@@ -13911,3 +13911,1103 @@ body.legado-v4-modal-open{overflow:hidden}
 })();
 </script>
 
+
+
+<!-- ============================================================
+     FINAL 28 — AJUSTES DE UX / ACESSO / CONVERSAS / TEMA
+     ============================================================ -->
+<style id="final28Styles">
+  /* ==========================================================
+     MODO ESCURO — paleta mais equilibrada e com contraste real
+     ========================================================== */
+  body.final27-dark{
+    --background:#0b0f0e;
+    --surface:#151a18;
+    --ink:#eef4f0;
+    --muted:#aab6af;
+    --line:#29352f;
+    --sage:#78aa91;
+    --sage-dark:#5b8d74;
+    --sage-light:#1c2a23;
+    --blue:#8eb0cc;
+    --blue-light:#1b2832;
+    --danger:#d77b7b;
+    --danger-light:#321f21;
+    --warning:#d7b06b;
+    --warning-light:#332b1d;
+    --success:#76b794;
+    --success-light:#1d2f25;
+    background:#0b0f0e!important;
+    color:#eef4f0!important;
+  }
+  body.final27-dark .main,
+  body.final27-dark .content{background:#0b0f0e!important}
+  body.final27-dark .sidebar{background:#111613!important;border-right-color:#26302c!important}
+  body.final27-dark .brand{border-bottom-color:#26302c!important}
+  body.final27-dark .topbar{background:#121714!important;border-bottom-color:#2a3530!important}
+  body.final27-dark .page-title,
+  body.final27-dark .page-title span,
+  body.final27-dark h1,
+  body.final27-dark h2,
+  body.final27-dark h3,
+  body.final27-dark h4,
+  body.final27-dark strong{color:#eef4f0!important}
+  body.final27-dark p,
+  body.final27-dark .eyebrow,
+  body.final27-dark .v3-kicker,
+  body.final27-dark .v3-inline-tags span,
+  body.final27-dark small{color:#aab6af!important}
+  body.final27-dark .nav button{color:#aebbb3!important}
+  body.final27-dark .nav button.active{background:#1b2b23!important;color:#e1eee7!important}
+  body.final27-dark .nav button:hover{background:#18241f!important}
+  body.final27-dark .card,
+  body.final27-dark .panel,
+  body.final27-dark .report-panel,
+  body.final27-dark .v3-panel,
+  body.final27-dark .mpro-panel,
+  body.final27-dark .mpro-tabs,
+  body.final27-dark .mpro-kpi,
+  body.final27-dark .mpro-action-grid button,
+  body.final27-dark .mpro-profile-strip,
+  body.final27-dark .mpro-diagnostic>div,
+  body.final27-dark .mpro-fin-summary>div,
+  body.final27-dark .mpro-rule-list>div,
+  body.final27-dark .mpro-checklist>div,
+  body.final27-dark .mpro-big-empty,
+  body.final27-dark .final24-profile-card,
+  body.final27-dark .final24-terms-card,
+  body.final27-dark .final26-profile-card,
+  body.final27-dark .final26-terms-card,
+  body.final27-dark .final26-profile-stat,
+  body.final27-dark .final24-profile-field,
+  body.final27-dark .final26-profile-field{background:#151a18!important;border-color:#29352f!important;color:#e8efeb!important}
+  body.final27-dark input,
+  body.final27-dark select,
+  body.final27-dark textarea{
+    background:#0f1412!important;
+    color:#edf3ef!important;
+    border-color:#34413a!important;
+  }
+  body.final27-dark input::placeholder,
+  body.final27-dark textarea::placeholder{color:#728078!important}
+  body.final27-dark .btn-outline,
+  body.final27-dark .icon-button,
+  body.final27-dark .mpro-light-btn,
+  body.final27-dark .mpro-icon-btn{background:#171d1a!important;border-color:#34413a!important;color:#dbe5df!important}
+  body.final27-dark .btn-soft{background:#1c2a23!important;color:#c7dccf!important}
+  body.final27-dark .btn-primary,
+  body.final27-dark .mpro-primary-btn{background:#5d8f76!important;border-color:#5d8f76!important;color:#fff!important}
+  body.final27-dark .v3-message,
+  body.final27-dark .v3-message-list .v3-message,
+  body.final27-dark .report-list-item{background:#151a18!important;border-color:#2b3731!important}
+  body.final27-dark .v3-message h3,
+  body.final27-dark .report-list-content strong{color:#edf3ef!important}
+  body.final27-dark .v3-message p,
+  body.final27-dark .report-list-content span{color:#9faca6!important}
+  body.final27-dark .final27-conversation-guide{background:linear-gradient(135deg,#18241e,#151a18)!important;border-color:#34433b!important}
+  body.final27-dark .final27-recipient-note{background:#1b2922!important;color:#aebbb4!important;border-color:#314138!important}
+  body.final27-dark .final27-toast{background:#151a18!important;border-color:#34413a!important}
+  body.final27-dark .final27-chat-shell,
+  body.final27-dark .final27-composer-card,
+  body.final27-dark .saas-payment-card,
+  body.final27-dark .legado-v4-dialog{background:#151a18!important;color:#edf3ef!important}
+  body.final27-dark .final27-chat-head,
+  body.final27-dark .final27-composer-head,
+  body.final27-dark .final27-chat-compose{background:#121714!important;border-color:#29352f!important}
+  body.final27-dark .final27-chat-body{background:linear-gradient(180deg,#101512,#131916)!important}
+  body.final27-dark .final27-bubble{background:#18201c!important;border-color:#314039!important;color:#e7eee9!important}
+  body.final27-dark .final27-bubble-row.me .final27-bubble{background:#1c3227!important;border-color:#385545!important}
+  body.final27-dark .final27-chat-close{background:#18201c!important;border-color:#34413a!important;color:#dce6e0!important}
+  body.final27-dark .final27-renewal-alert{background:linear-gradient(135deg,#2d261a,#1c1a15)!important;border-color:#594a30!important}
+  body.final27-dark .final27-renewal-main strong{color:#f1d28f!important}
+  body.final27-dark .final27-renewal-main span{color:#c5b79b!important}
+
+  /* O botão de tema não usa verde: fica claramente diferente do servidor. */
+  .final27-theme-btn{
+    background:#4b557b!important;
+    border-color:#424b70!important;
+    color:#fff!important;
+    box-shadow:0 3px 10px rgba(62,72,117,.18)!important;
+  }
+  .final27-theme-btn:hover{background:#3f496d!important;border-color:#374061!important}
+  body.final27-dark .final27-theme-btn{
+    background:#7569a7!important;
+    border-color:#8378b5!important;
+    color:#fff!important;
+  }
+  body.final27-dark .final27-theme-btn:hover{background:#685c96!important}
+
+  /* Servidor e online juntos, estáveis, sempre no canto direito. */
+  .topbar{position:relative!important}
+  #final27TopTools{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:8px!important;flex:0 0 auto!important;min-width:max-content!important}
+  #final27TopTools #final26ServerWrap,
+  #final27TopTools #final25OnlineWrap,
+  #final27TopTools #final27ThemeBtn{position:relative!important;left:auto!important;right:auto!important;transform:none!important;flex:none!important}
+  .topbar .page-title{flex:1 1 auto!important;min-width:0!important;margin-right:14px!important}
+  .topbar .page-title span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* ==========================================================
+     CONVERSAS — mais visíveis e com linguagem de central de atendimento
+     ========================================================== */
+  .final28-conversation-hub{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    margin:0 0 14px;padding:15px 16px;border:1px solid #d9e8df;border-radius:18px;
+    background:linear-gradient(135deg,#f5faf7,#ffffff);box-shadow:0 7px 23px rgba(35,60,47,.05)
+  }
+  .final28-conversation-hub-main{display:flex;align-items:center;gap:12px;min-width:0}
+  .final28-conversation-hub-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#e6f2eb;color:#4c7962;flex:none}
+  .final28-conversation-hub-text{min-width:0}
+  .final28-conversation-hub-text small{display:block;color:#7c8c84;font-size:8px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+  .final28-conversation-hub-text strong{display:block;margin-top:3px;color:#364a40;font-size:13px}
+  .final28-conversation-hub-text span{display:block;margin-top:3px;color:#829089;font-size:9px;line-height:1.5;overflow-wrap:anywhere}
+  .final28-conversation-hub-btn{border:1px solid #cfe1d6;background:#fff;color:#4a715e;border-radius:11px;padding:9px 12px;font:800 9px Inter,Arial,sans-serif;cursor:pointer;white-space:nowrap}
+  .final28-conversation-hub-btn:hover{background:#f3f8f5}
+  .final18-recados-tabs button[data-f26-tab="conversas"]{position:relative;font-weight:900;color:#456f5b;background:#edf6f0}
+  .final18-recados-tabs button[data-f26-tab="conversas"]::after{content:"Conversas";display:none}
+  body.final27-dark .final28-conversation-hub{background:linear-gradient(135deg,#18231d,#151a18)!important;border-color:#34433b}
+  body.final27-dark .final28-conversation-hub-icon{background:#1d3025;color:#9bc4ae}
+  body.final27-dark .final28-conversation-hub-text small{color:#83928b!important}
+  body.final27-dark .final28-conversation-hub-text strong{color:#eef4f0!important}
+  body.final27-dark .final28-conversation-hub-text span{color:#9daba5!important}
+  body.final27-dark .final28-conversation-hub-btn{background:#18201c;border-color:#35443b;color:#b8d3c3}
+
+  /* Aluno: edição inline, sem popup. */
+  .final28-student-inline-editor{margin:0 0 16px;padding:18px;border:1px solid #dce9e2;border-radius:19px;background:#fff;box-shadow:0 8px 25px rgba(28,54,42,.05)}
+  .final28-student-inline-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px}
+  .final28-student-inline-head small{display:block;color:#7c8b84;font-size:8px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+  .final28-student-inline-head h2{margin:4px 0 3px;font-size:17px;color:#35483f}
+  .final28-student-inline-head p{margin:0;color:#87948e;font-size:9px;line-height:1.5}
+  .final28-student-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+  .final28-student-grid label{display:grid;gap:5px;min-width:0}
+  .final28-student-grid label.full{grid-column:1/-1}
+  .final28-student-grid label>span{font-size:8px;font-weight:900;color:#718078;text-transform:uppercase;letter-spacing:.06em}
+  .final28-student-grid input,.final28-student-grid select,.final28-student-grid textarea{width:100%;border:1px solid #dfe8e3;border-radius:10px;padding:10px 11px;background:#fbfdfc;color:#405249;outline:0;font:500 10px/1.5 Inter,Arial,sans-serif}
+  .final28-student-grid textarea{min-height:95px;resize:vertical}
+  .final28-student-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid #edf2ef}
+  .final28-student-actions button{min-height:38px;border-radius:10px;padding:8px 12px;font:800 9px Inter,Arial,sans-serif;cursor:pointer}
+  body.final27-dark .final28-student-inline-editor{background:#151a18;border-color:#314039}
+  body.final27-dark .final28-student-inline-head h2{color:#edf3ef}
+  body.final27-dark .final28-student-grid input,body.final27-dark .final28-student-grid select,body.final27-dark .final28-student-grid textarea{background:#0f1412;border-color:#34413a;color:#edf3ef}
+  @media(max-width:700px){.final28-conversation-hub{align-items:flex-start;flex-direction:column}.final28-conversation-hub-btn{width:100%}.final28-student-grid{grid-template-columns:1fr}.final28-student-grid label.full{grid-column:auto}}
+
+  /* Mensagem flutuante com mais aparência de conversa. */
+  .final27-chat-toast{grid-template-columns:40px minmax(0,1fr) 24px!important;border-radius:18px!important;padding:13px!important}
+  .final27-chat-toast::before{content:"";position:absolute}
+  .final27-toast-stack{width:min(390px,calc(100vw - 24px))!important}
+  .final27-toast-avatar{width:40px!important;height:40px!important;border-radius:50%!important}
+  .final27-toast-kicker{font-size:8px!important}
+  .final27-toast-title{font-size:12px!important}
+  .final27-toast-text{font-size:10px!important}
+
+  @media(max-width:760px){
+    #final27TopTools{gap:5px!important}
+    #final27ThemeBtn{min-width:30px!important;padding:0 7px!important}
+  }
+</style>
+
+<script id="final28Enhancements">
+(function(){
+  'use strict';
+  const W=window;
+  const MASTER_EMAIL='contato@legadoqueensina.com.br';
+  const SUPPORT_PHONE='5543991466210';
+  const ACCESS_CHECK_MS=30000;
+  let accessTimer=null;
+  let accessTimeout=null;
+  let deadlineBusy=false;
+
+  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v??''):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  const uid=()=>W.state?.user?.id||null;
+  const sb=()=>W.supabaseClient||null;
+  const isMaster=()=>{
+    const u=W.state?.user||{};const p=W.state?.profile||{};
+    return String(u.email||'').toLowerCase()===MASTER_EMAIL||p.is_master===true||['master','admin'].includes(String(p.role||'').toLowerCase())||['master','admin'].includes(String(u.user_metadata?.role||'').toLowerCase());
+  };
+  const studentTable=()=>W.SUPABASE_SCHEMA?.students||W.DASHBOARD_TABLES?.students||W.V3Core?.TABLE?.students||'students';
+  const studentName=s=>String(s?.name||s?.full_name||'Aluno').trim()||'Aluno';
+  const fmtDate=v=>{const d=new Date(v);return Number.isFinite(d.getTime())?d.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}):'—'};
+  const dateOnly=v=>{const d=new Date(v);return Number.isFinite(d.getTime())?`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`:''};
+
+  /* ==========================================================
+     1) EDIÇÃO DO ALUNO DIRETAMENTE NO PERFIL
+     ========================================================== */
+  async function fetchCurrentStudent(){
+    const sid=W.state?.currentStudentId;if(!sid)throw new Error('Nenhum aluno selecionado.');
+    const local=(W.state?.selectedStudent&&String(W.state.selectedStudent.id)===String(sid))?W.state.selectedStudent:null;
+    if(local)return local;
+    const c=sb();const me=uid();if(!c||!me)throw new Error('Sessão não encontrada.');
+    const r=await c.from(studentTable()).select('*').eq('id',sid).eq('user_id',me).maybeSingle();
+    if(r.error)throw r.error;if(!r.data)throw new Error('Aluno não encontrado.');
+    return r.data;
+  }
+
+  function studentEditorHtml(s){
+    return `<section class="final28-student-inline-editor" id="final28StudentInlineEditor">
+      <div class="final28-student-inline-head"><div><small>EDITAR NO PRONTUÁRIO</small><h2>Dados do aluno</h2><p>Faça as alterações diretamente nesta página. Nada será aberto em popup.</p></div><button type="button" class="icon-button" id="final28StudentInlineClose" title="Cancelar edição"><i data-lucide="x"></i></button></div>
+      <form id="final28StudentInlineForm">
+        <div class="final28-student-grid">
+          <label><span>Nome completo *</span><input name="name" required value="${esc(s?.name||s?.full_name||'')}"></label>
+          <label><span>Data de nascimento</span><input type="date" name="birth_date" value="${esc(dateOnly(s?.birth_date||s?.date_of_birth))}"></label>
+          <label><span>Responsável</span><input name="responsible_name" value="${esc(s?.responsible_name||s?.guardian_name||s?.parent_name||'')}"></label>
+          <label><span>Telefone da família</span><input name="phone" value="${esc(s?.phone||s?.responsible_phone||'')}" inputmode="tel"></label>
+          <label><span>E-mail</span><input type="email" name="email" value="${esc(s?.email||'')}"></label>
+          <label><span>CPF</span><input name="cpf" value="${esc(s?.cpf||'')}" inputmode="numeric"></label>
+          <label><span>Status</span><select name="status"><option value="active" ${s?.status==='active'||!s?.status?'selected':''}>Ativo</option><option value="inactive" ${s?.status==='inactive'?'selected':''}>Inativo</option><option value="pending" ${s?.status==='pending'?'selected':''}>Pendente</option></select></label>
+          <label><span>Foto do aluno — URL</span><input type="url" name="photo_url" value="${esc(s?.photo_url||'')}" placeholder="https://..."></label>
+          <label class="full"><span>Observações cadastrais</span><textarea name="notes" rows="5">${esc(s?.notes||s?.observations||'')}</textarea></label>
+        </div>
+        <div class="final28-student-actions"><button type="button" class="btn btn-outline" id="final28StudentInlineCancel">Cancelar</button><button type="submit" class="btn btn-primary"><i data-lucide="save"></i>Salvar alterações</button></div>
+      </form>
+    </section>`;
+  }
+
+  W.final28EditStudentInline=async function(){
+    try{
+      const host=document.getElementById('studentProfileContent');if(!host)throw new Error('Prontuário do aluno não está disponível.');
+      host.querySelector('#final28StudentInlineEditor')?.remove();
+      const s=await fetchCurrentStudent();
+      const hero=host.querySelector('.v3-student-hero,.v3-profile-page .v3-student-hero');
+      if(!hero)throw new Error('Cabeçalho do prontuário não encontrado.');
+      hero.insertAdjacentHTML('afterend',studentEditorHtml(s));
+      W.refreshIcons?.();
+      const editor=host.querySelector('#final28StudentInlineEditor');
+      const close=()=>editor?.remove();
+      editor?.querySelector('#final28StudentInlineClose')?.addEventListener('click',close);
+      editor?.querySelector('#final28StudentInlineCancel')?.addEventListener('click',close);
+      editor?.querySelector('#final28StudentInlineForm')?.addEventListener('submit',async ev=>{
+        ev.preventDefault();
+        const btn=ev.currentTarget.querySelector('[type="submit"]');if(btn)btn.disabled=true;
+        try{
+          const fd=new FormData(ev.currentTarget),me=uid(),c=sb();if(!me||!c)throw new Error('Sessão não encontrada.');
+          const payload={user_id:me,name:String(fd.get('name')||'').trim(),full_name:String(fd.get('name')||'').trim(),birth_date:fd.get('birth_date')||null,responsible_name:String(fd.get('responsible_name')||'').trim()||null,phone:String(fd.get('phone')||'').trim()||null,email:String(fd.get('email')||'').trim().toLowerCase()||null,cpf:String(fd.get('cpf')||'').trim()||null,status:String(fd.get('status')||'active'),photo_url:String(fd.get('photo_url')||'').trim()||null,notes:String(fd.get('notes')||'').trim()||null};
+          if(!payload.name)throw new Error('Informe o nome do aluno.');
+          const r=await c.from(studentTable()).update(payload).eq('id',String(W.state.currentStudentId)).eq('user_id',me).select('*').maybeSingle();if(r.error)throw r.error;
+          W.state.selectedStudent={...(W.state.selectedStudent||s),...payload,...(r.data||{})};
+          W.showSuccess?.('Cadastro do aluno atualizado com sucesso.');
+          await W.renderStudentProfileView?.();
+        }catch(err){W.showError?.(err.message||'Não foi possível salvar o cadastro.');if(btn)btn.disabled=false;}
+      });
+      editor?.scrollIntoView({behavior:'smooth',block:'start'});
+    }catch(e){W.showError?.(e.message||'Não foi possível abrir a edição.');}
+  };
+
+  /* O botão existente do prontuário chama esta função; ele deixa de abrir popup. */
+  W.v3ShowStudentEditorFromProfile=W.final28EditStudentInline;
+
+  /* ==========================================================
+     2) AVISO DE VENCIMENTO → WHATSAPP FIXO DA GESTÃO
+     ========================================================== */
+  function renewalWhatsAppUrl(){
+    const name=String(W.state?.profile?.full_name||W.state?.profile?.name||W.state?.user?.email||'Professor').split('@')[0];
+    const msg=`Olá! Sou ${name}. Vi o aviso de vencimento da minha mensalidade no Legado Que Ensina e gostaria de regularizar meu acesso.`;
+    return `https://wa.me/${SUPPORT_PHONE}?text=${encodeURIComponent(msg)}`;
+  }
+  function patchRenewalAlert(){
+    const box=document.querySelector('.final27-renewal-alert');if(!box)return;
+    const btn=box.querySelector('.final27-renewal-cta');if(!btn)return;
+    btn.textContent='Falar pelo WhatsApp';
+    btn.title='Regularizar pagamento pelo WhatsApp';
+    btn.onclick=()=>W.open(renewalWhatsAppUrl(),'_blank','noopener,noreferrer');
+  }
+
+  /* ==========================================================
+     3) BLOQUEIO AUTOMÁTICO EXATO DO ACESSO
+     ========================================================== */
+  function updateExpiredLink(){
+    const btn=document.getElementById('expiredContactButton');if(!btn)return;
+    btn.href=renewalWhatsAppUrl();btn.target='_blank';btn.rel='noopener noreferrer';
+  }
+  function forceAccessBlock(reason='expired'){
+    if(isMaster())return;
+    const screen=document.getElementById('expiredScreen');
+    if(!screen)return;
+    const title=screen.querySelector('.expired-title'),text=screen.querySelector('.expired-text');
+    if(title)title.textContent='Seu acesso foi bloqueado';
+    if(text)text.textContent=reason==='blocked'
+      ? 'Seu acesso foi bloqueado pela administração. Entre em contato pelo WhatsApp para regularizar sua conta.'
+      : 'O prazo de uso do sistema terminou. Entre em contato pelo WhatsApp para regularizar seu plano.';
+    updateExpiredLink();
+    W.showExpiredScreen?.();
+  }
+  function scheduleAccessDeadline(){
+    if(accessTimeout)clearTimeout(accessTimeout);accessTimeout=null;
+    const p=W.state?.profile||{};if(isMaster())return;
+    const expires=p.access_expires_at||p.plan_expires_at||p.subscription_expires_at||p.expires_at;if(!expires)return;
+    const t=new Date(expires).getTime();if(!Number.isFinite(t))return;
+    const remaining=t-Date.now();
+    if(remaining<=0){forceAccessBlock(p.blocked===true?'blocked':'expired');return;}
+    accessTimeout=setTimeout(()=>forceAccessBlock('expired'),Math.min(Math.max(remaining+250,1000),2147483647));
+  }
+  async function checkAccessDeadline(){
+    if(deadlineBusy||!W.state?.user||isMaster())return;
+    deadlineBusy=true;
+    try{
+      const local=W.state?.profile||{};
+      const expires=local.access_expires_at||local.plan_expires_at||local.subscription_expires_at||local.expires_at;
+      if(local.blocked===true){forceAccessBlock('blocked');return;}
+      if(expires){
+        const t=new Date(expires).getTime();if(Number.isFinite(t)&&t<=Date.now()){forceAccessBlock('expired');return;}
+      }
+      /* Reconsulta o perfil a cada 30s para pegar alterações feitas pelo Master sem novo login. */
+      const c=sb(),me=uid();
+      if(c&&me){
+        const r=await c.from('profiles').select('access_expires_at,blocked,plan_name,plan_price,payment_status').eq('id',me).maybeSingle();
+        if(!r.error&&r.data){W.state.profile={...(W.state.profile||{}),...r.data};scheduleAccessDeadline();if(r.data.blocked===true){forceAccessBlock('blocked');return;}const t=r.data.access_expires_at?new Date(r.data.access_expires_at).getTime():NaN;if(Number.isFinite(t)&&t<=Date.now()){forceAccessBlock('expired');return;}}
+      }
+    }finally{deadlineBusy=false;}
+  }
+  function startAccessGuard(){
+    if(accessTimer)clearInterval(accessTimer);
+    if(accessTimeout)clearTimeout(accessTimeout);
+    accessTimer=setInterval(checkAccessDeadline,ACCESS_CHECK_MS);
+    setTimeout(()=>{scheduleAccessDeadline();checkAccessDeadline();},700);
+    document.removeEventListener('visibilitychange',W.final28VisibilityCheck||(()=>{}));
+    W.final28VisibilityCheck=()=>{if(document.visibilityState==='visible'){scheduleAccessDeadline();checkAccessDeadline();}};
+    document.addEventListener('visibilitychange',W.final28VisibilityCheck,{passive:true});
+    window.addEventListener('focus',()=>{scheduleAccessDeadline();checkAccessDeadline();},{passive:true});
+  }
+
+  /* ==========================================================
+     4) CONVERSAS VISÍVEIS — adiciona uma central destacada antes das abas
+     ========================================================== */
+  function enhanceConversationHub(){
+    const c=document.getElementById('recadosContent');if(!c)return;
+    if(c.querySelector('[data-final28-conversation-hub]'))return;
+    const isM=isMaster();
+    const hub=document.createElement('section');hub.className='final28-conversation-hub';hub.dataset.final28ConversationHub='1';
+    hub.innerHTML=`<div class="final28-conversation-hub-main"><div class="final28-conversation-hub-icon"><i data-lucide="messages-square"></i></div><div class="final28-conversation-hub-text"><small>CENTRAL DE CONVERSAS</small><strong>${isM?'Fale diretamente com qualquer professor':'Fale diretamente com a gestão'}</strong><span>${isM?'Selecione um professor para abrir uma conversa privada, responder dúvidas e acompanhar o histórico.':'Use esta área para pedir ajuda, esclarecer dúvidas ou informar problemas. A resposta da gestão continuará registrada nesta mesma conversa.'}</span></div></div><button type="button" class="final28-conversation-hub-btn" id="final28ConversationOpen">${isM?'Nova mensagem':'Nova conversa'}</button>`;
+    const anchor=c.querySelector('.final18-recados-tabs,.final18-recados-panel,.v3-message-list');
+    (anchor||c.firstElementChild)?.insertAdjacentElement('afterend',hub);
+    hub.querySelector('#final28ConversationOpen')?.addEventListener('click',()=>{
+      if(isM)W.v3OpenMessageEditor?.();
+      else W.final26NewSupport?.();
+    });
+    W.refreshIcons?.();
+  }
+  function wrapMessages(){
+    const old=W.renderMessages;if(typeof old!=='function'||old.__final28)return;
+    const fn=async function(){const r=await old.apply(this,arguments);setTimeout(enhanceConversationHub,40);return r;};fn.__final28=true;W.renderMessages=fn;
+  }
+
+  /* ==========================================================
+     5) Melhor destaque das conversas existentes
+     ========================================================== */
+  function focusConversationTab(){
+    const c=document.getElementById('recadosContent');if(!c)return;
+    const tab=c.querySelector('[data-f26-tab="conversas"]');
+    if(tab){tab.classList.add('final28-conversation-tab');tab.setAttribute('title','Abrir conversas');}
+  }
+
+  /* ==========================================================
+     6) Reforça tema + topo + alertas após navegação
+     ========================================================== */
+  function refreshUi(){
+    try{W.refreshIcons?.()}catch(_){}
+    try{
+      if(W.state?.currentView==='recados'){enhanceConversationHub();focusConversationTab();}
+      if(W.state?.currentView==='dashboard')patchRenewalAlert();
+    }catch(_){}
+  }
+  function boot(){
+    refreshUi();startAccessGuard();
+    const oldNav=W.navigate;
+    if(typeof oldNav==='function'&&!oldNav.__final28Nav){
+      const fn=function(view){const r=oldNav.apply(this,arguments);setTimeout(()=>{refreshUi();scheduleAccessDeadline();},130);return r;};
+      fn.__final28Nav=true;W.navigate=fn;
+    }
+    wrapMessages();
+    setTimeout(()=>{refreshUi();patchRenewalAlert();},500);
+    setTimeout(()=>{refreshUi();patchRenewalAlert();},1200);
+  }
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else setTimeout(boot,0);
+})();
+</script>
+
+<style id="final29Styles">
+  /* ============================================================
+     FINAL 29 — RECADOS / DARK / NOTIFICAÇÕES / ATENDIMENTO
+     ============================================================ */
+  .topbar .page-title{margin-right:24px!important}
+  #final27TopTools{margin-right:12px!important;gap:9px!important}
+  .topbar .user-mini{margin-left:8px!important;flex:none!important}
+
+  /* ---------- DARK: uma única linguagem visual ---------- */
+  body.final27-dark .v3-page,
+  body.final27-dark .l14-agenda-page,
+  body.final27-dark .final19-doc-page,
+  body.final27-dark .final26-profile,
+  body.final27-dark .v3-profile-page{color:#e8efeb!important}
+  body.final27-dark .l14-panel,
+  body.final27-dark .l14-history-item,
+  body.final27-dark .l14-up-item,
+  body.final27-dark .v4-model,
+  body.final27-dark .v4-empty,
+  body.final27-dark .v3-stat,
+  body.final27-dark .v3-student-card,
+  body.final27-dark .v3-history-item,
+  body.final27-dark .v3-progress-item,
+  body.final27-dark .v3-section-intro,
+  body.final27-dark .v3-tabs,
+  body.final27-dark .final19-doc-card,
+  body.final27-dark .final19-doc-tip,
+  body.final27-dark .final18-recados-summary,
+  body.final27-dark .final29-received-card,
+  body.final27-dark .final29-thread-item,
+  body.final27-dark .final29-conversation-shell,
+  body.final27-dark .final29-composer-card,
+  body.final27-dark .final29-chat-pane,
+  body.final27-dark .final29-notification-banner,
+  body.final27-dark .final29-attendance-bar,
+  body.final27-dark .final29-flow-card,
+  body.final27-dark .final29-doc-helper{
+    background:#151a18!important;
+    border-color:#2d3933!important;
+    color:#e8efeb!important;
+    box-shadow:0 10px 28px rgba(0,0,0,.18)!important;
+  }
+  body.final27-dark .l14-calendar-head h2,
+  body.final27-dark .l14-history-title,
+  body.final27-dark .l14-history-main strong,
+  body.final27-dark .l14-up-main strong,
+  body.final27-dark .v4-model h3,
+  body.final27-dark .v3-student-ident h3,
+  body.final27-dark .v3-history-content strong,
+  body.final27-dark .v3-section-intro h2,
+  body.final27-dark .final19-doc-card h3,
+  body.final27-dark .final29-thread-title,
+  body.final27-dark .final29-chat-title,
+  body.final27-dark .final29-notification-banner strong,
+  body.final27-dark .final29-attendance-bar strong,
+  body.final27-dark .final29-flow-card h2,
+  body.final27-dark .final29-flow-card h3,
+  body.final27-dark .final29-doc-helper strong{color:#eef4f0!important}
+  body.final27-dark .l14-history-meta,
+  body.final27-dark .l14-history-observation,
+  body.final27-dark .l14-up-main span,
+  body.final27-dark .v4-model p,
+  body.final27-dark .v4-model-meta,
+  body.final27-dark .v3-history-content p,
+  body.final27-dark .v3-history-content span,
+  body.final27-dark .v3-student-meta,
+  body.final27-dark .final19-doc-card p,
+  body.final27-dark .final19-doc-tip p,
+  body.final27-dark .final29-thread-preview,
+  body.final27-dark .final29-thread-meta,
+  body.final27-dark .final29-chat-meta,
+  body.final27-dark .final29-chat-empty,
+  body.final27-dark .final29-notification-banner span,
+  body.final27-dark .final29-attendance-bar span,
+  body.final27-dark .final29-flow-card p,
+  body.final27-dark .final29-doc-helper span{color:#aebbb4!important}
+  body.final27-dark .l14-slot,
+  body.final27-dark .l14-day,
+  body.final27-dark .final18-recados-tabs,
+  body.final27-dark .final18-recados-tabs button,
+  body.final27-dark .final29-chat-input,
+  body.final27-dark .final29-search,
+  body.final27-dark .final29-thread-item:hover{background:#101512!important;border-color:#303d36!important;color:#dfe8e3!important}
+  body.final27-dark .l14-day.muted{opacity:.58}
+  body.final27-dark .l14-day.selected{background:#254136!important;border-color:#4b8368!important;color:#fff!important}
+  body.final27-dark .l14-slot.booked{background:#1b2921!important;border-color:#3b5c4a!important}
+  body.final27-dark .final18-recados-tabs button.active{background:#2b493b!important;color:#eff7f2!important;border-color:#477761!important}
+  body.final27-dark .final29-search input,
+  body.final27-dark .final29-chat-input textarea,
+  body.final27-dark .final29-composer-card input,
+  body.final27-dark .final29-composer-card select,
+  body.final27-dark .final29-composer-card textarea,
+  body.final27-dark .final29-flow-card input,
+  body.final27-dark .final29-flow-card select{background:#0e1311!important;color:#edf3ef!important;border-color:#35443c!important}
+  body.final27-dark .final29-chat-messages{background:linear-gradient(180deg,#0e1311,#121814)!important}
+  body.final27-dark .final29-message-bubble{background:#18201c!important;border-color:#304037!important;color:#e7eee9!important}
+  body.final27-dark .final29-message-bubble.me{background:#214031!important;border-color:#416851!important}
+  body.final27-dark .final29-notification-banner{background:linear-gradient(135deg,#192a21,#151a18)!important}
+  body.final27-dark .final29-attendance-bar{background:linear-gradient(135deg,#1c2f25,#151a18)!important;border-color:#4a765f!important}
+  body.final27-dark .final29-flow-step{background:#111613!important;border-color:#2f3d36!important}
+  body.final27-dark .final29-choice{background:#111613!important;border-color:#35443c!important;color:#eaf1ed!important}
+  body.final27-dark .final29-choice:hover{background:#1e2d25!important;border-color:#4d7d65!important}
+
+  /* ---------- RECADOS: conversa fica no corpo da página ---------- */
+  .final29-recados-page{display:grid;gap:14px;min-width:0}
+  .final29-recados-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;min-width:0}
+  .final29-recados-head-main{min-width:0}
+  .final29-recados-kicker{font-size:8px;font-weight:900;letter-spacing:.13em;color:#789187;text-transform:uppercase}
+  .final29-recados-head h1{margin:4px 0 5px;font-size:24px;line-height:1.1;color:#31443b}
+  .final29-recados-head p{margin:0;color:#7d8c85;font-size:10px;line-height:1.55;max-width:760px}
+  .final29-recados-actions{display:flex;gap:8px;flex:none}
+  .final29-recados-kpi{display:grid;grid-template-columns:1.4fr repeat(3,minmax(110px,1fr));gap:8px;min-width:0}
+  .final29-kpi-main,.final29-kpi-mini{border:1px solid #dfe9e3;border-radius:16px;background:#fff;min-width:0}
+  .final29-kpi-main{padding:15px 16px;display:flex;align-items:center;gap:12px}
+  .final29-kpi-main-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#e9f4ee;color:#4f7b65;flex:none}
+  .final29-kpi-main strong{display:block;font-size:19px;color:#33483e}
+  .final29-kpi-main span{display:block;margin-top:3px;color:#7c8a84;font-size:9px}
+  .final29-kpi-mini{padding:12px 13px;display:flex;flex-direction:column;justify-content:center}
+  .final29-kpi-mini b{font-size:15px;color:#3b5046}
+  .final29-kpi-mini span{margin-top:3px;font-size:8px;color:#87938e}
+  .final29-conversation-shell{display:grid;grid-template-columns:minmax(250px,340px) minmax(0,1fr);min-height:590px;border:1px solid #dfe8e3;border-radius:20px;background:#fff;overflow:hidden;box-shadow:0 8px 26px rgba(37,63,49,.045)}
+  .final29-thread-sidebar{background:#f7faf8;border-right:1px solid #e3ebe6;display:grid;grid-template-rows:auto minmax(0,1fr);min-width:0}
+  .final29-thread-sidebar-head{padding:15px;border-bottom:1px solid #e3ebe6}
+  .final29-thread-sidebar-head-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .final29-thread-sidebar-head h2{margin:0;color:#33483e;font-size:13px}
+  .final29-thread-sidebar-head span{font-size:8px;color:#819089}
+  .final29-thread-list{padding:8px;overflow:auto;min-width:0}
+  .final29-thread-item{width:100%;border:1px solid transparent;border-radius:14px;background:transparent;text-align:left;padding:11px;display:grid;gap:5px;cursor:pointer;color:#33483e}
+  .final29-thread-item:hover{background:#fff;border-color:#dce7e1}
+  .final29-thread-item.active{background:#eaf4ee;border-color:#cfe2d6}
+  .final29-thread-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+  .final29-thread-title{font-size:10px;font-weight:900;overflow-wrap:anywhere;color:#3a4f45}
+  .final29-thread-badge{font-size:7px;font-weight:900;padding:4px 6px;border-radius:999px;background:#e5f0ea;color:#4b755f;white-space:nowrap}
+  .final29-thread-meta{font-size:8px;color:#819089;overflow-wrap:anywhere}
+  .final29-thread-preview{font-size:8px;line-height:1.45;color:#7d8984;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+  .final29-thread-empty{padding:24px 12px;color:#8a9690;font-size:9px;line-height:1.5;text-align:center}
+  .final29-chat-pane{min-width:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;background:#fff}
+  .final29-chat-pane-head{padding:15px 17px;border-bottom:1px solid #e5ece8;display:flex;justify-content:space-between;gap:12px;align-items:center;min-width:0}
+  .final29-chat-head-main{min-width:0}
+  .final29-chat-title{margin:0;color:#33483e;font-size:15px;overflow-wrap:anywhere}
+  .final29-chat-meta{margin-top:3px;color:#89958f;font-size:8px;line-height:1.45}
+  .final29-chat-messages{padding:17px;overflow:auto;background:linear-gradient(180deg,#f8fbf9,#f3f7f5);display:flex;flex-direction:column;gap:8px;min-height:0}
+  .final29-message-row{display:flex;min-width:0}
+  .final29-message-row.me{justify-content:flex-end}
+  .final29-message-bubble{max-width:min(78%,660px);border:1px solid #e0e8e4;background:#fff;border-radius:15px;padding:10px 12px;box-shadow:0 2px 8px rgba(30,54,42,.03);min-width:0}
+  .final29-message-bubble.me{background:#e9f4ee;border-color:#d1e4d8}
+  .final29-message-author{font-size:7px;font-weight:900;color:#718178;margin-bottom:4px}
+  .final29-message-text{font-size:10px;line-height:1.6;color:#3f5149;white-space:pre-wrap;overflow-wrap:anywhere}
+  .final29-message-time{margin-top:5px;font-size:7px;color:#8a9690;text-align:right}
+  .final29-chat-footer{padding:11px 14px;border-top:1px solid #e2eae5;background:#fff}
+  .final29-chat-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end}
+  .final29-chat-input{width:100%;min-height:44px;max-height:130px;resize:vertical;border:1px solid #dce6e0;border-radius:12px;padding:10px 11px;background:#f9fbfa;color:#34483e;font:500 10px/1.5 Inter,Arial,sans-serif;outline:0}
+  .final29-inline-compose-wrap{padding:14px;border-top:1px solid #e3ebe6;background:#f9fbfa}
+  .final29-composer-card{border:1px solid #dce7e1;border-radius:16px;background:#fff;padding:14px;display:grid;gap:9px}
+  .final29-composer-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+  .final29-composer-head small{font-size:8px;font-weight:900;letter-spacing:.1em;color:#7c8c84;text-transform:uppercase}
+  .final29-composer-head strong{display:block;margin-top:3px;font-size:12px;color:#35493f}
+  .final29-composer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .final29-composer-card label{display:grid;gap:4px;min-width:0}
+  .final29-composer-card label.full{grid-column:1/-1}
+  .final29-composer-card label>span{font-size:8px;font-weight:900;color:#728178;text-transform:uppercase}
+  .final29-composer-card input,.final29-composer-card select,.final29-composer-card textarea{width:100%;border:1px solid #dce7e1;border-radius:10px;padding:9px 10px;background:#fafcfb;color:#34483e;font:500 10px/1.5 Inter,Arial,sans-serif;outline:0}
+  .final29-composer-card textarea{min-height:74px;resize:vertical}
+  .final29-composer-actions{display:flex;justify-content:flex-end;gap:7px}
+  .final29-legacy-tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .final29-legacy-tab{border:1px solid #dfe8e3;background:#fff;color:#66766e;border-radius:10px;padding:8px 10px;font:800 8px/1 Inter,Arial,sans-serif;cursor:pointer}
+  .final29-legacy-tab.active{background:#edf6f1;color:#4b735e;border-color:#d1e4d7}
+  .final29-received-list{display:grid;gap:8px}
+  .final29-received-card{padding:13px;border:1px solid #e1e9e5;border-radius:14px;background:#fff;display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:10px;align-items:start}
+  .final29-received-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#edf5f0;color:#547863}
+  .final29-received-main{min-width:0}
+  .final29-received-main strong{font-size:11px;color:#3a4f45;overflow-wrap:anywhere}
+  .final29-received-main span{display:block;margin-top:3px;font-size:8px;color:#8a9690}
+  .final29-received-main p{margin:6px 0 0;font-size:9px;line-height:1.55;color:#74827b;white-space:pre-wrap;overflow-wrap:anywhere}
+
+  /* ---------- NOTIFICAÇÕES ---------- */
+  .final29-notification-banner{display:flex;align-items:center;gap:12px;padding:14px 15px;border:1px solid #dce8e1;border-radius:17px;background:linear-gradient(135deg,#f4faf7,#fff);box-shadow:0 6px 22px rgba(33,61,48,.04)}
+  .final29-notification-icon{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#e8f3ec;color:#4d7b63;flex:none}
+  .final29-notification-main{min-width:0;flex:1}
+  .final29-notification-main strong{display:block;color:#34483e;font-size:11px}
+  .final29-notification-main span{display:block;margin-top:3px;color:#7b8a83;font-size:9px;line-height:1.5;overflow-wrap:anywhere}
+  .final29-notification-actions{display:flex;gap:7px;flex:none;align-items:center}
+  .final29-notification-status{font-size:8px;font-weight:900;color:#4f7c65;white-space:nowrap}
+
+  .final29-toast{position:fixed;right:18px;top:84px;width:min(410px,calc(100vw - 28px));z-index:4800;display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:9px;padding:12px;border:1px solid #d9e7df;border-radius:16px;background:#fff;box-shadow:0 18px 48px rgba(24,46,36,.18);animation:final29In .2s ease}
+  .final29-toast-icon{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#e8f3ec;color:#4d7c64}
+  .final29-toast small{font-size:7px;font-weight:900;color:#6e8278;letter-spacing:.09em;text-transform:uppercase}
+  .final29-toast strong{display:block;margin-top:2px;color:#33483e;font-size:11px;overflow-wrap:anywhere}
+  .final29-toast span{display:block;margin-top:4px;color:#738079;font-size:9px;line-height:1.5;overflow-wrap:anywhere}
+  .final29-toast button{border:0;background:transparent;color:#809088;cursor:pointer}
+  @keyframes final29In{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ---------- BARRA DE ATENDIMENTO NO CANTO SUPERIOR DIREITO ---------- */
+  .final29-attendance-bar{position:fixed;right:18px;top:78px;width:min(430px,calc(100vw - 26px));z-index:4750;display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:10px;align-items:center;padding:13px;border:1px solid #bfd9c8;border-radius:16px;background:linear-gradient(135deg,#eef8f2,#fff);box-shadow:0 18px 44px rgba(35,74,54,.17);animation:final29In .22s ease}
+  .final29-attendance-icon{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#dcefe3;color:#4d7b62}
+  .final29-attendance-main{min-width:0}
+  .final29-attendance-main strong{display:block;color:#315041;font-size:10px;line-height:1.35}
+  .final29-attendance-main span{display:block;margin-top:3px;color:#70837a;font-size:8px;line-height:1.5;overflow-wrap:anywhere}
+  .final29-attendance-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .final29-start-btn,.final29-cancel-btn{border-radius:9px;padding:8px 10px;font:900 8px Inter,Arial,sans-serif;cursor:pointer}
+  .final29-start-btn{border:1px solid #5f8e75;background:#5f8e75;color:#fff}
+  .final29-cancel-btn{border:1px solid #d4dfd9;background:#fff;color:#6b7b73}
+
+  /* ---------- FLUXO DE ENCERRAMENTO ---------- */
+  .final29-flow-overlay{position:fixed;inset:0;z-index:4900;background:rgba(8,14,11,.54);display:grid;place-items:center;padding:18px}
+  .final29-flow-card{width:min(560px,96vw);border:1px solid #dfe9e3;border-radius:20px;background:#fff;padding:20px;box-shadow:0 28px 70px rgba(12,26,20,.24)}
+  .final29-flow-kicker{font-size:8px;font-weight:900;letter-spacing:.13em;color:#769085;text-transform:uppercase}
+  .final29-flow-card h2{margin:5px 0 5px;color:#32473d;font-size:19px}
+  .final29-flow-card p{margin:0;color:#7c8b84;font-size:9px;line-height:1.55}
+  .final29-flow-step{margin-top:14px;padding:13px;border:1px solid #dfe8e3;border-radius:14px;background:#fafcfb}
+  .final29-flow-step>strong{display:block;color:#3b5046;font-size:10px}
+  .final29-flow-step>span{display:block;margin-top:3px;color:#7d8b85;font-size:8px}
+  .final29-flow-pay-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:10px}
+  .final29-choice{border:1px solid #d9e4de;border-radius:10px;background:#fff;color:#43564c;padding:10px 8px;text-align:center;font:900 8px/1.25 Inter,Arial,sans-serif;cursor:pointer}
+  .final29-choice:hover{background:#f1f7f3;border-color:#c2d8ca}
+  .final29-choice.pending{border-style:dashed}
+  .final29-flow-amount{display:grid;gap:5px;margin-top:10px}
+  .final29-flow-amount label{font-size:8px;font-weight:900;text-transform:uppercase;color:#74837b}
+  .final29-flow-amount input{width:100%;border:1px solid #d9e4de;border-radius:10px;padding:10px;background:#fff;color:#34483e;font:600 11px Inter,Arial,sans-serif}
+  .final29-flow-note{margin-top:10px;padding:9px 10px;border-radius:10px;background:#f0f6f2;color:#577064;font-size:8px;line-height:1.5}
+  .final29-flow-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:15px}
+
+  /* ---------- DOCUMENTOS PREPARADOS ---------- */
+  .final29-doc-helper{margin-top:12px;padding:11px 12px;border:1px solid #dfe8e3;border-radius:12px;background:#f9fbfa;display:grid;gap:3px}
+  .final29-doc-helper strong{font-size:9px;color:#4b5f56}
+  .final29-doc-helper span{font-size:8px;color:#7d8b84;line-height:1.45}
+
+  /* ---------- BUSCA DE AVALIAÇÕES ---------- */
+  .final29-eval-search{display:flex;align-items:center;gap:9px;margin-bottom:10px;padding:10px 12px;border:1px solid #dfe8e3;border-radius:14px;background:#fff}
+  .final29-eval-search svg{width:15px;height:15px;flex:none;color:#75857d}
+  .final29-eval-search input{width:100%;border:0;outline:0;background:transparent;color:#3e5148;font:600 10px Inter,Arial,sans-serif}
+  .final29-eval-search input::placeholder{color:#92a09a}
+  .final29-search-count{font-size:8px;color:#83928a;white-space:nowrap}
+  body.final27-dark .final29-eval-search{background:#151a18;border-color:#2e3b34}
+  body.final27-dark .final29-eval-search input{color:#edf3ef}
+  body.final27-dark .final29-eval-search input::placeholder{color:#718078}
+
+  @media(max-width:860px){
+    .final29-recados-kpi{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .final29-kpi-main{grid-column:1/-1}
+    .final29-conversation-shell{grid-template-columns:1fr;min-height:auto}
+    .final29-thread-sidebar{border-right:0;border-bottom:1px solid #e3ebe6;max-height:280px}
+    .final29-chat-pane{min-height:520px}
+    .final29-composer-grid{grid-template-columns:1fr}
+    .final29-composer-card label.full{grid-column:auto}
+  }
+  @media(max-width:650px){
+    .final29-recados-head{flex-direction:column}
+    .final29-recados-actions{width:100%}
+    .final29-recados-actions .btn{width:100%}
+    .final29-recados-kpi{grid-template-columns:1fr 1fr}
+    .final29-received-card{grid-template-columns:32px minmax(0,1fr)}
+    .final29-received-card>.btn,.final29-received-card>div:last-child{grid-column:2}
+    .final29-notification-banner,.final29-attendance-bar{grid-template-columns:36px minmax(0,1fr)}
+    .final29-notification-actions,.final29-attendance-actions{grid-column:2;justify-content:flex-start}
+    .final29-flow-pay-grid{grid-template-columns:1fr}
+    .final29-toast{top:auto;bottom:14px}
+  }
+</style>
+
+<script id="final29Enhancements">
+(function(){
+  'use strict';
+  const W=window;
+  const MASTER_EMAIL='contato@legadoqueensina.com.br';
+  const UID=()=>W.state?.user?.id||null;
+  const DB=()=>W.supabaseClient||null;
+  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v??''):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  const master=()=>{const u=W.state?.user||{},p=W.state?.profile||{};return String(u.email||'').toLowerCase()===MASTER_EMAIL||p.is_master===true||['master','admin'].includes(String(p.role||'').toLowerCase());};
+  const fmt=v=>{const d=new Date(v);return Number.isFinite(d.getTime())?d.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}):'—';};
+  const dateOnly=v=>String(v||'').slice(0,10);
+  const timeOnly=v=>String(v||'').slice(0,5);
+  const today=()=>{if(typeof W.todayInputDate==='function')return W.todayInputDate();const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
+  const minutesBetween=(a,b)=>Math.round((new Date(b)-new Date(a))/60000);
+  const statusBR=s=>({scheduled:'Agendado',confirmed:'Confirmado',in_progress:'Em andamento',completed:'Concluído',cancelled:'Cancelado',canceled:'Cancelado',pending:'Pendente'}[String(s||'').toLowerCase()]||String(s||'Agendado'));
+  const studentName=s=>String(s?.name||s?.full_name||s?.student_name||'Aluno');
+  const table=(n,f)=>W.V3Core?.TABLE?.[n]||W.TABLE?.[n]||f||n;
+  const showOk=m=>W.showSuccess?.(m);
+  const showErr=m=>W.showError?.(m);
+
+  /* ============================================================
+     1) RECADOS — uma experiência de conversa dentro da página
+     ============================================================ */
+  let conversationCache=null;
+  W.__final29ConversationThread=W.__final29ConversationThread||null;
+
+  async function final29LoadMessages(){
+    const c=DB(),me=UID();if(!c||!me)return {rows:[],trash:[],profiles:[]};
+    let q=c.from('messages').select('*').order('created_at',{ascending:true}).limit(800);
+    if(master()) q=q.or(`user_id.eq.${me},recipient_id.eq.${me},target_all.eq.true`);
+    else q=q.or(`user_id.eq.${me},recipient_id.eq.${me},target_all.eq.true`);
+    const r=await q;if(r.error)throw r.error;
+    let reads=[];
+    if(!master()){
+      const rr=await c.from('message_reads').select('message_id,read_at,hidden_at').eq('user_id',me).limit(2000);
+      if(!rr.error)reads=rr.data||[];
+    }
+    const rm=new Map(reads.map(x=>[String(x.message_id),x]));
+    let rows=(r.data||[]).map(x=>{const rd=rm.get(String(x.id));return {...x,_read:Boolean(x.read||rd?.read_at),_hidden:Boolean(rd?.hidden_at),_support:Boolean(x.thread_id||x.recipient_id)};});
+    const trash=rows.filter(x=>x._hidden);rows=rows.filter(x=>!x._hidden);
+    let profiles=[];
+    if(master()){
+      const pr=await c.from('profiles').select('id,full_name,name,email').limit(1000);
+      if(!pr.error)profiles=pr.data||[];
+    }
+    return {rows,trash,profiles};
+  }
+  function groupThreads(rows){
+    const map=new Map();
+    rows.filter(r=>r._support&&r.thread_id).forEach(r=>{const k=String(r.thread_id);if(!map.has(k))map.set(k,[]);map.get(k).push(r);});
+    for(const list of map.values())list.sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+    return map;
+  }
+  function final29OtherName(items,profiles){
+    const me=UID();
+    const otherId=items.find(x=>String(x.user_id)!==String(me))?.user_id||items.find(x=>String(x.recipient_id)!==String(me))?.recipient_id;
+    const p=profiles.find(x=>String(x.id)===String(otherId));
+    return p?.full_name||p?.name||p?.email||(master()?'Professor':'Gestão');
+  }
+  function conversationThreadHtml(thread,items,profiles,active){
+    const last=items[items.length-1]||items[0];
+    const unread=items.filter(m=>!m._read&&String(m.recipient_id||'')===String(UID())).length;
+    const title=items[0]?.title||'Conversa';
+    const other=final29OtherName(items,profiles);
+    return `<button type="button" class="final29-thread-item ${active?'active':''}" data-final29-thread="${esc(thread)}">
+      <div class="final29-thread-top"><span class="final29-thread-title">${esc(title)}</span>${unread?`<span class="final29-thread-badge">${unread} nova${unread>1?'s':''}</span>`:''}</div>
+      <div class="final29-thread-meta">${esc(other)} · ${esc(fmt(last?.created_at))}</div>
+      <div class="final29-thread-preview">${esc(last?.message||'')}</div>
+    </button>`;
+  }
+  function conversationChatHtml(thread,items,profiles){
+    if(!items?.length)return `<div class="final29-chat-empty"><i data-lucide="messages-square"></i><strong>Selecione uma conversa</strong><span>Escolha uma conversa à esquerda para ver todo o histórico.</span></div>`;
+    const title=items[0]?.title||'Conversa';
+    const other=final29OtherName(items,profiles);
+    const me=UID();
+    return `<div class="final29-chat-pane-head"><div class="final29-chat-head-main"><div class="final29-recados-kicker">CONVERSA PRIVADA</div><h2 class="final29-chat-title">${esc(title)}</h2><div class="final29-chat-meta">${esc(other)} · ${items.length} mensagem${items.length===1?'':'ns'}</div></div><span class="v3-tag">${master()?'Professor':'Gestão'}</span></div>
+      <div class="final29-chat-messages" id="final29ChatMessages">${items.map(m=>`<div class="final29-message-row ${String(m.user_id)===String(me)?'me':''}"><div class="final29-message-bubble ${String(m.user_id)===String(me)?'me':''}"><div class="final29-message-author">${String(m.user_id)===String(me)?'Você':esc(other)}</div><div class="final29-message-text">${esc(m.message||'')}</div><div class="final29-message-time">${esc(fmt(m.created_at))}</div></div></div>`).join('')}</div>
+      <div class="final29-chat-footer"><form id="final29InlineReplyForm" class="final29-chat-form"><textarea class="final29-chat-input" name="message" rows="2" required placeholder="Escreva sua resposta..."></textarea><button type="submit" class="btn btn-primary"><i data-lucide="send"></i>Enviar</button></form></div>`;
+  }
+  function composeHtml(profiles){
+    return `<div class="final29-composer-card" id="final29ComposerCard"><div class="final29-composer-head"><div><small>${master()?'NOVA CONVERSA':'FALAR COM A GESTÃO'}</small><strong>${master()?'Envie uma mensagem para um professor':'Envie uma mensagem para a gestão'}</strong></div><span class="v3-tag">Privada</span></div><form id="final29NewConversationForm"><div class="final29-composer-grid">${master()?`<label class="full"><span>Destinatário</span><select name="recipient_id" required><option value="">Selecione o professor</option>${profiles.filter(p=>String(p.id)!==String(UID())).map(p=>`<option value="${esc(p.id)}">${esc(p.full_name||p.name||p.email||'Professor')}</option>`).join('')}<option value="__ALL__">Todos os professores</option></select></label>`:''}<label class="full"><span>Assunto</span><input name="title" required placeholder="Ex.: Dúvida sobre atendimento, financeiro ou sistema"></label><label class="full"><span>Mensagem</span><textarea name="message" rows="4" required placeholder="Escreva sua mensagem..."></textarea></label></div><div class="final29-composer-actions"><button type="submit" class="btn btn-primary"><i data-lucide="send"></i>Enviar mensagem</button></div></form></div>`;
+  }
+  async function final29SendMessage(form){
+    const c=DB(),me=UID();if(!c||!me)throw new Error('Sessão não encontrada.');
+    const fd=new FormData(form),title=String(fd.get('title')||'Conversa').trim(),message=String(fd.get('message')||'').trim();
+    if(!title||!message)throw new Error('Preencha o assunto e a mensagem.');
+    let recipientId=null,targetAll=false;
+    if(master()){
+      recipientId=String(fd.get('recipient_id')||'');
+      if(recipientId==='__ALL__'){targetAll=true;recipientId=null;}
+      else if(!recipientId)throw new Error('Selecione o professor.');
+    }else recipientId=(await c.rpc('get_master_user_id')).data;
+    if(!master()&&!recipientId)throw new Error('Não foi possível localizar a gestão.');
+    const thread=crypto.randomUUID();
+    const r=await c.from('messages').insert({user_id:me,recipient_id:recipientId,thread_id:thread,target_all:targetAll,title,type:'Suporte',message,read:false});
+    if(r.error)throw r.error;
+    W.__final29ConversationThread=thread;
+    showOk('Mensagem enviada.');
+  }
+  async function final29Reply(thread,items,form){
+    const c=DB(),me=UID();if(!c||!me)throw new Error('Sessão não encontrada.');
+    const message=String(new FormData(form).get('message')||'').trim();if(!message)throw new Error('Digite uma mensagem.');
+    let target=null;
+    if(master()) target=items.find(x=>String(x.user_id)!==String(me))?.user_id||items.find(x=>String(x.recipient_id)!==String(me))?.recipient_id;
+    else target=(await c.rpc('get_master_user_id')).data;
+    if(!target)throw new Error('Destinatário não encontrado.');
+    const title=items[0]?.title||'Conversa';
+    const r=await c.from('messages').insert({user_id:me,recipient_id:target,thread_id:thread,target_all:false,title,type:'Suporte',message,read:false});
+    if(r.error)throw r.error;
+    showOk('Resposta enviada.');
+  }
+  async function markThreadRead(items){
+    const c=DB(),me=UID();if(!c||!me||master())return;
+    try{for(const m of items.filter(x=>String(x.recipient_id||'')===String(me)&&!x._read)){await c.from('message_reads').upsert({message_id:String(m.id),user_id:me,read_at:new Date().toISOString(),updated_at:new Date().toISOString()},{onConflict:'message_id,user_id'});}}catch(_){ }
+  }
+  W.renderMessages=async function(){
+    const c=document.getElementById('recadosContent');if(!c)return;
+    c.innerHTML='<div class="v3-loading"><i data-lucide="loader-circle"></i><span>Carregando central de conversas...</span></div>';W.refreshIcons?.();
+    try{
+      const d=await final29LoadMessages();conversationCache=d;
+      const rows=d.rows||[],trash=d.trash||[],profiles=d.profiles||[];
+      const support=rows.filter(r=>r._support&&r.thread_id);
+      const threads=groupThreads(support);
+      const selectedThread=threads.has(String(W.__final29ConversationThread))?String(W.__final29ConversationThread):(threads.keys().next().value||null);
+      W.__final29ConversationThread=selectedThread;
+      const selectedItems=selectedThread?threads.get(selectedThread):[];
+      const broadcasts=rows.filter(r=>r.target_all);
+      const unread=support.filter(r=>!r._read&&String(r.recipient_id||'')===String(UID())).length+broadcasts.filter(r=>!r._read).length;
+      const received=broadcasts.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+      const threadList=[...threads.entries()].reverse();
+      const sidebar=threadList.length?threadList.map(([th,it])=>conversationThreadHtml(th,it,profiles,th===selectedThread)).join(''):`<div class="final29-thread-empty"><i data-lucide="messages-square"></i><strong>Nenhuma conversa ainda</strong><div>${master()?'Quando um professor falar com você, a conversa aparecerá aqui.':'Comece sua primeira conversa com a gestão no campo abaixo.'}</div></div>`;
+      const chat=conversationThreadHtml && selectedItems?.length?conversationChatHtml(selectedThread,selectedItems,profiles):`<div class="final29-chat-pane-head"><div><div class="final29-recados-kicker">CENTRAL DE CONVERSAS</div><h2 class="final29-chat-title">Comece por aqui</h2><div class="final29-chat-meta">${master()?'Escolha um professor na lista de destinatários e envie a mensagem.':'Sua conversa privada com a gestão aparecerá neste painel.'}</div></div></div><div class="final29-chat-messages"><div class="final29-chat-empty"><i data-lucide="messages-square"></i><strong>Conversa visível nesta mesma página</strong><span>Não é necessário abrir popup. Depois que a mensagem for enviada, o histórico ficará aqui.</span></div></div><div class="final29-chat-footer"><div class="final29-chat-meta">Use o campo “Nova conversa” abaixo para enviar a primeira mensagem.</div></div>`;
+      const tabs=`<div class="final29-legacy-tabs"><button type="button" class="final29-legacy-tab active" data-f29-mode="conversas"><i data-lucide="messages-square"></i> Conversas</button><button type="button" class="final29-legacy-tab" data-f29-mode="entrada"><i data-lucide="inbox"></i> Comunicados ${unread?`(${unread})`:''}</button><button type="button" class="final29-legacy-tab" data-f29-mode="enviados"><i data-lucide="send"></i> Enviados</button><button type="button" class="final29-legacy-tab" data-f29-mode="lixeira"><i data-lucide="trash-2"></i> Lixeira ${trash.length?`(${trash.length})`:''}</button></div>`;
+      const receivedHtml=received.length?`<div class="final29-received-list">${received.map(r=>`<article class="final29-received-card"><div class="final29-received-icon"><i data-lucide="megaphone"></i></div><div class="final29-received-main"><strong>${esc(r.title||'Comunicado')}</strong><span>${esc(fmt(r.created_at))}</span><p>${esc(r.message||'')}</p></div><div><button type="button" class="btn btn-outline btn-sm" data-f29-delete="${esc(r.id)}"><i data-lucide="trash-2"></i>Excluir</button></div></article>`).join('')}</div>`:'<div class="final29-chat-empty"><i data-lucide="inbox"></i><strong>Nenhum comunicado</strong><span>Os avisos da administração aparecerão nesta área.</span></div>';
+      const trashHtml=trash.length?`<div class="final29-received-list">${trash.map(r=>`<article class="final29-received-card"><div class="final29-received-icon"><i data-lucide="trash-2"></i></div><div class="final29-received-main"><strong>${esc(r.title||'Recado')}</strong><span>${esc(fmt(r.created_at))}</span></div><div><button type="button" class="btn btn-outline btn-sm" data-f29-restore="${esc(r.id)}"><i data-lucide="rotate-ccw"></i>Restaurar</button></div></article>`).join('')}</div>`:'<div class="final29-chat-empty"><i data-lucide="trash-2"></i><strong>Lixeira vazia</strong></div>';
+      c.innerHTML=`<div class="final29-recados-page">
+        <div class="final29-recados-head"><div class="final29-recados-head-main"><div class="final29-recados-kicker">COMUNICAÇÃO</div><h1>Recados</h1><p>${master()?'Central privada para conversar com qualquer professor, acompanhar comunicados e responder sem sair da página.':'Central de comunicação com a gestão. A conversa fica aberta dentro desta tela, com histórico completo e sem popup.'}</p></div><div class="final29-recados-actions">${!master()?'<button type="button" class="btn btn-primary" id="final29FocusComposer"><i data-lucide="message-square-plus"></i>Nova conversa</button>':''}${master()?'<button type="button" class="btn btn-primary" id="final29FocusComposer"><i data-lucide="message-square-plus"></i>Nova mensagem</button>':''}</div></div>
+        <div class="final29-recados-kpi"><div class="final29-kpi-main"><div class="final29-kpi-main-icon"><i data-lucide="messages-square"></i></div><div><strong>${threads.size}</strong><span>conversas em andamento</span></div></div><div class="final29-kpi-mini"><b>${unread}</b><span>não lidos</span></div><div class="final29-kpi-mini"><b>${broadcasts.length}</b><span>comunicados</span></div><div class="final29-kpi-mini"><b>${trash.length}</b><span>na lixeira</span></div></div>
+        ${tabs}
+        <div id="final29ModeConversas" class="final29-mode-panel">
+          <section class="final29-conversation-shell"><aside class="final29-thread-sidebar"><div class="final29-thread-sidebar-head"><div class="final29-thread-sidebar-head-row"><h2>Suas conversas</h2><span>${threads.size} ativa${threads.size===1?'':'s'}</span></div><div style="margin-top:8px;font-size:8px;color:#88958f">Clique em uma conversa. O histórico abre aqui.</div></div><div class="final29-thread-list">${sidebar}</div></aside><section class="final29-chat-pane">${chat}</section></section>
+          <div class="final29-inline-compose-wrap">${composeHtml(profiles)}</div>
+        </div>
+        <div id="final29ModeEntrada" class="final29-mode-panel" hidden>${receivedHtml}</div>
+        <div id="final29ModeEnviados" class="final29-mode-panel" hidden><div class="final29-chat-empty"><i data-lucide="send"></i><strong>Mensagens enviadas</strong><span>As conversas que você iniciou já ficam organizadas na aba Conversas.</span></div></div>
+        <div id="final29ModeLixeira" class="final29-mode-panel" hidden>${trashHtml}</div>
+      </div>`;
+      c.querySelectorAll('[data-f29-mode]').forEach(btn=>btn.addEventListener('click',()=>{c.querySelectorAll('[data-f29-mode]').forEach(x=>x.classList.toggle('active',x===btn));const map={conversas:'final29ModeConversas',entrada:'final29ModeEntrada',enviados:'final29ModeEnviados',lixeira:'final29ModeLixeira'};Object.entries(map).forEach(([k,id])=>{const el=document.getElementById(id);if(el)el.hidden=k!==btn.dataset.f29Mode;});}));
+      c.querySelectorAll('[data-final29-thread]').forEach(btn=>btn.addEventListener('click',async()=>{W.__final29ConversationThread=String(btn.dataset.final29Thread);await W.renderMessages();setTimeout(()=>{const body=document.getElementById('final29ChatMessages');if(body)body.scrollTop=body.scrollHeight;},40);}));
+      c.querySelector('#final29InlineReplyForm')?.addEventListener('submit',async e=>{e.preventDefault();const btn=e.currentTarget.querySelector('[type=submit]');btn.disabled=true;try{await final29Reply(selectedThread,selectedItems,e.currentTarget);await W.renderMessages();setTimeout(()=>{const body=document.getElementById('final29ChatMessages');if(body)body.scrollTop=body.scrollHeight;},50);}catch(err){showErr(err.message||'Não foi possível enviar a resposta.');}finally{btn.disabled=false;}});
+      c.querySelector('#final29NewConversationForm')?.addEventListener('submit',async e=>{e.preventDefault();const btn=e.currentTarget.querySelector('[type=submit]');btn.disabled=true;try{await final29SendMessage(e.currentTarget);await W.renderMessages();}catch(err){showErr(err.message||'Não foi possível enviar a mensagem.');}finally{btn.disabled=false;}});
+      c.querySelector('#final29FocusComposer')?.addEventListener('click',()=>{document.getElementById('final29ComposerCard')?.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>document.querySelector('#final29ComposerCard textarea')?.focus(),300);});
+      c.querySelectorAll('[data-f29-delete]').forEach(b=>b.addEventListener('click',async()=>{try{const mid=b.dataset.f29Delete;const row=await DB().from('messages').select('id,user_id').eq('id',mid).maybeSingle();if(row.error)throw row.error;if(!row.data)return;if(master()||String(row.data.user_id)===String(UID())){const d2=await DB().from('messages').delete().eq('id',mid);if(d2.error)throw d2.error;showOk('Mensagem excluída.');}else{const h=await DB().from('message_reads').upsert({message_id:String(mid),user_id:UID(),hidden_at:new Date().toISOString(),updated_at:new Date().toISOString()},{onConflict:'message_id,user_id'});if(h.error)throw h.error;showOk('Comunicado enviado para a lixeira.');}await W.renderMessages();}catch(err){showErr(err.message||'Não foi possível excluir.');}}));
+      c.querySelectorAll('[data-f29-restore]').forEach(b=>b.addEventListener('click',async()=>{try{const r2=await DB().from('message_reads').update({hidden_at:null,updated_at:new Date().toISOString()}).eq('message_id',b.dataset.f29Restore).eq('user_id',UID());if(r2.error)throw r2.error;showOk('Mensagem restaurada.');await W.renderMessages();}catch(err){showErr(err.message||'Não foi possível restaurar.');}}));
+      await markThreadRead(selectedItems||[]);
+      const badge=document.getElementById('recadosBadge');if(badge){badge.textContent=String(unread);badge.style.display=unread?'':'none';}
+      W.refreshIcons?.();
+      if(selectedItems?.length)setTimeout(()=>{const body=document.getElementById('final29ChatMessages');if(body)body.scrollTop=body.scrollHeight;},60);
+    }catch(err){c.innerHTML=`<section class="final18-recados-error"><i data-lucide="circle-alert"></i><strong>Não foi possível carregar a central de conversas.</strong><span>${esc(err.message||err)}</span><button type="button" class="btn btn-primary btn-sm" onclick="renderMessages()">Tentar novamente</button></section>`;W.refreshIcons?.();}
+  };
+  /* Compatibilidade com chamadas antigas: nunca abre popup. */
+  W.final26NewSupport=()=>document.getElementById('final29FocusComposer')?.click()||document.getElementById('final29ComposerCard')?.scrollIntoView({behavior:'smooth'});
+  W.openSupportComposer=W.final26NewSupport;
+  W.final26OpenThread=async thread=>{W.__final29ConversationThread=String(thread);await W.renderMessages();};
+  W.openThreadModal=async(thread)=>{W.__final29ConversationThread=String(thread);await W.renderMessages();};
+
+  /* ============================================================
+     2) AVALIAÇÕES — busca instantânea por nome/instrumento
+     ============================================================ */
+  function evalSearchNormalize(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();}
+  const EVAL_DEFS=W.V4_ASSESSMENTS||W.PEDAGOGICAL_ASSESSMENTS||{};
+  W.renderEvaluations=async function(){
+    const c=document.getElementById('avaliacoesContent');if(!c)return;
+    c.innerHTML='<div class="v3-loading"><i data-lucide="loader-circle"></i><span>Carregando avaliações...</span></div>';W.refreshIcons?.();
+    try{
+      const list=await W.selectSafe(table('evaluations','evaluations'),{filters:{user_id:UID()},order:'evaluation_date',ascending:false,limit:500})||[];
+      const render=term=>{
+        const q=evalSearchNormalize(term);
+        const models=Object.entries(EVAL_DEFS).filter(([name,def])=>!q||evalSearchNormalize(`${name} ${def?.area||''} ${def?.objective||''}`).includes(q));
+        const history=list.filter(e=>!q||evalSearchNormalize(`${e.title||''} ${e.type||''} ${e.student_name||''} ${e.summary||''}`).includes(q));
+        const modelHtml=models.length?`<div class="v4-model-list">${models.map(([name,def])=>`<article class="v4-model"><div class="v4-model-icon"><i data-lucide="clipboard-check"></i></div><div class="v4-model-main"><div class="v3-kicker">PRONTO PARA APLICAR</div><h3>${esc(name)}</h3><p>${esc(def?.objective||def?.source||'Instrumento pedagógico de apoio.')}</p><div class="v4-model-meta"><span>${esc(def?.area||'Avaliação pedagógica')}</span><span>${esc(def?.duration||'Duração flexível')}</span><span>${Array.isArray(def?.fields)?def.fields.length:0} campos</span></div></div><button class="btn btn-primary btn-sm" type="button" onclick="window.V3&&(V3.assessmentType='${esc(name)}');window.v4OpenEvaluationModal?.()"><i data-lucide="play"></i>Aplicar</button></article>`).join('')}</div>`:'<div class="v4-empty"><i data-lucide="search-x"></i><strong>Nenhuma avaliação encontrada</strong><span>Teste outro termo de busca.</span></div>';
+        const histHtml=history.length?`<div class="l14-history">${history.map(e=>`<article class="l14-history-item"><div class="l14-history-date"><strong>${esc(W.dateBR?W.dateBR(e.evaluation_date||e.date):String(e.evaluation_date||e.date||'—'))}</strong><span>${esc(statusBR(e.status))}</span></div><div class="l14-history-main"><div class="l14-history-title">${esc(e.title||e.type||'Avaliação aplicada')}</div><div class="l14-history-meta"><span class="v3-tag">${esc(e.type||'Avaliação')}</span><span class="l14-history-student"><i data-lucide="user-round"></i><span>${esc(e.student_name||'Aluno não informado')}</span></span></div><div class="l14-history-observation">Registro completo disponível. Use <b>Visualizar</b> para abrir a aplicação.</div></div><div class="l14-history-actions"><button type="button" class="btn btn-primary btn-sm" onclick="window.l14ViewEvaluation('${esc(e.id)}')"><i data-lucide="eye"></i>Visualizar</button></div></article>`).join('')}</div>`:'<div class="v4-empty"><i data-lucide="clipboard-list"></i><strong>Nenhum registro encontrado</strong><span>As aplicações aparecerão aqui conforme forem registradas.</span></div>';
+        return {models,history,modelHtml,histHtml};
+      };
+      const first=render('');
+      c.innerHTML=`<div class="v3-page"><div class="v3-head"><div><div class="v3-kicker">INVESTIGAÇÃO PEDAGÓGICA</div><h1>Avaliações</h1><p>Pesquise rapidamente pelo instrumento, aluno ou registro antes de aplicar ou abrir uma avaliação.</p></div><div class="v3-head-actions"><button class="btn btn-primary" type="button" onclick="window.V3&&(V3.assessmentType='Avaliação personalizada');window.v4OpenEvaluationModal?.()"><i data-lucide="clipboard-plus"></i>Nova avaliação</button></div></div><div class="v3-stats"><div class="v3-stat"><div class="v3-icon"><i data-lucide="clipboard-check"></i></div><div><span>Aplicações</span><strong>${esc(list.length)}</strong><small>Registros salvos</small></div></div><div class="v3-stat"><div class="v3-icon"><i data-lucide="user-round-check"></i></div><div><span>Alunos avaliados</span><strong>${esc(new Set(list.map(e=>e.student_id).filter(Boolean)).size)}</strong><small>Com histórico</small></div></div><div class="v3-stat good"><div class="v3-icon"><i data-lucide="file-check-2"></i></div><div><span>Concluídas</span><strong>${esc(list.filter(e=>e.status==='completed').length)}</strong><small>Finalizadas</small></div></div><div class="v3-stat"><div class="v3-icon"><i data-lucide="clock-3"></i></div><div><span>Rascunhos</span><strong>${esc(list.filter(e=>e.status!=='completed').length)}</strong><small>Em preenchimento</small></div></div></div><div class="final29-eval-search"><i data-lucide="search"></i><input id="final29EvaluationSearch" placeholder="Pesquisar avaliação, instrumento ou aluno..." autocomplete="off"><span class="final29-search-count" id="final29EvalSearchCount">${first.models.length+first.history.length} encontrados</span></div><section class="v3-panel"><div class="v3-panel-head"><div><h2>Avaliações disponíveis</h2><p>Instrumentos pedagógicos organizados por objetivo e aplicação.</p></div></div><div id="final29EvalModels">${first.modelHtml}</div></section><section class="v3-panel"><div class="v3-panel-head"><div><h2>Histórico das aplicações</h2><p>Pesquise pelo nome do aluno, instrumento ou título do registro.</p></div></div><div id="final29EvalHistory">${first.histHtml}</div></section></div>`;
+      const search=c.querySelector('#final29EvaluationSearch');
+      search?.addEventListener('input',()=>{const r=render(search.value);c.querySelector('#final29EvalModels').innerHTML=r.modelHtml;c.querySelector('#final29EvalHistory').innerHTML=r.histHtml;const count=c.querySelector('#final29EvalSearchCount');if(count)count.textContent=`${r.models.length+r.history.length} encontrado${r.models.length+r.history.length===1?'':'s'}`;W.refreshIcons?.();});
+      W.refreshIcons?.();
+    }catch(e){c.innerHTML=`<div class="v4-empty"><i data-lucide="circle-alert"></i><strong>Não foi possível carregar as avaliações.</strong><span>${esc(e.message||e)}</span></div>`;W.refreshIcons?.();}
+  };
+
+  /* ============================================================
+     3) DASHBOARD — permissão de notificações + próxima consulta
+     ============================================================ */
+  async function getTodayAppointments(){
+    const c=DB(),me=UID();if(!c||!me)return [];
+    const r=await c.from(table('appointments','appointments')).select('id,student_id,student_name,appointment_date,appointment_time,start_time,time,status,type,duration').eq('user_id',me).eq('appointment_date',today()).order('appointment_time',{ascending:true}).limit(100);
+    if(r.error)throw r.error;return (r.data||[]).filter(a=>!['cancelled','canceled'].includes(String(a.status||'').toLowerCase()));
+  }
+  async function nextTodayAppointment(){try{const list=await getTodayAppointments();const now=new Date();return list.find(a=>{const dt=new Date(`${dateOnly(a.appointment_date)}T${timeOnly(a.appointment_time||a.start_time||a.time)||'00:00'}:00`);return dt>=new Date(now.getTime()-5*60000)&&!['completed','cancelled','canceled'].includes(String(a.status||'').toLowerCase());})||null;}catch(_){return null;}}
+  function browserPermission(){try{return 'Notification' in W?Notification.permission:'unsupported';}catch(_){return 'unsupported';}}
+  async function requestBrowserNotifications(){
+    if(!('Notification' in W)){showErr('Este navegador não oferece notificações do sistema.');return;}
+    try{const p=await Notification.requestPermission();renderNotificationBanner();if(p==='granted'){showOk('Notificações do navegador ativadas.');await operationalCheck(true);}else if(p==='denied'){showErr('As notificações foram bloqueadas pelo navegador. Libere nas configurações do site.');}}catch(e){showErr(e.message||'Não foi possível ativar as notificações.');}
+  }
+  async function renderNotificationBanner(){
+    if(master())return;
+    const c=document.getElementById('dashboardContent');if(!c)return;
+    document.querySelector('[data-final29-notification-banner]')?.remove();
+    const perm=browserPermission();
+    let text='Ative as notificações para receber alertas de novas mensagens e avisos antes dos atendimentos.';
+    let title='Ative as notificações do navegador';
+    let action='Permitir notificações';
+    if(perm==='granted'){title='Notificações ativas';text='Você receberá alertas do sistema e aviso 10 minutos antes de cada atendimento agendado.';action='Testar notificação';}
+    else if(perm==='denied'){title='Notificações bloqueadas';text='O navegador bloqueou as notificações deste site. Libere a permissão nas configurações do site para receber os avisos de atendimento.';action='Como liberar';}
+    const next=await nextTodayAppointment();
+    if(next){text+=` Próximo atendimento hoje: ${esc(timeOnly(next.appointment_time||next.start_time||next.time))} · ${esc(next.student_name||'Aluno')}.`;}
+    const box=document.createElement('section');box.className='final29-notification-banner';box.dataset.final29NotificationBanner='1';
+    box.innerHTML=`<div class="final29-notification-icon"><i data-lucide="bell-ring"></i></div><div class="final29-notification-main"><strong>${esc(title)}</strong><span>${text}</span></div><div class="final29-notification-actions">${perm==='granted'?'<span class="final29-notification-status">Ativadas</span>':`<button type="button" class="btn btn-primary btn-sm" id="final29NotificationButton">${esc(action)}</button>`}</div>`;
+    const head=c.querySelector('.v3-head,.page-heading,.final19-dashboard-head');
+    if(head){head.insertAdjacentElement('afterend',box);}else{c.prepend(box);}
+    box.querySelector('#final29NotificationButton')?.addEventListener('click',async()=>{if(perm==='denied'){showErr('Abra as configurações do site pelo ícone de cadeado ao lado do endereço e permita Notificações.');return;}if(perm==='granted'){const n=new Notification('Legado Que Ensina',{body:'As notificações estão funcionando.',tag:'legado-test'});setTimeout(()=>n.close?.(),4500);return;}await requestBrowserNotifications();});
+    W.refreshIcons?.();
+  }
+  function appointmentDateTime(a){
+    const d=dateOnly(a?.appointment_date||a?.date),t=timeOnly(a?.appointment_time||a?.start_time||a?.time);
+    if(!d||!t)return null;const dt=new Date(`${d}T${t}:00`);return Number.isFinite(dt.getTime())?dt:null;
+  }
+  function showAppointmentToast(a,minutesAhead){
+    document.getElementById('final29NotificationToast')?.remove();
+    const el=document.createElement('div');el.id='final29NotificationToast';el.className='final29-toast';
+    const lead=minutesAhead>0?`Faltam ${minutesAhead} minutos.`:'Está no horário agendado.';
+    el.innerHTML=`<div class="final29-toast-icon"><i data-lucide="calendar-clock"></i></div><div><small>ATENDIMENTO</small><strong>${esc(timeOnly(a.appointment_time||a.start_time||a.time))} · ${esc(a.student_name||'Aluno')}</strong><span>${esc(lead)} ${esc(a.type||'Atendimento psicopedagógico')}</span></div><button type="button" id="final29ToastClose"><i data-lucide="x"></i></button>`;
+    document.body.appendChild(el);W.refreshIcons?.();
+    el.querySelector('#final29ToastClose')?.addEventListener('click',()=>el.remove());
+    setTimeout(()=>el.remove(),8000);
+    try{if(typeof W.AudioContext==='function'){const ac=new W.AudioContext(),o=ac.createOscillator(),g=ac.createGain();o.frequency.value=880;g.gain.value=.04;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.18);setTimeout(()=>ac.close?.(),260);}}catch(_){ }
+  }
+  function browserAppointmentNotify(a,minutesAhead){
+    try{if(browserPermission()!=='granted')return;const t=minutesAhead>0?`Faltam ${minutesAhead} minutos para o atendimento.`:'Chegou a hora do atendimento.';const n=new Notification('Legado Que Ensina',{body:`${t} ${a.student_name||'Aluno'} · ${timeOnly(a.appointment_time||a.start_time||a.time)}`,tag:`legado-appointment-${a.id}`});setTimeout(()=>n.close?.(),9000);}catch(_){ }
+  }
+  let operationalTimer=null,attendanceBar=null;
+  async function operationalCheck(fromButton=false){
+    if(master()||!UID())return;
+    try{
+      const list=await getTodayAppointments(),now=new Date(),startWindow=10;
+      let upcoming=null,started=null;
+      for(const a of list){
+        const dt=appointmentDateTime(a);if(!dt)continue;
+        const diff=Math.round((dt-now)/60000);
+        if(diff>=0&&diff<=startWindow&&!['completed','in_progress','cancelled','canceled'].includes(String(a.status||'scheduled').toLowerCase()))upcoming={a,diff};
+        if(diff<=0&&diff>=-20&&!['completed','in_progress','cancelled','canceled'].includes(String(a.status||'').toLowerCase())){started={a,diff};break;}
+      }
+      if(upcoming){
+        const key=`legado:appointment:10min:${upcoming.a.id}:${dateOnly(upcoming.a.appointment_date)}:${timeOnly(upcoming.a.appointment_time||upcoming.a.start_time||upcoming.a.time)}`;
+        if(!sessionStorage.getItem(key)&&upcoming.diff<=10){sessionStorage.setItem(key,'1');showAppointmentToast(upcoming.a,Math.max(0,upcoming.diff));browserAppointmentNotify(upcoming.a,Math.max(0,upcoming.diff));}
+      }
+      if(started){
+        const dismissed=sessionStorage.getItem(`legado:appointment:bar:${started.a.id}`)==='1';
+        if(!dismissed)showAttendanceBar(started.a);
+      }else removeAttendanceBar();
+      if(fromButton&&browserPermission()==='granted')showAppointmentToast(list[0]||{},0);
+    }catch(e){console.warn('[FINAL29 notifications]',e?.message||e);}
+  }
+  function showAttendanceBar(a){
+    if(document.getElementById('final29AttendanceBar'))return;
+    attendanceBar=document.createElement('section');attendanceBar.id='final29AttendanceBar';attendanceBar.className='final29-attendance-bar';
+    attendanceBar.innerHTML=`<div class="final29-attendance-icon"><i data-lucide="clock-3"></i></div><div class="final29-attendance-main"><strong>Chegou a hora de iniciar novo atendimento</strong><span>${esc(a.student_name||'Aluno')} · ${esc(timeOnly(a.appointment_time||a.start_time||a.time))} · ${esc(a.type||'Atendimento psicopedagógico')}</span></div><div class="final29-attendance-actions"><button type="button" class="final29-start-btn" id="final29StartAttendance">Iniciar</button><button type="button" class="final29-cancel-btn" id="final29DismissAttendance">Cancelar</button></div>`;
+    document.body.appendChild(attendanceBar);W.refreshIcons?.();
+    attendanceBar.querySelector('#final29StartAttendance')?.addEventListener('click',()=>startAttendance(a));
+    attendanceBar.querySelector('#final29DismissAttendance')?.addEventListener('click',()=>{sessionStorage.setItem(`legado:appointment:bar:${a.id}`,'1');removeAttendanceBar();});
+  }
+  function removeAttendanceBar(){attendanceBar?.remove();attendanceBar=null;document.getElementById('final29AttendanceBar')?.remove();}
+  async function startAttendance(a){
+    try{
+      const c=DB(),me=UID();if(!c||!me)throw new Error('Sessão não encontrada.');
+      const r=await c.from(table('appointments','appointments')).update({status:'in_progress'}).eq('id',a.id).eq('user_id',me);if(r.error)throw r.error;
+      sessionStorage.setItem('legado:active-appointment',JSON.stringify({id:a.id,student_id:a.student_id,appointment_date:a.appointment_date,appointment_time:a.appointment_time||a.start_time||a.time,type:a.type||'Atendimento'}));
+      removeAttendanceBar();
+      if(typeof W.openStudentProfile==='function'&&a.student_id)W.openStudentProfile(a.student_id);else W.navigate?.('aluno-perfil');
+      W.V3=W.V3||{};W.V3.studentSection='appointments';
+      setTimeout(()=>patchAttendancePage(a.id),260);setTimeout(()=>patchAttendancePage(a.id),900);setTimeout(()=>patchAttendancePage(a.id),1700);
+    }catch(e){showErr(e.message||'Não foi possível iniciar o atendimento.');}
+  }
+  function activeAppointment(){try{return JSON.parse(sessionStorage.getItem('legado:active-appointment')||'null');}catch(_){return null;}}
+  function patchAttendancePage(activeId){
+    const c=document.getElementById('studentProfileContent');if(!c)return;
+    if(W.state?.currentView!=='aluno-perfil')return;
+    const tab=[...c.querySelectorAll('.v3-tabs button')].find(b=>/Atendimentos/i.test(b.textContent||''));tab?.click();
+    const form=c.querySelector('#v3RecordForm');if(!form)return;
+    const ap=activeAppointment();
+    const submit=form.querySelector('[type=submit]');
+    if(ap&&String(ap.id)===String(activeId)){
+      form.dataset.final29Attendance='1';
+      if(submit){submit.innerHTML='<i data-lucide="check-circle-2"></i>Encerrar atendimento';submit.className='btn btn-primary';}
+      const title=form.querySelector('[name=title]');if(title&&!title.value)title.value=`Atendimento · ${timeOnly(ap.appointment_time||'')}`;
+      const duration=form.querySelector('[name=duration]');if(duration&&!duration.value)duration.value='60 min';
+      const recDate=form.querySelector('[name=record_date]');if(recDate&&!recDate.value)recDate.value=dateOnly(ap.appointment_date)||today();
+      if(!form.__final29Capture){
+        form.__final29Capture=true;
+        form.addEventListener('submit',async ev=>{ev.preventDefault();ev.stopImmediatePropagation();const button=form.querySelector('[type=submit]');button?.setAttribute('disabled','true');try{await finishAttendance(ap,form);}catch(e){showErr(e.message||'Não foi possível encerrar o atendimento.');button?.removeAttribute('disabled');}},true);
+      }
+      W.refreshIcons?.();
+      document.getElementById('v3RecordForm')?.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+  }
+  async function finishAttendance(ap,form){
+    const c=DB(),me=UID();if(!c||!me)throw new Error('Sessão não encontrada.');
+    const fd=new FormData(form);const content=String(fd.get('content')||'').trim();if(!content)throw new Error('Descreva a sessão antes de encerrar o atendimento.');
+    const payload={user_id:me,student_id:ap.student_id,record_type:'atendimento',record_date:fd.get('record_date')||dateOnly(ap.appointment_date)||today(),title:String(fd.get('title')||'Atendimento').trim(),content,duration:String(fd.get('duration')||'').trim()||null,mood:String(fd.get('mood')||'').trim()||null,next_step:String(fd.get('next_step')||'').trim()||null};
+    const rr=await c.from(table('records','student_records')).insert(payload);if(rr.error)throw rr.error;
+    const ar=await c.from(table('appointments','appointments')).update({status:'completed'}).eq('id',ap.id).eq('user_id',me);if(ar.error)throw ar.error;
+    sessionStorage.removeItem('legado:active-appointment');
+    showOk('Atendimento encerrado e registrado no prontuário.');
+    W.renderStudentProfileView?.();
+    openAttendanceFlow(ap);
+  }
+  function flowRemove(){document.getElementById('final29FlowOverlay')?.remove();}
+  async function paymentDuplicateCheck(ap){
+    const c=DB(),me=UID();if(!c||!me)return null;
+    const d=dateOnly(ap.appointment_date)||today();
+    const r=await c.from(table('payments','payments')).select('*').eq('user_id',me).eq('student_id',ap.student_id).eq('payment_date',d).order('created_at',{ascending:false}).limit(20);if(r.error)return null;
+    return (r.data||[]).find(p=>String(p.description||'').toLowerCase().includes('atendimento')&&String(p.description||'').includes(String(ap.id)))||null;
+  }
+  async function lastStudentPaymentAmount(ap){
+    try{const c=DB(),me=UID();if(!c||!me)return '';const r=await c.from(table('payments','payments')).select('amount,payment_date').eq('user_id',me).eq('student_id',ap.student_id).order('payment_date',{ascending:false}).limit(1).maybeSingle();return r.data?.amount??'';}catch(_){return '';}
+  }
+  function openAttendanceFlow(ap){
+    flowRemove();
+    const root=document.createElement('div');root.id='final29FlowOverlay';root.className='final29-flow-overlay';
+    root.innerHTML=`<div class="final29-flow-card" role="dialog" aria-modal="true"><div class="final29-flow-kicker">ATENDIMENTO ENCERRADO</div><h2>Registrar pagamento</h2><p>O atendimento de ${esc(ap.student_name||'Aluno')} foi encerrado. Agora registre a forma de pagamento para que o financeiro seja atualizado.</p><div class="final29-flow-step"><strong>Como foi o pagamento?</strong><span>Escolha uma opção. Pagamentos marcados como pagos entram diretamente no Financeiro.</span><div class="final29-flow-amount"><label>Valor do atendimento</label><input id="final29PaymentAmount" inputmode="decimal" placeholder="R$ 0,00"></div><div class="final29-flow-pay-grid"><button type="button" class="final29-choice" data-method="PIX">PIX</button><button type="button" class="final29-choice" data-method="Cartão de crédito">Cartão de crédito</button><button type="button" class="final29-choice" data-method="Cartão de débito">Cartão de débito</button><button type="button" class="final29-choice" data-method="Dinheiro">Dinheiro</button><button type="button" class="final29-choice" data-method="Boleto">Boleto</button><button type="button" class="final29-choice pending">Registrar depois</button></div></div><div class="final29-flow-actions"><button type="button" class="btn btn-outline" id="final29FlowClose">Fechar</button></div></div>`;
+    document.body.appendChild(root);W.refreshIcons?.();
+    lastStudentPaymentAmount(ap).then(v=>{const input=root.querySelector('#final29PaymentAmount');if(input&&v!=='')input.value=String(Number(v)).replace('.',',');});
+    root.querySelector('#final29FlowClose').onclick=()=>flowRemove();
+    root.querySelectorAll('[data-method]').forEach(btn=>btn.addEventListener('click',async()=>{btn.disabled=true;const amount=parseFloat(String(root.querySelector('#final29PaymentAmount')?.value||'').replace(/\./g,'').replace(',','.'));try{if(!Number.isFinite(amount)||amount<=0)throw new Error('Informe o valor do atendimento.');const dup=await paymentDuplicateCheck(ap);if(dup?.status==='paid'){showOk('Este atendimento já possui um pagamento registrado como pago.');flowAfterPayment(ap,dup);return;}const c=DB(),me=UID();const student=activeStudentForAppointment(ap);const desc=`Atendimento ${ap.id}${student?` · ${studentName(student)}`:''}`;const r=await c.from(table('payments','payments')).insert({user_id:me,student_id:ap.student_id,student_name:student?studentName(student):ap.student_name||null,payment_date:dateOnly(ap.appointment_date)||today(),amount,status:'paid',payment_method:btn.dataset.method,description:desc});if(r.error)throw r.error;showOk('Pagamento registrado no Financeiro.');flowAfterPayment(ap,{amount,payment_method:btn.dataset.method,status:'paid'});}catch(e){showErr(e.message||'Não foi possível registrar o pagamento.');btn.disabled=false;}}));
+    root.querySelector('.pending').addEventListener('click',()=>flowAfterPayment(ap,null));
+  }
+  function activeStudentForAppointment(ap){return (W.state?.students||W.studentsState?.data||[]).find(s=>String(s.id)===String(ap.student_id))||W.state?.selectedStudent||null;}
+  function flowAfterPayment(ap,payment){
+    const root=document.getElementById('final29FlowOverlay');if(!root)return;
+    if(!payment){
+      root.querySelector('.final29-flow-card').innerHTML=`<div class="final29-flow-kicker">PRÓXIMO PASSO</div><h2>Atendimento encerrado</h2><p>O atendimento foi salvo. O pagamento poderá ser registrado depois no Financeiro.</p><div class="final29-flow-step"><strong>Precisa de declaração?</strong><span>Você pode abrir a declaração já preenchida com os dados deste aluno.</span><div class="final29-flow-actions"><button type="button" class="btn btn-outline" id="final29NoDeclaration">Não</button><button type="button" class="btn btn-primary" id="final29YesDeclaration">Sim, abrir declaração</button></div></div><div class="final29-flow-actions"><button type="button" class="btn btn-outline" id="final29FlowFinish">Concluir</button></div>`;
+      root.querySelector('#final29NoDeclaration').onclick=()=>flowRemove();
+      root.querySelector('#final29YesDeclaration').onclick=()=>{flowRemove();openPreparedDocument('declaracao',ap,null);};
+      root.querySelector('#final29FlowFinish').onclick=()=>flowRemove();
+      W.refreshIcons?.();
+      return;
+    }
+    root.querySelector('.final29-flow-card').innerHTML=`<div class="final29-flow-kicker">PAGAMENTO REGISTRADO</div><h2>Recibo do atendimento</h2><p>O valor foi lançado no Financeiro como pago. Agora você pode abrir o recibo e, em seguida, decidir se precisa de uma declaração.</p><div class="final29-flow-step"><strong>Deseja encaminhar recibo?</strong><span>Ao escolher Sim, a página Modelos e documentos abrirá o recibo já preenchido.</span><div class="final29-flow-actions"><button type="button" class="btn btn-outline" id="final29NoReceipt">Não</button><button type="button" class="btn btn-primary" id="final29YesReceipt">Sim, abrir recibo</button></div></div><div class="final29-flow-actions"><button type="button" class="btn btn-outline" id="final29FlowFinish">Concluir</button></div>`;
+    root.querySelector('#final29YesReceipt').onclick=()=>{flowRemove();openPreparedDocument('recibo',ap,payment,{askDeclaration:true});};
+    root.querySelector('#final29NoReceipt').onclick=()=>askDeclarationFlow(ap,payment);
+    root.querySelector('#final29FlowFinish').onclick=()=>flowRemove();
+    W.refreshIcons?.();
+  }
+  function askDeclarationFlow(ap,payment){
+    const root=document.getElementById('final29FlowOverlay');if(!root)return;
+    root.querySelector('.final29-flow-card').innerHTML=`<div class="final29-flow-kicker">PRÓXIMO DOCUMENTO</div><h2>Precisa de declaração?</h2><p>A declaração será aberta na página Modelos e documentos com os dados do atendimento.</p><div class="final29-flow-step"><strong>Deseja gerar agora?</strong><div class="final29-flow-actions"><button type="button" class="btn btn-outline" id="final29DeclNo">Não</button><button type="button" class="btn btn-primary" id="final29DeclYes">Sim, abrir declaração</button></div></div>`;
+    root.querySelector('#final29DeclNo').onclick=()=>flowRemove();
+    root.querySelector('#final29DeclYes').onclick=()=>{flowRemove();openPreparedDocument('declaracao',ap,payment);};
+    W.refreshIcons?.();
+  }
+  function preparedDocPrefill(type,ap,payment){
+    const st=activeStudentForAppointment(ap);const name=studentName(st)||ap.student_name||'Aluno';
+    if(type==='recibo')return {payer:st?.responsible_name||st?.guardian_name||name,amount:payment?.amount??'',reference:'Atendimento psicopedagógico',date:dateOnly(ap.appointment_date)||today(),method:payment?.payment_method||'',note:`Aluno: ${name}`};
+    return {person:name,document:st?.cpf||'',purpose:'Comparecimento/acompanhamento psicopedagógico',period:dateOnly(ap.appointment_date)||today(),note:`Atendimento realizado às ${timeOnly(ap.appointment_time||ap.start_time||ap.time)||''}.`};
+  }
+  function openPreparedDocument(type,ap,payment,options){
+    try{
+      const runner=()=>{if(typeof W.openDocModal!=='function')return;W.openDocModal(type);const vals=preparedDocPrefill(type,ap,payment);Object.entries(vals).forEach(([k,v])=>{const input=document.querySelector(`#final19DocModal [name="${k}"]`);if(input&&v!==undefined)input.value=String(v);});const helper=document.createElement('div');helper.className='final29-doc-helper';helper.innerHTML=`<strong>Documento iniciado automaticamente</strong><span>Os dados do atendimento foram preenchidos para você revisar antes de salvar ou imprimir.</span>`;document.querySelector('#final19DocModal .final19-doc-form')?.prepend(helper);W.refreshIcons?.(); if(options?.askDeclaration){const pdf=document.querySelector('#final19DocPdf'),print=document.querySelector('#final19DocPrint');const next=()=>{if(!document.getElementById('final19DocModal'))return;setTimeout(()=>{document.getElementById('final19DocModal')?.remove();const overlay=document.createElement('div');overlay.id='final29FlowOverlay';overlay.className='final29-flow-overlay';overlay.innerHTML=`<div class="final29-flow-card"><div class="final29-flow-kicker">PRÓXIMO PASSO</div><h2>Precisa de declaração?</h2><p>A declaração será aberta com os dados do mesmo atendimento.</p><div class="final29-flow-actions"><button type="button" class="btn btn-outline" id="final29AfterNo">Não</button><button type="button" class="btn btn-primary" id="final29AfterYes">Sim, abrir declaração</button></div></div>`;document.body.appendChild(overlay);overlay.querySelector('#final29AfterNo').onclick=()=>overlay.remove();overlay.querySelector('#final29AfterYes').onclick=()=>{overlay.remove();openPreparedDocument('declaracao',ap,payment);};W.refreshIcons?.();},250)};pdf?.addEventListener('click',next,{once:true});print?.addEventListener('click',next,{once:true});} };
+      if(W.state?.currentView!=='documentos'){W.navigate?.('documentos');setTimeout(runner,300);setTimeout(runner,900);}else runner();
+    }catch(e){showErr(e.message||'Não foi possível abrir o documento.');}
+  }
+
+  /* ============================================================
+     4) GARANTIR QUE O DASHBOARD MOSTRE O AVISO
+     ============================================================ */
+  const oldDashboard=W.renderDashboard;
+  if(typeof oldDashboard==='function'&&!oldDashboard.__final29){
+    const fn=async function(){const r=await oldDashboard.apply(this,arguments);setTimeout(()=>renderNotificationBanner(),60);return r;};fn.__final29=true;W.renderDashboard=fn;
+  }
+
+  /* ============================================================
+     5) IMPEDIR QUE CHAMADAS ANTIGAS VOLTEM A ABRIR POPUP DE CHAT
+     ============================================================ */
+  const oldV3OpenMessage=W.v3OpenMessageEditor;
+  if(typeof oldV3OpenMessage==='function'&&!oldV3OpenMessage.__final29){
+    const fn=function(){if(master()){document.getElementById('final29FocusComposer')?.click();}else{document.getElementById('final29FocusComposer')?.click();}};fn.__final29=true;W.v3OpenMessageEditor=fn;
+  }
+
+  /* ============================================================
+     6) POLLING OPERACIONAL
+     ============================================================ */
+  function bootOperationalNotifications(){
+    if(operationalTimer)clearInterval(operationalTimer);
+    operationalTimer=null;
+    if(master()||!UID())return;
+    operationalCheck();
+    operationalTimer=setInterval(operationalCheck,15000);
+  }
+  const oldNavigate=W.navigate;
+  if(typeof oldNavigate==='function'&&!oldNavigate.__final29){
+    const fn=function(view){
+      if(view==='documentos'){
+        try{if(typeof W.ensureDocsView==='function')W.ensureDocsView();}catch(_){}
+        document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+        document.getElementById('view-documentos')?.classList.add('active');
+        if(W.state)W.state.currentView='documentos';
+        const pageTitle=document.getElementById('pageTitle');
+        if(pageTitle)pageTitle.innerHTML='<i data-lucide="file-text"></i><span>Modelos e documentos</span>';
+        try{if(typeof W.docsView==='function')W.docsView(); else if(typeof docsView==='function')docsView();}catch(e){console.warn('[Documentos]',e?.message||e);}
+        W.refreshIcons?.();
+        return;
+      }
+      const r=oldNavigate.apply(this,arguments);
+      setTimeout(()=>{if(view==='dashboard')renderNotificationBanner();if(view==='aluno-perfil'){const ap=activeAppointment();if(ap)setTimeout(()=>patchAttendancePage(ap.id),350);}if(view==='recados')W.renderMessages?.();},90);
+      return r;
+    };fn.__final29=true;W.navigate=fn;
+  }
+  const oldUpdateHeader=W.updateUserHeader;
+  if(typeof oldUpdateHeader==='function'&&!oldUpdateHeader.__final29){W.updateUserHeader=function(){const r=oldUpdateHeader.apply(this,arguments);setTimeout(bootOperationalNotifications,100);return r;};W.updateUserHeader.__final29=true;}
+  function boot(){
+    if(W.state?.user){bootOperationalNotifications();if(W.state.currentView==='dashboard')setTimeout(renderNotificationBanner,200);if(W.state.currentView==='aluno-perfil'){const ap=activeAppointment();if(ap)setTimeout(()=>patchAttendancePage(ap.id),350);}}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else setTimeout(boot,0);
+})();
+</script>
