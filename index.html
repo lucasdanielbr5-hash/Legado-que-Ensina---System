@@ -12720,7 +12720,7 @@ body.legado-v4-modal-open{overflow:hidden}
   'use strict';
   const W=window;
   const TERMS_VERSION='2026-09-26-v1';
-  const TERMS_PDF='termos_de_uso_sistema_psicopedagogico.pdf';
+  const TERMS_URL='termos_de_uso_sistema_psicopedagogico.html';
   W.__legadoTermsVersion=TERMS_VERSION;
   const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v??''):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
   const displayName=()=>{const p=W.state?.profile||{};const u=W.state?.user||{};return String(p.full_name||p.name||u.user_metadata?.full_name||u.user_metadata?.name||(u.email?String(u.email).split('@')[0]:'Professor')).trim()||'Professor';};
@@ -12732,14 +12732,14 @@ body.legado-v4-modal-open{overflow:hidden}
     addStyles();remove();const name=displayName();const root=document.createElement('div');root.id='final20TermsModal';root.className='final20-terms-overlay';
     root.innerHTML='<div class="final20-terms-card" role="dialog" aria-modal="true" aria-labelledby="final20TermsTitle">'+
       '<div class="final20-terms-head"><div class="final20-terms-icon"><i data-lucide="file-signature"></i></div><div><div class="final20-terms-kicker">PRIMEIRO ACESSO</div><h2 id="final20TermsTitle">Termos e Condições de Uso</h2><p>Leia o documento e registre seu aceite antes de continuar.</p></div></div>'+
-      '<a class="final20-terms-link" href="'+esc(TERMS_PDF)+'" target="_blank" rel="noopener noreferrer"><span><i data-lucide="file-text" style="width:15px;vertical-align:-3px;margin-right:6px"></i>Abrir Termos e Condições de Uso</span><i data-lucide="external-link"></i></a>'+
-      '<div class="final20-terms-check"><input type="checkbox" id="final20TermsCheck"><label for="final20TermsCheck">Li, compreendi e aceito integralmente os <a href="'+esc(TERMS_PDF)+'" target="_blank" rel="noopener noreferrer">Termos e Condições de Uso</a> do sistema Legado Que Ensina.</label></div>'+
+      '<a class="final20-terms-link" href="'+esc(TERMS_URL)+'" target="_blank" rel="noopener noreferrer"><span><i data-lucide="file-text" style="width:15px;vertical-align:-3px;margin-right:6px"></i>Abrir Termos e Condições de Uso</span><i data-lucide="external-link"></i></a>'+
+      '<div class="final20-terms-check"><input type="checkbox" id="final20TermsCheck"><label for="final20TermsCheck">Li, compreendi e aceito integralmente os <a href="'+esc(TERMS_URL)+'" target="_blank" rel="noopener noreferrer">Termos e Condições de Uso</a> do sistema Legado Que Ensina.</label></div>'+
       '<div class="final20-sign-preview" id="final20SignPreview"><div class="final20-sign-caption">Assinatura eletrônica</div><div class="final20-sign-name">'+esc(name)+'</div><div class="final20-sign-date" id="final20SignDate">Data: —</div></div>'+
       '<div class="final20-terms-actions"><button type="button" class="btn btn-outline" id="final20TermsReview">Ler termos</button><button type="button" class="btn btn-primary" id="final20TermsSign" disabled><i data-lucide="pen-line"></i>Assinar e continuar</button></div>'+
       '<div class="final20-terms-note">Seu nome, a versão do documento e a data/hora do aceite ficarão registrados no seu perfil para consulta pela gestão.</div></div>';
     document.body.appendChild(root);W.refreshIcons?.();
     const check=root.querySelector('#final20TermsCheck'),sign=root.querySelector('#final20TermsSign'),preview=root.querySelector('#final20SignPreview'),signDate=root.querySelector('#final20SignDate');
-    root.querySelector('#final20TermsReview').onclick=()=>window.open(TERMS_PDF,'_blank','noopener,noreferrer');
+    root.querySelector('#final20TermsReview').onclick=()=>window.open(TERMS_URL,'_blank','noopener,noreferrer');
     check.onchange=()=>{sign.disabled=!check.checked;preview.classList.toggle('show',check.checked);if(check.checked)signDate.textContent='Data: '+new Date().toLocaleString('pt-BR');};
     sign.onclick=async()=>{
       if(!check.checked)return;sign.disabled=true;const uid=W.state?.user?.id;
@@ -12762,7 +12762,7 @@ body.legado-v4-modal-open{overflow:hidden}
   const oldProfile=W.renderProfile;if(typeof oldProfile==='function'&&!oldProfile.__final20Terms){const fn=async function(){const r=await oldProfile.apply(this,arguments);profileCard();return r;};fn.__final20Terms=true;W.renderProfile=fn;}
   function masterPanel(users){
     const host=document.getElementById('saas-panel-overview');if(!host)return;host.querySelector('[data-final20-master-terms]')?.remove();const rows=(Array.isArray(users)?users:[]).filter(r=>!r.is_master&&!['master','admin'].includes(String(r.role||'').toLowerCase()));const signed=rows.filter(r=>r.terms_accepted_at&&r.terms_accepted_name);const pending=rows.length-signed.length;const panel=document.createElement('section');panel.dataset.final20MasterTerms='1';panel.className='final20-master-panel';
-    let html='<div class="final20-master-head"><div><span>CONFORMIDADE</span><h2>Termos de uso</h2><p>Veja quem aceitou os termos e a data do aceite.</p></div><a class="saas-secondary" href="'+esc(TERMS_PDF)+'" target="_blank" rel="noopener noreferrer"><i data-lucide="file-text"></i>Ver termos</a></div>';
+    let html='<div class="final20-master-head"><div><span>CONFORMIDADE</span><h2>Termos de uso</h2><p>Veja quem aceitou os termos e a data do aceite.</p></div><a class="saas-secondary" href="'+esc(TERMS_URL)+'" target="_blank" rel="noopener noreferrer"><i data-lucide="file-text"></i>Ver termos</a></div>';
     html+='<div class="final20-term-summary"><div class="final20-term-kpi"><small>Professores</small><strong>'+rows.length+'</strong></div><div class="final20-term-kpi"><small>Assinaram</small><strong>'+signed.length+'</strong></div><div class="final20-term-kpi"><small>Pendentes</small><strong>'+pending+'</strong></div></div>';
     html+='<div class="final20-term-list">';if(rows.length){rows.forEach(r=>{html+='<div class="final20-term-row"><div><strong>'+esc(r.terms_accepted_name||r.full_name||r.name||r.email||'Professor')+'</strong><small>'+esc(r.email||'')+'</small></div><div><span class="final20-term-badge '+(r.terms_accepted_at?'':'final20-term-pending')+'">'+(r.terms_accepted_at?'Aceito':'Pendente')+'</span></div><div class="final20-term-date">'+(r.terms_accepted_at?esc(fmt(r.terms_accepted_at)):'Ainda não assinou')+'</div></div>';});}else html+='<div class="empty">Nenhum professor cadastrado.</div>';
     html+='</div>';panel.innerHTML=html;host.appendChild(panel);W.refreshIcons?.();
