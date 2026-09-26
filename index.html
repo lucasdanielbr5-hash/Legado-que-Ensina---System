@@ -15353,3 +15353,575 @@ body.final27-dark .final29-eval-search input{background:transparent!important;bo
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else setTimeout(boot,0);
 })();
 </script>
+
+<style id="final31Styles">
+/* ============================================================
+   FINAL 31 — DARK TOTAL / RECADOS FIXO / NOTIFICAÇÕES / FINANCEIRO
+   ============================================================ */
+:root{
+  --f31-dark-bg:#0a0f0d;
+  --f31-dark-surface:#121816;
+  --f31-dark-surface-2:#171e1b;
+  --f31-dark-surface-3:#1c2521;
+  --f31-dark-border:#2b3832;
+  --f31-dark-text:#eef5f1;
+  --f31-dark-muted:#a7b5ae;
+  --f31-dark-faint:#75837c;
+  --f31-dark-primary:#67a887;
+  --f31-dark-primary-2:#4d8b6b;
+}
+
+/* ---------- DARK TOTAL ---------- */
+body.final27-dark,
+body.final27-dark #app,
+body.final27-dark .app-shell,
+body.final27-dark .main,
+body.final27-dark main,
+body.final27-dark .content,
+body.final27-dark .view,
+body.final27-dark .view.active,
+body.final27-dark #dashboardContent,
+body.final27-dark #financeiroContent,
+body.final27-dark #avaliacoesContent,
+body.final27-dark #recadosContent,
+body.final27-dark #studentProfileContent,
+body.final27-dark .v3-page,
+body.final27-dark .rz-page{
+  background:var(--f31-dark-bg)!important;
+  color:var(--f31-dark-text)!important;
+}
+body.final27-dark .topbar,
+body.final27-dark .sidebar,
+body.final27-dark .sidebar-inner,
+body.final27-dark .mobile-sidebar,
+body.final27-dark .header,
+body.final27-dark .main-header{
+  background:#0e1411!important;
+  color:var(--f31-dark-text)!important;
+  border-color:var(--f31-dark-border)!important;
+}
+body.final27-dark .topbar .page-title,
+body.final27-dark .topbar .page-title span,
+body.final27-dark .user-mini,
+body.final27-dark .user-mini strong,
+body.final27-dark .user-mini span{
+  color:var(--f31-dark-text)!important;
+}
+body.final27-dark .final27-top-tools{margin-right:20px!important;gap:10px!important;flex:none!important}
+body.final27-dark .topbar .user-mini{margin-left:14px!important;flex:none!important}
+
+/* surfaces do dashboard */
+body.final27-dark .rz-kpi,
+body.final27-dark .rz-panel,
+body.final27-dark .rz-fin-summary div,
+body.final27-dark .rz-row,
+body.final27-dark .rz-date,
+body.final27-dark .rz-progress,
+body.final27-dark .rz-table,
+body.final27-dark .rz-tr,
+body.final27-dark .rz-empty,
+body.final27-dark .rz-loading,
+body.final27-dark .final19-greeting,
+body.final27-dark .final19-plan-card,
+body.final27-dark .final19-doc-card,
+body.final27-dark .final19-doc-tip,
+body.final27-dark .v3-stat,
+body.final27-dark .v3-panel,
+body.final27-dark .v3-card,
+body.final27-dark .v3-section,
+body.final27-dark .v3-section-intro,
+body.final27-dark .v3-student-card,
+body.final27-dark .v3-history-item,
+body.final27-dark .v3-progress-item,
+body.final27-dark .v3-tabs,
+body.final27-dark .v4-model,
+body.final27-dark .v4-empty,
+body.final27-dark .l14-panel,
+body.final27-dark .l14-history-item,
+body.final27-dark .l14-up-item,
+body.final27-dark .final18-recados-summary,
+body.final27-dark .final29-recados-kpi > *,
+body.final27-dark .final29-thread-sidebar,
+body.final27-dark .final29-chat-pane,
+body.final27-dark .final29-composer-card,
+body.final27-dark .final29-received-card,
+body.final27-dark .final29-conversation-shell,
+body.final27-dark .final29-inline-compose-wrap,
+body.final27-dark .final29-chat-footer{
+  background:var(--f31-dark-surface)!important;
+  color:var(--f31-dark-text)!important;
+  border-color:var(--f31-dark-border)!important;
+  box-shadow:0 12px 32px rgba(0,0,0,.22)!important;
+}
+body.final27-dark .rz-kpi:hover,
+body.final27-dark .v3-stat:hover,
+body.final27-dark .v3-panel:hover,
+body.final27-dark .v4-model:hover,
+body.final27-dark .final29-thread-item.active,
+body.final27-dark .final29-thread-item:hover{
+  background:var(--f31-dark-surface-2)!important;
+}
+body.final27-dark .rz-icon,
+body.final27-dark .final19-greeting-icon,
+body.final27-dark .v3-icon,
+body.final27-dark .final29-kpi-main-icon,
+body.final27-dark .final29-received-icon{
+  background:#1c2c25!important;
+  color:#86c3a2!important;
+}
+body.final27-dark .rz-kpi span,
+body.final27-dark .rz-kpi small,
+body.final27-dark .rz-panel-head span,
+body.final27-dark .rz-row-main span,
+body.final27-dark .rz-muted,
+body.final27-dark .rz-value,
+body.final27-dark .rz-label,
+body.final27-dark .final19-greeting p,
+body.final27-dark .final19-doc-card p,
+body.final27-dark .final19-doc-tip p,
+body.final27-dark .v3-stat small,
+body.final27-dark .v3-stat span,
+body.final27-dark .v3-panel p,
+body.final27-dark .v3-section-intro p,
+body.final27-dark .v3-history-item p,
+body.final27-dark .v3-history-item span,
+body.final27-dark .v4-model p,
+body.final27-dark .v4-model-meta,
+body.final27-dark .l14-history-meta,
+body.final27-dark .l14-history-observation{
+  color:var(--f31-dark-muted)!important;
+}
+body.final27-dark .rz-kpi strong,
+body.final27-dark .rz-panel h2,
+body.final27-dark .rz-panel h3,
+body.final27-dark .rz-row-main strong,
+body.final27-dark .final19-greeting h2,
+body.final27-dark .final19-doc-card h3,
+body.final27-dark .final19-doc-tip strong,
+body.final27-dark .v3-stat strong,
+body.final27-dark .v3-panel h2,
+body.final27-dark .v3-panel h3,
+body.final27-dark .v3-section-intro h2,
+body.final27-dark .v3-history-item strong,
+body.final27-dark .v4-model h3,
+body.final27-dark .l14-history-title,
+body.final27-dark .l14-history-main strong{
+  color:var(--f31-dark-text)!important;
+}
+body.final27-dark .rz-fin-summary div,
+body.final27-dark .rz-date,
+body.final27-dark .rz-progress,
+body.final27-dark .final19-plan-status,
+body.final27-dark .v3-finance-summary div{
+  background:var(--f31-dark-surface-2)!important;
+  color:var(--f31-dark-text)!important;
+  border-color:var(--f31-dark-border)!important;
+}
+body.final27-dark .rz-axis{stroke:#33433b!important}
+body.final27-dark .rz-value{fill:#c8d5cf!important}
+body.final27-dark .rz-label{fill:#84938c!important}
+body.final27-dark .rz-dot{fill:#0e1411!important}
+
+/* texto/inputs/bordas globais das telas */
+body.final27-dark input,
+body.final27-dark select,
+body.final27-dark textarea,
+body.final27-dark .form-control,
+body.final27-dark .v3-input,
+body.final27-dark .v3-form input,
+body.final27-dark .v3-form select,
+body.final27-dark .v3-form textarea,
+body.final27-dark .legado-fin-filter input,
+body.final27-dark .legado-fin-filter select,
+body.final27-dark .final29-search,
+body.final27-dark .final29-chat-input,
+body.final27-dark .final29-composer-card input,
+body.final27-dark .final29-composer-card select,
+body.final27-dark .final29-composer-card textarea,
+body.final27-dark .final29-flow-card input,
+body.final27-dark .final29-flow-card select,
+body.final27-dark .final29-flow-card textarea{
+  background:#0d1310!important;
+  color:#eef5f1!important;
+  border-color:#34443d!important;
+}
+body.final27-dark input::placeholder,
+body.final27-dark textarea::placeholder{color:#718078!important}
+body.final27-dark .btn-outline,
+body.final27-dark .icon-button,
+body.final27-dark .l12-action,
+body.final27-dark .final29-legacy-tab,
+body.final27-dark .final29-cancel-btn{
+  background:#171f1b!important;
+  color:#dce7e1!important;
+  border-color:#394940!important;
+}
+body.final27-dark .btn-outline:hover,
+body.final27-dark .icon-button:hover,
+body.final27-dark .final29-legacy-tab:hover{
+  background:#202a25!important;
+  color:#fff!important;
+}
+body.final27-dark .btn-primary,
+body.final27-dark .final29-start-btn{
+  background:#4f8f6e!important;
+  border-color:#67a887!important;
+  color:#fff!important;
+}
+body.final27-dark .status-pill{background:#1d3027!important;color:#bfe3cd!important;border-color:#355b47!important}
+
+/* qualquer grande superfície antiga que ficou branca */
+body.final27-dark .view.active [style*="background:#fff"],
+body.final27-dark .view.active [style*="background: #fff"],
+body.final27-dark .view.active [style*="background-color:#fff"],
+body.final27-dark .view.active [style*="background-color: #fff"],
+body.final27-dark .view.active .white,
+body.final27-dark .view.active .bg-white{
+  background:var(--f31-dark-surface)!important;
+  color:var(--f31-dark-text)!important;
+  border-color:var(--f31-dark-border)!important;
+}
+
+/* ---------- TEMA: botão não encosta no professor ---------- */
+#final27TopTools{padding-right:4px!important}
+#final27ThemeBtn{margin-left:2px!important;margin-right:4px!important;white-space:nowrap}
+
+/* ---------- RECADOS: aplicativo de chat sem precisar rolar a página ---------- */
+.final29-recados-page{gap:12px!important}
+.final29-conversation-shell{
+  height:calc(100vh - 260px)!important;
+  min-height:560px!important;
+  max-height:760px!important;
+  position:relative!important;
+  overflow:hidden!important;
+}
+.final29-thread-sidebar{min-height:0!important}
+.final29-thread-list{min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important}
+.final29-chat-pane{min-height:0!important;height:100%!important;overflow:hidden!important}
+.final29-chat-messages{min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;padding:20px 22px!important;scroll-behavior:smooth!important}
+.final29-message-bubble{max-width:min(72%,700px)!important;border-radius:18px!important;padding:11px 14px!important}
+.final29-message-text{font-size:11px!important;line-height:1.65!important}
+.final29-message-time{font-size:8px!important}
+.final29-chat-footer{padding:13px 16px!important}
+.final29-chat-form{grid-template-columns:minmax(0,1fr) 96px!important}
+.final29-chat-input{min-height:48px!important;resize:none!important}
+.final29-thread-sidebar-head{padding:16px!important}
+.final29-thread-item{padding:13px!important;border-radius:15px!important}
+.final29-thread-title{font-size:11px!important}
+.final29-thread-preview{font-size:9px!important}
+.final29-thread-meta{font-size:8px!important}
+.final29-chat-pane-head{padding:17px 20px!important}
+.final29-chat-title{font-size:17px!important}
+.final29-composer-card{padding:16px!important}
+.final29-inline-compose-wrap{padding:0!important;border:0!important;background:transparent!important}
+.final29-inline-compose-wrap[hidden]{display:none!important}
+
+/* remove o hub antigo e qualquer botão duplicado de conversa */
+.final28-conversation-hub{display:none!important}
+.final28-conversation-hub-btn{display:none!important}
+
+/* ---------- NOTIFICAÇÃO: só aparece quando necessário ---------- */
+.final31-notification-banner{
+  display:flex;align-items:center;gap:13px;padding:13px 14px;
+  border:1px solid #d4e5dc;border-radius:16px;background:#f7fbf9;
+  box-shadow:0 7px 24px rgba(27,52,40,.05);margin-bottom:12px;
+}
+.final31-notification-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;flex:none;background:#e5f1eb;color:#4f7e66}
+.final31-notification-main{min-width:0;flex:1}
+.final31-notification-main strong{display:block;font-size:11px;color:#32483d}
+.final31-notification-main span{display:block;margin-top:3px;font-size:9px;line-height:1.5;color:#728179}
+.final31-notification-actions{display:flex;align-items:center;gap:8px;flex:none}
+.final31-notification-close{width:32px;height:32px;border:1px solid #d9e4de;border-radius:10px;background:#fff;color:#718178;display:grid;place-items:center;cursor:pointer}
+.final31-notification-close:hover{background:#eef4f1;color:#31483c}
+body.final27-dark .final31-notification-banner{background:#121b17!important;border-color:#304039!important;box-shadow:0 12px 34px rgba(0,0,0,.23)!important}
+body.final27-dark .final31-notification-icon{background:#1c2d25!important;color:#89c5a4!important}
+body.final27-dark .final31-notification-main strong{color:#eef5f1!important}
+body.final27-dark .final31-notification-main span{color:#9eada5!important}
+body.final27-dark .final31-notification-close{background:#171f1b!important;border-color:#384840!important;color:#b7c5be!important}
+
+/* ---------- FINANCEIRO: botão anual agora é Salvar em PDF ---------- */
+.v3-month-nav .final31-finance-pdf{display:inline-flex!important;align-items:center;gap:6px}
+
+@media(max-width:900px){
+  .final29-conversation-shell{height:calc(100vh - 220px)!important;min-height:500px!important}
+  .final29-chat-form{grid-template-columns:1fr!important}
+}
+@media(max-width:640px){
+  .final29-recados-head{flex-direction:column!important}
+  .final29-recados-actions{width:100%!important}
+  .final29-recados-actions .btn{width:100%!important}
+  .final29-conversation-shell{height:calc(100vh - 250px)!important;min-height:460px!important;grid-template-columns:1fr!important}
+  .final29-thread-sidebar{display:block!important;max-height:190px!important;border-right:0!important;border-bottom:1px solid #dfe8e3!important}
+  .final29-thread-list{max-height:110px!important;display:flex!important;gap:7px!important;overflow-x:auto!important;overflow-y:hidden!important}
+  .final29-thread-item{min-width:220px!important}
+}
+</style>
+
+<script id="final31Enhancements">
+(function(){
+  'use strict';
+  const W=window;
+  const esc31=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v??''):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  const isMaster31=()=>{const u=W.state?.user,p=W.state?.profile||{};return String(u?.email||'').toLowerCase()==='contato@legadoqueensina.com.br'||p.is_master===true||['master','admin'].includes(String(p.role||'').toLowerCase());};
+  const uid31=()=>W.state?.user?.id||null;
+  const db31=()=>W.supabaseClient;
+  const date31=v=>String(v||'').slice(0,10);
+  const time31=v=>String(v||'').slice(0,5);
+  const money31=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  const statusText31=s=>({paid:'Pago',pending:'Pendente',overdue:'Em atraso',cancelled:'Cancelado',canceled:'Cancelado'}[String(s||'').toLowerCase()]||String(s||'—'));
+
+  /* ============================================================
+     1) RECADOS — reorganiza o DOM para o chat ficar na primeira tela
+     ============================================================ */
+  function arrangeRecados31(){
+    const c=document.getElementById('recadosContent');
+    if(!c)return;
+    const page=c.querySelector('.final29-recados-page');
+    if(!page)return;
+
+    /* Remove o painel antigo que duplicava a chamada de conversa. */
+    page.querySelectorAll('.final28-conversation-hub').forEach(el=>el.remove());
+
+    const head=page.querySelector('.final29-recados-head');
+    const tabs=page.querySelector('.final29-legacy-tabs');
+    const kpi=page.querySelector('.final29-recados-kpi');
+    const mode=page.querySelector('#final29ModeConversas');
+    const compose=page.querySelector('.final29-inline-compose-wrap');
+    if(!head||!mode)return;
+
+    /* Ordem: título → abas → chat → indicadores. Assim o chat não fica escondido. */
+    if(tabs)head.insertAdjacentElement('afterend',tabs);
+    const anchor=tabs||head;
+    anchor.insertAdjacentElement('afterend',mode);
+    if(kpi)mode.insertAdjacentElement('afterend',kpi);
+
+    /* Composer é inline, mas fechado por padrão. Não usa popup. */
+    if(compose){
+      if(!compose.dataset.final31Ready){
+        compose.dataset.final31Ready='1';
+        compose.hidden=true;
+      }
+      const trigger=page.querySelector('#final29FocusComposer');
+      if(trigger&&!trigger.dataset.final31Bound){
+        trigger.dataset.final31Bound='1';
+        trigger.onclick=()=>{
+          compose.hidden=!compose.hidden;
+          if(!compose.hidden){
+            setTimeout(()=>{
+              compose.scrollIntoView({behavior:'smooth',block:'nearest'});
+              compose.querySelector('textarea,input,select')?.focus();
+            },40);
+          }
+        };
+      }
+    }
+
+    /* Quando o professor escolhe uma conversa, mantém a posição interna e não joga a página. */
+    const shell=page.querySelector('.final29-conversation-shell');
+    shell?.querySelectorAll('[data-final29-thread]').forEach(btn=>{
+      if(btn.dataset.final31Scroll)return;
+      btn.dataset.final31Scroll='1';
+      btn.addEventListener('click',()=>setTimeout(()=>{
+        const body=page.querySelector('#final29ChatMessages');
+        if(body)body.scrollTop=body.scrollHeight;
+      },80));
+    });
+  }
+
+  const oldRenderMessages31=W.renderMessages;
+  if(typeof oldRenderMessages31==='function'&&!oldRenderMessages31.__final31){
+    const fn=async function(){
+      const r=await oldRenderMessages31.apply(this,arguments);
+      setTimeout(arrangeRecados31,20);
+      setTimeout(arrangeRecados31,180);
+      setTimeout(arrangeRecados31,500);
+      return r;
+    };
+    fn.__final31=true;
+    W.renderMessages=fn;
+  }
+
+  /* Compatibilidade com as ações antigas: tudo cai dentro da página, nunca popup. */
+  W.final26NewSupport=()=>{
+    const trigger=document.getElementById('final29FocusComposer');
+    if(trigger)trigger.click();
+    else document.querySelector('.final29-inline-compose-wrap')?.removeAttribute('hidden');
+  };
+  W.openSupportComposer=W.final26NewSupport;
+  W.openThreadModal=async thread=>{W.__final29ConversationThread=String(thread);await W.renderMessages?.();};
+
+  /* ============================================================
+     2) NOTIFICAÇÕES — uma só, com X, somente quando não autorizadas
+     ============================================================ */
+  const notifyDismissKey=perm=>`legado:notification-banner:dismissed:${perm}`;
+  function permission31(){try{return 'Notification' in W?Notification.permission:'unsupported';}catch(_){return 'unsupported';}}
+  function clearOldNotificationBanners31(){
+    document.querySelectorAll('.final29-notification-banner,[data-final29-notification-banner]').forEach(el=>el.remove());
+  }
+  let notificationToken31=0;
+  async function renderNotificationBanner31(){
+    const token=++notificationToken31;
+    if(isMaster31())return clearOldNotificationBanners31();
+    const dashboard=document.getElementById('dashboardContent');
+    if(!dashboard)return;
+    const perm=permission31();
+    /* Com permissão ativa, não existe banner. */
+    if(perm==='granted'||perm==='unsupported')return clearOldNotificationBanners31();
+    if(localStorage.getItem(notifyDismissKey(perm))==='1')return clearOldNotificationBanners31();
+    let next=null;
+    try{next=typeof W.nextTodayAppointment==='function'?await W.nextTodayAppointment():null;}catch(_){next=null;}
+    if(token!==notificationToken31)return;
+    clearOldNotificationBanners31();
+    dashboard.querySelector('.final31-notification-banner')?.remove();
+    const box=document.createElement('section');
+    box.className='final31-notification-banner';
+    const title=perm==='denied'?'Notificações do navegador estão bloqueadas':'Ative as notificações do navegador';
+    const text=perm==='denied'
+      ?'Este site não poderá mostrar avisos do sistema enquanto a permissão estiver bloqueada. Libere Notificações nas configurações do navegador.'
+      :'Permita as notificações para receber alertas de novas mensagens e avisos 10 minutos antes dos atendimentos.';
+    const nextText=next?` Próximo atendimento: ${time31(next.appointment_time||next.start_time||next.time)} · ${esc31(next.student_name||'Aluno')}.`:'';
+    box.innerHTML=`<div class="final31-notification-icon"><i data-lucide="bell-ring"></i></div><div class="final31-notification-main"><strong>${title}</strong><span>${text}${nextText}</span></div><div class="final31-notification-actions">${perm==='default'?'<button type="button" class="btn btn-primary btn-sm" id="final31AllowNotifications">Permitir notificações</button>':'<button type="button" class="btn btn-outline btn-sm" id="final31ExplainNotifications">Como liberar</button>'}<button type="button" class="final31-notification-close" id="final31CloseNotifications" aria-label="Não mostrar novamente"><i data-lucide="x"></i></button></div>`;
+    const head=dashboard.querySelector('.rz-head,.v3-head,.page-heading,.final19-dashboard-head');
+    if(head)head.insertAdjacentElement('afterend',box);else dashboard.prepend(box);
+    box.querySelector('#final31CloseNotifications')?.addEventListener('click',()=>{localStorage.setItem(notifyDismissKey(perm),'1');box.remove();});
+    box.querySelector('#final31AllowNotifications')?.addEventListener('click',async()=>{
+      try{
+        const p=await Notification.requestPermission();
+        localStorage.removeItem(notifyDismissKey('default'));
+        localStorage.removeItem(notifyDismissKey('denied'));
+        clearOldNotificationBanners31();
+        if(p==='granted'){
+          try{new Notification('Legado Que Ensina',{body:'As notificações do sistema estão ativas.',tag:'legado-notification-test'});}catch(_){ }
+          W.showSuccess?.('Notificações ativadas.');
+        }else if(p==='denied'){
+          W.showError?.('O navegador bloqueou as notificações. Libere a permissão nas configurações do site.');
+          renderNotificationBanner31();
+        }
+      }catch(e){W.showError?.(e.message||'Não foi possível ativar as notificações.');}
+    });
+    box.querySelector('#final31ExplainNotifications')?.addEventListener('click',()=>W.showError?.('Clique no cadeado ao lado do endereço do site e altere Notificações para Permitir.'));
+    W.refreshIcons?.();
+  }
+
+  /* O renderer legado é assíncrono e pode inserir dois banners; sanitizamos após cada render. */
+  const oldDashboard31=W.renderDashboard;
+  if(typeof oldDashboard31==='function'&&!oldDashboard31.__final31){
+    const fn=async function(){
+      const r=await oldDashboard31.apply(this,arguments);
+      [80,350,800,1400].forEach(ms=>setTimeout(()=>renderNotificationBanner31(),ms));
+      return r;
+    };
+    fn.__final31=true;
+    W.renderDashboard=fn;
+  }
+
+  let sanitizeTimer31=null;
+  function startDashboardNotificationSanitizer31(){
+    if(sanitizeTimer31)clearInterval(sanitizeTimer31);
+    sanitizeTimer31=setInterval(()=>{
+      if(W.state?.currentView!=='dashboard'){clearInterval(sanitizeTimer31);sanitizeTimer31=null;return;}
+      const perm=permission31();
+      if(perm==='granted'||perm==='unsupported')clearOldNotificationBanners31();
+    },1600);
+  }
+
+  /* ============================================================
+     3) FINANCEIRO — substitui “Imprimir ano” por “Salvar em PDF”
+     ============================================================ */
+  function financePdfButton31(){
+    const nav=document.querySelector('#financeiroContent .v3-month-nav');
+    if(!nav)return;
+    nav.querySelectorAll('button').forEach(btn=>{
+      if(/imprimir\s+ano/i.test(btn.textContent||'')){
+        btn.classList.add('final31-finance-pdf');
+        btn.innerHTML='<i data-lucide="file-down"></i>Salvar em PDF';
+        btn.onclick=()=>W.legadoSaveFinanceYearPDF?.((W.V3?.financeMonth instanceof Date?W.V3.financeMonth:new Date()).getFullYear());
+      }
+    });
+    W.refreshIcons?.();
+  }
+
+  function addPdfText31(pdf,text,x,y,max=185,step=5){
+    const words=String(text||'').split(/\s+/);let line='';
+    for(const word of words){
+      const test=line?`${line} ${word}`:word;
+      if(pdf.getTextWidth(test)>max&&line){pdf.text(line,x,y);y+=step;line=word;}else line=test;
+    }
+    if(line){pdf.text(line,x,y);y+=step;}
+    return y;
+  }
+  W.legadoSaveFinanceYearPDF=async function(year){
+    try{
+      const Js=W.jspdf?.jsPDF;
+      if(!Js){W.showError?.('A biblioteca de PDF ainda não foi carregada.');return;}
+      if(!uid31()||!db31()){W.showError?.('Sessão não encontrada.');return;}
+      const loader=typeof W.loadFinance13==='function'?W.loadFinance13:null;
+      if(!loader){W.showError?.('O módulo financeiro não está disponível.');return;}
+      const entries=await loader();
+      const yNum=Number(year)||new Date().getFullYear();
+      const rows=entries.filter(e=>date31(e.competence_date||e.payment_date||e.date).slice(0,4)===String(yNum));
+      const pdf=new Js({unit:'mm',format:'a4'});
+      const teacher=String(W.state?.profile?.full_name||W.state?.profile?.name||W.state?.user?.email||'Professor');
+      const addHeader=()=>{pdf.setFont('helvetica','bold');pdf.setFontSize(18);pdf.text('RELATÓRIO FINANCEIRO',15,17);pdf.setFontSize(10);pdf.setFont('helvetica','normal');pdf.text(`Legado Que Ensina · ${yNum}`,15,24);pdf.text(`Responsável: ${teacher}`,15,30);pdf.setDrawColor(190,205,197);pdf.line(15,34,195,34);};
+      addHeader();
+      let y=42;
+      const months=Array.from({length:12},(_,i)=>i+1);
+      const monthName=m=>new Date(yNum,m-1,1).toLocaleDateString('pt-BR',{month:'long'});
+      pdf.setFont('helvetica','bold');pdf.setFontSize(11);pdf.text('Resumo por mês',15,y);y+=7;
+      pdf.setFont('helvetica','normal');pdf.setFontSize(8);
+      pdf.text('Mês',15,y);pdf.text('Recebido',70,y);pdf.text('Despesas',112,y);pdf.text('Resultado',155,y);y+=5;
+      for(const m of months){
+        const mm=String(m).padStart(2,'0');
+        const monthRows=rows.filter(e=>date31(e.competence_date||'').slice(5,7)===mm);
+        const income=monthRows.filter(e=>e.kind!=='expense'&&String(e.status||'').toLowerCase()==='paid').reduce((s,e)=>s+Number(e.amount||0),0);
+        const expense=monthRows.filter(e=>e.kind==='expense'&&String(e.status||'').toLowerCase()==='paid').reduce((s,e)=>s+Number(e.amount||0),0);
+        pdf.text(monthName(m),15,y);pdf.text(money31(income),70,y);pdf.text(money31(expense),112,y);pdf.text(money31(income-expense),155,y);y+=5;
+      }
+      const received=rows.filter(e=>e.kind!=='expense'&&String(e.status||'').toLowerCase()==='paid').reduce((s,e)=>s+Number(e.amount||0),0);
+      const expense=rows.filter(e=>e.kind==='expense'&&String(e.status||'').toLowerCase()==='paid').reduce((s,e)=>s+Number(e.amount||0),0);
+      y+=4;pdf.setFont('helvetica','bold');pdf.setFontSize(11);pdf.text(`Total recebido: ${money31(received)}`,15,y);pdf.text(`Total despesas: ${money31(expense)}`,105,y);y+=7;pdf.text(`Resultado do ano: ${money31(received-expense)}`,15,y);y+=9;
+      pdf.setDrawColor(190,205,197);pdf.line(15,y,195,y);y+=8;
+      pdf.setFontSize(11);pdf.text('Lançamentos do ano',15,y);y+=7;
+      pdf.setFont('helvetica','bold');pdf.setFontSize(8);pdf.text('Data',15,y);pdf.text('Descrição / aluno',38,y);pdf.text('Tipo',116,y);pdf.text('Valor',145,y);pdf.text('Status',171,y);y+=5;pdf.setFont('helvetica','normal');
+      const sorted=rows.slice().sort((a,b)=>String(a.competence_date||'').localeCompare(String(b.competence_date||''))||String(a.id).localeCompare(String(b.id)));
+      for(const e of sorted){
+        if(y>283){pdf.addPage();addHeader();y=42;pdf.setFont('helvetica','bold');pdf.setFontSize(8);pdf.text('Data',15,y);pdf.text('Descrição / aluno',38,y);pdf.text('Tipo',116,y);pdf.text('Valor',145,y);pdf.text('Status',171,y);y+=5;pdf.setFont('helvetica','normal');}
+        const desc=String(e.student_name||e.description||'Lançamento').replace(/\s+/g,' ').slice(0,50);
+        pdf.text(date31(e.competence_date),15,y);pdf.text(desc,38,y);pdf.text(e.kind==='expense'?'Despesa':'Receita',116,y);pdf.text(money31(e.amount),145,y);pdf.text(statusText31(e.status),171,y);y+=5;
+      }
+      if(!sorted.length){pdf.setFont('helvetica','normal');pdf.text('Nenhum lançamento encontrado para este ano.',15,y);}
+      pdf.setFontSize(7);pdf.setTextColor(105,120,112);pdf.text(`Gerado em ${new Date().toLocaleString('pt-BR')}`,15,290);pdf.save(`financeiro-${yNum}.pdf`);W.showSuccess?.(`Relatório financeiro de ${yNum} salvo em PDF.`);
+    }catch(e){console.error('[FINAL31 PDF]',e);W.showError?.('Não foi possível salvar o financeiro em PDF: '+(e.message||e));}
+  };
+
+  const oldFinance31=W.renderFinance;
+  if(typeof oldFinance31==='function'&&!oldFinance31.__final31){
+    const fn=async function(){const r=await oldFinance31.apply(this,arguments);setTimeout(financePdfButton31,50);setTimeout(financePdfButton31,250);return r;};fn.__final31=true;W.renderFinance=fn;
+  }
+
+  /* ============================================================
+     4) TEMA / NAVEGAÇÃO
+     ============================================================ */
+  const oldNav31=W.navigate;
+  if(typeof oldNav31==='function'&&!oldNav31.__final31){
+    const fn=function(view){
+      const r=oldNav31.apply(this,arguments);
+      setTimeout(()=>{
+        if(view==='recados'){arrangeRecados31();}
+        if(view==='dashboard'){startDashboardNotificationSanitizer31();renderNotificationBanner31();}
+        if(view==='financeiro'){financePdfButton31();}
+      },120);
+      return r;
+    };
+    fn.__final31=true;
+    W.navigate=fn;
+  }
+
+  function boot31(){
+    if(W.state?.currentView==='recados')arrangeRecados31();
+    if(W.state?.currentView==='dashboard'){startDashboardNotificationSanitizer31();renderNotificationBanner31();}
+    if(W.state?.currentView==='financeiro')financePdfButton31();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot31,{once:true});else setTimeout(boot31,40);
+})();
+</script>
