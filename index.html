@@ -13162,3 +13162,463 @@ body.legado-v4-modal-open{overflow:hidden}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(run,0),{once:true});else setTimeout(run,0);
 })();
 </script>
+
+
+<style id="legado-final26-style-anchor">html,body{overflow-x:hidden}</style>
+<script id="legado-final26-enhancements">
+(function(){
+  'use strict';
+  const W=window;
+  const MASTER_EMAIL='contato@legadoqueensina.com.br';
+  const TERMS_URL='https://www.image2url.com/r2/default/documents/1790459926378-f5718225-4759-4efa-a827-42420b0b3e98.pdf';
+  const TERMS_VERSION='2026-09-26-v1';
+  const PRESENCE_INTERVAL=30000;
+  const ONLINE_WINDOW=70000;
+  const STATUS_INTERVAL=30000;
+  const MASTER_POLL_INTERVAL=30000;
+
+  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v??''):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  const id=()=>W.state?.user?.id||null;
+  const sb=()=>W.supabaseClient||null;
+  const isMaster=()=>{
+    const u=W.state?.user||{}; const p=W.state?.profile||{};
+    return String(u.email||'').toLowerCase()===MASTER_EMAIL || p.is_master===true || ['master','admin'].includes(String(p.role||'').toLowerCase()) || String(u.user_metadata?.role||'').toLowerCase()==='master';
+  };
+  const displayName=()=>{
+    const p=W.state?.profile||{},u=W.state?.user||{};
+    return String(p.full_name||p.name||u.user_metadata?.full_name||u.user_metadata?.name||((u.email||'').split('@')[0])||'Professor').trim()||'Professor';
+  };
+  const initials=n=>String(n||'P').trim().split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase()||'P';
+  const fmtDate=v=>{const d=new Date(v);return Number.isFinite(d.getTime())?d.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}):'—';};
+
+  /* ============================================================
+     1) PRESENÇA — exatamente a cada 30 segundos
+  ============================================================ */
+  let presenceTimer=null,masterPresenceTimer=null,presenceBusy=false;
+  async function heartbeat(){
+    try{
+      const c=sb(),u=W.state?.user;
+      if(!c||!u||isMaster())return;
+      const r=await c.from('profiles').update({last_seen_at:new Date().toISOString()}).eq('id',u.id);
+      if(r.error && !/last_seen_at|column/i.test(String(r.error.message||''))) console.warn('[Presença]',r.error.message);
+    }catch(e){console.warn('[Presença]',e?.message||e);}
+  }
+  async function refreshMasterPresence(){
+    if(!isMaster()||presenceBusy)return;
+    const c=sb(); if(!c)return;
+    presenceBusy=true;
+    try{
+      const r=await c.functions.invoke('master-admin',{body:{action:'get_users',include_blocked:true}});
+      if(r.error)throw r.error;
+      const users=r.data?.users||[];
+      const now=Date.now();
+      const online=users.filter(u=>!u.is_master && !['master','admin'].includes(String(u.role||'').toLowerCase()) && u.last_seen_at && (now-new Date(u.last_seen_at).getTime())<=ONLINE_WINDOW)
+        .sort((a,b)=>new Date(b.last_seen_at).getTime()-new Date(a.last_seen_at).getTime());
+      const wrap=document.getElementById('final25OnlineWrap');
+      const count=wrap?.querySelector('#final25OnlineCount');
+      const list=wrap?.querySelector('#final25OnlineList');
+      const refresh=wrap?.querySelector('#final25OnlineRefresh');
+      if(count)count.textContent=String(online.length);
+      if(refresh)refresh.textContent='Atualizado agora';
+      if(list)list.innerHTML=online.length?online.map(u=>`<div class="final25-online-row"><div class="final25-online-avatar">${esc(initials(u.full_name||u.name||u.email))}</div><div class="final25-online-name">${esc(u.full_name||u.name||u.email||'Professor')}</div><div class="final25-online-time">há ${Math.max(0,Math.floor((Date.now()-new Date(u.last_seen_at).getTime())/1000))}s</div></div>`).join(''):'<div class="final25-online-empty">Nenhum professor ativo agora.</div>';
+    }catch(e){console.warn('[Presença Master]',e?.message||e);}
+    finally{presenceBusy=false;}
+  }
+  function bootPresence(){
+    if(presenceTimer)clearInterval(presenceTimer); presenceTimer=null;
+    if(masterPresenceTimer)clearInterval(masterPresenceTimer); masterPresenceTimer=null;
+    if(isMaster()){
+      setTimeout(refreshMasterPresence,150);
+      masterPresenceTimer=setInterval(refreshMasterPresence,MASTER_POLL_INTERVAL);
+    }else if(W.state?.user){
+      heartbeat();
+      presenceTimer=setInterval(heartbeat,PRESENCE_INTERVAL);
+    }
+  }
+
+  /* ============================================================
+     2) SERVIDOR — online / manutenção / offline automático
+  ============================================================ */
+  let serverStatusTimer=null,serverBusy=false;
+  function addServerStyles(){
+    if(document.getElementById('final26ServerStyles'))return;
+    const s=document.createElement('style');s.id='final26ServerStyles';s.textContent=`
+      .final26-server-wrap{position:relative;display:flex;align-items:center;flex:none;margin-left:auto;margin-right:8px;z-index:40}
+      .final26-server-btn{appearance:none;border:1px solid #dce8e1;background:#f7faf8;color:#50675c;border-radius:999px;height:31px;padding:0 11px 0 9px;display:inline-flex;align-items:center;gap:7px;font:800 10px/1 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(20,45,35,.04)}
+      .final26-server-btn:hover{background:#eef6f1;border-color:#cfe0d6}
+      .final26-server-dot{width:7px;height:7px;border-radius:50%;background:#37a86d;box-shadow:0 0 0 3px rgba(55,168,109,.12);flex:none}
+      .final26-server-btn.maintenance{background:#fff8eb;border-color:#f0dfba;color:#8b672e}
+      .final26-server-btn.maintenance .final26-server-dot{background:#d99a2b;box-shadow:0 0 0 3px rgba(217,154,43,.13)}
+      .final26-server-btn.offline{background:#fff2f2;border-color:#f0d1d1;color:#a04e4e}
+      .final26-server-btn.offline .final26-server-dot{background:#c65a5a;box-shadow:0 0 0 3px rgba(198,90,90,.12)}
+      .final26-server-pop{position:absolute;top:39px;right:0;width:min(310px,calc(100vw - 28px));background:#fff;border:1px solid #e1ebe5;border-radius:17px;box-shadow:0 18px 44px rgba(27,52,42,.16);padding:14px;display:none}
+      .final26-server-pop.open{display:block}
+      .final26-server-pop h3{margin:0 0 4px;font-size:12px;color:#34483e}
+      .final26-server-pop p{margin:0;color:#829089;font-size:9px;line-height:1.5}
+      .final26-server-admin{margin-top:11px;padding-top:11px;border-top:1px solid #edf2ef}
+      .final26-server-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+      .final26-server-actions button{border:1px solid #dfe8e3;background:#f7faf8;color:#50675c;border-radius:10px;padding:8px 10px;font:800 9px Inter,Arial,sans-serif;cursor:pointer}
+      .final26-server-actions button.active{background:#e9f5ee;border-color:#cfe4d7;color:#47745a}
+      .final26-server-actions button.maint-active{background:#fff4df;border-color:#ead5ac;color:#94682b}
+      .final26-master-server-card{margin-bottom:16px;padding:17px;border:1px solid #dfe9e4;border-radius:18px;background:#fff;box-shadow:0 7px 24px rgba(30,50,40,.045)}
+      .final26-master-server-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}
+      .final26-master-server-kicker{font-size:8px;font-weight:800;letter-spacing:.13em;color:#7d8b84;text-transform:uppercase}
+      .final26-master-server-head h2{margin:4px 0 4px;color:#34463d;font-size:16px}
+      .final26-master-server-head p{margin:0;color:#84918b;font-size:9px;line-height:1.55;max-width:700px}
+      .final26-master-server-badge{display:inline-flex;align-items:center;gap:6px;padding:7px 9px;border-radius:999px;background:#e9f5ee;color:#47745a;font-size:9px;font-weight:800;white-space:nowrap}
+      .final26-master-server-badge.maint{background:#fff4df;color:#94682b}
+      .final26-master-server-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+      .final26-master-server-actions button{min-height:36px;border-radius:10px;border:1px solid #dfe8e3;background:#fff;color:#4d6258;padding:8px 12px;font:800 10px Inter,Arial,sans-serif;cursor:pointer}
+      .final26-master-server-actions button.primary{background:#5f8f7a;border-color:#5f8f7a;color:#fff}
+      .final26-master-server-actions button.maint{background:#fff3dc;border-color:#ead7b6;color:#91692e}
+      @media(max-width:760px){.final26-server-wrap{margin-right:5px}.final26-server-btn{height:29px;padding:0 9px;font-size:9px}.final26-server-pop{right:-8px}.final26-master-server-head{flex-direction:column}.final26-master-server-badge{align-self:flex-start}}
+    `;document.head.appendChild(s);
+  }
+  async function readServerStatus(){
+    const c=sb(); if(!c) return {connected:false,status:'offline'};
+    try{
+      const {data,error}=await c.from('platform_settings').select('value').eq('key','server_status').maybeSingle();
+      if(error)throw error;
+      return {connected:true,status:String(data?.value||'online').toLowerCase()==='maintenance'?'maintenance':'online'};
+    }catch(e){return {connected:false,status:'offline'};}
+  }
+  function applyServerStatus(info){
+    const wrap=document.getElementById('final26ServerWrap'); if(!wrap)return;
+    const btn=wrap.querySelector('#final26ServerBtn'),title=wrap.querySelector('#final26ServerTitle'),pop=wrap.querySelector('#final26ServerPop'),desc=wrap.querySelector('#final26ServerDesc');
+    const status=info?.status||'offline';
+    btn?.classList.remove('maintenance','offline'); btn?.classList.add(status);
+    if(title)title.textContent=status==='maintenance'?'Servidor passando por atualização':status==='online'?'Servidor online':'Servidor offline';
+    if(desc)desc.textContent=status==='maintenance'?'O sistema está conectado, mas foi sinalizado pela gestão como em atualização.':status==='online'?'Conexão com o servidor estabelecida normalmente.':'Não foi possível confirmar a conexão com o Supabase neste momento.';
+    pop?.querySelector('[data-server-mode="online"]')?.classList.toggle('active',status==='online');
+    pop?.querySelector('[data-server-mode="maintenance"]')?.classList.toggle('maint-active',status==='maintenance');
+  }
+  function ensureServerWidget(){
+    addServerStyles();
+    const topbar=document.querySelector('.topbar'); if(!topbar)return null;
+    let wrap=document.getElementById('final26ServerWrap');
+    if(!wrap){
+      wrap=document.createElement('div');wrap.id='final26ServerWrap';wrap.className='final26-server-wrap';
+      wrap.innerHTML=`<button type="button" id="final26ServerBtn" class="final26-server-btn online" aria-expanded="false"><span class="final26-server-dot"></span><strong id="final26ServerTitle">Servidor online</strong></button><div id="final26ServerPop" class="final26-server-pop"><h3>Status do servidor</h3><p id="final26ServerDesc">Verificando conexão...</p>${isMaster()?`<div class="final26-server-admin"><strong style="display:block;font-size:9px;color:#52645b">Controle da Master</strong><p>Você pode sinalizar o sistema como em atualização. O estado offline é detectado automaticamente.</p><div class="final26-server-actions"><button type="button" data-server-mode="online">Servidor online</button><button type="button" data-server-mode="maintenance">Servidor em atualização</button></div></div>`:''}</div>`;
+      const userMini=topbar.querySelector('.user-mini');
+      topbar.insertBefore(wrap,userMini||null);
+      const btn=wrap.querySelector('#final26ServerBtn'),pop=wrap.querySelector('#final26ServerPop');
+      btn?.addEventListener('click',()=>{const open=!pop.classList.contains('open');pop.classList.toggle('open',open);btn.setAttribute('aria-expanded',String(open));});
+      document.addEventListener('click',e=>{if(!wrap.contains(e.target)){pop.classList.remove('open');btn.setAttribute('aria-expanded','false');}},{passive:true});
+      wrap.querySelector('[data-server-mode="online"]')?.addEventListener('click',()=>setServerMode('online'));
+      wrap.querySelector('[data-server-mode="maintenance"]')?.addEventListener('click',()=>setServerMode('maintenance'));
+    }
+    if(!isMaster()) wrap.querySelector('.final26-server-admin')?.remove();
+    return wrap;
+  }
+  async function refreshServerStatus(){
+    if(serverBusy)return;
+    ensureServerWidget(); serverBusy=true;
+    try{applyServerStatus(await readServerStatus());}finally{serverBusy=false;}
+  }
+  async function setServerMode(mode){
+    if(!isMaster())return;
+    const c=sb(); if(!c)return;
+    try{
+      const value=mode==='maintenance'?'maintenance':'online';
+      const r=await c.from('platform_settings').upsert({key:'server_status',value,updated_by:id(),updated_at:new Date().toISOString()},{onConflict:'key'});
+      if(r.error)throw r.error;
+      applyServerStatus({connected:true,status:value});
+      W.showSuccess?.(value==='maintenance'?'Servidor marcado como em atualização.':'Servidor marcado como online.');
+    }catch(e){W.showError?.(e.message||'Não foi possível alterar o status do servidor.');}
+  }
+  function bootServer(){
+    ensureServerWidget(); refreshServerStatus();
+    if(serverStatusTimer)clearInterval(serverStatusTimer);
+    serverStatusTimer=setInterval(refreshServerStatus,STATUS_INTERVAL);
+  }
+
+  /* ============================================================
+     3) MEU PERFIL — remove o formulário antigo e edita no próprio cartão
+  ============================================================ */
+  function profileStyles(){
+    if(document.getElementById('final26ProfileStyles'))return;
+    const s=document.createElement('style');s.id='final26ProfileStyles';s.textContent=`
+      .final26-profile{display:grid;gap:16px;max-width:1180px;margin:0 auto;padding-bottom:30px}
+      .final26-profile-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center;padding:24px;border:1px solid #dfe8e3;border-radius:24px;background:linear-gradient(135deg,#f6fbf8 0%,#fff 72%);box-shadow:0 12px 36px rgba(30,52,42,.065)}
+      .final26-profile-identity{display:flex;gap:16px;align-items:center;min-width:0}
+      .final26-profile-avatar{width:78px;height:78px;border-radius:22px;overflow:hidden;display:grid;place-items:center;flex:none;background:#e7f1eb;color:#47725d;font-size:23px;font-weight:800;border:1px solid #d7e5dd}
+      .final26-profile-avatar img{width:100%;height:100%;object-fit:cover}
+      .final26-profile-kicker{font-size:9px;font-weight:800;letter-spacing:.15em;color:#788980;text-transform:uppercase}
+      .final26-profile-title{margin:4px 0 0;color:#293a32;font-size:28px;letter-spacing:-.04em;overflow-wrap:anywhere}
+      .final26-profile-sub{margin:6px 0 0;color:#7e8d86;font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+      .final26-profile-hero-actions{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+      .final26-profile-status{display:inline-flex;align-items:center;gap:6px;padding:8px 11px;border-radius:999px;background:#e9f5ee;color:#47745a;font-size:9px;font-weight:800}
+      .final26-profile-status.warn{background:#fff4df;color:#94682b}
+      .final26-profile-status.bad{background:#fff0f0;color:#a15050}
+      .final26-edit-btn{min-height:38px;border:1px solid #dbe6e0;background:#fff;color:#4d6759;border-radius:10px;padding:8px 12px;font:800 10px Inter,Arial,sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+      .final26-profile-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,.75fr);gap:16px}
+      .final26-profile-card{padding:19px;border:1px solid #e1e9e4;border-radius:20px;background:#fff;box-shadow:0 7px 25px rgba(30,52,42,.04);min-width:0}
+      .final26-profile-card-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px}
+      .final26-profile-card-head h2{margin:3px 0 0;color:#33453c;font-size:16px}
+      .final26-profile-card-head p{margin:3px 0 0;color:#87948e;font-size:9px;line-height:1.5}
+      .final26-profile-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+      .final26-profile-field{padding:12px 13px;border:1px solid #e6ece8;border-radius:13px;background:#fbfdfc;min-width:0}
+      .final26-profile-field small{display:block;color:#899690;font-size:8px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+      .final26-profile-field strong{display:block;color:#45584e;font-size:10px;line-height:1.5;overflow-wrap:anywhere;word-break:break-word}
+      .final26-profile-edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+      .final26-profile-edit-grid label{display:grid;gap:5px;min-width:0}
+      .final26-profile-edit-grid label.full{grid-column:1/-1}
+      .final26-profile-edit-grid span{font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#75847d}
+      .final26-profile-edit-grid input,.final26-profile-edit-grid textarea{width:100%;min-width:0;border:1px solid #dfe7e2;border-radius:10px;background:#fff;padding:10px;font:500 10px Inter,Arial,sans-serif;color:#42534b;outline:0}
+      .final26-profile-edit-grid textarea{resize:vertical;min-height:84px}
+      .final26-profile-edit-grid input:focus,.final26-profile-edit-grid textarea:focus{border-color:#8eb2a3;box-shadow:0 0 0 3px rgba(95,143,122,.08)}
+      .final26-profile-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:13px;padding-top:12px;border-top:1px solid #edf2ef}
+      .final26-profile-actions button{min-height:37px;border-radius:10px;padding:8px 12px;font:800 10px Inter,Arial,sans-serif;cursor:pointer}
+      .final26-profile-cancel{border:1px solid #dfe7e3;background:#fff;color:#56685f}.final26-profile-save{border:1px solid #5f8f7a;background:#5f8f7a;color:#fff}
+      .final26-profile-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+      .final26-profile-stat{padding:12px;border-radius:13px;background:#f7faf8;border:1px solid #e5ece8}
+      .final26-profile-stat small{display:block;font-size:8px;text-transform:uppercase;color:#8a9690;letter-spacing:.05em}.final26-profile-stat strong{display:block;margin-top:4px;color:#43564c;font-size:11px;overflow-wrap:anywhere}
+      .final26-terms-card{padding:19px;border:1px solid #dce8e1;border-radius:20px;background:linear-gradient(145deg,#f5faf7,#fff);box-shadow:0 7px 25px rgba(50,90,70,.045);min-width:0}
+      .final26-terms-head{display:flex;gap:10px;align-items:flex-start}.final26-terms-icon{width:41px;height:41px;display:grid;place-items:center;border-radius:12px;background:#e7f2eb;color:#47745e;flex:none}.final26-terms-title{min-width:0;flex:1}.final26-terms-title h2{margin:0;color:#31443a;font-size:15px}.final26-terms-title p{margin:4px 0 0;color:#819088;font-size:9px;line-height:1.5}.final26-terms-badge{display:inline-flex;align-items:center;gap:5px;padding:6px 8px;border-radius:999px;background:#e9f5ee;color:#47765a;font-size:8px;font-weight:800;white-space:nowrap}.final26-terms-badge.pending{background:#fff4df;color:#94682b}
+      .final26-terms-data{display:grid;gap:7px;margin:14px 0}.final26-terms-row{display:flex;justify-content:space-between;gap:12px;padding:10px;border:1px solid #e5ece8;border-radius:12px;background:#fff}.final26-terms-row span{font-size:8px;color:#899690}.final26-terms-row strong{text-align:right;color:#46594f;font-size:9px;overflow-wrap:anywhere}.final26-terms-read{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:40px;border-radius:11px;background:#456f5d;color:#fff;text-decoration:none;font-size:9px;font-weight:800}.final26-profile-note{margin-top:10px;padding:10px 11px;border-radius:11px;background:#f8faf9;color:#84918b;font-size:8px;line-height:1.55}
+      @media(max-width:920px){.final26-profile-grid{grid-template-columns:1fr}}
+      @media(max-width:680px){.final26-profile-hero{grid-template-columns:1fr;padding:18px}.final26-profile-hero-actions{align-items:flex-start}.final26-profile-fields,.final26-profile-edit-grid,.final26-profile-info-grid{grid-template-columns:1fr}.final26-profile-edit-grid label.full{grid-column:auto}.final26-profile-title{font-size:23px}.final26-profile-avatar{width:64px;height:64px;border-radius:18px}}
+    `;document.head.appendChild(s);
+  }
+  function renderProfile(){
+    const c=document.getElementById('perfilContent'); if(!c)return;
+    profileStyles();
+    const p=W.state?.profile||{},u=W.state?.user||{},name=displayName();
+    const photo=p.photo_url||p.avatar_url||'';
+    const expiry=p.access_expires_at||p.plan_expires_at||p.subscription_expires_at||null;
+    const expTs=expiry?new Date(expiry).getTime():NaN;
+    const accessBad=Number.isFinite(expTs)&&expTs<Date.now();
+    const blocked=p.blocked===true;
+    const plan=p.plan_name||p.plan||'Não informado';
+    const price=p.plan_price!=null&&p.plan_price!==''?(W.formatCurrency?W.formatCurrency(Number(p.plan_price)):'R$ '+Number(p.plan_price).toFixed(2).replace('.',',')):'Não informado';
+    const pay={paid:'Pago',overdue:'Em atraso',courtesy:'Cortesia',pending:'Pendente'}[String(p.payment_status||'pending').toLowerCase()]||'Pendente';
+    const termsOk=Boolean(p.terms_accepted_at&&p.terms_accepted_name&&p.terms_version===TERMS_VERSION);
+    const accessLabel=blocked?'Acesso bloqueado':accessBad?'Acesso vencido':'Acesso regular';
+    c.innerHTML=`<div class="final26-profile">
+      <section class="final26-profile-hero">
+        <div class="final26-profile-identity"><div class="final26-profile-avatar">${photo?`<img src="${esc(photo)}" alt="Foto de ${esc(name)}">`:`<span>${esc(initials(name))}</span>`}</div><div><div class="final26-profile-kicker">MINHA CONTA PROFISSIONAL</div><h1 class="final26-profile-title">${esc(name)}</h1><p class="final26-profile-sub">${esc(u.email||p.email||'E-mail não informado')} · ${esc(p.specialty||'Psicopedagogia')}</p></div></div>
+        <div class="final26-profile-hero-actions"><span class="final26-profile-status ${blocked||accessBad?'bad':expiry?'':'warn'}"><i data-lucide="${blocked||accessBad?'triangle-alert':'shield-check'}"></i>${esc(accessLabel)}</span><button type="button" class="final26-edit-btn" id="final26EditProfile"><i data-lucide="pencil"></i>Editar perfil</button></div>
+      </section>
+      <div class="final26-profile-grid">
+        <section class="final26-profile-card" id="final26ProfileDataCard">
+          <div class="final26-profile-card-head"><div><div class="final24-profile-card-kicker">SEUS DADOS</div><h2>Informações do profissional</h2><p>Edite diretamente aqui sempre que precisar.</p></div></div>
+          <div id="final26ProfileViewMode"><div class="final26-profile-fields">
+            <div class="final26-profile-field"><small>Nome completo</small><strong>${esc(name)}</strong></div>
+            <div class="final26-profile-field"><small>E-mail</small><strong>${esc(u.email||p.email||'Não informado')}</strong></div>
+            <div class="final26-profile-field"><small>Telefone</small><strong>${esc(p.phone||'Não informado')}</strong></div>
+            <div class="final26-profile-field"><small>Especialidade</small><strong>${esc(p.specialty||'Não informada')}</strong></div>
+            <div class="final26-profile-field"><small>Serviços / atendimentos</small><strong>${esc(p.services||'Não informado')}</strong></div>
+            <div class="final26-profile-field"><small>Foto por URL</small><strong>${esc(p.photo_url||p.avatar_url||'Não configurada')}</strong></div>
+            <div class="final26-profile-field final26-profile-span-2"><small>Apresentação profissional</small><strong>${esc(p.bio||'Não informada')}</strong></div>
+          </div></div>
+          <div id="final26ProfileEditMode" hidden></div>
+        </section>
+        <aside class="final26-terms-card">
+          <div class="final26-terms-head"><div class="final26-terms-icon"><i data-lucide="file-signature"></i></div><div class="final26-terms-title"><h2>Termos e Condições de Uso</h2><p>O documento que você aceitou continua disponível para consulta.</p></div><span class="final26-terms-badge ${termsOk?'':'pending'}"><i data-lucide="${termsOk?'circle-check':'clock-3'}"></i>${termsOk?'Aceito':'Pendente'}</span></div>
+          ${termsOk?`<div class="final26-terms-data"><div class="final26-terms-row"><span>Nome no aceite</span><strong>${esc(p.terms_accepted_name)}</strong></div><div class="final26-terms-row"><span>Data e hora</span><strong>${esc(fmtDate(p.terms_accepted_at))}</strong></div><div class="final26-terms-row"><span>Versão</span><strong>${esc(p.terms_version)}</strong></div></div><a class="final26-terms-read" href="${TERMS_URL}" target="_blank" rel="noopener noreferrer"><i data-lucide="book-open"></i>Ler os Termos aceitos novamente</a>`:`<div class="final24-terms-pending-note">O aceite da versão atual ainda não foi registrado.</div><a class="final26-terms-read" href="${TERMS_URL}" target="_blank" rel="noopener noreferrer"><i data-lucide="file-text"></i>Visualizar os Termos de Uso</a>`}
+          <div class="final26-profile-note">O nome utilizado no aceite, a data/hora e a versão ficam vinculados ao seu perfil para consulta administrativa.</div>
+        </aside>
+      </div>
+      <section class="final26-profile-card"><div class="final26-profile-card-head"><div><div class="final24-profile-card-kicker">ACESSO E PLANO</div><h2>Informações da assinatura</h2><p>Dados definidos pela gestão da plataforma.</p></div></div><div class="final26-profile-info-grid">
+        <div class="final26-profile-stat"><small>Plano contratado</small><strong>${esc(plan)}</strong></div><div class="final26-profile-stat"><small>Valor do plano</small><strong>${esc(price)}</strong></div><div class="final26-profile-stat"><small>Status financeiro</small><strong>${esc(pay)}</strong></div><div class="final26-profile-stat"><small>Acesso até</small><strong>${expiry?(W.dateOnly?esc(W.dateOnly(expiry)):esc(String(expiry).slice(0,10))):'Sem vencimento informado'}</strong></div>
+      </div></section>
+    </div>`;
+    W.refreshIcons?.();
+    c.querySelector('#final26EditProfile')?.addEventListener('click',()=>openProfileEditor(c,p,u));
+  }
+  function openProfileEditor(c,p,u){
+    const view=c.querySelector('#final26ProfileViewMode'), edit=c.querySelector('#final26ProfileEditMode'); if(!view||!edit)return;
+    view.hidden=true; edit.hidden=false;
+    edit.innerHTML=`<div class="final26-profile-edit-grid">
+      <label><span>Nome completo</span><input name="full_name" value="${esc(p.full_name||p.name||u.user_metadata?.full_name||'')}"></label>
+      <label><span>E-mail</span><input value="${esc(u.email||p.email||'')}" disabled></label>
+      <label><span>Telefone</span><input name="phone" value="${esc(p.phone||'')}"></label>
+      <label><span>Especialidade</span><input name="specialty" value="${esc(p.specialty||'')}"></label>
+      <label><span>Serviços / atendimentos</span><input name="services" value="${esc(p.services||'')}"></label>
+      <label><span>Foto por URL</span><input name="photo_url" value="${esc(p.photo_url||p.avatar_url||'')}" placeholder="https://..."></label>
+      <label class="full"><span>Apresentação profissional</span><textarea name="bio" rows="4" placeholder="Conte um pouco sobre seu trabalho...">${esc(p.bio||'')}</textarea></label>
+    </div><div class="final26-profile-actions"><button type="button" class="final26-profile-cancel" id="final26ProfileCancel">Cancelar</button><button type="button" class="final26-profile-save" id="final26ProfileSave"><i data-lucide="save"></i>Salvar alterações</button></div>`;
+    W.refreshIcons?.();
+    edit.querySelector('#final26ProfileCancel')?.addEventListener('click',()=>{edit.hidden=true;view.hidden=false;});
+    edit.querySelector('#final26ProfileSave')?.addEventListener('click',async e=>{
+      const btn=e.currentTarget;btn.disabled=true;
+      try{
+        const payload={full_name:String(edit.querySelector('[name=full_name]')?.value||'').trim(),phone:String(edit.querySelector('[name=phone]')?.value||'').trim()||null,specialty:String(edit.querySelector('[name=specialty]')?.value||'').trim()||null,services:String(edit.querySelector('[name=services]')?.value||'').trim()||null,photo_url:String(edit.querySelector('[name=photo_url]')?.value||'').trim()||null,bio:String(edit.querySelector('[name=bio]')?.value||'').trim()||null};
+        if(!payload.full_name)throw new Error('Informe seu nome completo.');
+        const cdb=sb();if(!cdb||!id())throw new Error('Sessão não encontrada.');
+        const r=await cdb.from('profiles').update(payload).eq('id',id()).select('*').maybeSingle();if(r.error)throw r.error;
+        W.state.profile={...(W.state.profile||{}),...(r.data||payload)};W.updateUserHeader?.();W.showSuccess?.('Perfil atualizado com sucesso.');renderProfile();
+      }catch(err){W.showError?.(err.message||'Não foi possível salvar o perfil.');btn.disabled=false;}
+    });
+  }
+
+  /* ============================================================
+     4) FINANCEIRO — tamanho intermediário, sem ficar estreito ou gigante
+  ============================================================ */
+  function financeStyles(){
+    if(document.getElementById('final26FinanceStyles'))return;
+    const s=document.createElement('style');s.id='final26FinanceStyles';s.textContent=`
+      #uxModalCard.final24-finance-wide{width:min(860px,94vw)!important;max-width:none!important;border-radius:22px!important;padding:24px!important}
+      #uxModalCard.final24-finance-wide .form-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+      #uxModalCard.final24-finance-wide .form-grid .full{grid-column:1/-1}
+      #uxModalCard.final24-finance-wide .modal-form .form-field input,#uxModalCard.final24-finance-wide .modal-form .form-field select{min-height:44px}
+      @media(max-width:640px){#uxModalCard.final24-finance-wide{width:calc(100vw - 22px)!important;padding:18px!important}#uxModalCard.final24-finance-wide .form-grid{grid-template-columns:1fr}}
+    `;document.head.appendChild(s);
+  }
+  function wrapFinance(){
+    financeStyles();
+    const old=W.openPaymentModal;
+    if(typeof old==='function'&&!old.__final26Finance){
+      const fn=async function(){const r=await old.apply(this,arguments);document.getElementById('uxModalCard')?.classList.add('final24-finance-wide');return r;};fn.__final26Finance=true;W.openPaymentModal=fn;W.v3OpenFinanceEditor=fn;
+    }
+    const oldClose=W.closeModal;
+    if(typeof oldClose==='function'&&!oldClose.__final26Close){
+      const fn=function(){document.getElementById('uxModalCard')?.classList.remove('final24-finance-wide');return oldClose.apply(this,arguments);};fn.__final26Close=true;W.closeModal=fn;
+    }
+  }
+
+  /* ============================================================
+     5) RECADOS — suporte em conversa + excluir
+  ============================================================ */
+  let currentThread=null;
+  async function getMasterId(){
+    const c=sb();if(!c)throw new Error('Supabase não está disponível.');
+    const r=await c.rpc('get_master_user_id');if(r.error)throw r.error;return r.data;
+  }
+  async function loadMsgData(){
+    const c=sb(),me=id();if(!c||!me)return {rows:[],trash:[],profiles:[]};
+    const master=isMaster();
+    let q=master?c.from('messages').select('*').order('created_at',{ascending:false}).limit(800):c.from('messages').select('*').or(`user_id.eq.${me},recipient_id.eq.${me},target_all.eq.true`).order('created_at',{ascending:false}).limit(500);
+    const r=await q;if(r.error)throw r.error;let rows=r.data||[];
+    let reads=[];
+    if(!master){const rr=await c.from('message_reads').select('message_id,read_at,hidden_at,dismissed_at').eq('user_id',me).limit(1500);if(!rr.error)reads=rr.data||[];}
+    const rm=new Map(reads.map(x=>[String(x.message_id),x]));
+    rows=rows.map(x=>{const rr=rm.get(String(x.id));return {...x,_read:Boolean(x.read||rr?.read_at),_hidden:Boolean(rr?.hidden_at),_sent:String(x.user_id||'')===String(me)&&!x.target_all,_support:Boolean(x.thread_id||x.recipient_id)};});
+    const trash=rows.filter(x=>x._hidden);
+    rows=rows.filter(x=>!x._hidden);
+    let profiles=[];
+    if(master){const pr=await c.from('profiles').select('id,full_name,name,email').limit(1000);if(!pr.error)profiles=pr.data||[];}
+    return {rows,trash,profiles};
+  }
+  function threadMap(rows){
+    const map=new Map();
+    rows.filter(r=>r._support&&r.thread_id).forEach(r=>{const key=String(r.thread_id);if(!map.has(key))map.set(key,[]);map.get(key).push(r);});
+    for(const a of map.values())a.sort((x,y)=>new Date(x.created_at)-new Date(y.created_at));
+    return map;
+  }
+  function openSupportComposer(){
+    const modal=document.createElement('div');modal.id='final26SupportModal';modal.className='saas-payment-modal';
+    modal.innerHTML=`<div class="saas-payment-card" style="width:min(660px,94vw)"><div class="saas-drawer-head"><div><span>SUPORTE</span><h2>Nova conversa</h2><p>Envie sua dúvida ou solicitação diretamente para a gestão.</p></div><button type="button" class="icon-button" id="final26SupportClose"><i data-lucide="x"></i></button></div><form id="final26SupportForm" class="v3-form"><div class="v3-form-grid"><label><span>Assunto *</span><input name="title" required placeholder="Ex.: Dúvida sobre meu acesso"></label><label class="full"><span>Mensagem *</span><textarea name="message" rows="7" required placeholder="Escreva sua mensagem..."></textarea></label></div><div class="v3-form-actions"><button type="button" class="btn btn-outline" id="final26SupportCancel">Cancelar</button><button type="submit" class="btn btn-primary"><i data-lucide="send"></i>Enviar mensagem</button></div></form></div>`;
+    document.body.appendChild(modal);W.refreshIcons?.();
+    const close=()=>modal.remove();modal.querySelector('#final26SupportClose')?.addEventListener('click',close);modal.querySelector('#final26SupportCancel')?.addEventListener('click',close);
+    modal.querySelector('#final26SupportForm')?.addEventListener('submit',async e=>{e.preventDefault();const btn=e.currentTarget.querySelector('[type=submit]');btn.disabled=true;try{const fd=new FormData(e.currentTarget);const masterId=await getMasterId();const c=sb();const thread=crypto.randomUUID();const r=await c.from('messages').insert({user_id:id(),recipient_id:masterId,thread_id:thread,target_all:false,title:String(fd.get('title')||'Suporte').trim(),type:'Suporte',message:String(fd.get('message')||'').trim(),read:false});if(r.error)throw r.error;close();W.showSuccess?.('Mensagem enviada para a gestão.');await W.renderMessages?.();}catch(err){W.showError?.(err.message||'Não foi possível enviar a mensagem.');btn.disabled=false;}});
+  }
+  async function deleteChatMessage(msgId){
+    const c=sb(),me=id();if(!c||!me)return;
+    if(!confirm('Excluir esta mensagem?'))return;
+    const g=await c.from('messages').select('id,user_id,recipient_id,target_all').eq('id',msgId).maybeSingle();if(g.error)throw g.error;if(!g.data)return;
+    const own=String(g.data.user_id||'')===String(me),master=isMaster();
+    if(master||own){const d=await c.from('messages').delete().eq('id',msgId);if(d.error)throw d.error;W.showSuccess?.('Mensagem excluída.');}
+    else {const up=await c.from('message_reads').upsert({message_id:String(msgId),user_id:me,hidden_at:new Date().toISOString(),updated_at:new Date().toISOString()},{onConflict:'message_id,user_id'});if(up.error)throw up.error;W.showSuccess?.('Mensagem removida da sua caixa.');}
+    await W.renderMessages?.();
+  }
+  async function replyInThread(threadId,recipientId){
+    const c=sb(),me=id();if(!c||!me)return;
+    const body=prompt('Digite sua resposta:');if(!body?.trim())return;
+    const rows=await c.from('messages').select('title').eq('thread_id',threadId).order('created_at',{ascending:true}).limit(1);if(rows.error)throw rows.error;
+    const title=rows.data?.[0]?.title||'Suporte';
+    const target=recipientId||await getMasterId();
+    const r=await c.from('messages').insert({user_id:me,recipient_id:target,thread_id:threadId,target_all:false,title,type:'Suporte',message:body.trim(),read:false});if(r.error)throw r.error;
+    W.showSuccess?.('Resposta enviada.');await W.renderMessages?.();
+  }
+  function openThreadModal(thread,items,profiles){
+    const master= isMaster(); const otherId=master?(items.find(x=>String(x.user_id)!==String(id()))?.user_id||items.find(x=>String(x.recipient_id)!==String(id()))?.recipient_id):null;
+    const other=otherId?profiles.find(p=>String(p.id)===String(otherId)):null;
+    const title=items[0]?.title||'Conversa de suporte';
+    const modal=document.createElement('div');modal.id='final26ThreadModal';modal.className='saas-payment-modal';
+    modal.innerHTML=`<div class="saas-payment-card" style="width:min(760px,95vw);padding:0;overflow:hidden"><div style="padding:18px 20px;border-bottom:1px solid #e7eee9;display:flex;justify-content:space-between;gap:12px"><div><div style="font-size:8px;font-weight:800;letter-spacing:.12em;color:#7d8b84">CONVERSA</div><h2 style="margin:4px 0 2px;font-size:18px;color:#34463d">${esc(title)}</h2><p style="margin:0;font-size:9px;color:#8a9690">${esc(other?.full_name||other?.name||other?.email||'Suporte')}</p></div><button type="button" class="icon-button" id="final26ThreadClose"><i data-lucide="x"></i></button></div><div id="final26ThreadBody" style="padding:16px;max-height:55vh;overflow:auto;display:grid;gap:9px">${items.map(m=>`<div style="max-width:82%;${String(m.user_id)===String(id())?'margin-left:auto;background:#eaf5ee;border:1px solid #d8e9de':'background:#f7faf8;border:1px solid #e6ece8'};padding:10px 12px;border-radius:13px"><div style="font-size:8px;font-weight:800;color:#76857e;margin-bottom:4px">${String(m.user_id)===String(id())?'Você':esc(other?.full_name||other?.name||'Gestão')} · ${esc(fmtDate(m.created_at))}</div><div style="font-size:10px;line-height:1.55;color:#46584f;white-space:pre-wrap;overflow-wrap:anywhere">${esc(m.message||'')}</div><button type="button" style="margin-top:7px;border:0;background:transparent;color:#9c5656;font-size:8px;font-weight:800;cursor:pointer" data-del-msg="${esc(m.id)}">Excluir</button></div>`).join('')}</div><form id="final26ThreadReply" style="padding:14px 16px;border-top:1px solid #e7eee9;background:#fbfdfc"><textarea name="message" rows="3" required placeholder="Escreva uma resposta..."></textarea><div style="display:flex;justify-content:flex-end;margin-top:8px;gap:7px"><button type="button" class="btn btn-outline" id="final26ThreadCancel">Fechar</button><button class="btn btn-primary" type="submit"><i data-lucide="send"></i>Enviar resposta</button></div></form></div>`;
+    document.body.appendChild(modal);W.refreshIcons?.();
+    const close=()=>modal.remove();modal.querySelector('#final26ThreadClose')?.addEventListener('click',close);modal.querySelector('#final26ThreadCancel')?.addEventListener('click',close);
+    modal.querySelectorAll('[data-del-msg]').forEach(b=>b.addEventListener('click',async()=>{try{await deleteChatMessage(b.dataset.delMsg);close();}catch(e){W.showError?.(e.message||'Não foi possível excluir.');}}));
+    modal.querySelector('#final26ThreadReply')?.addEventListener('submit',async e=>{e.preventDefault();const btn=e.currentTarget.querySelector('[type=submit]');btn.disabled=true;try{const msg=String(new FormData(e.currentTarget).get('message')||'').trim();if(!msg)throw new Error('Digite uma mensagem.');const target=master?(items.find(x=>String(x.user_id)!==String(id()))?.user_id||items.find(x=>String(x.recipient_id)!==String(id()))?.recipient_id):await getMasterId();const r=await sb().from('messages').insert({user_id:id(),recipient_id:target,thread_id:thread,target_all:false,title,type:'Suporte',message:msg,read:false});if(r.error)throw r.error;close();W.showSuccess?.('Resposta enviada.');await W.renderMessages?.();}catch(err){W.showError?.(err.message||'Não foi possível enviar a resposta.');btn.disabled=false;}});
+  }
+  W.renderMessages=async function(){
+    const c=document.getElementById('recadosContent');if(!c)return;
+    c.innerHTML='<div class="v3-loading"><i data-lucide="loader-circle"></i><span>Carregando recados...</span></div>';W.refreshIcons?.();
+    try{
+      const {rows,trash,profiles}=await loadMsgData();
+      const supportRows=rows.filter(r=>r._support&&r.thread_id);
+      const broadcasts=rows.filter(r=>r.target_all);
+      const sent=rows.filter(r=>r._sent&&!r.target_all);
+      const conversations=threadMap(supportRows);
+      const unread=broadcasts.filter(r=>!r._read).length+supportRows.filter(r=>!r._read&&String(r.recipient_id)===String(id())).length;
+      const date=r=>fmtDate(r.created_at);
+      const card=r=>`<article style="display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:9px;padding:12px;border:1px solid #e3ebe6;border-radius:14px;background:#fff;margin-bottom:8px"><div style="width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#edf5f0;color:#527763"><i data-lucide="${r._support?'messages-square':'megaphone'}"></i></div><div style="min-width:0"><div style="display:flex;gap:7px;flex-wrap:wrap;font-size:8px;color:#8a9690"><span style="display:inline-flex;padding:4px 7px;border-radius:999px;background:${r._sent?'#eef4fb':'#f1f5f2'};color:${r._sent?'#547292':'#61736a'};font-weight:800">${r._support?'Suporte':r._sent?'Enviado':'Recebido'}</span><span>${esc(date(r))}</span></div><h3 style="margin:6px 0 2px;font-size:12px;color:#3c4f46;overflow-wrap:anywhere">${esc(r.title||'Recado')}</h3><p style="margin:0;color:#7e8b85;font-size:9px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere">${esc(r.message||'')}</p></div><div style="display:flex;gap:5px;flex-wrap:wrap;align-content:start;justify-content:flex-end"><button type="button" class="btn btn-danger btn-sm" onclick="final26DeleteMessage('${esc(r.id)}')"><i data-lucide="trash-2"></i>Excluir</button></div></article>`;
+      const convCard=(items,thread)=>{const last=items[items.length-1];const otherId=isMaster()?(items.find(x=>String(x.user_id)!==String(id()))?.user_id||items.find(x=>String(x.recipient_id)!==String(id()))?.recipient_id):null;const other=otherId?profiles.find(p=>String(p.id)===String(otherId)):null;return `<article style="padding:14px;border:1px solid #e1e9e4;border-radius:15px;background:#fff;display:grid;gap:8px"><div style="display:flex;justify-content:space-between;gap:10px"><div style="min-width:0"><strong style="display:block;font-size:11px;color:#40534a;overflow-wrap:anywhere">${esc(items[0]?.title||'Conversa de suporte')}</strong><span style="display:block;margin-top:3px;color:#8a9690;font-size:8px">${esc(isMaster()?(other?.full_name||other?.name||other?.email||'Professor'):'Conversa com a gestão')} · ${esc(date(last))}</span></div><span style="padding:5px 8px;border-radius:999px;background:#eef6f1;color:#4d735e;font-size:8px;font-weight:800">${items.length} ${items.length===1?'mensagem':'mensagens'}</span></div><p style="margin:0;color:#7d8984;font-size:9px;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(last?.message||'')}</p><div style="display:flex;justify-content:flex-end;gap:6px"><button type="button" class="btn btn-primary btn-sm" onclick="final26OpenThread('${esc(thread)}')"><i data-lucide="messages-square"></i>Abrir conversa</button></div></article>`;};
+      const receivedHtml=broadcasts.length?broadcasts.map(card).join(''):'<div class="final18-empty"><i data-lucide="inbox"></i><strong>Nenhum comunicado recebido.</strong></div>';
+      const sentHtml=sent.length?sent.map(card).join(''):'<div class="final18-empty"><i data-lucide="send"></i><strong>Nenhuma mensagem enviada.</strong></div>';
+      const trashHtml=trash.length?trash.map(r=>`<article style="padding:12px;border:1px solid #eadede;border-radius:14px;background:#fff8f8;margin-bottom:8px"><div style="display:flex;justify-content:space-between;gap:10px"><div><strong style="font-size:11px;color:#654f4f">${esc(r.title||'Recado')}</strong><span style="display:block;margin-top:3px;color:#9a8585;font-size:8px">${esc(date(r))}</span></div><button type="button" class="btn btn-outline btn-sm" onclick="final26RestoreMessage('${esc(r.id)}')"><i data-lucide="rotate-ccw"></i>Restaurar</button></div></article>`).join(''):'<div class="final18-empty"><i data-lucide="trash-2"></i><strong>A lixeira está vazia.</strong></div>';
+      const convHtml=conversations.size?[...conversations.entries()].reverse().map(([thread,items])=>convCard(items,thread)).join(''):`<div class="final18-empty"><i data-lucide="messages-square"></i><strong>Nenhuma conversa de suporte.</strong><span>${isMaster()?'As mensagens dos professores aparecerão aqui.':'Use “Nova conversa com suporte” para falar com a gestão.'}</span></div>`;
+      c.innerHTML=`<div class="final18-recados-head"><div><div class="final18-recados-kicker">COMUNICAÇÃO</div><h1>Recados</h1><p>${isMaster()?'Comunicados e conversas de suporte com os professores.':'Comunicados, mensagens e atendimento direto com a gestão.'}</p></div>${isMaster()?'<button type="button" class="btn btn-primary" onclick="v3OpenMessageEditor()"><i data-lucide="plus"></i>Novo comunicado</button>':'<button type="button" class="btn btn-primary" onclick="final26NewSupport"><i data-lucide="message-square-plus"></i>Nova conversa com suporte</button>'}</div>
+      <section class="final18-recados-summary"><div class="final18-summary-icon"><i data-lucide="messages-square"></i></div><div><strong>${unread}</strong><span>Não lidos</span></div><div><strong>${broadcasts.length}</strong><span>Comunicados</span></div><div><strong>${conversations.size}</strong><span>Conversas</span></div><div><strong>${trash.length}</strong><span>Na lixeira</span></div></section>
+      <div class="final18-recados-tabs"><button type="button" class="active" data-f26-tab="entrada"><i data-lucide="inbox"></i>Entrada</button><button type="button" data-f26-tab="conversas"><i data-lucide="messages-square"></i>Conversas</button><button type="button" data-f26-tab="enviados"><i data-lucide="send"></i>Enviados</button><button type="button" data-f26-tab="lixeira"><i data-lucide="trash-2"></i>Lixeira <b>${trash.length}</b></button></div>
+      <div class="final18-recados-panel active" data-f26-panel="entrada">${receivedHtml}</div>
+      <div class="final18-recados-panel" data-f26-panel="conversas" hidden><div style="display:grid;gap:8px">${convHtml}</div></div>
+      <div class="final18-recados-panel" data-f26-panel="enviados" hidden>${sentHtml}</div>
+      <div class="final18-recados-panel" data-f26-panel="lixeira" hidden>${trashHtml}</div>`;
+      c.querySelectorAll('[data-f26-tab]').forEach(btn=>btn.addEventListener('click',()=>{c.querySelectorAll('[data-f26-tab]').forEach(x=>x.classList.toggle('active',x===btn));c.querySelectorAll('[data-f26-panel]').forEach(x=>x.hidden=x.dataset.f26Panel!==btn.dataset.f26Tab);}));
+      const newSupport=c.querySelector('[onclick="final26NewSupport"]');if(newSupport){newSupport.removeAttribute('onclick');newSupport.addEventListener('click',openSupportComposer);}
+      const badge=document.getElementById('recadosBadge');if(badge){badge.textContent=String(unread);badge.style.display=unread?'':'none';}
+      W.refreshIcons?.();
+    }catch(err){c.innerHTML=`<section class="final18-recados-error"><i data-lucide="circle-alert"></i><strong>Não foi possível carregar os recados.</strong><span>${esc(err.message||err)}</span><button type="button" class="btn btn-primary btn-sm" onclick="renderMessages()">Tentar novamente</button></section>`;W.refreshIcons?.();}
+  };
+  W.final26NewSupport=openSupportComposer;
+  W.final26DeleteMessage=async msgId=>{try{await deleteChatMessage(msgId);}catch(e){W.showError?.(e.message||'Não foi possível excluir a mensagem.');}};
+  W.final26RestoreMessage=async msgId=>{try{const c=sb(),me=id();const r=await c.from('message_reads').update({hidden_at:null,updated_at:new Date().toISOString()}).eq('message_id',String(msgId)).eq('user_id',me);if(r.error)throw r.error;W.showSuccess?.('Mensagem restaurada.');await W.renderMessages?.();}catch(e){W.showError?.(e.message||'Não foi possível restaurar a mensagem.');}};
+  W.final26OpenThread=async thread=>{try{const d=await loadMsgData();const items=d.rows.filter(x=>String(x.thread_id)===String(thread)).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));if(!items.length)throw new Error('Conversa não encontrada.');openThreadModal(thread,items,d.profiles);}catch(e){W.showError?.(e.message||'Não foi possível abrir a conversa.');}};
+
+  /* ============================================================
+     6) MASTER — controle do servidor dentro da conta Master
+  ============================================================ */
+  function ensureMasterServerCard(){
+    if(!isMaster())return;
+    const host=document.getElementById('masterContent');if(!host)return;
+    const shell=host.querySelector('.saas-shell')||host.firstElementChild;if(!shell)return;
+    let card=shell.querySelector('[data-final26-master-server]');
+    if(!card){card=document.createElement('section');card.dataset.final26MasterServer='1';card.className='final26-master-server-card';shell.prepend(card);}
+    card.innerHTML=`<div class="final26-master-server-head"><div><div class="final26-master-server-kicker">STATUS GLOBAL DA PLATAFORMA</div><h2>Servidor e manutenção</h2><p>Defina a indicação exibida no topo para todos os usuários. O estado “offline” não é escolhido aqui: ele aparece automaticamente quando a conexão com o Supabase não puder ser confirmada.</p></div><span id="final26MasterServerBadge" class="final26-master-server-badge">Verificando…</span></div><div class="final26-master-server-actions"><button type="button" class="primary" id="final26MasterOnline"><i data-lucide="check-circle"></i>Servidor online</button><button type="button" class="maint" id="final26MasterMaintenance"><i data-lucide="wrench"></i>Servidor em atualização</button></div>`;
+    card.querySelector('#final26MasterOnline')?.addEventListener('click',()=>setServerMode('online'));
+    card.querySelector('#final26MasterMaintenance')?.addEventListener('click',()=>setServerMode('maintenance'));
+    updateMasterServerBadge();W.refreshIcons?.();
+  }
+  async function updateMasterServerBadge(){
+    const b=document.getElementById('final26MasterServerBadge');if(!b)return;const st=await readServerStatus();b.className='final26-master-server-badge'+(st.status==='maintenance'?' maint':'');b.textContent=st.status==='maintenance'?'Servidor passando por atualização':st.status==='online'?'Servidor online':'Servidor offline';
+  }
+  function wrapMaster(){
+    const old=W.renderMaster;
+    if(typeof old==='function'&&!old.__final26Master){const fn=async function(){const r=await old.apply(this,arguments);setTimeout(ensureMasterServerCard,30);return r;};fn.__final26Master=true;W.renderMaster=fn;}
+  }
+
+  /* ============================================================
+     7) INICIALIZAÇÃO / REFORÇO APÓS LOGIN E NAVEGAÇÃO
+  ============================================================ */
+  function enhance(){
+    addServerStyles();profileStyles();financeStyles();wrapFinance();wrapMaster();
+    bootServer();bootPresence();ensureServerWidget();
+    if(W.state?.currentView==='perfil')renderProfile();
+    if(isMaster())setTimeout(ensureMasterServerCard,80);
+  }
+  const oldUpdate=W.updateUserHeader;
+  if(typeof oldUpdate==='function'&&!oldUpdate.__final26){
+    W.updateUserHeader=function(){const r=oldUpdate.apply(this,arguments);setTimeout(()=>{ensureServerWidget();bootServer();bootPresence();if(isMaster())ensureMasterServerCard();},30);return r;};W.updateUserHeader.__final26=true;
+  }
+  const oldNavigate=W.navigate;
+  if(typeof oldNavigate==='function'&&!oldNavigate.__final26){
+    W.navigate=function(view){const r=oldNavigate.apply(this,arguments);setTimeout(()=>{ensureServerWidget();if(view==='perfil')renderProfile();if(isMaster())ensureMasterServerCard();},80);return r;};W.navigate.__final26=true;
+  }
+  W.renderProfile=renderProfile;
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',enhance,{once:true});else setTimeout(enhance,0);
+  window.addEventListener('focus',()=>{refreshServerStatus();bootPresence();},{passive:true});
+})();
+
+</script>
