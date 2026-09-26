@@ -13032,6 +13032,348 @@ body.legado-v4-modal-open{overflow:hidden}
 })();
 </script>
 </body>
+
+<style id="final30DesignOverride">
+/* =============================================================
+   FINAL 30 — DESIGN VISUAL REAL
+   Objetivo: eliminar o aspecto misturado do modo escuro e deixar
+   RECADOS claramente visível, sem popup para iniciar conversa.
+   ============================================================= */
+
+/* ---------- TOPO: distância real do nome do professor ---------- */
+.topbar{display:flex!important;align-items:center!important;gap:0!important;min-width:0!important}
+.topbar #pageTitle{flex:1 1 auto!important;min-width:0!important;margin-right:18px!important}
+.topbar #final27TopTools{display:flex!important;align-items:center!important;gap:8px!important;flex:0 0 auto!important;margin:0 0 0 12px!important;min-width:max-content!important}
+.topbar .user-mini{display:flex!important;align-items:center!important;gap:9px!important;flex:0 0 auto!important;margin:0 0 0 18px!important;padding-left:14px!important;border-left:1px solid #dfe5e1!important}
+#final27ThemeBtn{margin-left:2px!important}
+
+/* ---------- BOTÃO DE TEMA: não pode parecer o botão do servidor ---------- */
+#final27ThemeBtn{border-radius:12px!important;padding:9px 11px!important;font-weight:800!important;box-shadow:none!important}
+body:not(.final27-dark) #final27ThemeBtn{background:#f2efff!important;border:1px solid #ddd6ff!important;color:#5a547e!important}
+body:not(.final27-dark) #final27ThemeBtn:hover{background:#e9e4ff!important;border-color:#cec5ff!important}
+body.final27-dark #final27ThemeBtn{background:#25223c!important;border:1px solid #48446d!important;color:#dcd8ff!important}
+body.final27-dark #final27ThemeBtn:hover{background:#302b4d!important;border-color:#625b91!important}
+
+/* =============================================================
+   MODO DARK — PALETA ÚNICA, sem cards brancos e sem texto branco
+   em fundo branco.
+   ============================================================= */
+body.final27-dark{
+  --background:#0b1020!important;
+  --surface:#111827!important;
+  --surface-2:#151f2f!important;
+  --surface-3:#1b2638!important;
+  --line:#29364a!important;
+  --ink:#f3f6fb!important;
+  --muted:#aab5c6!important;
+  --accent:#72c7a0!important;
+  --accent-strong:#4bb889!important;
+  --accent-soft:#193a2d!important;
+  --warning:#e3b566!important;
+  --danger:#ef8b8b!important;
+  background:#0b1020!important;
+  color:#f3f6fb!important;
+}
+body.final27-dark .main,
+body.final27-dark .content,
+body.final27-dark .view,
+body.final27-dark .topbar{background:#0b1020!important;color:#f3f6fb!important;border-color:#29364a!important}
+body.final27-dark .topbar{background:#101827!important;box-shadow:0 1px 0 rgba(255,255,255,.04)!important}
+body.final27-dark .sidebar{background:#0e1522!important;border-color:#29364a!important}
+body.final27-dark .page-title,
+body.final27-dark .page-title span,
+body.final27-dark h1,body.final27-dark h2,body.final27-dark h3,
+body.final27-dark h4,body.final27-dark h5,body.final27-dark strong,
+body.final27-dark .user-mini,
+body.final27-dark .nav-label{color:#f3f6fb!important}
+body.final27-dark p,
+body.final27-dark small,
+body.final27-dark label,
+body.final27-dark .muted,
+body.final27-dark .help-text,
+body.final27-dark [class*="meta"],
+body.final27-dark [class*="description"],
+body.final27-dark [class*="subtitle"]{color:#aab5c6!important}
+
+/* Superfícies globais — tudo dentro da aplicação segue a mesma família */
+body.final27-dark .card,
+body.final27-dark .panel,
+body.final27-dark .report-panel,
+body.final27-dark .mpro-panel,
+body.final27-dark .mpro-tabs,
+body.final27-dark .v3-panel,
+body.final27-dark .v3-stat,
+body.final27-dark .v3-student-card,
+body.final27-dark .v3-history-item,
+body.final27-dark .v3-progress-item,
+body.final27-dark .v3-section-intro,
+body.final27-dark .v3-tabs,
+body.final27-dark .v4-model,
+body.final27-dark .v4-empty,
+body.final27-dark .final19-doc-card,
+body.final27-dark .final19-doc-tip,
+body.final27-dark .final24-profile-card,
+body.final27-dark .final24-terms-card,
+body.final27-dark .final26-profile-card,
+body.final27-dark .final26-terms-card,
+body.final27-dark .final18-recados-summary,
+body.final27-dark .final18-recados-panel,
+body.final27-dark .l14-panel,
+body.final27-dark .l14-history-item,
+body.final27-dark .l14-up-item,
+body.final27-dark .saas-payment-card,
+body.final27-dark .final29-conversation-shell,
+body.final27-dark .final29-composer-card,
+body.final27-dark .final29-chat-pane,
+body.final27-dark .final29-notification-banner,
+body.final27-dark .final29-attendance-bar,
+body.final27-dark .final29-flow-card,
+body.final27-dark .final29-doc-helper,
+body.final27-dark .final29-received-card,
+body.final27-dark .final29-toast{
+  background:#111827!important;
+  color:#f3f6fb!important;
+  border-color:#29364a!important;
+  box-shadow:0 14px 38px rgba(0,0,0,.24)!important;
+}
+
+/* Cards internos nunca voltam a ficar brancos */
+body.final27-dark [class*="card"] [style*="background"],
+body.final27-dark [class*="panel"] [style*="background"],
+body.final27-dark [class*="field"] [style*="background"],
+body.final27-dark [class*="item"] [style*="background"]{background:#151f2f!important}
+body.final27-dark .final29-kpi-main,
+body.final27-dark .final29-kpi-mini,
+body.final27-dark .final29-thread-sidebar,
+body.final27-dark .final29-thread-sidebar-head,
+body.final27-dark .final29-inline-compose-wrap,
+body.final27-dark .final29-received-card,
+body.final27-dark .final29-composer-card,
+body.final27-dark .final29-flow-step,
+body.final27-dark .final29-choice,
+body.final27-dark .final29-chat-input,
+body.final27-dark .final29-search,
+body.final27-dark .final29-eval-search,
+body.final27-dark .final29-chat-messages{background:#151f2f!important;color:#f3f6fb!important;border-color:#29364a!important}
+
+/* Formulários */
+body.final27-dark input,
+body.final27-dark select,
+body.final27-dark textarea,
+body.final27-dark .form-control,
+body.final27-dark .modal-form input,
+body.final27-dark .modal-form select,
+body.final27-dark .modal-form textarea{background:#0f1725!important;color:#f3f6fb!important;border-color:#34435a!important}
+body.final27-dark input::placeholder,
+body.final27-dark textarea::placeholder{color:#7f8da2!important}
+body.final27-dark input:focus,
+body.final27-dark select:focus,
+body.final27-dark textarea:focus{border-color:#5d9f82!important;box-shadow:0 0 0 3px rgba(114,199,160,.12)!important;outline:none!important}
+
+/* Botões */
+body.final27-dark .btn-primary{background:#4bb889!important;border-color:#4bb889!important;color:#07140e!important;box-shadow:none!important}
+body.final27-dark .btn-primary:hover{background:#63c99d!important;border-color:#63c99d!important}
+body.final27-dark .btn-outline,
+body.final27-dark .btn-secondary{background:#151f2f!important;border-color:#34435a!important;color:#dce5f0!important}
+body.final27-dark .btn-outline:hover,
+body.final27-dark .btn-secondary:hover{background:#1b2940!important;border-color:#4a5b74!important;color:#fff!important}
+body.final27-dark .btn-danger{background:#422326!important;border-color:#6b343a!important;color:#ffc7c7!important}
+
+/* Navegação */
+body.final27-dark .nav button{color:#aeb9c9!important;background:transparent!important}
+body.final27-dark .nav button.active{background:#193a2d!important;color:#eefcf5!important;border-color:#285a45!important}
+body.final27-dark .nav button:hover{background:#151f2f!important;color:#f3f6fb!important}
+
+/* Tags, badges e estados */
+body.final27-dark .v3-tag{background:#193a2d!important;border-color:#2c5e49!important;color:#bdebd5!important}
+body.final27-dark .badge,
+body.final27-dark [class*="badge"]{background:#1b2638!important;border-color:#34435a!important;color:#dce5f0!important}
+body.final27-dark .status-success{background:#183728!important;color:#aee6c9!important}
+body.final27-dark .status-warning{background:#392f1d!important;color:#f1d08a!important}
+body.final27-dark .status-danger{background:#3b2528!important;color:#ffc2c7!important}
+
+/* Tabelas/listas */
+body.final27-dark table{background:#111827!important;color:#f3f6fb!important;border-color:#29364a!important}
+body.final27-dark th{background:#151f2f!important;color:#dce5f0!important;border-color:#29364a!important}
+body.final27-dark td{background:#111827!important;color:#d7e1ed!important;border-color:#29364a!important}
+body.final27-dark tr:hover td{background:#151f2f!important}
+
+/* Modais restantes do sistema */
+body.final27-dark #uxModalCard,
+body.final27-dark .modal-card,
+body.final27-dark .modal-content,
+body.final27-dark .dialog,
+body.final27-dark .confirm-modal,
+body.final27-dark .saas-modal{background:#111827!important;color:#f3f6fb!important;border-color:#29364a!important}
+body.final27-dark .modal-header,
+body.final27-dark .modal-footer{background:#151f2f!important;border-color:#29364a!important}
+body.final27-dark .modal-header p,
+body.final27-dark .form-section-title,
+body.final27-dark .form-field>span{color:#aab5c6!important}
+
+/* Scrollbar */
+body.final27-dark ::-webkit-scrollbar{width:10px;height:10px}
+body.final27-dark ::-webkit-scrollbar-track{background:#0b1020!important}
+body.final27-dark ::-webkit-scrollbar-thumb{background:#35445b!important;border-radius:20px;border:2px solid #0b1020!important}
+body.final27-dark ::-webkit-scrollbar-thumb:hover{background:#4a5d77!important}
+
+/* =============================================================
+   RECADOS — página dedicada, conversa à vista
+   ============================================================= */
+.final29-recados-page{gap:18px!important}
+.final29-recados-head{padding:4px 0 2px!important;align-items:center!important}
+.final29-recados-kicker{font-size:9px!important;letter-spacing:.14em!important;font-weight:900!important}
+.final29-recados-head h1{font-size:30px!important;letter-spacing:-.03em!important;margin:5px 0 7px!important}
+.final29-recados-head p{font-size:11px!important;max-width:850px!important}
+.final29-recados-actions .btn{min-height:42px!important;padding:11px 16px!important;border-radius:13px!important;font-size:10px!important}
+
+/* Oculta somente a aba redundante "Conversas" — continua existindo UMA ação de Nova conversa */
+.final29-legacy-tab[data-f29-mode="conversas"]{display:none!important}
+.final29-legacy-tabs{display:flex!important;align-items:center!important;gap:5px!important;padding:4px!important;background:#f4f7f5!important;border:1px solid #e1e9e4!important;border-radius:13px!important;width:max-content!important;max-width:100%!important}
+.final29-legacy-tab{padding:9px 12px!important;border:0!important;border-radius:9px!important;background:transparent!important;color:#708078!important;font-size:9px!important}
+.final29-legacy-tab.active{background:#fff!important;color:#3d654f!important;box-shadow:0 2px 7px rgba(25,57,41,.08)!important}
+body.final27-dark .final29-legacy-tabs{background:#0f1725!important;border-color:#29364a!important}
+body.final27-dark .final29-legacy-tab{background:transparent!important;color:#9eabbd!important}
+body.final27-dark .final29-legacy-tab.active{background:#193a2d!important;color:#dff8ea!important;box-shadow:none!important}
+
+.final29-conversation-shell{grid-template-columns:350px minmax(0,1fr)!important;min-height:640px!important;border-radius:22px!important}
+.final29-thread-sidebar{background:#f7faf8!important}
+.final29-thread-sidebar-head{padding:17px 16px!important}
+.final29-thread-sidebar-head h2{font-size:15px!important}
+.final29-thread-item{padding:13px!important;border-radius:14px!important}
+.final29-thread-item.active{background:#e8f3ec!important;border-color:#cfe3d7!important;box-shadow:inset 3px 0 0 #4f8568!important}
+.final29-thread-title{font-size:10px!important}
+.final29-thread-preview{font-size:9px!important;color:#75857d!important}
+.final29-chat-pane{display:grid!important;grid-template-rows:auto minmax(0,1fr) auto!important;background:#fff!important;min-width:0!important}
+.final29-chat-pane-head{padding:18px 20px!important;border-bottom:1px solid #e4ebe7!important;background:#fbfdfc!important}
+.final29-chat-title{font-size:17px!important;letter-spacing:-.02em!important}
+.final29-chat-messages{padding:20px!important;background:#f7faf8!important}
+.final29-message-row{margin:8px 0!important;display:flex!important}
+.final29-message-row.me{justify-content:flex-end!important}
+.final29-message-bubble{max-width:min(72%,620px)!important;padding:11px 13px!important;border-radius:15px 15px 15px 5px!important;background:#fff!important;border:1px solid #dfe8e3!important;box-shadow:0 3px 9px rgba(25,48,37,.04)!important}
+.final29-message-bubble.me{border-radius:15px 15px 5px 15px!important;background:#e6f4ed!important;border-color:#c7e0d2!important}
+.final29-message-author{font-size:8px!important;font-weight:900!important;color:#60736a!important;margin-bottom:4px!important}
+.final29-message-text{font-size:10px!important;line-height:1.6!important;color:#34483f!important;overflow-wrap:anywhere!important}
+.final29-message-time{font-size:7px!important;color:#89968f!important;margin-top:6px!important}
+.final29-chat-footer{padding:12px 14px!important;border-top:1px solid #e4ebe7!important;background:#fff!important}
+.final29-chat-form{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:8px!important;align-items:end!important}
+.final29-chat-input{min-height:46px!important;border-radius:13px!important;padding:11px!important;font-size:10px!important;resize:none!important}
+.final29-chat-form .btn{min-height:46px!important;padding:0 15px!important;border-radius:13px!important}
+.final29-inline-compose-wrap{padding:14px!important;background:#f6f9f7!important;border-top:1px solid #e4ebe7!important}
+.final29-composer-card{padding:17px!important;border-radius:18px!important}
+.final29-composer-head strong{font-size:14px!important}
+.final29-composer-card input,.final29-composer-card select,.final29-composer-card textarea{padding:11px 12px!important;font-size:10px!important;border-radius:11px!important}
+.final29-composer-card textarea{min-height:100px!important}
+body.final27-dark .final29-thread-sidebar{background:#0f1725!important;border-color:#29364a!important}
+body.final27-dark .final29-thread-sidebar-head{border-color:#29364a!important}
+body.final27-dark .final29-thread-item{color:#e6edf6!important}
+body.final27-dark .final29-thread-item.active{background:#193a2d!important;border-color:#2d5b47!important;box-shadow:inset 3px 0 0 #72c7a0!important}
+body.final27-dark .final29-chat-pane{background:#111827!important}
+body.final27-dark .final29-chat-pane-head{background:#151f2f!important;border-color:#29364a!important}
+body.final27-dark .final29-chat-messages{background:#0f1725!important}
+body.final27-dark .final29-message-bubble{background:#172235!important;border-color:#30405a!important}
+body.final27-dark .final29-message-bubble.me{background:#193a2d!important;border-color:#2f624d!important}
+body.final27-dark .final29-message-author{color:#a5b5c8!important}
+body.final27-dark .final29-message-text{color:#edf2f7!important}
+body.final27-dark .final29-message-time{color:#7f8da2!important}
+body.final27-dark .final29-chat-footer{background:#151f2f!important;border-color:#29364a!important}
+body.final27-dark .final29-inline-compose-wrap{background:#0f1725!important;border-color:#29364a!important}
+
+/* O composer continua na página; nunca vira popup */
+.final29-inline-compose-wrap{scroll-margin-top:90px!important}
+
+/* Busca de avaliações: destaca como elemento principal */
+.final29-eval-search{display:flex!important;align-items:center!important;gap:10px!important;padding:11px 13px!important;border-radius:14px!important;border:1px solid #dce6e0!important;background:#fff!important}
+.final29-eval-search input{border:0!important;background:transparent!important;box-shadow:none!important;outline:none!important;width:100%!important;font-size:10px!important}
+.final29-eval-search input:focus{box-shadow:none!important}
+body.final27-dark .final29-eval-search{background:#111827!important;border-color:#29364a!important}
+body.final27-dark .final29-eval-search input{background:transparent!important;border:0!important;color:#f3f6fb!important}
+
+/* responsivo */
+@media(max-width:900px){
+  .final29-conversation-shell{grid-template-columns:300px minmax(0,1fr)!important}
+}
+@media(max-width:760px){
+  .topbar #final27TopTools{margin-left:6px!important}
+  .topbar .user-mini{margin-left:10px!important;padding-left:8px!important}
+  .final29-conversation-shell{grid-template-columns:1fr!important;min-height:auto!important}
+  .final29-thread-sidebar{max-height:300px!important;border-right:0!important;border-bottom:1px solid #e3ebe6!important}
+  .final29-chat-pane{min-height:560px!important}
+}
+@media(max-width:560px){
+  .topbar #final27TopTools{gap:4px!important}
+  .topbar .user-mini{border-left:0!important}
+  #final27ThemeBtn span{display:none!important}
+  .final29-recados-head{align-items:flex-start!important;flex-direction:column!important}
+  .final29-legacy-tabs{width:100%!important;overflow:auto!important}
+  .final29-legacy-tab{white-space:nowrap!important}
+  .final29-message-bubble{max-width:88%!important}
+  .final29-chat-form{grid-template-columns:1fr!important}
+}
+</style>
+
+<script id="final30Behavior">
+(function(){
+  'use strict';
+  const W=window;
+  function focusComposer(){
+    const el=document.getElementById('final29ComposerCard') || document.querySelector('.final29-composer-card');
+    if(!el)return false;
+    el.scrollIntoView({behavior:'smooth',block:'center'});
+    setTimeout(()=>el.querySelector('textarea')?.focus(),220);
+    return true;
+  }
+  /* Todos os atalhos antigos que chamavam popup agora levam ao composer dentro da página. */
+  W.openMessageModal=focusComposer;
+  W.openSupportComposer=focusComposer;
+  W.final26NewSupport=focusComposer;
+  W.v3OpenMessageEditor=focusComposer;
+  W.openMasterComposer=focusComposer;
+  W.openThreadEnhanced=function(thread){
+    if(thread)W.__final29ConversationThread=String(thread);
+    return W.renderMessages?.();
+  };
+  W.openThreadModal=W.openThreadEnhanced;
+
+  /* Garante que a página de Recados continue mostrando a conversa em primeiro plano. */
+  function normalizeRecados(){
+    const c=document.getElementById('recadosContent');
+    if(!c)return;
+    const root=c.querySelector('.final29-recados-page');
+    if(!root)return;
+    root.classList.add('final30-redesign');
+    const tabs=root.querySelector('.final29-legacy-tabs');
+    const convTab=root.querySelector('[data-f29-mode="conversas"]');
+    if(convTab)convTab.style.display='none';
+    const mode=root.querySelector('#final29ModeConversas');
+    if(mode && !mode.hidden)mode.style.display='block';
+  }
+
+  const nav=W.navigate;
+  if(typeof nav==='function'&&!nav.__final30){
+    const wrapped=function(view){
+      const r=nav.apply(this,arguments);
+      setTimeout(()=>{if(view==='recados')normalizeRecados();},120);
+      return r;
+    };
+    wrapped.__final30=true;
+    W.navigate=wrapped;
+  }
+  const oldRender=W.renderMessages;
+  if(typeof oldRender==='function'&&!oldRender.__final30){
+    const wrapped=async function(){
+      const result=await oldRender.apply(this,arguments);
+      setTimeout(normalizeRecados,50);
+      return result;
+    };
+    wrapped.__final30=true;
+    W.renderMessages=wrapped;
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',normalizeRecados,{once:true});
+  else setTimeout(normalizeRecados,150);
+})();
+</script>
+
 </html>
 
 <!-- ============================================================
