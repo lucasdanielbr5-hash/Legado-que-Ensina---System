@@ -2915,7 +2915,7 @@
     if (!supabaseClient) return;
 
     supabaseClient.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         state.session = session;
         state.user = session?.user || null;
 
@@ -2925,13 +2925,12 @@
           return;
         }
 
-        if (
-          event === 'SIGNED_IN' ||
-          event === 'TOKEN_REFRESHED' ||
-          event === 'USER_UPDATED'
-        ) {
+        // O login manual já chama finishAuthentication().
+        // Não repetimos o processo em SIGNED_IN para evitar duas
+        // inicializações concorrentes quando o Supabase dispara o evento.
+        if (event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
           if (state.user) {
-            await finishAuthentication();
+            void finishAuthentication();
           }
         }
       }
@@ -12714,7 +12713,7 @@ body.legado-v4-modal-open{overflow:hidden}
 
 </script>
 
-<!-- FINAL 20 — ACEITE ELETRÔNICO DOS TERMOS -->
+<!-- FINAL 23 — ACEITE ELETRÔNICO DOS TERMOS: VERIFICAÇÃO POR CONTA -->
 <script id="legado-final20-terms">
 (function(){
   'use strict';
@@ -12752,7 +12751,31 @@ body.legado-v4-modal-open{overflow:hidden}
       }catch(e){console.error('[Termos]',e);W.showError?.('Não foi possível registrar seu aceite: '+(e.message||e));sign.disabled=false;}
     };
   }
-  W.ensureTermsAccepted=async()=>{const user=W.state?.user;if(!user)return true;const p=W.state?.profile||{};if(accepted(p)){remove();return true;}open();return false;};
+  W.ensureTermsAccepted=async()=>{
+    const user=W.state?.user;
+    if(!user)return true;
+    const uid=String(user.id||'');
+    let p=W.state?.profile||{};
+
+    // Sempre consulta o perfil atual antes de decidir. Isso impede que
+    // o aceite de uma conta anterior seja reutilizado ao trocar de usuário.
+    try{
+      if(W.supabaseClient&&uid){
+        const r=await W.supabaseClient.from('profiles').select('id,full_name,name,terms_accepted_at,terms_accepted_name,terms_version').eq('id',uid).maybeSingle();
+        if(!r.error&&r.data){
+          if(String(W.state?.user?.id||'')!==uid)return true;
+          p={...(p||{}),...r.data};
+          W.state.profile=p;
+        }
+      }
+    }catch(e){
+      console.warn('[Termos] Não foi possível atualizar o aceite antes da verificação:',e);
+    }
+
+    if(accepted(p)){remove();return true;}
+    open();
+    return false;
+  };
   function profileCard(){
     const c=document.getElementById('perfilContent');if(!c)return;const anchor=c.querySelector('.v3-profile-editor,.report-panel,.card');if(!anchor)return;let card=c.querySelector('[data-final20-profile-terms]');
     if(!card){card=document.createElement('section');card.dataset.final20ProfileTerms='1';card.className='final20-master-panel';anchor.insertAdjacentElement('afterend',card);}
@@ -12769,7 +12792,20 @@ body.legado-v4-modal-open{overflow:hidden}
   }
   async function loadMasterPanel(){try{const u=W.state?.user,p=W.state?.profile||{};if(!u)return;const master=String(u.email||'').toLowerCase()==='contato@legadoqueensina.com.br'||p.is_master===true||['master','admin'].includes(String(p.role||'').toLowerCase());if(!master||!W.supabaseClient)return;const r=await W.supabaseClient.functions.invoke('master-admin',{body:{action:'get_users',include_blocked:true}});if(r.error)throw r.error;masterPanel(r.data?.users||[]);}catch(e){console.warn('[Termos Master]',e);}}
   const oldMaster=W.renderMaster;if(typeof oldMaster==='function'&&!oldMaster.__final20Terms){const fn=async function(){const r=await oldMaster.apply(this,arguments);setTimeout(loadMasterPanel,0);return r;};fn.__final20Terms=true;W.renderMaster=fn;}
-  function init(){addStyles();profileCard();}
+  async function safetyTermsCheck(){
+    try{
+      const user=W.state?.user;
+      if(!user)return;
+      await W.ensureTermsAccepted();
+    }catch(e){console.warn('[Termos] verificação de segurança:',e);}
+  }
+  function init(){
+    addStyles();
+    profileCard();
+    // Dá uma segunda oportunidade após a restauração da sessão,
+    // inclusive quando o navegador já tinha uma sessão ativa.
+    setTimeout(safetyTermsCheck,600);
+  }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else setTimeout(init,0);
 })();
 </script>
