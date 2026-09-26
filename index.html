@@ -10476,6 +10476,7 @@ body.legado-v4-modal-open{overflow:hidden}
           <label><span>Forma de pagamento</span><select name="payment_method"><option value="">Selecionar</option>${['PIX','Transferência','Cartão','Dinheiro','Boleto','Outro'].map(x=>`<option value="${escM(x)}" ${p?.payment_method===x?'selected':''}>${escM(x)}</option>`).join('')}</select></label>
           <label class="full"><span>Observação financeira</span><textarea name="payment_notes" rows="3">${escM(p?.payment_notes||'')}</textarea></label>
         </div></div>
+        <div class="mpro-form-section mpro-terms-section"><div class="mpro-form-section-title"><i data-lucide="file-signature"></i><span>Termos de Uso</span></div><div class="mpro-terms-box">${p?.terms_accepted_at && p?.terms_accepted_name && p?.terms_version ? `<div class="mpro-terms-status good"><i data-lucide="circle-check"></i><div><strong>Aceito e registrado</strong><span>Nome: ${escM(p.terms_accepted_name)}</span><span>Data e hora: ${dateM(p.terms_accepted_at)} · Versão: ${escM(p.terms_version)}</span></div></div><a class="mpro-terms-link" href="https://www.image2url.com/r2/default/documents/1790459926378-f5718225-4759-4efa-a827-42420b0b3e98.pdf" target="_blank" rel="noopener noreferrer"><i data-lucide="file-text"></i>Visualizar Termos aceitos</a>` : `<div class="mpro-terms-status warn"><i data-lucide="circle-alert"></i><div><strong>Ainda não aceitou</strong><span>O professor ainda não registrou o aceite da versão atual.</span></div></div>`}</div></div>
         <div class="mpro-drawer-actions"><button type="button" class="mpro-light-btn" onclick="mproCloseTeacher()">Cancelar</button><button type="submit" class="mpro-primary-btn"><i data-lucide="save"></i>Salvar alterações</button></div>
       </form>
     </aside></div>`;
@@ -12811,3 +12812,132 @@ body.legado-v4-modal-open{overflow:hidden}
 </script>
 </body>
 </html>
+
+<!-- ============================================================
+     FINAL 24 — APRIMORAMENTO DE PERFIL + TERMOS + MODAL FINANCEIRO
+     Mantém os módulos existentes e atua somente como camada visual/UX.
+     ============================================================ -->
+<style id="final24Enhancements">
+  /* MEU PERFIL — apresentação mais completa */
+  #perfilContent { min-width:0; overflow-x:hidden; }
+  .final24-profile-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;margin:0 0 18px;padding:24px;border:1px solid #e2e9e5;border-radius:24px;background:linear-gradient(135deg,#f8fbf9 0%,#ffffff 72%);box-shadow:0 10px 34px rgba(35,55,45,.06)}
+  .final24-profile-main{display:flex;gap:18px;align-items:center;min-width:0}
+  .final24-profile-avatar{width:76px;height:76px;border-radius:22px;overflow:hidden;display:grid;place-items:center;flex:none;background:#e9f2ed;color:#446a58;font-size:24px;font-weight:800;border:1px solid #dce8e1}
+  .final24-profile-avatar img{width:100%;height:100%;object-fit:cover}
+  .final24-profile-kicker{font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:#71837a;margin-bottom:5px}
+  .final24-profile-hero h1{margin:0;color:#26372f;font-size:27px;line-height:1.1;letter-spacing:-.035em;overflow-wrap:anywhere}
+  .final24-profile-sub{margin:7px 0 0;color:#7c8983;font-size:12px;line-height:1.55;overflow-wrap:anywhere}
+  .final24-profile-side{display:flex;flex-direction:column;align-items:flex-end;gap:9px;min-width:150px}
+  .final24-profile-status{display:inline-flex;align-items:center;gap:6px;padding:8px 11px;border-radius:999px;background:#eaf5ee;color:#44745a;font-size:10px;font-weight:800}
+  .final24-profile-status.warn{background:#fff5e3;color:#976a2b}
+  .final24-profile-side small{color:#88958f;font-size:10px}
+  .final24-profile-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,.75fr);gap:18px;align-items:start;margin-bottom:18px}
+  .final24-profile-card{min-width:0;padding:20px;border:1px solid #e2e9e5;border-radius:20px;background:#fff;box-shadow:0 7px 26px rgba(35,55,45,.045)}
+  .final24-profile-card-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:16px}
+  .final24-profile-card-head h2{margin:3px 0 0;color:#31423a;font-size:16px;letter-spacing:-.02em}
+  .final24-profile-card-head p{margin:4px 0 0;color:#8b9791;font-size:10px;line-height:1.5}
+  .final24-profile-card-kicker{font-size:9px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:#7e8d86}
+  .final24-profile-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .final24-profile-field{padding:13px 14px;border:1px solid #e8eeea;border-radius:14px;background:#fbfdfc;min-width:0}
+  .final24-profile-field small{display:block;color:#8d9993;font-size:9px;margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
+  .final24-profile-field strong{display:block;color:#405249;font-size:11px;line-height:1.45;overflow-wrap:anywhere;word-break:break-word}
+  .final24-profile-span-2{grid-column:span 2}
+  .final24-terms-card{min-width:0;padding:20px;border:1px solid #dce9e1;border-radius:20px;background:linear-gradient(145deg,#f7fbf8,#fff);box-shadow:0 8px 28px rgba(61,103,81,.06)}
+  .final24-terms-top{display:flex;gap:12px;align-items:flex-start}
+  .final24-terms-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#e7f2eb;color:#47745e;flex:none}
+  .final24-terms-title{min-width:0}
+  .final24-terms-title h2{margin:0;color:#30443a;font-size:16px}
+  .final24-terms-title p{margin:4px 0 0;color:#809087;font-size:10px;line-height:1.55}
+  .final24-term-badge{margin-left:auto;display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;font-size:9px;font-weight:800;background:#e9f5ee;color:#47765a;white-space:nowrap}
+  .final24-term-badge.pending{background:#fff5e4;color:#9b6c2b}
+  .final24-terms-data{display:grid;gap:8px;margin:16px 0}
+  .final24-terms-data-row{display:flex;justify-content:space-between;gap:14px;padding:11px 12px;border-radius:13px;background:#fff;border:1px solid #e7eee9}
+  .final24-terms-data-row span{color:#8a9691;font-size:9px}
+  .final24-terms-data-row strong{text-align:right;color:#42564c;font-size:10px;overflow-wrap:anywhere}
+  .final24-terms-read{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;min-height:41px;border-radius:12px;text-decoration:none;background:#456f5d;color:#fff;font-size:10px;font-weight:800}
+  .final24-terms-read:hover{filter:brightness(.98)}
+  .final24-terms-pending-note{padding:12px;border:1px dashed #e5d9c0;border-radius:13px;background:#fffaf0;color:#876f47;font-size:10px;line-height:1.55}
+  .final24-profile-tip{margin-top:14px;padding:11px 12px;border-radius:13px;background:#f8faf9;color:#7e8b85;font-size:9px;line-height:1.55}
+  .final24-profile-legacy-form{margin-top:18px}
+
+  /* MASTER — aceite dos termos dentro do cadastro do professor */
+  .mpro-terms-box{display:grid;gap:10px}
+  .mpro-terms-status{display:flex;gap:10px;align-items:flex-start;padding:13px;border-radius:13px;border:1px solid #e4ece7;background:#fbfdfc}
+  .mpro-terms-status>svg{width:19px;height:19px;flex:none;margin-top:1px}
+  .mpro-terms-status strong{display:block;font-size:11px;color:#41544b}
+  .mpro-terms-status span{display:block;margin-top:4px;font-size:9px;color:#87938d;line-height:1.5;overflow-wrap:anywhere}
+  .mpro-terms-status.good{background:#f5fbf7;border-color:#dcebe1;color:#47755b}
+  .mpro-terms-status.warn{background:#fffaf1;border-color:#eee0c8;color:#9a6c2d}
+  .mpro-terms-link{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 12px;border:1px solid #dbe8e0;border-radius:11px;text-decoration:none;background:#fff;color:#456f5d;font-size:9px;font-weight:800}
+
+  /* FINANCEIRO — popup mais largo */
+  #uxModalCard.final24-finance-wide{width:min(1080px,96vw)!important;max-width:none!important;border-radius:24px!important;padding:28px!important}
+  #uxModalCard.final24-finance-wide .form-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  #uxModalCard.final24-finance-wide .form-grid .full{grid-column:1/-1}
+  #uxModalCard.final24-finance-wide .modal-form .form-field input,
+  #uxModalCard.final24-finance-wide .modal-form .form-field select{min-height:45px}
+  @media(max-width:900px){.final24-profile-grid{grid-template-columns:1fr}#uxModalCard.final24-finance-wide .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:640px){.final24-profile-hero{grid-template-columns:1fr;padding:18px}.final24-profile-side{align-items:flex-start}.final24-profile-main{align-items:flex-start}.final24-profile-avatar{width:62px;height:62px;border-radius:18px}.final24-profile-hero h1{font-size:23px}.final24-profile-fields{grid-template-columns:1fr}.final24-profile-span-2{grid-column:auto}#uxModalCard.final24-finance-wide{width:calc(100vw - 20px)!important;padding:18px!important}#uxModalCard.final24-finance-wide .form-grid{grid-template-columns:1fr}}
+</style>
+<script id="final24EnhancementsScript">
+(function(){
+  'use strict';
+  const W=window;
+  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v??''):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  const datePt=v=>{const d=v?new Date(v):null;return d&&Number.isFinite(d.getTime())?d.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}):'—';};
+  const today=()=>typeof W.todayInputDate==='function'?W.todayInputDate():new Date().toISOString().slice(0,10);
+  const initials=n=>String(n||'Professor').trim().split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase()||'PR';
+  const pData=()=>W.state?.profile||{};
+  const uData=()=>W.state?.user||{};
+  const displayName=()=>String(pData().full_name||pData().name||uData().user_metadata?.full_name||uData().user_metadata?.name||((uData().email||'').split('@')[0])||'Professor').trim();
+  const termsUrl='https://www.image2url.com/r2/default/documents/1790459926378-f5718225-4759-4efa-a827-42420b0b3e98.pdf';
+  const termsVersion='2026-09-26-v1';
+  function profileEnhanced(){
+    const c=document.getElementById('perfilContent'); if(!c)return;
+    c.querySelector('[data-final24-profile-hero]')?.remove();
+    c.querySelector('[data-final24-profile-grid]')?.remove();
+    const p=pData(),u=uData(),name=displayName();
+    const photo=p.photo_url||p.avatar_url||'';
+    const expiry=p.access_expires_at||p.plan_expires_at||p.subscription_expires_at||null;
+    const expired=expiry && new Date(expiry).getTime()<Date.now();
+    const plan=p.plan_name||p.plan||'Plano não informado';
+    const price=p.plan_price!=null&&p.plan_price!==''?(W.formatCurrency?W.formatCurrency(Number(p.plan_price)):'R$ '+Number(p.plan_price).toFixed(2).replace('.',',')):'Valor não informado';
+    const accepted=Boolean(p.terms_accepted_at&&p.terms_accepted_name&&p.terms_version===termsVersion);
+    const hero=document.createElement('section'); hero.dataset.final24ProfileHero='1'; hero.className='final24-profile-hero';
+    hero.innerHTML=`<div class="final24-profile-main"><div class="final24-profile-avatar">${photo?`<img src="${esc(photo)}" alt="Foto de ${esc(name)}">`:`<span>${esc(initials(name))}</span>`}</div><div><div class="final24-profile-kicker">MINHA CONTA PROFISSIONAL</div><h1>${esc(name)}</h1><p class="final24-profile-sub">${esc(u.email||p.email||'E-mail não informado')} · ${esc(p.specialty||'Psicopedagogia')}</p></div></div><div class="final24-profile-side"><span class="final24-profile-status ${expired?'warn':''}"><i data-lucide="${expired?'triangle-alert':'shield-check'}"></i>${expired?'Acesso vencido':'Acesso regular'}</span><small>${expiry?'Acesso até '+esc(W.dateOnly?W.dateOnly(expiry):String(expiry).slice(0,10)):'Sem vencimento informado'}</small></div>`;
+    c.prepend(hero);
+
+    const grid=document.createElement('div');grid.dataset.final24ProfileGrid='1';grid.className='final24-profile-grid';
+    const left=document.createElement('section');left.className='final24-profile-card';
+    left.innerHTML=`<div class="final24-profile-card-head"><div><div class="final24-profile-card-kicker">SEUS DADOS</div><h2>Informações profissionais</h2><p>Mantenha seus dados sempre atualizados.</p></div></div><div class="final24-profile-fields"><div class="final24-profile-field"><small>Nome completo</small><strong>${esc(name||'—')}</strong></div><div class="final24-profile-field"><small>Telefone</small><strong>${esc(p.phone||'Não informado')}</strong></div><div class="final24-profile-field"><small>E-mail</small><strong>${esc(u.email||p.email||'Não informado')}</strong></div><div class="final24-profile-field"><small>Especialidade</small><strong>${esc(p.specialty||'Não informada')}</strong></div><div class="final24-profile-field"><small>Serviços / atendimentos</small><strong>${esc(p.services||'Não informado')}</strong></div><div class="final24-profile-field"><small>Plano contratado</small><strong>${esc(plan)}</strong></div><div class="final24-profile-field"><small>Valor do plano</small><strong>${esc(price)}</strong></div><div class="final24-profile-field"><small>Status financeiro</small><strong>${esc(p.payment_status==='paid'?'Pago':p.payment_status==='overdue'?'Em atraso':p.payment_status==='courtesy'?'Cortesia':'Pendente')}</strong></div></div>`;
+
+    const right=document.createElement('section');right.className='final24-terms-card';
+    right.innerHTML=`<div class="final24-terms-top"><div class="final24-terms-icon"><i data-lucide="file-signature"></i></div><div class="final24-terms-title"><h2>Termos e Condições de Uso</h2><p>O documento aceito fica disponível aqui para consulta sempre que precisar.</p></div><span class="final24-term-badge ${accepted?'':'pending'}"><i data-lucide="${accepted?'circle-check':'clock-3'}"></i>${accepted?'Aceito':'Pendente'}</span></div>${accepted?`<div class="final24-terms-data"><div class="final24-terms-data-row"><span>Nome no aceite</span><strong>${esc(p.terms_accepted_name)}</strong></div><div class="final24-terms-data-row"><span>Data e hora</span><strong>${esc(datePt(p.terms_accepted_at))}</strong></div><div class="final24-terms-data-row"><span>Versão</span><strong>${esc(p.terms_version)}</strong></div></div><a class="final24-terms-read" href="${termsUrl}" target="_blank" rel="noopener noreferrer"><i data-lucide="book-open"></i>Ler os Termos aceitos novamente</a>`:`<div class="final24-terms-pending-note">Você ainda não registrou o aceite da versão atual. O sistema solicitará a assinatura antes de liberar o uso completo.</div><a class="final24-terms-read" href="${termsUrl}" target="_blank" rel="noopener noreferrer"><i data-lucide="file-text"></i>Visualizar os Termos de Uso</a>`}<div class="final24-profile-tip">O aceite eletrônico é vinculado ao seu perfil. O nome utilizado, a data/hora e a versão ficam registrados para consulta administrativa.</div>`;
+    grid.append(left,right);c.prepend(grid);
+
+    const form=c.querySelector('#profileForm');if(form)form.classList.add('final24-profile-legacy-form');
+    try{W.refreshIcons?.();}catch(_){}
+  }
+
+  function wrapProfile(){
+    const old=W.renderProfile;if(typeof old==='function'&&!old.__final24){
+      const fn=async function(){const r=await old.apply(this,arguments);profileEnhanced();return r;};fn.__final24=true;W.renderProfile=fn;
+    }
+  }
+
+  function wrapFinance(){
+    const old=W.openPaymentModal;
+    if(typeof old==='function'&&!old.__final24Wide){
+      const fn=async function(){const r=await old.apply(this,arguments);const card=document.getElementById('uxModalCard');card?.classList.add('final24-finance-wide');try{W.refreshIcons?.();}catch(_){}return r;};fn.__final24Wide=true;W.openPaymentModal=fn;
+      if(W.v3OpenFinanceEditor===old) W.v3OpenFinanceEditor=fn;
+    }
+    const closeOld=W.closeModal;
+    if(typeof closeOld==='function'&&!closeOld.__final24Close){
+      const cfn=function(){document.getElementById('uxModalCard')?.classList.remove('final24-finance-wide');return closeOld.apply(this,arguments);};cfn.__final24Close=true;W.closeModal=cfn;
+    }
+  }
+
+  function run(){wrapProfile();wrapFinance();if(W.state?.currentView==='perfil')setTimeout(profileEnhanced,60);}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(run,0),{once:true});else setTimeout(run,0);
+})();
+</script>
