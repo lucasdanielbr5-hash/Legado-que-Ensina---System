@@ -13622,3 +13622,291 @@ body.legado-v4-modal-open{overflow:hidden}
 })();
 
 </script>
+
+<!-- FINAL 27 — NOTIFICAÇÕES, CONVERSAS, TEMA, SERVIDOR FIXO, AVISO DE ACESSO -->
+<style id="final27Styles">
+  /* Agrupa ferramentas do topo em posição estável, sem depender do tamanho do título da página. */
+  .topbar{position:relative!important;}
+  .page-title{flex:1 1 auto!important;min-width:0!important;overflow:hidden!important;}
+  .page-title span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .final27-top-tools{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex:0 0 auto;margin-left:14px;}
+  .final27-top-tools .final25-online-wrap,.final27-top-tools .final26-server-wrap{display:flex!important;margin:0!important;flex:none!important;}
+  .final27-theme-btn{height:31px;min-width:31px;padding:0 9px;border:1px solid #dce8e1;border-radius:999px;background:#f7faf8;color:#50675c;display:inline-flex;align-items:center;justify-content:center;gap:6px;font:800 10px/1 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(20,45,35,.04)}
+  .final27-theme-btn:hover{background:#eef6f1;border-color:#cfe0d6}
+  .final27-theme-btn svg{width:14px;height:14px}
+
+  /* Notificação interna inspirada em mensageria */
+  .final27-toast-stack{position:fixed;right:18px;bottom:18px;z-index:16000;display:grid;gap:9px;width:min(360px,calc(100vw - 28px));pointer-events:none}
+  .final27-chat-toast{pointer-events:auto;display:grid;grid-template-columns:38px minmax(0,1fr) 22px;gap:10px;align-items:start;padding:12px;border:1px solid #dce9e2;border-radius:18px;background:#fff;box-shadow:0 18px 45px rgba(20,40,30,.18);animation:final27ToastIn .22s ease both;cursor:pointer}
+  .final27-chat-toast.leaving{animation:final27ToastOut .22s ease both}
+  .final27-toast-avatar{width:38px;height:38px;border-radius:12px;background:#e8f3ec;color:#4a745e;display:grid;place-items:center;font-weight:900;font-size:11px}
+  .final27-toast-main{min-width:0}
+  .final27-toast-kicker{font-size:8px;font-weight:900;letter-spacing:.11em;text-transform:uppercase;color:#5a816d}
+  .final27-toast-title{margin-top:3px;font-size:11px;font-weight:900;color:#30443a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .final27-toast-text{margin-top:3px;font-size:10px;line-height:1.45;color:#718078;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-wrap}
+  .final27-toast-time{margin-top:5px;font-size:8px;color:#9aa69f}
+  .final27-toast-close{border:0;background:transparent;color:#9ba8a1;padding:2px;cursor:pointer}
+  @keyframes final27ToastIn{from{opacity:0;transform:translateY(8px) translateX(8px)}to{opacity:1;transform:none}}
+  @keyframes final27ToastOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(8px) translateX(8px)}}
+
+  /* Central de conversa */
+  .final27-conversation-guide{display:flex;gap:12px;align-items:flex-start;margin:0 0 14px;padding:14px 15px;border:1px solid #dbe8e0;border-radius:16px;background:linear-gradient(135deg,#f6fbf8,#fff);box-shadow:0 4px 18px rgba(31,60,46,.04)}
+  .final27-conversation-guide-icon{width:36px;height:36px;border-radius:11px;background:#e6f1ea;color:#4a765e;display:grid;place-items:center;flex:none}
+  .final27-conversation-guide strong{display:block;font-size:11px;color:#3f5349}
+  .final27-conversation-guide span{display:block;margin-top:3px;font-size:9px;line-height:1.6;color:#7e8b85}
+  .final27-chat-shell{width:min(920px,96vw)!important;max-width:none!important;padding:0!important;overflow:hidden!important;border-radius:24px!important}
+  .final27-chat-head{display:flex;align-items:center;gap:12px;padding:17px 19px;border-bottom:1px solid #e7eee9;background:#f8fbf9}
+  .final27-chat-avatar{width:42px;height:42px;border-radius:50%;background:#e7f2eb;color:#4e7863;display:grid;place-items:center;font-size:12px;font-weight:900;flex:none}
+  .final27-chat-head-main{min-width:0;flex:1}
+  .final27-chat-kicker{font-size:8px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#7b8a83}
+  .final27-chat-title{margin-top:3px;font-size:15px;font-weight:900;color:#33483e;overflow-wrap:anywhere}
+  .final27-chat-sub{margin-top:2px;font-size:9px;color:#8c9892}
+  .final27-chat-close{width:34px;height:34px;border:1px solid #dfe8e3;border-radius:10px;background:#fff;color:#69786f;display:grid;place-items:center;cursor:pointer}
+  .final27-chat-body{padding:16px;max-height:52vh;overflow:auto;background:linear-gradient(180deg,#f7faf8 0%,#fbfcfb 100%);display:grid;gap:7px}
+  .final27-bubble-row{display:flex}.final27-bubble-row.me{justify-content:flex-end}.final27-bubble{max-width:min(74%,580px);padding:9px 11px 8px;border-radius:15px;border:1px solid #e1e9e4;background:#fff;box-shadow:0 2px 7px rgba(28,52,41,.03)}
+  .final27-bubble-row.me .final27-bubble{background:#e6f3eb;border-color:#d4e7db;border-bottom-right-radius:6px}.final27-bubble-row:not(.me) .final27-bubble{border-bottom-left-radius:6px}
+  .final27-bubble-author{font-size:8px;font-weight:900;color:#6f7f77;margin-bottom:4px}.final27-bubble-row.me .final27-bubble-author{color:#527462}
+  .final27-bubble-text{font-size:10px;line-height:1.6;color:#40534a;white-space:pre-wrap;overflow-wrap:anywhere}
+  .final27-bubble-time{text-align:right;margin-top:5px;font-size:7px;color:#97a29c}
+  .final27-bubble-meta{display:flex;justify-content:flex-end;align-items:center;gap:9px;margin-top:5px}.final27-bubble-meta span{font-size:7px;color:#97a29c}.final27-bubble-delete{border:0;background:transparent;padding:0;font:700 7px/1 Inter,Arial,sans-serif;color:#a86969;cursor:pointer}.final27-bubble-delete:hover{text-decoration:underline}
+  .final27-chat-compose{padding:12px;border-top:1px solid #e7eee9;background:#fff;display:flex;gap:8px;align-items:flex-end}
+  .final27-chat-compose textarea{flex:1;min-height:44px;max-height:120px;resize:vertical;border:1px solid #dce7e1;border-radius:14px;padding:10px 12px;outline:0;background:#fbfdfc;font:500 10px/1.5 Inter,Arial,sans-serif;color:#41544b}.final27-chat-compose textarea:focus{border-color:#8fb2a2;box-shadow:0 0 0 3px rgba(95,143,122,.08)}
+  .final27-send-btn{width:42px;height:42px;border:0;border-radius:13px;background:#5f8f7a;color:#fff;display:grid;place-items:center;cursor:pointer;flex:none}.final27-send-btn:hover{background:#477363}.final27-send-btn svg{width:17px;height:17px}
+
+  /* Modal de composição Master */
+  .final27-composer-card{width:min(760px,94vw)!important;max-width:none!important;border-radius:22px!important;padding:0!important;overflow:hidden!important}
+  .final27-composer-head{display:flex;align-items:flex-start;gap:12px;padding:18px 20px;border-bottom:1px solid #e7eee9;background:#fbfdfc}
+  .final27-composer-icon{width:40px;height:40px;border-radius:12px;background:#e8f2ec;color:#4a765f;display:grid;place-items:center;flex:none}.final27-composer-icon svg{width:19px}
+  .final27-composer-head-main{flex:1;min-width:0}.final27-composer-head-main small{font-size:8px;font-weight:900;letter-spacing:.12em;color:#7f8d86;text-transform:uppercase}.final27-composer-head-main h2{margin:4px 0 3px;font-size:18px;color:#32463c}.final27-composer-head-main p{margin:0;font-size:9px;line-height:1.5;color:#87938d}
+  .final27-composer-body{padding:18px 20px}.final27-composer-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.final27-composer-grid label{display:grid;gap:6px;min-width:0}.final27-composer-grid label.full{grid-column:1/-1}.final27-composer-grid label>span{font-size:8px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:#718078}.final27-composer-grid input,.final27-composer-grid select,.final27-composer-grid textarea{width:100%;border:1px solid #dce6e1;border-radius:11px;background:#fff;padding:10px 11px;outline:0;color:#405249;font:500 10px/1.5 Inter,Arial,sans-serif}.final27-composer-grid textarea{min-height:150px;resize:vertical}.final27-composer-grid input:focus,.final27-composer-grid select:focus,.final27-composer-grid textarea:focus{border-color:#8fb2a2;box-shadow:0 0 0 3px rgba(95,143,122,.08)}
+  .final27-recipient-note{padding:10px 11px;border-radius:12px;background:#f3f8f5;color:#74827b;font-size:8px;line-height:1.5}
+  .final27-composer-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;padding-top:13px;border-top:1px solid #edf2ef}
+  @media(max-width:700px){.final27-top-tools{gap:5px;margin-left:7px}.final27-top-tools .final25-online-wrap .final25-online-btn{height:29px}.final27-top-tools .final26-server-btn{height:29px}.final27-theme-btn{height:29px;min-width:29px;padding:0 7px}.final27-chat-shell{width:calc(100vw - 18px)!important}.final27-bubble{max-width:88%}.final27-chat-compose{padding:10px}.final27-composer-grid{grid-template-columns:1fr}.final27-composer-grid label.full{grid-column:auto}.final27-toast-stack{right:10px;bottom:10px}.final27-conversation-guide{padding:12px}}
+
+  /* Modal aluno maior — tamanho intermediário confortável */
+  #uxModalCard.final27-student-wide{width:min(900px,94vw)!important;max-width:none!important;border-radius:22px!important;padding:28px!important}
+  #uxModalCard.final27-student-wide .form-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  #uxModalCard.final27-student-wide .modal-form textarea{min-height:120px}
+  @media(max-width:680px){#uxModalCard.final27-student-wide{width:calc(100vw - 16px)!important;padding:18px!important}#uxModalCard.final27-student-wide .form-grid{grid-template-columns:1fr}}
+
+  /* Aviso de renovação no dashboard */
+  .final27-renewal-alert{display:flex;align-items:flex-start;gap:12px;margin:0 0 18px;padding:14px 16px;border:1px solid #ead9b9;border-radius:16px;background:linear-gradient(135deg,#fffaf0,#fffdf8);box-shadow:0 5px 18px rgba(110,78,32,.05)}
+  .final27-renewal-icon{width:38px;height:38px;border-radius:12px;background:#fff0d2;color:#a2712b;display:grid;place-items:center;flex:none}.final27-renewal-icon svg{width:18px}
+  .final27-renewal-main{min-width:0}.final27-renewal-main strong{display:block;font-size:11px;color:#73572b}.final27-renewal-main span{display:block;margin-top:4px;font-size:9px;line-height:1.6;color:#7e715e}.final27-renewal-cta{margin-left:auto;align-self:center;border:1px solid #e6d2ac;background:#fff;color:#9a6c2c;border-radius:10px;padding:8px 10px;font:800 9px Inter,Arial,sans-serif;cursor:pointer;white-space:nowrap}.final27-renewal-cta:hover{background:#fff8eb}
+  @media(max-width:620px){.final27-renewal-alert{flex-direction:column}.final27-renewal-cta{margin-left:0}}
+
+  /* Tema escuro */
+  body.final27-dark{--surface:#171b19;--background:#0f1211;--ink:#eef3f0;--muted:#a6b1ab;--line:#2a332f;--sage-light:#203128;--blue-light:#202a31;--danger-light:#332021;--warning-light:#332a1c;--success-light:#1f3026;background:#0f1211!important;color:#eef3f0!important}
+  body.final27-dark .sidebar{background:#151917;border-color:#2a332f}
+  body.final27-dark .main,body.final27-dark .content,body.final27-dark .topbar{background:#0f1211;color:#eef3f0;border-color:#2a332f}
+  body.final27-dark .topbar{background:#141816}
+  body.final27-dark .page-title{color:#eef3f0}
+  body.final27-dark .user-mini{color:#dfe8e3}
+  body.final27-dark .card,body.final27-dark .panel,body.final27-dark .report-panel,body.final27-dark .mpro-panel,body.final27-dark .mpro-tabs,body.final27-dark .final24-profile-card,body.final27-dark .final24-terms-card,body.final27-dark .final26-profile-card,body.final27-dark .final26-terms-card,.final27-dark .v3-panel{background:#171b19!important;border-color:#2b3631!important;color:#eaf0ed!important}
+  body.final27-dark .nav button,body.final27-dark .brand-text .main,body.final27-dark .brand-text .sub,body.final27-dark .nav-label{color:#b8c2bc!important}
+  body.final27-dark .nav button.active{background:#203128!important;color:#d8e8df!important}
+  body.final27-dark input,body.final27-dark select,body.final27-dark textarea{background:#121614!important;color:#eaf0ed!important;border-color:#34403a!important}
+  body.final27-dark .final27-top-tools .final25-online-btn,body.final27-dark .final27-top-tools .final26-server-btn,body.final27-dark .final27-theme-btn{background:#1a211e!important;border-color:#34403a!important;color:#d7e4dd!important}
+  body.final27-dark .final26-server-pop,body.final27-dark .final25-online-pop,body.final27-dark .final26-chat-shell,body.final27-dark .final27-chat-shell,body.final27-dark .final27-composer-card{background:#171b19!important;border-color:#2c3732!important}
+  body.final27-dark .final25-online-row,body.final27-dark .final26-server-pop,.final27-dark .final27-chat-body{background:#141816!important}
+  body.final27-dark .final27-chat-head,body.final27-dark .final27-composer-head,body.final27-dark .final27-chat-compose{background:#171b19!important;border-color:#2b3631!important}
+  body.final27-dark .final27-bubble{background:#1a211e;border-color:#2d3933;color:#e5ede8}.final27-dark .final27-bubble-row.me .final27-bubble{background:#203128;border-color:#31493d}
+  body.final27-dark .final27-chat-title,body.final27-dark .final27-toast-title,body.final27-dark .final27-conversation-guide strong{color:#e8f0eb}.final27-dark .final27-bubble-text,.final27-dark .final27-toast-text,.final27-dark .final27-conversation-guide span{color:#a9b5ae}
+  body.final27-dark .final27-chat-sub,body.final27-dark .final27-bubble-author,body.final27-dark .final27-bubble-time{color:#829189}
+  body.final27-dark .final27-conversation-guide,body.final27-dark .final27-renewal-alert{background:linear-gradient(135deg,#1b241f,#171b19)!important;border-color:#39473f}
+  body.final27-dark .final27-toast,.final27-dark .final27-toast-avatar{background:#171b19;border-color:#34403a}.final27-dark .final27-toast-avatar{background:#203128;color:#afd0bd}
+  body.final27-dark .final27-recipient-note{background:#1c2721;color:#aebbb3}
+  body.final27-dark .final27-renewal-main strong{color:#f0cf91}.final27-dark .final27-renewal-main span{color:#b6ab95}
+  body.final27-dark .modal-header h2,body.final27-dark .mpro-panel-head h2,body.final27-dark .final24-profile-card-head h2,body.final27-dark .final26-profile-card-head h2,body.final27-dark .final26-terms-title h2{color:#edf3ef!important}
+  body.final27-dark .final24-profile-field,body.final27-dark .final26-profile-field,body.final27-dark .final26-profile-stat,body.final27-dark .final24-terms-data-row{background:#141816!important;border-color:#2b3631!important}
+  body.final27-dark .final24-profile-field strong,body.final27-dark .final26-profile-field strong,body.final27-dark .final26-profile-stat strong,body.final27-dark .final24-terms-data-row strong{color:#dbe5df!important}
+  body.final27-dark .mpro-kpi,body.final27-dark .mpro-action-grid button,body.final27-dark .mpro-profile-strip,body.final27-dark .mpro-diagnostic>div,body.final27-dark .mpro-fin-summary>div,body.final27-dark .mpro-rule-list>div,body.final27-dark .mpro-checklist>div,body.final27-dark .mpro-big-empty{background:#141816!important;border-color:#2b3631!important}
+  body.final27-dark .mpro-tab-panel,.final27-dark .final18-recados-panel{color:#e7efeb}
+  body.final27-dark #uxModalCard,body.final27-dark .saas-payment-card{background:#171b19!important;color:#e7efeb;border-color:#2b3631!important}.final27-dark .modal-header p,.final27-dark .form-section-title,.final27-dark .form-field>span{color:#aab5af!important}.final27-dark .final27-chat-close{background:#1a211e;color:#d7e4dd;border-color:#34403a}
+  body.final27-dark ::-webkit-scrollbar-thumb{background:#47534d}
+
+  /* Impede que o servidor se mova por causa da largura do título. */
+  @media(min-width:761px){.topbar .final27-top-tools{order:2}.topbar .user-mini{order:3;flex:none}.topbar .final27-top-tools{min-width:128px}}
+  @media(max-width:760px){.topbar .page-title{max-width:none}.topbar .final27-top-tools{margin-left:5px}.topbar .user-mini{flex:none}.topbar #topbarUserName{display:none!important}}
+</style>
+<script id="final27Enhancements">
+(function(){
+  'use strict';
+  const W=window;
+  const MASTER_EMAIL='contato@legadoqueensina.com.br';
+  const TERMS_VERSION='2026-09-26-v1';
+  const MESSAGE_POLL=12000;
+  const ONLINE_WINDOW=70000;
+  let messageTimer=null, lastMessageSnapshot=null, themeReady=false;
+
+  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v??''):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  const sb=()=>W.supabaseClient||null;
+  const uid=()=>W.state?.user?.id||null;
+  const isMaster=()=>{const u=W.state?.user||{},p=W.state?.profile||{};return String(u.email||'').toLowerCase()===MASTER_EMAIL||p.is_master===true||['master','admin'].includes(String(p.role||'').toLowerCase())||['master','admin'].includes(String(u.user_metadata?.role||'').toLowerCase());};
+  const nameOf=o=>String(o?.full_name||o?.name||o?.email||'Professor').trim()||'Professor';
+  const initials=n=>String(n||'P').trim().split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase()||'P';
+  const fmt=v=>{const d=new Date(v);return Number.isFinite(d.getTime())?d.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}):'—';};
+
+  /* -------------------- TOPO FIXO: online + servidor + tema -------------------- */
+  function ensureTopTools(){
+    const topbar=document.querySelector('.topbar');if(!topbar)return null;
+    let tools=topbar.querySelector('#final27TopTools');
+    if(!tools){
+      tools=document.createElement('div');tools.id='final27TopTools';tools.className='final27-top-tools';
+      const userMini=topbar.querySelector('.user-mini');topbar.insertBefore(tools,userMini||null);
+    }
+    const server=document.getElementById('final26ServerWrap');if(server&&server.parentElement!==tools)tools.appendChild(server);
+    const online=document.getElementById('final25OnlineWrap');if(online&&online.parentElement!==tools)tools.appendChild(online);
+    ensureThemeButton(tools);
+    return tools;
+  }
+  function currentTheme(){return localStorage.getItem('legado_theme')||'light';}
+  function applyTheme(theme){
+    const dark=theme==='dark';document.body.classList.toggle('final27-dark',dark);localStorage.setItem('legado_theme',dark?'dark':'light');
+    const btn=document.getElementById('final27ThemeBtn');
+    if(btn){btn.title=dark?'Voltar ao modo claro':'Ativar modo escuro';btn.setAttribute('aria-label',btn.title);btn.innerHTML=`<i data-lucide="${dark?'sun':'moon'}"></i><span>${dark?'Modo claro':'Modo escuro'}</span>`;try{W.refreshIcons?.();}catch(_){} }
+  }
+  function ensureThemeButton(tools){
+    if(!tools)return;
+    let btn=tools.querySelector('#final27ThemeBtn');
+    if(!btn){
+      btn=document.createElement('button');btn.id='final27ThemeBtn';btn.className='final27-theme-btn';btn.type='button';
+      btn.addEventListener('click',()=>applyTheme(currentTheme()==='dark'?'light':'dark'));
+      tools.appendChild(btn);
+    }
+    applyTheme(currentTheme());
+    themeReady=true;
+  }
+
+  /* -------------------- NOTIFICAÇÃO DE NOVA MENSAGEM -------------------- */
+  function toastStack(){let s=document.getElementById('final27ToastStack');if(!s){s=document.createElement('div');s.id='final27ToastStack';s.className='final27-toast-stack';document.body.appendChild(s);}return s;}
+  function playPing(){try{const AC=W.AudioContext||W.webkitAudioContext;if(!AC)return;const ac=new AC();const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(880,ac.currentTime);o.frequency.exponentialRampToValueAtTime(660,ac.currentTime+0.11);g.gain.setValueAtTime(0.0001,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.045,ac.currentTime+0.015);g.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+0.18);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+0.2);setTimeout(()=>ac.close?.(),300);}catch(_){} }
+  function showMessageToast(msg){
+    const stack=toastStack();const title=msg.title||'Nova mensagem';const sender=isMaster()?'Professor':(msg._senderName||'Gestão');
+    const el=document.createElement('div');el.className='final27-chat-toast';el.innerHTML=`<div class="final27-toast-avatar">${esc(initials(sender))}</div><div class="final27-toast-main"><div class="final27-toast-kicker">Nova mensagem</div><div class="final27-toast-title">${esc(title)}</div><div class="final27-toast-text">${esc(msg.message||'')}</div><div class="final27-toast-time">${esc(fmt(msg.created_at))}</div></div><button type="button" class="final27-toast-close" aria-label="Fechar"><i data-lucide="x"></i></button>`;
+    el.addEventListener('click',e=>{if(e.target.closest('.final27-toast-close'))return;W.navigate?.('recados');el.remove();});
+    el.querySelector('.final27-toast-close')?.addEventListener('click',e=>{e.stopPropagation();el.remove();});
+    stack.appendChild(el);try{W.refreshIcons?.();}catch(_){};playPing();maybeBrowserNotify(msg);setTimeout(()=>{if(el.isConnected){el.classList.add('leaving');setTimeout(()=>el.remove(),220);}},7000);
+  }
+  function maybeBrowserNotify(msg){try{if('Notification' in W && Notification.permission==='granted'){new Notification(msg.title||'Nova mensagem',{body:String(msg.message||'').slice(0,180),tag:'legado-chat'});}}catch(_){} }
+  async function pollMessages(){
+    const c=sb(),me=uid();if(!c||!me)return;
+    try{
+      let q=c.from('messages').select('id,user_id,recipient_id,target_all,title,type,message,created_at,thread_id').order('created_at',{ascending:false}).limit(35);
+      q=isMaster()?q.eq('recipient_id',me):q.or(`recipient_id.eq.${me},target_all.eq.true`);
+      const r=await q;if(r.error)throw r.error;
+      let rows=r.data||[];
+      if(!isMaster()) rows=rows.filter(x=>String(x.user_id||'')!==String(me));
+      const newest=rows[0];
+      if(!newest)return;
+      const key=`legado:last_message:${me}`;
+      const stored=localStorage.getItem(key);
+      if(!stored){localStorage.setItem(key,String(newest.id));lastMessageSnapshot=newest.id;return;}
+      if(String(newest.id)!==String(stored)){
+        const unseen=rows.filter(x=>new Date(x.created_at).getTime()>new Date(localStorage.getItem(`legado:last_message_at:${me}`)||0).getTime());
+        const batch=(unseen.length?unseen:[newest]).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+        batch.slice(0,3).forEach(m=>showMessageToast(m));
+        localStorage.setItem(key,String(newest.id));localStorage.setItem(`legado:last_message_at:${me}`,String(newest.created_at));
+      }
+    }catch(e){console.warn('[Mensagens] polling',e?.message||e);}
+  }
+  function bootMessagePolling(){
+    if(messageTimer)clearInterval(messageTimer);
+    messageTimer=setInterval(pollMessages,MESSAGE_POLL);
+    setTimeout(pollMessages,2500);
+  }
+
+  /* -------------------- COMPOSITOR MASTER: geral ou professor específico -------------------- */
+  async function openMasterComposer(){
+    if(!isMaster())return W.showError?.('Acesso restrito ao Master.');
+    const c=sb();if(!c)return W.showError?.('Supabase não está disponível.');
+    let teachers=[];
+    try{const r=await c.from('profiles').select('id,full_name,name,email').order('full_name',{ascending:true}).limit(1000);if(r.error)throw r.error;teachers=(r.data||[]).filter(x=>String(x.email||'').toLowerCase()!==MASTER_EMAIL&&!['master','admin'].includes(String(x.role||'').toLowerCase()));}
+    catch(e){return W.showError?.(e.message||'Não foi possível carregar os professores.');}
+    const modal=document.createElement('div');modal.className='saas-payment-modal';modal.id='final27MasterMessageModal';
+    modal.innerHTML=`<div class="saas-payment-card final27-composer-card"><div class="final27-composer-head"><div class="final27-composer-icon"><i data-lucide="messages-square"></i></div><div class="final27-composer-head-main"><small>CENTRAL DE COMUNICAÇÃO</small><h2>Nova mensagem</h2><p>Envie um comunicado para todos ou inicie uma conversa privada com um professor.</p></div><button type="button" class="final27-chat-close" id="final27MasterMsgClose"><i data-lucide="x"></i></button></div><div class="final27-composer-body"><form id="final27MasterMsgForm"><div class="final27-composer-grid"><label><span>Destinatário *</span><select name="recipient_id" required><option value="">Selecione um professor</option>${teachers.map(t=>`<option value="${esc(t.id)}">${esc(nameOf(t))} · ${esc(t.email||'')}</option>`).join('')}<option value="__all__">Todos os professores</option></select></label><label><span>Tipo</span><select name="type"><option>Suporte</option><option>Comunicado</option><option>Aviso</option><option>Atualização</option><option>Importante</option></select></label><label class="full"><span>Assunto *</span><input name="title" maxlength="140" required placeholder="Ex.: Atualização do sistema"></label><label class="full"><span>Mensagem *</span><textarea name="message" maxlength="5000" required placeholder="Escreva a mensagem..."></textarea></label></div><div id="final27RecipientNote" class="final27-recipient-note">Selecione um professor para iniciar uma conversa privada, ou escolha “Todos os professores” para um comunicado geral.</div><div class="final27-composer-actions"><button type="button" class="btn btn-outline" id="final27MasterMsgCancel">Cancelar</button><button class="btn btn-primary" type="submit"><i data-lucide="send"></i>Enviar mensagem</button></div></form></div></div>`;
+    document.body.appendChild(modal);W.refreshIcons?.();
+    const close=()=>modal.remove();modal.querySelector('#final27MasterMsgClose')?.addEventListener('click',close);modal.querySelector('#final27MasterMsgCancel')?.addEventListener('click',close);
+    const select=modal.querySelector('[name=recipient_id]'),note=modal.querySelector('#final27RecipientNote');
+    select?.addEventListener('change',()=>{note.textContent=select.value==='__all__'?'Esta mensagem será publicada como comunicado geral e ficará visível aos professores.':select.value?'Esta mensagem inicia uma conversa privada com o professor selecionado. As próximas respostas ficarão nesta mesma conversa.':'Selecione um professor para iniciar uma conversa privada, ou escolha “Todos os professores” para um comunicado geral.';});
+    modal.querySelector('#final27MasterMsgForm')?.addEventListener('submit',async e=>{e.preventDefault();const btn=e.currentTarget.querySelector('[type=submit]');btn.disabled=true;try{const fd=new FormData(e.currentTarget);const target=String(fd.get('recipient_id')||'');const title=String(fd.get('title')||'').trim();const body=String(fd.get('message')||'').trim();if(!target||!title||!body)throw new Error('Preencha destinatário, assunto e mensagem.');const payload={user_id:id(),title,type:String(fd.get('type')||'Suporte'),message:body,read:false,target_all:target==='__all__'};if(target!=='__all__'){payload.recipient_id=target;payload.thread_id=crypto.randomUUID();}const ins=await sb().from('messages').insert(payload);if(ins.error)throw ins.error;close();W.showSuccess?.('Mensagem enviada.');await W.renderMessages?.();}catch(err){W.showError?.(err.message||'Não foi possível enviar a mensagem.');btn.disabled=false;}});
+  }
+  function replaceMasterComposer(){W.v3OpenMessageEditor=openMasterComposer;W.openMessageModal=openMasterComposer;W.final27OpenMasterMessage=openMasterComposer;}
+
+  /* -------------------- Conversa visual melhorada -------------------- */
+  async function openThreadEnhanced(thread){
+    const c=sb(),me=uid();if(!c||!me)return;
+    try{
+      let q=c.from('messages').select('id,user_id,recipient_id,target_all,title,type,message,created_at,thread_id').eq('thread_id',thread).order('created_at',{ascending:true}).limit(500);
+      const r=await q;if(r.error)throw r.error;const items=r.data||[];if(!items.length)throw new Error('Conversa não encontrada.');
+      let otherName=isMaster()?'Professor':'Gestão';
+      if(isMaster()){const otherId=items.find(x=>String(x.user_id)!==String(me))?.user_id||items.find(x=>String(x.recipient_id)!==String(me))?.recipient_id;if(otherId){const pr=await c.from('profiles').select('id,full_name,name,email').eq('id',otherId).maybeSingle();if(!pr.error&&pr.data)otherName=nameOf(pr.data);}}
+      const title=items[0]?.title||'Conversa de suporte';
+      const modal=document.createElement('div');modal.className='saas-payment-modal';modal.id='final27EnhancedThreadModal';
+      modal.innerHTML=`<div class="saas-payment-card final27-chat-shell"><div class="final27-chat-head"><div class="final27-chat-avatar">${esc(initials(otherName))}</div><div class="final27-chat-head-main"><div class="final27-chat-kicker">CONVERSA DE SUPORTE</div><div class="final27-chat-title">${esc(title)}</div><div class="final27-chat-sub">${esc(otherName)}</div></div><button type="button" class="final27-chat-close" id="final27ThreadClose"><i data-lucide="x"></i></button></div><div class="final27-chat-body" id="final27ChatBody">${items.map(m=>{const mine=String(m.user_id)===String(me);const author=mine?'Você':otherName;return `<div class="final27-bubble-row ${mine?'me':''}"><div class="final27-bubble"><div class="final27-bubble-author">${esc(author)}</div><div class="final27-bubble-text">${esc(m.message||'')}</div><div class="final27-bubble-meta"><span>${esc(fmt(m.created_at))}</span><button type="button" class="final27-bubble-delete" data-del-chat="${esc(m.id)}">Excluir</button></div></div></div>`;}).join('')}</div><form id="final27ThreadForm" class="final27-chat-compose"><textarea name="message" rows="1" required placeholder="Digite sua mensagem..."></textarea><button class="final27-send-btn" type="submit" title="Enviar"><i data-lucide="send"></i></button></form></div>`;
+      document.body.appendChild(modal);W.refreshIcons?.();const body=modal.querySelector('#final27ChatBody');if(body)body.scrollTop=body.scrollHeight;      try{const unreadIncoming=items.filter(m=>String(m.user_id)!==String(me));for(const m of unreadIncoming){await c.from('message_reads').upsert({message_id:String(m.id),user_id:me,read_at:new Date().toISOString(),updated_at:new Date().toISOString()},{onConflict:'message_id,user_id'});}}catch(_){}modal.querySelector('#final27ThreadClose')?.addEventListener('click',()=>modal.remove());
+      modal.querySelectorAll('[data-del-chat]').forEach(btn=>btn.addEventListener('click',async()=>{try{const ok=window.confirm('Excluir esta mensagem?');if(!ok)return;const d=await c.from('messages').delete().eq('id',btn.dataset.delChat);if(d.error)throw d.error;W.showSuccess?.('Mensagem excluída.');modal.remove();await W.renderMessages?.();}catch(e){W.showError?.(e.message||'Não foi possível excluir a mensagem.');}}));
+      modal.querySelector('#final27ThreadForm')?.addEventListener('submit',async e=>{e.preventDefault();const btn=e.currentTarget.querySelector('[type=submit]');btn.disabled=true;try{const msg=String(new FormData(e.currentTarget).get('message')||'').trim();if(!msg)throw new Error('Digite uma mensagem.');const otherId=items.find(x=>String(x.user_id)!==String(me))?.user_id||items.find(x=>String(x.recipient_id)!==String(me))?.recipient_id;if(!otherId)throw new Error('Destinatário da conversa não encontrado.');const ins=await c.from('messages').insert({user_id:me,recipient_id:otherId,thread_id:thread,target_all:false,title,type:'Suporte',message:msg,read:false});if(ins.error)throw ins.error;modal.remove();await W.renderMessages?.();W.showSuccess?.('Resposta enviada.');}catch(err){W.showError?.(err.message||'Não foi possível enviar a resposta.');btn.disabled=false;}});
+    }catch(e){W.showError?.(e.message||'Não foi possível abrir a conversa.');}
+  }
+  function replaceThreadLinks(){W.final26OpenThread=openThreadEnhanced;}
+
+  /* -------------------- Instrutivo do professor na Central de recados -------------------- */
+  function addTeacherGuide(){
+    if(isMaster())return;
+    const c=document.getElementById('recadosContent');if(!c)return;
+    if(c.querySelector('[data-final27-guide]'))return;
+    const guide=document.createElement('section');guide.className='final27-conversation-guide';guide.dataset.final27Guide='1';guide.innerHTML=`<div class="final27-conversation-guide-icon"><i data-lucide="message-circle-question"></i></div><div><strong>Como usar esta ferramenta</strong><span>Use esta área para pedir ajuda sobre o sistema, tirar dúvidas, avisar sobre um problema ou falar diretamente com a gestão. Ao respondermos, a conversa continuará aqui, como uma troca de mensagens.</span></div>`;
+    const head=c.querySelector('.final18-recados-head,.v3-head,.page-heading');(head||c.firstElementChild)?.insertAdjacentElement('afterend',guide);W.refreshIcons?.();
+  }
+
+  /* -------------------- Dashboard: aviso de vencimento -------------------- */
+  function addRenewalAlert(){
+    if(isMaster())return;const c=document.getElementById('dashboardContent');if(!c)return;
+    c.querySelector('[data-final27-renewal]')?.remove();
+    const p=W.state?.profile||{};const expiry=p.access_expires_at||p.plan_expires_at||p.subscription_expires_at||null;if(!expiry)return;
+    const t=new Date(expiry).getTime();if(!Number.isFinite(t))return;const diff=t-Date.now();const days=Math.ceil(diff/86400000);if(days>15||days<0)return;
+    const word=days===1?'1 dia':`${Math.max(0,days)} dias`;
+    const box=document.createElement('section');box.className='final27-renewal-alert';box.dataset.final27Renewal='1';box.innerHTML=`<div class="final27-renewal-icon"><i data-lucide="calendar-clock"></i></div><div class="final27-renewal-main"><strong>Falta ${esc(word)} para vencer sua mensalidade.</strong><span>Após a não conclusão do pagamento, o seu acesso poderá ser restrito. Confira sua situação financeira para manter o acesso ativo.</span></div><button type="button" class="final27-renewal-cta">Ver financeiro</button>`;
+    box.querySelector('button')?.addEventListener('click',()=>W.navigate?.('financeiro'));c.prepend(box);W.refreshIcons?.();
+  }
+
+  /* -------------------- Aluno: modal maior -------------------- */
+  function wideStudentModal(){
+    const card=document.getElementById('uxModalCard');const form=document.getElementById('final18StudentForm');if(form){card?.classList.add('final27-student-wide');}
+  }
+  function wrapStudentOpener(name){
+    const old=W[name];if(typeof old!=='function'||old.__final27)return;
+    const fn=async function(){const r=await old.apply(this,arguments);setTimeout(wideStudentModal,20);return r;};fn.__final27=true;W[name]=fn;
+  }
+  function wrapClose(){
+    const old=W.closeModal;if(typeof old==='function'&&!old.__final27){const fn=function(){document.getElementById('uxModalCard')?.classList.remove('final27-student-wide');return old.apply(this,arguments);};fn.__final27=true;W.closeModal=fn;}
+  }
+
+  /* -------------------- Inicialização e reforço -------------------- */
+  function enhance(){
+    ensureTopTools();
+    // Dá outra chance porque os widgets de presença/servidor são criados em scripts anteriores.
+    setTimeout(ensureTopTools,250);setTimeout(ensureTopTools,900);
+    replaceMasterComposer();replaceThreadLinks();wrapStudentOpener('openNewStudentModal');wrapStudentOpener('openEditStudentModal');wrapClose();
+    if(W.state?.currentView==='recados'){setTimeout(addTeacherGuide,80);}if(W.state?.currentView==='dashboard'){setTimeout(addRenewalAlert,80);}
+    bootMessagePolling();
+  }
+  const oldNavigate=W.navigate;
+  if(typeof oldNavigate==='function'&&!oldNavigate.__final27){
+    const fn=function(view){const r=oldNavigate.apply(this,arguments);setTimeout(()=>{ensureTopTools();if(view==='recados')addTeacherGuide();if(view==='dashboard')addRenewalAlert();},90);return r;};fn.__final27=true;W.navigate=fn;
+  }
+  const oldMessages=W.renderMessages;
+  if(typeof oldMessages==='function'&&!oldMessages.__final27Guide){
+    const fn=async function(){const r=await oldMessages.apply(this,arguments);setTimeout(addTeacherGuide,30);return r;};fn.__final27Guide=true;W.renderMessages=fn;
+  }
+  const oldDash=W.renderDashboard;
+  if(typeof oldDash==='function'&&!oldDash.__final27Renewal){
+    const fn=async function(){const r=await oldDash.apply(this,arguments);setTimeout(addRenewalAlert,30);return r;};fn.__final27Renewal=true;W.renderDashboard=fn;W.rendDashboard=fn;
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',enhance,{once:true});else setTimeout(enhance,0);
+  W.final27AddRenewalAlert=addRenewalAlert;
+  W.final27OpenMasterMessage=openMasterComposer;
+  W.final27OpenThread=openThreadEnhanced;
+})();
+</script>
