@@ -12669,7 +12669,14 @@ body.legado-v4-modal-open{overflow:hidden}
   function printDoc(type,fd){
     const data=buildDocText(type,fd),w=window.open('','_blank','noopener,noreferrer');
     if(!w){W.showError?.('O navegador bloqueou a janela de impressão. Permita pop-ups para imprimir.');return;}
-    w.document.write(`<html lang="pt-BR"><head><meta charset="utf-8"><title>${esc(data.title)}</title><style>body{font-family:Arial,sans-serif;padding:42px;line-height:1.7;color:#263238}h1{text-align:center;font-size:20px;margin-bottom:36px}p{white-space:pre-wrap;margin:0 0 18px}.sign{margin-top:80px;text-align:center}</style></head><body><h1>${esc(data.title)}</h1>${data.body.map(x=>`<p>${esc(x)}</p>`).join('')}</body></html>`);w.document.close();w.focus();setTimeout(()=>w.print(),250);
+    w.document.write(`<html lang="pt-BR"><head><meta charset="utf-8"><title>${esc(data.title)}</title><style>body{font-family:Arial,sans-serif;padding:42px;line-height:1.7;color:#263238}h1{text-align:center;font-size:20px;margin-bottom:36px}p{white-space:pre-wrap;margin:0 0 18px}.sign{margin-top:80px;text-align:center}</style></head><body><h1>${esc(data.title)}</h1>${data.body.map(x=>`<p>${esc(x)}</p>`).join('')}
+
+<!-- ============================================================
+     FINAL 25 — PRESENÇA ONLINE EXCLUSIVA DA CONTA MASTER
+     ============================================================ -->
+
+
+</body></html>`);w.document.close();w.focus();setTimeout(()=>w.print(),250);
   }
 
   /* ============================================================
@@ -12808,6 +12815,220 @@ body.legado-v4-modal-open{overflow:hidden}
     setTimeout(safetyTermsCheck,600);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else setTimeout(init,0);
+})();
+</script>
+
+
+<script id="legado-final25-presence">
+(function(){
+  'use strict';
+  const W=window;
+  const MASTER_EMAIL='contato@legadoqueensina.com.br';
+  const PRESENCE_INTERVAL=25000;
+  const ONLINE_WINDOW=90000;
+  const MASTER_POLL=20000;
+  let heartbeatTimer=null;
+  let masterTimer=null;
+  let masterBusy=false;
+
+  const esc=v=>typeof W.escapeHtml==='function'
+    ? W.escapeHtml(v??'')
+    : String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+
+  function isMaster(){
+    const u=W.state?.user;
+    const p=W.state?.profile;
+    return String(u?.email||'').toLowerCase()===MASTER_EMAIL
+      || p?.is_master===true
+      || String(p?.role||'').toLowerCase()==='master'
+      || String(p?.role||'').toLowerCase()==='admin'
+      || String(u?.user_metadata?.role||'').toLowerCase()==='master';
+  }
+
+  function nameOf(u){
+    return String(u?.full_name||u?.name||u?.email||'Professor').trim()||'Professor';
+  }
+
+  function initials(name){
+    const a=String(name).trim().split(/\s+/).filter(Boolean);
+    return a.length>1?(a[0][0]+a[a.length-1][0]).toUpperCase():String(a[0]||'P').slice(0,2).toUpperCase();
+  }
+
+  function addStyles(){
+    if(document.getElementById('final25PresenceStyles'))return;
+    const s=document.createElement('style');
+    s.id='final25PresenceStyles';
+    s.textContent=`
+      .final25-online-wrap{position:relative;display:none;align-items:center;margin-left:auto;margin-right:12px;z-index:20}
+      .final25-online-wrap.show{display:flex}
+      .final25-online-btn{appearance:none;border:1px solid #dce8e1;background:#f7faf8;color:#50675c;border-radius:999px;height:30px;padding:0 10px 0 8px;display:inline-flex;align-items:center;gap:6px;font:700 10px/1 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(20,45,35,.04)}
+      .final25-online-btn:hover{background:#eef6f1;border-color:#cfe0d6}
+      .final25-online-dot{width:7px;height:7px;border-radius:50%;background:#33a56b;box-shadow:0 0 0 3px rgba(51,165,107,.12);flex:none}
+      .final25-online-count{font-size:10px;color:#2f5443}
+      .final25-online-pop{position:absolute;top:38px;right:0;width:min(290px,calc(100vw - 30px));background:#fff;border:1px solid #e2ebe6;border-radius:16px;box-shadow:0 16px 40px rgba(27,52,42,.15);padding:12px;display:none}
+      .final25-online-pop.open{display:block}
+      .final25-online-head{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:2px 2px 10px;border-bottom:1px solid #edf2ef}
+      .final25-online-head strong{font-size:11px;color:#30453b}
+      .final25-online-head span{font-size:9px;color:#89968f}
+      .final25-online-list{display:grid;gap:7px;margin-top:9px;max-height:260px;overflow:auto}
+      .final25-online-row{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px;border-radius:11px;background:#f8faf9}
+      .final25-online-avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#e7f1eb;color:#4e755f;font-size:9px;font-weight:800}
+      .final25-online-name{min-width:0;overflow-wrap:anywhere;font-size:10px;font-weight:700;color:#465950}
+      .final25-online-time{font-size:8px;color:#93a09a;white-space:nowrap}
+      .final25-online-empty{padding:16px 8px;text-align:center;color:#8a9791;font-size:9px}
+      @media(max-width:700px){
+        .final25-online-wrap{margin-right:7px}
+        .final25-online-btn{height:28px;padding:0 8px}
+        .final25-online-btn span:last-child{display:none}
+        .final25-online-pop{right:-4px}
+      }
+    `;
+    document.head.appendChild(s);
+  }
+
+  function ensureWidget(){
+    if(!isMaster()){
+      document.getElementById('final25OnlineWrap')?.remove();
+      return null;
+    }
+    addStyles();
+    let wrap=document.getElementById('final25OnlineWrap');
+    if(wrap)return wrap;
+    const topbar=document.querySelector('.topbar');
+    if(!topbar)return null;
+    const userMini=topbar.querySelector('.user-mini');
+    if(!userMini)return null;
+    wrap=document.createElement('div');
+    wrap.id='final25OnlineWrap';
+    wrap.className='final25-online-wrap show';
+    wrap.innerHTML=`
+      <button type="button" id="final25OnlineBtn" class="final25-online-btn" aria-expanded="false" aria-controls="final25OnlinePop" title="Professores online">
+        <span class="final25-online-dot"></span>
+        <strong id="final25OnlineCount" class="final25-online-count">0</strong>
+        <span>online</span>
+      </button>
+      <div id="final25OnlinePop" class="final25-online-pop" role="dialog" aria-label="Professores online">
+        <div class="final25-online-head"><strong>Quem está online</strong><span id="final25OnlineRefresh">Atualizando…</span></div>
+        <div id="final25OnlineList" class="final25-online-list"><div class="final25-online-empty">Verificando presença…</div></div>
+      </div>`;
+    topbar.insertBefore(wrap,userMini);
+    const btn=wrap.querySelector('#final25OnlineBtn');
+    const pop=wrap.querySelector('#final25OnlinePop');
+    btn?.addEventListener('click',()=>{
+      const open=!pop.classList.contains('open');
+      pop.classList.toggle('open',open);
+      btn.setAttribute('aria-expanded',String(open));
+    });
+    document.addEventListener('click',e=>{
+      if(!wrap.contains(e.target)){pop.classList.remove('open');btn.setAttribute('aria-expanded','false');}
+    },{passive:true});
+    return wrap;
+  }
+
+  async function heartbeat(){
+    try{
+      const sb=W.supabaseClient;
+      const user=W.state?.user;
+      if(!sb||!user||isMaster())return;
+      const now=new Date().toISOString();
+      const result=await sb.from('profiles').update({last_seen_at:now}).eq('id',user.id);
+      if(result.error && !/last_seen_at|column/i.test(String(result.error.message||''))) console.warn('[Presença]',result.error.message);
+    }catch(e){
+      console.warn('[Presença] heartbeat:',e?.message||e);
+    }
+  }
+
+  function startHeartbeat(){
+    if(heartbeatTimer)clearInterval(heartbeatTimer);
+    heartbeat();
+    heartbeatTimer=setInterval(heartbeat,PRESENCE_INTERVAL);
+    document.removeEventListener('visibilitychange',heartbeat);
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')heartbeat();},{passive:true});
+    window.removeEventListener('focus',heartbeat);
+    window.addEventListener('focus',heartbeat,{passive:true});
+  }
+
+  function formatWhen(value){
+    const t=new Date(value).getTime();
+    if(!Number.isFinite(t))return 'agora';
+    const seconds=Math.max(0,Math.floor((Date.now()-t)/1000));
+    if(seconds<15)return 'agora';
+    if(seconds<60)return `há ${seconds}s`;
+    const minutes=Math.floor(seconds/60);
+    return `há ${minutes}min`;
+  }
+
+  function renderUsers(users){
+    const wrap=ensureWidget();
+    if(!wrap)return;
+    const now=Date.now();
+    const online=(Array.isArray(users)?users:[])
+      .filter(u=>!u.is_master && String(u.role||'').toLowerCase()!=='master' && String(u.role||'').toLowerCase()!=='admin')
+      .filter(u=>u.last_seen_at && (now-new Date(u.last_seen_at).getTime())<=ONLINE_WINDOW)
+      .sort((a,b)=>new Date(b.last_seen_at).getTime()-new Date(a.last_seen_at).getTime());
+    const count=wrap.querySelector('#final25OnlineCount');
+    const list=wrap.querySelector('#final25OnlineList');
+    const refresh=wrap.querySelector('#final25OnlineRefresh');
+    if(count)count.textContent=String(online.length);
+    if(refresh)refresh.textContent='Atualizado agora';
+    if(!list)return;
+    list.innerHTML=online.length?online.map(u=>{
+      const name=nameOf(u);
+      return `<div class="final25-online-row"><div class="final25-online-avatar">${esc(initials(name))}</div><div class="final25-online-name">${esc(name)}</div><div class="final25-online-time">${esc(formatWhen(u.last_seen_at))}</div></div>`;
+    }).join(''):'<div class="final25-online-empty">Nenhum professor ativo nos últimos minutos.</div>';
+    try{W.refreshIcons?.();}catch(_){ }
+  }
+
+  async function masterRefresh(){
+    if(!isMaster())return;
+    ensureWidget();
+    const sb=W.supabaseClient;
+    if(!sb||masterBusy)return;
+    masterBusy=true;
+    try{
+      const {data,error}=await sb.functions.invoke('master-admin',{body:{action:'get_users'}});
+      if(error)throw error;
+      if(data?.error)throw new Error(data.error);
+      renderUsers(data?.users||[]);
+    }catch(e){
+      const list=document.getElementById('final25OnlineList');
+      if(list)list.innerHTML='<div class="final25-online-empty">Não foi possível atualizar a presença.</div>';
+      console.warn('[Presença Master]',e?.message||e);
+    }finally{masterBusy=false;}
+  }
+
+  function boot(){
+    if(!W.state?.user)return;
+    if(isMaster()){
+      if(masterTimer)clearInterval(masterTimer);
+      ensureWidget();
+      masterRefresh();
+      masterTimer=setInterval(masterRefresh,MASTER_POLL);
+    }else{
+      if(masterTimer)clearInterval(masterTimer);
+      masterTimer=null;
+      startHeartbeat();
+    }
+  }
+
+  function watchAuth(){
+    const sb=W.supabaseClient;
+    if(!sb?.auth?.onAuthStateChange)return;
+    sb.auth.onAuthStateChange(()=>setTimeout(boot,80));
+  }
+
+  function start(){
+    addStyles();
+    setTimeout(boot,300);
+    setTimeout(watchAuth,500);
+    const originalUpdate=W.updateUserHeader;
+    if(typeof originalUpdate==='function'&&!originalUpdate.__final25Presence){
+      const fn=function(){const r=originalUpdate.apply(this,arguments);setTimeout(boot,20);return r;};
+      fn.__final25Presence=true;W.updateUserHeader=fn;
+    }
+  }
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
 </script>
 </body>
