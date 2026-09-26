@@ -2850,6 +2850,10 @@
       return;
     }
 
+    if (!(await window.ensureTermsAccepted())) {
+      return;
+    }
+
     showAppScreen();
     updateUserHeader();
     updateMasterMenu();
@@ -12708,6 +12712,66 @@ body.legado-v4-modal-open{overflow:hidden}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else setTimeout(init,0);
 })();
 
+</script>
+
+<!-- FINAL 20 — ACEITE ELETRÔNICO DOS TERMOS -->
+<script id="legado-final20-terms">
+(function(){
+  'use strict';
+  const W=window;
+  const TERMS_VERSION='2026-09-26-v1';
+  const TERMS_PDF='termos_de_uso_sistema_psicopedagogico.pdf';
+  W.__legadoTermsVersion=TERMS_VERSION;
+  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v??''):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  const displayName=()=>{const p=W.state?.profile||{};const u=W.state?.user||{};return String(p.full_name||p.name||u.user_metadata?.full_name||u.user_metadata?.name||(u.email?String(u.email).split('@')[0]:'Professor')).trim()||'Professor';};
+  const fmt=v=>{const d=new Date(v);return Number.isNaN(d.getTime())?'—':d.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});};
+  const addStyles=()=>{if(document.getElementById('final20TermsStyles'))return;const s=document.createElement('style');s.id='final20TermsStyles';s.textContent=".final20-terms-overlay{position:fixed;inset:0;z-index:12000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(18,30,25,.58);backdrop-filter:blur(5px)}\n.final20-terms-card{width:min(720px,100%);max-height:min(92vh,900px);overflow:auto;background:#fff;border-radius:24px;box-shadow:0 28px 80px rgba(15,30,24,.28);padding:28px}\n.final20-terms-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}.final20-terms-icon{width:48px;height:48px;display:grid;place-items:center;flex:none;border-radius:15px;background:#eaf3ee;color:#477363}.final20-terms-icon svg{width:23px;height:23px}\n.final20-terms-kicker{font-size:10px;font-weight:800;letter-spacing:.14em;color:#6f8178}.final20-terms-card h2{margin:3px 0 5px;font-size:24px;color:#24362f;letter-spacing:-.03em}.final20-terms-card p{margin:0;color:#7b8982;font-size:12px;line-height:1.6}\n.final20-terms-link{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0;padding:14px 15px;border:1px solid #dfe9e4;border-radius:14px;background:#f7faf8;text-decoration:none;color:#45685a}.final20-terms-link span{font-size:11px;font-weight:700}.final20-terms-link i{width:16px}\n.final20-terms-check{display:flex;align-items:flex-start;gap:11px;margin:16px 0;padding:15px;border:1px solid #e2eae6;border-radius:15px;background:#fbfdfc}.final20-terms-check input{width:18px;height:18px;margin-top:1px;accent-color:#5f8f7a;flex:none}.final20-terms-check label{font-size:12px;line-height:1.65;color:#4f5f58;cursor:pointer}.final20-terms-check a{color:#477363;font-weight:800}\n.final20-sign-preview{display:none;margin:15px 0 0;padding:16px;border:1px solid #d9e8df;border-radius:16px;background:#f7fbf8}.final20-sign-preview.show{display:block}.final20-sign-caption{font-size:9px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:#82918a}.final20-sign-name{margin:5px 0 3px;font-family:\"Segoe Script\",\"Bradley Hand\",\"Brush Script MT\",cursive;font-size:32px;font-style:italic;color:#29463a;line-height:1.1}.final20-sign-date{font-size:10px;color:#7b8982}\n.final20-terms-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}.final20-terms-actions .btn{min-height:42px}.final20-terms-note{margin-top:14px;color:#97a29d;font-size:10px;line-height:1.55}\n.final20-master-panel{margin-top:16px;padding:18px;border:1px solid #e1e9e5;border-radius:18px;background:#fff;box-shadow:0 4px 18px rgba(30,50,40,.035)}.final20-master-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px}.final20-master-head>div>span{display:block;font-size:8px;font-weight:800;letter-spacing:.13em;color:#7c8d84}.final20-master-head h2{margin:4px 0 3px;font-size:16px;color:#34443c}.final20-master-head p{margin:0;font-size:10px;line-height:1.5;color:#8b9892}.final20-term-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-bottom:13px}.final20-term-kpi{padding:12px;border-radius:13px;background:#f7faf8}.final20-term-kpi small{display:block;font-size:8px;color:#89968f;text-transform:uppercase}.final20-term-kpi strong{display:block;margin-top:3px;font-size:18px;color:#3d5047}.final20-term-list{display:grid;gap:8px}.final20-term-row{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,.9fr) 135px;gap:10px;align-items:center;padding:11px 12px;border:1px solid #e7eee9;border-radius:12px;background:#fbfdfc}.final20-term-row strong{display:block;font-size:10px;color:#465850;overflow-wrap:anywhere}.final20-term-row small{display:block;margin-top:2px;font-size:8px;color:#8b9791;overflow-wrap:anywhere}.final20-term-badge{display:inline-flex;justify-content:center;padding:5px 8px;border-radius:999px;background:#eaf5ee;color:#47745a;font-size:8px;font-weight:800}.final20-term-pending{background:#fff5e4;color:#986b2d}.final20-term-date{text-align:right;font-size:9px;color:#718078}\n@media(max-width:700px){.final20-terms-card{padding:20px;border-radius:20px}.final20-terms-card h2{font-size:21px}.final20-term-summary{grid-template-columns:1fr}.final20-term-row{grid-template-columns:1fr}.final20-term-date{text-align:left}.final20-terms-actions{flex-direction:column-reverse}.final20-terms-actions .btn{width:100%}}";document.head.appendChild(s);};
+  const accepted=p=>Boolean(p&&p.terms_accepted_at&&p.terms_accepted_name&&p.terms_version===TERMS_VERSION);
+  const remove=()=>{document.getElementById('final20TermsModal')?.remove();};
+  function open(){
+    addStyles();remove();const name=displayName();const root=document.createElement('div');root.id='final20TermsModal';root.className='final20-terms-overlay';
+    root.innerHTML='<div class="final20-terms-card" role="dialog" aria-modal="true" aria-labelledby="final20TermsTitle">'+
+      '<div class="final20-terms-head"><div class="final20-terms-icon"><i data-lucide="file-signature"></i></div><div><div class="final20-terms-kicker">PRIMEIRO ACESSO</div><h2 id="final20TermsTitle">Termos e Condições de Uso</h2><p>Leia o documento e registre seu aceite antes de continuar.</p></div></div>'+
+      '<a class="final20-terms-link" href="'+esc(TERMS_PDF)+'" target="_blank" rel="noopener noreferrer"><span><i data-lucide="file-text" style="width:15px;vertical-align:-3px;margin-right:6px"></i>Abrir Termos e Condições de Uso</span><i data-lucide="external-link"></i></a>'+
+      '<div class="final20-terms-check"><input type="checkbox" id="final20TermsCheck"><label for="final20TermsCheck">Li, compreendi e aceito integralmente os <a href="'+esc(TERMS_PDF)+'" target="_blank" rel="noopener noreferrer">Termos e Condições de Uso</a> do sistema Legado Que Ensina.</label></div>'+
+      '<div class="final20-sign-preview" id="final20SignPreview"><div class="final20-sign-caption">Assinatura eletrônica</div><div class="final20-sign-name">'+esc(name)+'</div><div class="final20-sign-date" id="final20SignDate">Data: —</div></div>'+
+      '<div class="final20-terms-actions"><button type="button" class="btn btn-outline" id="final20TermsReview">Ler termos</button><button type="button" class="btn btn-primary" id="final20TermsSign" disabled><i data-lucide="pen-line"></i>Assinar e continuar</button></div>'+
+      '<div class="final20-terms-note">Seu nome, a versão do documento e a data/hora do aceite ficarão registrados no seu perfil para consulta pela gestão.</div></div>';
+    document.body.appendChild(root);W.refreshIcons?.();
+    const check=root.querySelector('#final20TermsCheck'),sign=root.querySelector('#final20TermsSign'),preview=root.querySelector('#final20SignPreview'),signDate=root.querySelector('#final20SignDate');
+    root.querySelector('#final20TermsReview').onclick=()=>window.open(TERMS_PDF,'_blank','noopener,noreferrer');
+    check.onchange=()=>{sign.disabled=!check.checked;preview.classList.toggle('show',check.checked);if(check.checked)signDate.textContent='Data: '+new Date().toLocaleString('pt-BR');};
+    sign.onclick=async()=>{
+      if(!check.checked)return;sign.disabled=true;const uid=W.state?.user?.id;
+      if(!W.supabaseClient||!uid){sign.disabled=false;W.showError?.('Sessão do usuário não encontrada.');return;}
+      const now=new Date().toISOString();const payload={terms_accepted_at:now,terms_accepted_name:name,terms_version:TERMS_VERSION};
+      try{
+        const r=await W.supabaseClient.from('profiles').update(payload).eq('id',uid).select('*').maybeSingle();if(r.error)throw r.error;
+        const audit=await W.supabaseClient.from('terms_acceptances').insert({user_id:uid,terms_version:TERMS_VERSION,accepted_name:name,accepted_at:now});if(audit.error)console.warn('[Termos] histórico não gravado:',audit.error.message);
+        W.state.profile={...(W.state.profile||{}),...(r.data||payload)};remove();W.showSuccess?.('Termos aceitos e assinatura registrada.');W.showAppScreen?.();W.updateUserHeader?.();W.updateMasterMenu?.();W.navigate?.(W.state.currentView||'dashboard');
+      }catch(e){console.error('[Termos]',e);W.showError?.('Não foi possível registrar seu aceite: '+(e.message||e));sign.disabled=false;}
+    };
+  }
+  W.ensureTermsAccepted=async()=>{const user=W.state?.user;if(!user)return true;const p=W.state?.profile||{};if(accepted(p)){remove();return true;}open();return false;};
+  function profileCard(){
+    const c=document.getElementById('perfilContent');if(!c)return;const anchor=c.querySelector('.v3-profile-editor,.report-panel,.card');if(!anchor)return;let card=c.querySelector('[data-final20-profile-terms]');
+    if(!card){card=document.createElement('section');card.dataset.final20ProfileTerms='1';card.className='final20-master-panel';anchor.insertAdjacentElement('afterend',card);}
+    const p=W.state?.profile||{};const ok=accepted(p);const signed='<div class="final20-sign-preview show" style="display:block;margin-top:0"><div class="final20-sign-caption">Nome registrado</div><div class="final20-sign-name">'+esc(p.terms_accepted_name)+'</div><div class="final20-sign-date">Data e hora: '+esc(fmt(p.terms_accepted_at))+' · Versão '+esc(p.terms_version||'—')+'</div></div>';
+    card.innerHTML='<div class="final20-master-head"><div><span>ACEITE ELETRÔNICO</span><h2>Termos e Condições de Uso</h2><p>Registro vinculado a este perfil.</p></div><span class="final20-term-badge '+(ok?'':'final20-term-pending')+'">'+(ok?'Aceito':'Pendente')+'</span></div>'+(ok?signed:'<div class="final20-terms-note" style="margin-top:0">O aceite ainda não foi registrado.</div>');W.refreshIcons?.();
+  }
+  const oldProfile=W.renderProfile;if(typeof oldProfile==='function'&&!oldProfile.__final20Terms){const fn=async function(){const r=await oldProfile.apply(this,arguments);profileCard();return r;};fn.__final20Terms=true;W.renderProfile=fn;}
+  function masterPanel(users){
+    const host=document.getElementById('saas-panel-overview');if(!host)return;host.querySelector('[data-final20-master-terms]')?.remove();const rows=(Array.isArray(users)?users:[]).filter(r=>!r.is_master&&!['master','admin'].includes(String(r.role||'').toLowerCase()));const signed=rows.filter(r=>r.terms_accepted_at&&r.terms_accepted_name);const pending=rows.length-signed.length;const panel=document.createElement('section');panel.dataset.final20MasterTerms='1';panel.className='final20-master-panel';
+    let html='<div class="final20-master-head"><div><span>CONFORMIDADE</span><h2>Termos de uso</h2><p>Veja quem aceitou os termos e a data do aceite.</p></div><a class="saas-secondary" href="'+esc(TERMS_PDF)+'" target="_blank" rel="noopener noreferrer"><i data-lucide="file-text"></i>Ver termos</a></div>';
+    html+='<div class="final20-term-summary"><div class="final20-term-kpi"><small>Professores</small><strong>'+rows.length+'</strong></div><div class="final20-term-kpi"><small>Assinaram</small><strong>'+signed.length+'</strong></div><div class="final20-term-kpi"><small>Pendentes</small><strong>'+pending+'</strong></div></div>';
+    html+='<div class="final20-term-list">';if(rows.length){rows.forEach(r=>{html+='<div class="final20-term-row"><div><strong>'+esc(r.terms_accepted_name||r.full_name||r.name||r.email||'Professor')+'</strong><small>'+esc(r.email||'')+'</small></div><div><span class="final20-term-badge '+(r.terms_accepted_at?'':'final20-term-pending')+'">'+(r.terms_accepted_at?'Aceito':'Pendente')+'</span></div><div class="final20-term-date">'+(r.terms_accepted_at?esc(fmt(r.terms_accepted_at)):'Ainda não assinou')+'</div></div>';});}else html+='<div class="empty">Nenhum professor cadastrado.</div>';
+    html+='</div>';panel.innerHTML=html;host.appendChild(panel);W.refreshIcons?.();
+  }
+  async function loadMasterPanel(){try{const u=W.state?.user,p=W.state?.profile||{};if(!u)return;const master=String(u.email||'').toLowerCase()==='contato@legadoqueensina.com.br'||p.is_master===true||['master','admin'].includes(String(p.role||'').toLowerCase());if(!master||!W.supabaseClient)return;const r=await W.supabaseClient.functions.invoke('master-admin',{body:{action:'get_users',include_blocked:true}});if(r.error)throw r.error;masterPanel(r.data?.users||[]);}catch(e){console.warn('[Termos Master]',e);}}
+  const oldMaster=W.renderMaster;if(typeof oldMaster==='function'&&!oldMaster.__final20Terms){const fn=async function(){const r=await oldMaster.apply(this,arguments);setTimeout(loadMasterPanel,0);return r;};fn.__final20Terms=true;W.renderMaster=fn;}
+  function init(){addStyles();profileCard();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else setTimeout(init,0);
+})();
 </script>
 </body>
 </html>
