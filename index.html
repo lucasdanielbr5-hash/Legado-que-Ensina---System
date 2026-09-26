@@ -13293,6 +13293,20 @@ body.final27-dark .final29-eval-search input{background:transparent!important;bo
 @media(max-width:900px){
   .final29-conversation-shell{grid-template-columns:300px minmax(0,1fr)!important}
 }
+
+.final32-new-launch{display:flex;justify-content:center;margin-top:7px}
+.final32-new-toggle{border:1px solid #d6e2dc;background:#f6faf8;color:#4c6b5c;border-radius:999px;padding:6px 10px;display:inline-flex;align-items:center;gap:5px;font:900 7px Inter,Arial,sans-serif;cursor:pointer}
+.final32-newbox{margin-top:7px;padding:8px;border:1px solid #dde7e2;border-radius:12px;background:#f7faf8}
+.final32-newbox[hidden]{display:none!important}
+.final32-new-fields{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px}
+.final32-new-fields select,.final32-new-fields input,.final32-newbox>textarea{width:100%;border:1px solid #d8e3de;border-radius:9px;padding:7px 8px;background:#fff;color:#344940;font:500 8px/1.4 Inter,Arial,sans-serif;outline:0}
+.final32-newbox>textarea{margin-top:6px;min-height:58px;resize:none}
+.final32-newbox-actions{display:flex;justify-content:flex-end;margin-top:6px}
+body.final27-dark .final32-new-toggle{background:#151d1d!important;border-color:#354341!important;color:#d8e4df!important}
+body.final27-dark .final32-newbox{background:#121919!important;border-color:#2c3938!important}
+body.final27-dark .final32-new-fields select,
+body.final27-dark .final32-new-fields input,
+body.final27-dark .final32-newbox>textarea{background:#0c1213!important;color:#f1f7f5!important;border-color:#33413f!important}
 @media(max-width:760px){
   .topbar #final27TopTools{margin-left:6px!important}
   .topbar .user-mini{margin-left:10px!important;padding-left:8px!important}
@@ -15233,6 +15247,18 @@ body.final27-dark .final29-eval-search input{background:transparent!important;bo
       document.getElementById('v3RecordForm')?.scrollIntoView({behavior:'smooth',block:'center'});
     }
   }
+  /* FINAL 32 — quando já existe pagamento pago para o mesmo atendimento, pula a pergunta de pagamento. */
+  function final32AlreadyPaidFlow(ap,existing){
+    flowRemove();
+    const root=document.createElement('div');root.id='final29FlowOverlay';root.className='final29-flow-overlay';
+    root.innerHTML=`<div class="final29-flow-card"><div class="final29-flow-kicker">ATENDIMENTO ENCERRADO</div><h2>Pagamento já registrado</h2><p>Este atendimento já consta como <strong>pago</strong> no Financeiro. Nenhum novo lançamento será criado.</p><div class="final29-flow-step"><strong>Deseja encaminhar recibo?</strong><span>O recibo será aberto com os dados já registrados.</span><div class="final29-flow-actions"><button type="button" class="btn btn-outline" id="f32ReceiptNo">Não</button><button type="button" class="btn btn-primary" id="f32ReceiptYes">Sim, abrir recibo</button></div></div><div class="final29-flow-step"><strong>Precisa de declaração?</strong><span>Também pode abrir a declaração já preenchida.</span><div class="final29-flow-actions"><button type="button" class="btn btn-outline" id="f32DeclNo">Não</button><button type="button" class="btn btn-primary" id="f32DeclYes">Sim, abrir declaração</button></div></div></div>`;
+    document.body.appendChild(root);W.refreshIcons?.();
+    root.querySelector('#f32ReceiptNo').onclick=()=>root.querySelector('#f32ReceiptNo')?.closest('.final29-flow-step')?.remove();
+    root.querySelector('#f32DeclNo').onclick=()=>root.querySelector('#f32DeclNo')?.closest('.final29-flow-step')?.remove();
+    root.querySelector('#f32ReceiptYes').onclick=()=>{root.remove();openPreparedDocument('recibo',ap,existing);};
+    root.querySelector('#f32DeclYes').onclick=()=>{root.remove();openPreparedDocument('declaracao',ap,existing);};
+  }
+
   async function finishAttendance(ap,form){
     const c=DB(),me=UID();if(!c||!me)throw new Error('Sessão não encontrada.');
     const fd=new FormData(form);const content=String(fd.get('content')||'').trim();if(!content)throw new Error('Descreva a sessão antes de encerrar o atendimento.');
@@ -15242,7 +15268,7 @@ body.final27-dark .final29-eval-search input{background:transparent!important;bo
     sessionStorage.removeItem('legado:active-appointment');
     showOk('Atendimento encerrado e registrado no prontuário.');
     W.renderStudentProfileView?.();
-    openAttendanceFlow(ap);
+    paymentDuplicateCheck(ap).then(existing=>{ if(existing?.status==='paid'){ final32AlreadyPaidFlow(ap,existing); } else { openAttendanceFlow(ap); } }).catch(()=>openAttendanceFlow(ap));
   }
   function flowRemove(){document.getElementById('final29FlowOverlay')?.remove();}
   async function paymentDuplicateCheck(ap){
@@ -15923,5 +15949,674 @@ body.final27-dark .final31-notification-close{background:#171f1b!important;borde
     if(W.state?.currentView==='financeiro')financePdfButton31();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot31,{once:true});else setTimeout(boot31,40);
+})();
+</script>
+
+<style id="final32Styles">
+/* ============================================================
+   FINAL 32 — DARK REAL / CHAT FLUTUANTE / NOTIFICAÇÕES REAIS
+   ============================================================ */
+:root{
+  --f32-bg:#080c0d;
+  --f32-surface:#111718;
+  --f32-surface-2:#161d1d;
+  --f32-surface-3:#1b2323;
+  --f32-border:#293434;
+  --f32-text:#f1f7f5;
+  --f32-muted:#a8b6b2;
+  --f32-dim:#7f8e89;
+  --f32-green:#61a785;
+  --f32-green-2:#78c39d;
+  --f32-purple:#7367c8;
+}
+
+/* ---------- MODO DARK: superfícies realmente escuras ---------- */
+body.final27-dark,
+body.final27-dark #app,
+body.final27-dark .app-shell,
+body.final27-dark .main,
+body.final27-dark main,
+body.final27-dark .content,
+body.final27-dark .view,
+body.final27-dark .view.active,
+body.final27-dark [id$="Content"]{
+  background:var(--f32-bg)!important;
+  color:var(--f32-text)!important;
+}
+body.final27-dark .view section,
+body.final27-dark .view article,
+body.final27-dark .view .card,
+body.final27-dark .view [class*="card"],
+body.final27-dark .view [class*="panel"],
+body.final27-dark .view [class*="stat"],
+body.final27-dark .view [class*="kpi"],
+body.final27-dark .view [class*="summary"],
+body.final27-dark .view [class*="tile"],
+body.final27-dark .view [class*="box"],
+body.final27-dark .view [class*="table-wrap"],
+body.final27-dark .view [class*="history"],
+body.final27-dark .view [class*="timeline"],
+body.final27-dark .view [class*="model"],
+body.final27-dark .view [class*="empty"]{
+  background-color:var(--f32-surface)!important;
+  background-image:none!important;
+  color:var(--f32-text)!important;
+  border-color:var(--f32-border)!important;
+  box-shadow:none;
+}
+/* Corrige inline styles claros antigos: rgb/white/variações */
+body.final27-dark .view [style*="background:#fff"],
+body.final27-dark .view [style*="background: #fff"],
+body.final27-dark .view [style*="background-color:#fff"],
+body.final27-dark .view [style*="background-color: #fff"],
+body.final27-dark .view [style*="background: rgb(255"],
+body.final27-dark .view [style*="background-color: rgb(255"],
+body.final27-dark .view [style*="background:white"],
+body.final27-dark .view [style*="background: white"],
+body.final27-dark .view [style*="background-color:white"],
+body.final27-dark .view [style*="background-color: white"]{
+  background:var(--f32-surface)!important;
+  background-color:var(--f32-surface)!important;
+  color:var(--f32-text)!important;
+  border-color:var(--f32-border)!important;
+}
+body.final27-dark .view h1,
+body.final27-dark .view h2,
+body.final27-dark .view h3,
+body.final27-dark .view h4,
+body.final27-dark .view h5,
+body.final27-dark .view h6,
+body.final27-dark .view strong,
+body.final27-dark .view b,
+body.final27-dark .view th,
+body.final27-dark .view dt{
+  color:var(--f32-text)!important;
+}
+body.final27-dark .view p,
+body.final27-dark .view span,
+body.final27-dark .view small,
+body.final27-dark .view label,
+body.final27-dark .view td,
+body.final27-dark .view li,
+body.final27-dark .view .muted,
+body.final27-dark .view .text-muted,
+body.final27-dark .view [class*="muted"],
+body.final27-dark .view [class*="meta"],
+body.final27-dark .view [class*="desc"],
+body.final27-dark .view [class*="subtitle"]{
+  color:var(--f32-muted)!important;
+}
+body.final27-dark .view input,
+body.final27-dark .view select,
+body.final27-dark .view textarea,
+body.final27-dark .view .form-control{
+  background:#0d1314!important;
+  background-color:#0d1314!important;
+  color:var(--f32-text)!important;
+  border-color:#33403f!important;
+  caret-color:var(--f32-green-2)!important;
+}
+body.final27-dark .view input::placeholder,
+body.final27-dark .view textarea::placeholder{color:#74837e!important;opacity:1!important}
+body.final27-dark .view option{background:#101616!important;color:#f1f7f5!important}
+body.final27-dark .view .btn-outline,
+body.final27-dark .view .icon-button,
+body.final27-dark .view button:not(.btn-primary):not(.final32-chat-launcher):not(.final32-close){
+  background:#151d1d!important;
+  color:#dbe6e2!important;
+  border-color:#354341!important;
+}
+body.final27-dark .view .btn-outline:hover,
+body.final27-dark .view button:not(.btn-primary):not(.final32-chat-launcher):not(.final32-close):hover{
+  background:#1d2726!important;
+  color:#fff!important;
+}
+body.final27-dark .view .btn-primary{
+  background:var(--f32-green)!important;
+  color:#07100c!important;
+  border-color:var(--f32-green)!important;
+}
+body.final27-dark .view .v3-tag,
+body.final27-dark .view .status-pill{
+  background:#1b2b24!important;
+  color:#9fe0be!important;
+  border-color:#355644!important;
+}
+body.final27-dark .view svg{color:inherit}
+
+/* ---------- DASHBOARD: cards nunca brancos ---------- */
+body.final27-dark #dashboardContent .rz-kpi,
+body.final27-dark #dashboardContent .rz-panel,
+body.final27-dark #dashboardContent .rz-date,
+body.final27-dark #dashboardContent .rz-progress,
+body.final27-dark #dashboardContent .rz-fin-summary div,
+body.final27-dark #dashboardContent .v3-stat,
+body.final27-dark #dashboardContent .v3-panel,
+body.final27-dark #dashboardContent .final19-greeting,
+body.final27-dark #dashboardContent .final19-plan-card,
+body.final27-dark #dashboardContent .final19-doc-card,
+body.final27-dark #dashboardContent .final31-notification-banner,
+body.final27-dark #dashboardContent .final29-notification-banner{
+  background:var(--f32-surface)!important;
+  color:var(--f32-text)!important;
+  border-color:var(--f32-border)!important;
+}
+body.final27-dark #dashboardContent .rz-icon,
+body.final27-dark #dashboardContent .v3-icon,
+body.final27-dark #dashboardContent .final19-greeting-icon{
+  background:#172421!important;
+  color:#8bd1ab!important;
+}
+
+/* ---------- RECADOS LIMPO ---------- */
+.final32-recados-clean{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(270px,330px);
+  gap:14px;
+}
+.final32-recados-card{
+  border:1px solid #dbe6e0;
+  border-radius:18px;
+  background:#fff;
+  padding:18px;
+  min-width:0;
+}
+.final32-recados-card h2{margin:0;color:#294039;font-size:15px}
+.final32-recados-card p{margin:5px 0 0;color:#74827b;font-size:9px;line-height:1.55}
+.final32-recados-actions{display:flex;align-items:center;gap:8px;margin-top:15px;flex-wrap:wrap}
+.final32-recados-stat{display:grid;grid-template-columns:40px minmax(0,1fr);gap:10px;align-items:center;padding:11px;border:1px solid #e0e9e4;border-radius:13px;background:#f8fbf9}
+.final32-recados-stat i{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#eaf4ee;color:#538269}
+.final32-recados-stat strong{display:block;font-size:12px;color:#30463d}
+.final32-recados-stat span{font-size:8px;color:#829089}
+body.final27-dark .final32-recados-card{background:var(--f32-surface)!important;border-color:var(--f32-border)!important}
+body.final27-dark .final32-recados-card h2{color:var(--f32-text)!important}
+body.final27-dark .final32-recados-card p{color:var(--f32-muted)!important}
+body.final27-dark .final32-recados-stat{background:var(--f32-surface-2)!important;border-color:var(--f32-border)!important}
+body.final27-dark .final32-recados-stat i{background:#1a2823!important;color:#8fd2ad!important}
+body.final27-dark .final32-recados-stat strong{color:var(--f32-text)!important}
+body.final27-dark .final32-recados-stat span{color:var(--f32-muted)!important}
+
+/* Esconde o layout de chat de página: a conversa agora é flutuante */
+.final29-conversation-shell,.final29-inline-compose-wrap{display:none!important}
+.final32-hide-conversation-tab{display:none!important}
+
+/* ---------- CHAT FLUTUANTE ---------- */
+.final32-chat-launcher{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  z-index:6100;
+  width:56px;
+  height:56px;
+  border:1px solid #4d8068;
+  border-radius:18px;
+  background:#5e9a7b;
+  color:#fff;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  box-shadow:0 16px 34px rgba(33,73,54,.24);
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+.final32-chat-launcher:hover{transform:translateY(-2px);box-shadow:0 20px 42px rgba(33,73,54,.28)}
+.final32-chat-launcher .final32-chat-unread{position:absolute;right:-3px;top:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:#de6d69;color:#fff;font:900 9px/19px Inter,Arial,sans-serif;text-align:center;border:2px solid #fff}
+.final32-chat-widget{
+  position:fixed;
+  right:22px;
+  bottom:88px;
+  z-index:6099;
+  width:min(390px,calc(100vw - 24px));
+  height:min(570px,calc(100vh - 112px));
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr);
+  overflow:hidden;
+  border:1px solid #d6e3dc;
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 24px 70px rgba(22,45,34,.24);
+}
+.final32-chat-widget[hidden]{display:none!important}
+.final32-chat-widget-head{padding:14px 15px;border-bottom:1px solid #e2ebe6;display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(180deg,#fff,#f7faf8)}
+.final32-chat-widget-head-main{min-width:0}
+.final32-chat-widget-kicker{font-size:7px;font-weight:900;letter-spacing:.11em;color:#71837a}
+.final32-chat-widget-title{margin:3px 0 0;color:#294039;font-size:14px;overflow-wrap:anywhere}
+.final32-close{width:32px;height:32px;border:1px solid #d9e4de;border-radius:10px;background:#fff;color:#64756c;display:grid;place-items:center;cursor:pointer}
+.final32-chat-body{display:grid;grid-template-rows:136px minmax(0,1fr) auto;min-height:0;background:#f4f7f5}
+.final32-thread-list{overflow:auto;padding:8px;border-bottom:1px solid #e1e9e4;background:#f8faf9;display:grid;gap:5px}
+.final32-thread{width:100%;text-align:left;border:1px solid transparent;border-radius:11px;background:transparent;padding:8px;cursor:pointer}
+.final32-thread:hover{background:#fff;border-color:#dfe8e2}
+.final32-thread.active{background:#eaf4ee;border-color:#cfe2d6}
+.final32-thread strong{display:block;color:#32473d;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.final32-thread span{display:block;margin-top:2px;color:#86928c;font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.final32-messages{overflow:auto;padding:12px;display:flex;flex-direction:column;gap:7px;background:linear-gradient(180deg,#f8fbf9,#eef3f0)}
+.final32-msg-row{display:flex;min-width:0}.final32-msg-row.me{justify-content:flex-end}
+.final32-msg{max-width:79%;padding:8px 10px;border:1px solid #dce6e1;border-radius:13px;background:#fff;color:#3e5048;box-shadow:0 2px 7px rgba(25,49,38,.035)}
+.final32-msg.me{background:#dff0e6;border-color:#c6ded1}
+.final32-msg-author{font-size:7px;font-weight:900;color:#718178;margin-bottom:3px}
+.final32-msg-text{font-size:9px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.final32-msg-time{margin-top:4px;text-align:right;font-size:6px;color:#8a9691}
+.final32-chat-compose{padding:8px;border-top:1px solid #e0e8e3;background:#fff}
+.final32-chat-compose form{display:grid;grid-template-columns:minmax(0,1fr) 38px;gap:6px}
+.final32-chat-compose textarea{width:100%;min-height:38px;max-height:90px;resize:none;border:1px solid #d9e4df;border-radius:11px;background:#f9fbfa;padding:8px;color:#344840;font:500 9px/1.45 Inter,Arial,sans-serif;outline:0}
+.final32-send{width:38px;height:38px;border:0;border-radius:11px;background:#5e9a7b;color:#fff;display:grid;place-items:center;cursor:pointer}
+.final32-empty-chat{display:grid;place-items:center;align-content:center;text-align:center;padding:18px;color:#83918a;gap:7px;font-size:8px}
+.final32-empty-chat i{width:36px;height:36px;border-radius:12px;background:#e7f1eb;color:#5d8d74;display:grid;place-items:center}
+.final32-new-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;padding:8px;background:#fff;border-top:1px solid #e0e8e3}
+.final32-new-row select,.final32-new-row input{width:100%;border:1px solid #d9e4df;border-radius:10px;padding:8px 9px;background:#fafcfb;color:#344840;font:500 8px Inter,Arial,sans-serif}
+body.final27-dark .final32-chat-launcher{background:#7569a7;border-color:#8f84d2;color:#fff;box-shadow:0 18px 40px rgba(0,0,0,.4)}
+body.final27-dark .final32-chat-launcher .final32-chat-unread{border-color:#111718}
+body.final27-dark .final32-chat-widget{background:var(--f32-surface)!important;border-color:var(--f32-border)!important;box-shadow:0 30px 80px rgba(0,0,0,.5)!important}
+body.final27-dark .final32-chat-widget-head,
+body.final27-dark .final32-thread-list,
+body.final27-dark .final32-chat-compose,
+body.final27-dark .final32-new-row{background:var(--f32-surface)!important;border-color:var(--f32-border)!important}
+body.final27-dark .final32-chat-widget-kicker{color:#94a39d!important}
+body.final27-dark .final32-chat-widget-title{color:#f1f7f5!important}
+body.final27-dark .final32-close{background:#151d1d!important;border-color:#354341!important;color:#dbe6e2!important}
+body.final27-dark .final32-chat-body{background:#0b1011!important}
+body.final27-dark .final32-thread{background:transparent!important}
+body.final27-dark .final32-thread:hover{background:#1a2222!important;border-color:#2d3a39!important}
+body.final27-dark .final32-thread.active{background:#172820!important;border-color:#315542!important}
+body.final27-dark .final32-thread strong{color:#eef5f2!important}
+body.final27-dark .final32-thread span{color:#93a19b!important}
+body.final27-dark .final32-messages{background:#0b1011!important}
+body.final27-dark .final32-msg{background:#151c1d!important;border-color:#2c3938!important;color:#e3ece8!important}
+body.final27-dark .final32-msg.me{background:#183126!important;border-color:#315442!important}
+body.final27-dark .final32-msg-author{color:#a2b1aa!important}
+body.final27-dark .final32-msg-time{color:#7f8d88!important}
+body.final27-dark .final32-chat-compose textarea,
+body.final27-dark .final32-new-row select,
+body.final27-dark .final32-new-row input{background:#0c1213!important;color:#f1f7f5!important;border-color:#33413f!important}
+body.final27-dark .final32-empty-chat{color:#9ba9a3!important}
+body.final27-dark .final32-empty-chat i{background:#172720!important;color:#8bcaa7!important}
+body.final27-dark .final32-send{background:#61a785;color:#07100c}
+
+/* ---------- NOTIFICAÇÃO PERMISSÃO ---------- */
+.final32-permission-banner{
+  display:flex;align-items:center;gap:12px;padding:13px 14px;
+  margin:10px 0 14px;border:1px solid #cfdfd6;border-radius:16px;
+  background:#f8fcf9;color:#294039;box-shadow:0 6px 20px rgba(38,66,53,.05);
+}
+.final32-permission-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#e4f2ea;color:#4d8367;flex:none}
+.final32-permission-main{min-width:0;flex:1}.final32-permission-main strong{display:block;font-size:11px;color:#294039}.final32-permission-main span{display:block;margin-top:3px;font-size:8px;line-height:1.5;color:#74827a;overflow-wrap:anywhere}
+.final32-permission-actions{display:flex;align-items:center;gap:7px;flex:none}.final32-permission-close{width:30px;height:30px;border:1px solid #d5e1db;border-radius:10px;background:#fff;color:#6d7d75;display:grid;place-items:center;cursor:pointer}
+body.final27-dark .final32-permission-banner{background:#121a1a!important;border-color:#2d3938!important;color:#f1f7f5!important}
+body.final27-dark .final32-permission-icon{background:#192a23!important;color:#8ed0aa!important}
+body.final27-dark .final32-permission-main strong{color:#f1f7f5!important}
+body.final27-dark .final32-permission-main span{color:#a6b4ae!important}
+body.final27-dark .final32-permission-close{background:#161e1e!important;border-color:#34413f!important;color:#c7d3ce!important}
+
+/* ---------- AVISO 10 MIN / HORA DE ATENDIMENTO ---------- */
+.final32-appointment-toast{position:fixed;right:18px;top:84px;z-index:6200;width:min(420px,calc(100vw - 26px));display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:10px;align-items:center;padding:13px;border:1px solid #c9dfd1;border-radius:16px;background:#f8fcf9;box-shadow:0 18px 50px rgba(22,49,35,.2)}
+.final32-appointment-icon{width:42px;height:42px;border-radius:12px;background:#e3f0e8;color:#4f8568;display:grid;place-items:center}
+.final32-appointment-main strong{display:block;color:#2d473c;font-size:10px}.final32-appointment-main span{display:block;margin-top:3px;color:#74827b;font-size:8px;line-height:1.45}
+.final32-appointment-close{width:30px;height:30px;border:0;background:transparent;color:#73827b;display:grid;place-items:center;cursor:pointer}
+.final32-start-bar{position:fixed;right:18px;top:84px;z-index:6201;width:min(450px,calc(100vw - 26px));display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:10px;align-items:center;padding:13px;border:1px solid #5d9c78;border-radius:16px;background:#102019;box-shadow:0 20px 60px rgba(0,0,0,.28)}
+.final32-start-icon{width:42px;height:42px;border-radius:12px;background:#1d3d2c;color:#86cca5;display:grid;place-items:center}
+.final32-start-main strong{display:block;color:#f1f7f4;font-size:10px}.final32-start-main span{display:block;margin-top:3px;color:#a7b8b0;font-size:8px;line-height:1.45}
+.final32-start-actions{display:flex;gap:6px;justify-content:flex-end}.final32-start-actions button{border-radius:10px;padding:8px 10px;font:900 8px Inter,Arial,sans-serif;cursor:pointer}.final32-start-now{border:1px solid #73b38f;background:#73b38f;color:#08120d}.final32-start-cancel{border:1px solid #3a4b44;background:#17201d;color:#d8e3df}
+
+@media(max-width:760px){
+  .final32-recados-clean{grid-template-columns:1fr}
+  .final32-chat-widget{right:12px;bottom:78px;width:calc(100vw - 24px);height:min(620px,calc(100vh - 96px))}
+  .final32-chat-launcher{right:14px;bottom:14px}
+  .final32-permission-banner{align-items:flex-start;flex-wrap:wrap}.final32-permission-actions{margin-left:54px}
+  .final32-start-bar,.final32-appointment-toast{right:12px;left:12px;width:auto}
+}
+</style>
+
+
+<style id="final32DarkHardening">
+/* FINAL 32.1 — neutraliza superfícies claras herdadas */
+body.final27-dark #dashboardContent > *,
+body.final27-dark #recadosContent > *,
+body.final27-dark #financeiroContent > *,
+body.final27-dark #avaliacoesContent > *,
+body.final27-dark #studentProfileContent > *,
+body.final27-dark #agendaContent > *,
+body.final27-dark #documentosContent > *,
+body.final27-dark .v3-profile-page > *,
+body.final27-dark .v3-two-col > *,
+body.final27-dark .v3-detail-grid > *,
+body.final27-dark .v3-history-list > *,
+body.final27-dark .metric-card,
+body.final27-dark .stat-card,
+body.final27-dark .kpi-card,
+body.final27-dark .summary-card,
+body.final27-dark .dashboard-card,
+body.final27-dark .info-card,
+body.final27-dark .finance-card,
+body.final27-dark .table-card,
+body.final27-dark .chart-card,
+body.final27-dark .rz-kpi,
+body.final27-dark .rz-panel,
+body.final27-dark .v3-stat,
+body.final27-dark .v3-panel,
+body.final27-dark .v3-card,
+body.final27-dark .v3-section,
+body.final27-dark .v3-history-item,
+body.final27-dark .v3-progress-item,
+body.final27-dark .v4-model,
+body.final27-dark .l14-panel,
+body.final27-dark .l14-history-item,
+body.final27-dark .final19-doc-card,
+body.final27-dark .final19-plan-card{
+  background:#111718!important;
+  background-color:#111718!important;
+  background-image:none!important;
+  color:#f1f7f5!important;
+  border-color:#293434!important;
+}
+body.final27-dark #dashboardContent .rz-kpi strong,
+body.final27-dark #dashboardContent .rz-kpi span,
+body.final27-dark #dashboardContent .rz-kpi small,
+body.final27-dark #dashboardContent .metric-card strong,
+body.final27-dark #dashboardContent .metric-card span,
+body.final27-dark #dashboardContent .metric-card small{
+  color:#eef6f2!important;
+}
+body.final27-dark .view .bg-white,
+body.final27-dark .view .bg-light,
+body.final27-dark .view .surface-white,
+body.final27-dark .view .white,
+body.final27-dark .view .panel-white,
+body.final27-dark .view .card-white{
+  background:#111718!important;color:#f1f7f5!important;border-color:#293434!important;
+}
+</style>
+<script id="final32Enhancements">
+(function(){
+  'use strict';
+  const W=window;
+  const esc32=W.escapeHtml||function(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));};
+  const db32=()=>W.supabaseClient||null;
+  const uid32=()=>W.state?.user?.id||W.state?.session?.user?.id||null;
+  const isMaster32=()=>typeof W.isMaster==='function'?W.isMaster():(String(W.state?.user?.email||'').toLowerCase()==='contato@legadoqueensina.com.br');
+  const today32=()=>{try{return typeof W.today==='function'?W.today():new Date().toISOString().slice(0,10);}catch(_){return new Date().toISOString().slice(0,10);}};
+  const date32=v=>String(v||'').slice(0,10);
+  const time32=v=>String(v||'').slice(0,5);
+  const appointmentDateTime32=a=>{const d=date32(a?.appointment_date||a?.date),t=time32(a?.appointment_time||a?.start_time||a?.time);if(!d||!t)return null;const x=new Date(`${d}T${t}:00`);return Number.isFinite(x.getTime())?x:null;};
+  const name32=a=>String(a?.student_name||'Aluno');
+
+  /* ============================================================
+     1) CHAT FLUTUANTE: um único botão, estilo chatbot
+     ============================================================ */
+  let chat32Open=false, chat32Data=null, chat32Initialized=false;
+  function removeLegacyConversationControls32(){
+    document.querySelectorAll('#recadosContent .final29-conversation-shell,#recadosContent .final29-inline-compose-wrap').forEach(e=>e.remove());
+    document.querySelectorAll('#recadosContent .final29-legacy-tab').forEach(b=>{
+      if(/\bConversas\b/i.test(b.textContent||''))b.remove();
+    });
+    document.querySelectorAll('#recadosContent button').forEach(b=>{
+      const t=String(b.textContent||'').replace(/\s+/g,' ').trim();
+      if((/nova conversa|falar com a gestão|iniciar conversa/i.test(t))&&!b.closest('.final32-recados-clean'))b.remove();
+    });
+  }
+  async function loadChat32(){
+    const c=db32(),me=uid32();
+    if(!c||!me)return {rows:[],trash:[],profiles:[]};
+    try{
+      let q=c.from('messages').select('*').order('created_at',{ascending:true}).limit(800);
+      q=q.or(`user_id.eq.${me},recipient_id.eq.${me},target_all.eq.true`);
+      const r=await q;if(r.error)throw r.error;
+      let reads=[];
+      if(!isMaster32()){
+        const rr=await c.from('message_reads').select('message_id,read_at,hidden_at').eq('user_id',me).limit(2000);
+        if(!rr.error)reads=rr.data||[];
+      }
+      const rm=new Map(reads.map(x=>[String(x.message_id),x]));
+      let rows=(r.data||[]).map(x=>{const rd=rm.get(String(x.id));return {...x,_read:Boolean(x.read||rd?.read_at),_hidden:Boolean(rd?.hidden_at),_support:Boolean(x.thread_id||x.recipient_id)};});
+      const trash=rows.filter(x=>x._hidden);rows=rows.filter(x=>!x._hidden);
+      let profiles=[];
+      if(isMaster32()){
+        const pr=await c.from('profiles').select('id,full_name,name,email').limit(1000);
+        if(!pr.error)profiles=pr.data||[];
+      }
+      return {rows,trash,profiles};
+    }catch(e){console.warn('[FINAL32 chat]',e?.message||e);return {rows:[],trash:[],profiles:[]};}
+  }
+  function threadMap32(data){
+    const map=new Map();
+    const rows=(data?.rows||[]).filter(r=>r._support&&r.thread_id);
+    for(const r of rows){const k=String(r.thread_id);if(!map.has(k))map.set(k,[]);map.get(k).push(r);}
+    for(const a of map.values())a.sort((x,y)=>new Date(x.created_at)-new Date(y.created_at));
+    return map;
+  }
+  function otherName32(items,profiles){
+    const me=uid32();const otherId=items.find(x=>String(x.user_id)!==String(me))?.user_id||items.find(x=>String(x.recipient_id)!==String(me))?.recipient_id;
+    const p=(profiles||[]).find(x=>String(x.id)===String(otherId));
+    return p?.full_name||p?.name||p?.email||(isMaster32()?'Professor':'Gestão');
+  }
+  function ensureChatShell32(){
+    if(document.getElementById('final32ChatLauncher'))return;
+    const b=document.createElement('button');b.type='button';b.id='final32ChatLauncher';b.className='final32-chat-launcher';b.setAttribute('aria-label','Abrir conversas');b.innerHTML='<i data-lucide="message-circle-more"></i><span class="final32-chat-unread" id="final32ChatUnread" hidden></span>';
+    b.onclick=()=>{chat32Open=!chat32Open;const w=document.getElementById('final32ChatWidget');if(w)w.hidden=!chat32Open;if(chat32Open)renderChat32();};
+    document.body.appendChild(b);
+    const w=document.createElement('section');w.id='final32ChatWidget';w.className='final32-chat-widget';w.hidden=true;
+    w.innerHTML='<header class="final32-chat-widget-head"><div class="final32-chat-widget-head-main"><div class="final32-chat-widget-kicker">CENTRAL DE CONVERSAS</div><h2 class="final32-chat-widget-title">'+(isMaster32()?'Professores':'Gestão')+'</h2></div><button type="button" class="final32-close" id="final32ChatClose" aria-label="Fechar"><i data-lucide="x"></i></button></header><div id="final32ChatBody" class="final32-chat-body"></div>';
+    document.body.appendChild(w);w.querySelector('#final32ChatClose').onclick=()=>{chat32Open=false;w.hidden=true;};
+    try{W.refreshIcons?.();}catch(_){ }
+  }
+  async function sendNewChat32(title,message,recipient){
+    const c=db32(),me=uid32();if(!c||!me)throw new Error('Sessão não encontrada.');
+    let recipientId=recipient,targetAll=false;
+    if(isMaster32()){if(recipient==='__ALL__'){targetAll=true;recipientId=null;}else if(!recipientId)throw new Error('Selecione o professor.');}
+    else recipientId=(await c.rpc('get_master_user_id')).data;
+    if(!recipientId&&!targetAll)throw new Error('Destinatário não encontrado.');
+    const thread=crypto.randomUUID();
+    const r=await c.from('messages').insert({user_id:me,recipient_id:recipientId,thread_id:thread,target_all:targetAll,title:String(title||'Conversa').trim(),type:'Suporte',message:String(message||'').trim(),read:false});
+    if(r.error)throw r.error;W.__final29ConversationThread=thread;return thread;
+  }
+  async function sendReply32(thread,items,message){
+    const c=db32(),me=uid32();if(!c||!me)throw new Error('Sessão não encontrada.');
+    let target=null;if(isMaster32())target=items.find(x=>String(x.user_id)!==String(me))?.user_id||items.find(x=>String(x.recipient_id)!==String(me))?.recipient_id;else target=(await c.rpc('get_master_user_id')).data;
+    if(!target)throw new Error('Destinatário não encontrado.');
+    const r=await c.from('messages').insert({user_id:me,recipient_id:target,thread_id:thread,target_all:false,title:items[0]?.title||'Conversa',type:'Suporte',message:String(message||'').trim(),read:false});
+    if(r.error)throw r.error;
+  }
+  function renderChat32(){
+    const body=document.getElementById('final32ChatBody');if(!body)return;
+    body.innerHTML='<div class="final32-empty-chat"><i data-lucide="loader-circle"></i><span>Carregando conversas...</span></div>';W.refreshIcons?.();
+    loadChat32().then(data=>{
+      chat32Data=data;const map=threadMap32(data),entries=[...map.entries()].reverse();
+      const selected=W.__final29ConversationThread&&map.has(String(W.__final29ConversationThread))?String(W.__final29ConversationThread):(entries[0]?.[0]||null);
+      W.__final29ConversationThread=selected;
+      const selectedItems=selected?map.get(selected)||[]:[];
+      const me=uid32();
+      const threadsHtml=entries.length?entries.map(([th,it])=>`<button type="button" class="final32-thread ${th===selected?'active':''}" data-th="${esc32(th)}"><strong>${esc32(it[0]?.title||'Conversa')}</strong><span>${esc32(otherName32(it,data.profiles))} · ${esc32(String(it[it.length-1]?.message||'').slice(0,80))}</span></button>`).join(''):'<div class="final32-empty-chat"><i data-lucide="messages-square"></i><span>Nenhuma conversa ainda.</span></div>';
+      const msgs=selectedItems.length?selectedItems.map(m=>`<div class="final32-msg-row ${String(m.user_id)===String(me)?'me':''}"><div class="final32-msg ${String(m.user_id)===String(me)?'me':''}"><div class="final32-msg-author">${String(m.user_id)===String(me)?'Você':esc32(otherName32(selectedItems,data.profiles))}</div><div class="final32-msg-text">${esc32(m.message||'')}</div><div class="final32-msg-time">${new Date(m.created_at).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}</div></div></div>`).join(''):'<div class="final32-empty-chat"><i data-lucide="message-circle"></i><strong>'+ (isMaster32()?'Escolha um professor':'Fale com a gestão') +'</strong><span>Abra “Nova conversa” para começar.</span></div>';
+      const profiles=(data.profiles||[]).filter(p=>String(p.id)!==String(me));
+      const recipient=isMaster32()?`<select id="final32Recipient"><option value="">Destinatário</option>${profiles.map(p=>`<option value="${esc32(p.id)}">${esc32(p.full_name||p.name||p.email||'Professor')}</option>`).join('')}<option value="__ALL__">Todos os professores</option></select>`:'';
+      body.innerHTML=`<div class="final32-thread-list">${threadsHtml}</div><div class="final32-messages" id="final32Messages">${msgs}</div><div class="final32-chat-compose"><form id="final32ReplyForm"><textarea name="message" placeholder="Escreva uma mensagem..." required></textarea><button class="final32-send" type="submit" title="Enviar"><i data-lucide="send"></i></button></form><div class="final32-new-launch"><button type="button" class="final32-new-toggle" id="final32NewToggle"><i data-lucide="message-plus"></i><span>Nova conversa</span></button></div><div class="final32-newbox" id="final32NewBox" hidden><div class="final32-new-fields">${recipient}<input id="final32NewTitle" placeholder="Assunto (opcional)"></div><textarea id="final32NewMessage" placeholder="Digite a primeira mensagem..."></textarea><div class="final32-newbox-actions"><button type="button" class="btn btn-primary btn-sm" id="final32CreateConversation"><i data-lucide="send"></i>Enviar</button></div></div></div>`;
+      body.querySelectorAll('.final32-thread').forEach(btn=>btn.onclick=()=>{W.__final29ConversationThread=btn.dataset.th;renderChat32();});
+      body.querySelector('#final32ReplyForm')?.addEventListener('submit',async e=>{e.preventDefault();if(!selected)return;const ta=e.currentTarget.querySelector('textarea');const msg=String(ta.value||'').trim();if(!msg)return;try{await sendReply32(selected,selectedItems,msg);ta.value='';renderChat32();W.showSuccess?.('Mensagem enviada.');}catch(err){W.showError?.(err.message||'Não foi possível enviar a mensagem.');}});
+      body.querySelector('#final32NewToggle')?.addEventListener('click',()=>{const box=body.querySelector('#final32NewBox');if(box)box.hidden=!box.hidden;});
+      body.querySelector('#final32CreateConversation')?.addEventListener('click',async()=>{
+        try{
+          const title=String(body.querySelector('#final32NewTitle')?.value||'Conversa').trim()||'Conversa';
+          const msg=String(body.querySelector('#final32NewMessage')?.value||'').trim();
+          if(!msg){W.showError?.('Digite a mensagem.');return;}
+          const rec=isMaster32()?String(body.querySelector('#final32Recipient')?.value||''):null;
+          if(isMaster32()&&!rec){W.showError?.('Selecione o destinatário.');return;}
+          const thread=await sendNewChat32(title,msg,rec);W.__final29ConversationThread=thread;renderChat32();W.showSuccess?.('Conversa iniciada.');
+        }catch(err){W.showError?.(err.message||'Não foi possível iniciar a conversa.');}
+      });
+      const box=document.getElementById('final32Messages');if(box)box.scrollTop=box.scrollHeight;
+      W.refreshIcons?.();
+    });
+  }
+  function updateUnread32(){
+    loadChat32().then(d=>{const me=uid32();const n=(d?.rows||[]).filter(m=>m._support&&String(m.recipient_id||'')===String(me)&&!m._read).length;const el=document.getElementById('final32ChatUnread');if(el){el.hidden=n===0;el.textContent=n>99?'99+':String(n);}});
+  }
+  function enhanceRecadosPage32(){
+    const c=document.getElementById('recadosContent');if(!c)return;
+    removeLegacyConversationControls32();
+    if(!c.querySelector('.final32-recados-clean')){
+      const page=c.querySelector('.final29-recados-page')||c.firstElementChild||c;
+      const clean=document.createElement('div');clean.className='final32-recados-clean';
+      const left=document.createElement('section');left.className='final32-recados-card';left.innerHTML='<h2>Central de recados</h2><p>Comunicados e mensagens ficam organizados aqui. Para conversar em particular, use o único botão de chat com ícone no canto inferior direito; o painel abre suspenso, sem ocupar a página.</p>';
+      const right=document.createElement('aside');right.className='final32-recados-card';right.innerHTML='<div class="final32-recados-stat"><i data-lucide="messages-square"></i><div><strong>Conversas privadas</strong><span>Chat rápido com gestão ou professores</span></div></div><div class="final32-recados-stat" style="margin-top:8px"><i data-lucide="bell"></i><div><strong>Novas mensagens</strong><span>Você será avisado automaticamente</span></div></div>';
+      clean.append(left,right);page.appendChild(clean);
+    }
+    try{W.refreshIcons?.();}catch(_){ }
+  }
+
+  /* ============================================================
+     2) NOTIFICAÇÕES DE NAVEGADOR: um único aviso, sempre correto
+     ============================================================ */
+  const dismissedKey32='legado:notification-banner:session-dismissed:v32';
+  let permissionTimer32=null,permissionWatch32=null;
+  function permission32(){try{return 'Notification' in W?Notification.permission:'unsupported';}catch(_){return 'unsupported';}}
+  function clearPermissionBanners32(){document.querySelectorAll('.final29-notification-banner,.final31-notification-banner,.final32-permission-banner,[data-final29-notification-banner]').forEach(e=>e.remove());}
+  function permissionDismissed32(){try{return sessionStorage.getItem(dismissedKey32)==='1';}catch(_){return false;}}
+  function showPermissionBanner32(){
+    if(isMaster32())return clearPermissionBanners32();
+    const c=document.getElementById('dashboardContent');if(!c)return;
+    const p=permission32();
+    clearPermissionBanners32();
+    if(p==='granted'||p==='unsupported'||permissionDismissed32())return;
+    const box=document.createElement('section');box.className='final32-permission-banner';
+    const denied=p==='denied';
+    box.innerHTML=`<div class="final32-permission-icon"><i data-lucide="bell-ring"></i></div><div class="final32-permission-main"><strong>${denied?'Notificações bloqueadas no navegador':'Ative as notificações do navegador'}</strong><span>${denied?'Libere a permissão deste site nas configurações do navegador para receber o aviso 10 minutos antes de cada atendimento e novas mensagens.':'Permita as notificações para receber avisos de novas mensagens e 10 minutos antes de cada atendimento.'}</span></div><div class="final32-permission-actions">${denied?'<button type="button" class="btn btn-outline btn-sm" id="final32PermissionHelp">Como liberar</button>':'<button type="button" class="btn btn-primary btn-sm" id="final32PermissionAllow">Permitir</button>'}<button type="button" class="final32-permission-close" id="final32PermissionClose" aria-label="Fechar"><i data-lucide="x"></i></button></div>`;
+    const head=c.querySelector('.v3-head,.page-heading,.final19-dashboard-head,.rz-head');
+    if(head)head.insertAdjacentElement('afterend',box);else c.prepend(box);
+    box.querySelector('#final32PermissionClose').onclick=()=>{try{sessionStorage.setItem(dismissedKey32,'1');}catch(_){ }box.remove();};
+    box.querySelector('#final32PermissionAllow')?.addEventListener('click',async()=>{try{const r=await Notification.requestPermission();try{sessionStorage.removeItem(dismissedKey32);}catch(_){ }clearPermissionBanners32();if(r==='granted'){try{new Notification('Legado Que Ensina',{body:'Notificações ativadas.',tag:'legado-enabled'});}catch(_){ }W.showSuccess?.('Notificações do navegador ativadas.');scheduleAppointments32();showPermissionBanner32();}else if(r==='denied'){W.showError?.('O navegador bloqueou as notificações. Use “Como liberar” para abrir as configurações do site.');showPermissionBanner32();}}catch(e){W.showError?.(e.message||'Não foi possível ativar as notificações.');}});
+    box.querySelector('#final32PermissionHelp')?.addEventListener('click',()=>W.showError?.('No Chrome: clique no ícone ao lado do endereço do site → Configurações do site → Notificações → Permitir. Depois recarregue a página.'));
+    W.refreshIcons?.();
+  }
+
+  function startPermissionWatch32(){
+    if(permissionWatch32)clearInterval(permissionWatch32);
+    permissionWatch32=setInterval(()=>{
+      if(W.state?.currentView!=='dashboard')return;
+      const p=permission32();
+      document.querySelectorAll('.final29-notification-banner,.final31-notification-banner,[data-final29-notification-banner]').forEach(e=>e.remove());
+      if(p==='granted'||p==='unsupported')clearPermissionBanners32();
+      else if(!document.querySelector('.final32-permission-banner')&&!permissionDismissed32())showPermissionBanner32();
+    },700);
+  }
+
+  /* ============================================================
+     3) AGENDA — agendamento real de 10 min + barra ao iniciar
+     ============================================================ */
+  const appointmentTimers32=new Map();let scheduler32=null;
+  async function appointments32(){
+    const c=db32(),me=uid32();if(!c||!me||isMaster32())return [];
+    try{
+      const r=await c.from((W.DASHBOARD_TABLES?.appointments||W.V3Core?.TABLE?.appointments||'appointments')).select('id,student_id,student_name,appointment_date,appointment_time,start_time,time,status,type,duration').eq('user_id',me).eq('appointment_date',today32()).order('appointment_time',{ascending:true}).limit(100);
+      if(r.error)throw r.error;
+      return (r.data||[]).filter(a=>!['cancelled','canceled','completed','in_progress'].includes(String(a.status||'').toLowerCase()));
+    }catch(e){console.warn('[FINAL32 appointments]',e?.message||e);return [];}
+  }
+  function toast32(a,when){
+    document.getElementById('final32AppointmentToast')?.remove();
+    const el=document.createElement('aside');el.id='final32AppointmentToast';el.className='final32-appointment-toast';
+    const lead=when==='lead'?'Faltam 10 minutos para o atendimento.':'Chegou a hora do atendimento.';
+    el.innerHTML=`<div class="final32-appointment-icon"><i data-lucide="calendar-clock"></i></div><div class="final32-appointment-main"><strong>${when==='lead'?'Próximo atendimento':'Atendimento agora'}</strong><span>${esc32(name32(a))} · ${esc32(time32(a.appointment_time||a.start_time||a.time))} · ${esc32(lead)}</span></div><button class="final32-appointment-close" id="final32ToastClose" aria-label="Fechar"><i data-lucide="x"></i></button>`;
+    document.body.appendChild(el);el.querySelector('#final32ToastClose').onclick=()=>el.remove();W.refreshIcons?.();setTimeout(()=>el.remove(),10000);
+    if(permission32()==='granted'){try{new Notification('Legado Que Ensina',{body:`${lead} ${name32(a)} · ${time32(a.appointment_time||a.start_time||a.time)}`,tag:`legado32-${a.id}-${when}`});}catch(_){ }}
+  }
+  function startBar32(a){
+    document.getElementById('final32StartBar')?.remove();
+    const bar=document.createElement('aside');bar.id='final32StartBar';bar.className='final32-start-bar';
+    bar.innerHTML=`<div class="final32-start-icon"><i data-lucide="clock-3"></i></div><div class="final32-start-main"><strong>Chegou a hora de iniciar novo atendimento</strong><span>${esc32(name32(a))} · ${esc32(time32(a.appointment_time||a.start_time||a.time))} · clique em iniciar para abrir o Atendimento.</span></div><div class="final32-start-actions"><button class="final32-start-now" id="final32StartNow">Iniciar</button><button class="final32-start-cancel" id="final32StartCancel">Cancelar</button></div>`;
+    document.body.appendChild(bar);W.refreshIcons?.();
+    bar.querySelector('#final32StartNow').onclick=()=>beginAttendance32(a);
+    bar.querySelector('#final32StartCancel').onclick=()=>{try{sessionStorage.setItem(`legado32:cancel:${a.id}`,'1');}catch(_){ }bar.remove();};
+  }
+  function scheduleOne32(a,now){
+    const dt=appointmentDateTime32(a);if(!dt)return;
+    const key=String(a.id);const leadAt=new Date(dt.getTime()-10*60000);
+    for(const type of ['lead','start']){
+      const timerKey=`${key}:${type}`;if(appointmentTimers32.has(timerKey))continue;
+      const target=type==='lead'?leadAt:dt;const delay=target.getTime()-now.getTime();
+      if(delay<=0&&type==='lead')continue;
+      if(delay>0&&delay<36*60*60*1000){
+        const tid=setTimeout(()=>{appointmentTimers32.delete(timerKey);if(type==='lead'){try{if(sessionStorage.getItem(`legado32:lead:${key}`)==='1')return;sessionStorage.setItem(`legado32:lead:${key}`,'1');}catch(_){ }toast32(a,'lead');}else{try{if(sessionStorage.getItem(`legado32:start:${key}`)==='1')return;sessionStorage.setItem(`legado32:start:${key}`,'1');}catch(_){ }toast32(a,'start');if(sessionStorage.getItem(`legado32:cancel:${key}`)!=='1')startBar32(a);}},delay);
+        appointmentTimers32.set(timerKey,tid);
+      }
+    }
+    const diff=dt.getTime()-now.getTime();
+    if(diff<=0&&diff>=-25*60000){try{if(sessionStorage.getItem(`legado32:start:${key}`)!=='1'){if(sessionStorage.getItem(`legado32:cancel:${key}`)!=='1')startBar32(a);}}catch(_){startBar32(a);}}
+    if(diff>0&&diff<=10*60000){try{if(sessionStorage.getItem(`legado32:lead:${key}`)!=='1'){sessionStorage.setItem(`legado32:lead:${key}`,'1');toast32(a,'lead');}}catch(_){toast32(a,'lead');}}
+  }
+  async function scheduleAppointments32(){
+    if(isMaster32()||!uid32())return;
+    const list=await appointments32(),now=new Date();
+    for(const a of list)scheduleOne32(a,now);
+  }
+  async function beginAttendance32(a){
+    try{
+      const c=db32(),me=uid32();if(!c||!me)throw new Error('Sessão não encontrada.');
+      const tableName=W.DASHBOARD_TABLES?.appointments||W.V3Core?.TABLE?.appointments||'appointments';
+      const r=await c.from(tableName).update({status:'in_progress'}).eq('id',a.id).eq('user_id',me);if(r.error)throw r.error;
+      try{sessionStorage.setItem('legado:active-appointment',JSON.stringify({id:a.id,student_id:a.student_id,appointment_date:a.appointment_date,appointment_time:a.appointment_time||a.start_time||a.time,type:a.type||'Atendimento'}));}catch(_){ }
+      document.getElementById('final32StartBar')?.remove();document.getElementById('final32AppointmentToast')?.remove();
+      W.state=W.state||{};W.state.currentStudentId=a.student_id;W.state.selectedStudent=(W.studentsState?.data||W.state.students||[]).find(s=>String(s.id)===String(a.student_id))||W.state.selectedStudent||null;W.V3=W.V3||{};W.V3.studentSection='appointments';
+      if(typeof W.navigate==='function')W.navigate('aluno-perfil');
+      const patch=()=>{if(typeof W.v3StudentSection==='function')W.v3StudentSection('appointments');patchAttendanceForm32(a);};
+      [350,800,1400,2200].forEach(ms=>setTimeout(patch,ms));
+    }catch(e){W.showError?.(e.message||'Não foi possível iniciar o atendimento.');}
+  }
+  function patchAttendanceForm32(a){
+    if(W.state?.currentView!=='aluno-perfil')return;
+    const c=document.getElementById('studentProfileContent');if(!c)return;
+    const tab=[...c.querySelectorAll('.v3-tabs button')].find(b=>/Atendimentos/i.test(b.textContent||''));if(tab&&!tab.classList.contains('active'))tab.click();
+    const form=c.querySelector('#v3RecordForm');if(!form){return;}
+    form.dataset.final32Active='1';
+    const submit=form.querySelector('[type="submit"]');if(submit){submit.innerHTML='<i data-lucide="check-circle-2"></i>Encerrar atendimento';submit.classList.add('final32-close-attendance');}
+    const title=form.querySelector('[name="title"]');if(title&&!title.value)title.value=`Atendimento · ${time32(a.appointment_time||a.start_time||a.time)}`;
+    const date=form.querySelector('[name="record_date"]');if(date&&!date.value)date.value=date32(a.appointment_date)||today32();
+    const dur=form.querySelector('[name="duration"]');if(dur&&!dur.value)dur.value=a.duration?`${a.duration} min`:'50 min';
+    /* O FINAL 29 já instala o fluxo completo do botão (salvar + pagamento + recibo/declaração).
+       Aqui apenas reforçamos os campos e o rótulo, sem substituir o submit original. */
+    W.refreshIcons?.();
+  }
+
+  /* Se o pagamento do atendimento já está pago no Financeiro, não pergunta novamente. */
+  function openPaidOrPaymentFlow32(ap){
+    if(typeof W.paymentDuplicateCheck!=='function'||typeof W.openAttendanceFlow!=='function')return;
+    Promise.resolve(W.paymentDuplicateCheck(ap)).then(existing=>{
+      if(existing?.status==='paid'){
+        const root=document.getElementById('final29FlowOverlay');
+        if(root){root.innerHTML=`<div class="final29-flow-card"><div class="final29-flow-kicker">ATENDIMENTO ENCERRADO</div><h2>Pagamento já registrado</h2><p>Este atendimento já consta como pago no Financeiro. Não é necessário registrar novamente.</p><div class="final29-flow-step"><strong>Deseja encaminhar recibo?</strong><div class="final29-flow-actions"><button type="button" class="btn btn-outline" id="final32NoReceipt">Não</button><button type="button" class="btn btn-primary" id="final32YesReceipt">Sim, abrir recibo</button></div></div><div class="final29-flow-step"><strong>Precisa de declaração?</strong><div class="final29-flow-actions"><button type="button" class="btn btn-outline" id="final32NoDecl">Não</button><button type="button" class="btn btn-primary" id="final32YesDecl">Sim, abrir declaração</button></div></div></div>`;root.querySelector('#final32NoReceipt').onclick=()=>{root.querySelector('#final32NoReceipt')?.closest('.final29-flow-step')?.remove();};root.querySelector('#final32YesReceipt').onclick=()=>{root.remove();W.openPreparedDocument?.('recibo',ap,existing);};root.querySelector('#final32NoDecl').onclick=()=>{root.querySelector('#final32NoDecl')?.closest('.final29-flow-step')?.remove();};root.querySelector('#final32YesDecl').onclick=()=>{root.remove();W.openPreparedDocument?.('declaracao',ap,existing);};}
+      }
+    });
+  }
+
+  /* ============================================================
+     4) BOOT ROBUSTO — funciona em qualquer página
+     ============================================================ */
+  function boot32(){
+    ensureChatShell32();
+    updateUnread32();
+    if(W.state?.currentView==='recados')setTimeout(enhanceRecadosPage32,50);
+    if(W.state?.currentView==='dashboard')setTimeout(showPermissionBanner32,120);
+    startPermissionWatch32();
+    scheduleAppointments32();
+    if(scheduler32)clearInterval(scheduler32);
+    scheduler32=setInterval(()=>{updateUnread32();scheduleAppointments32();if(W.state?.currentView==='dashboard')showPermissionBanner32();if(W.state?.currentView==='recados')enhanceRecadosPage32();},10000);
+  }
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden){scheduleAppointments32();if(W.state?.currentView==='dashboard')showPermissionBanner32();}});
+  window.addEventListener('focus',()=>{scheduleAppointments32();if(W.state?.currentView==='dashboard')showPermissionBanner32();});
+
+  const prevNav32=W.navigate;
+  if(typeof prevNav32==='function'&&!prevNav32.__final32){
+    const fn=function(view){const r=prevNav32.apply(this,arguments);setTimeout(()=>{if(view==='dashboard')showPermissionBanner32();if(view==='recados')enhanceRecadosPage32();ensureChatShell32();scheduleAppointments32();},220);return r;};fn.__final32=true;W.navigate=fn;
+  }
+  const prevRenderDash32=W.renderDashboard;
+  if(typeof prevRenderDash32==='function'&&!prevRenderDash32.__final32){
+    const fn=async function(){const r=await prevRenderDash32.apply(this,arguments);setTimeout(showPermissionBanner32,120);return r;};fn.__final32=true;W.renderDashboard=fn;
+  }
+  const prevRenderMsg32=W.renderMessages;
+  if(typeof prevRenderMsg32==='function'&&!prevRenderMsg32.__final32){
+    const fn=async function(){const r=await prevRenderMsg32.apply(this,arguments);setTimeout(enhanceRecadosPage32,80);setTimeout(updateUnread32,120);return r;};fn.__final32=true;W.renderMessages=fn;
+  }
+  const prevUpdateHeader32=W.updateUserHeader;
+  if(typeof prevUpdateHeader32==='function'&&!prevUpdateHeader32.__final32){W.updateUserHeader=function(){const r=prevUpdateHeader32.apply(this,arguments);setTimeout(boot32,150);return r;};W.updateUserHeader.__final32=true;}
+  try{db32()?.auth?.onAuthStateChange?.(()=>{setTimeout(boot32,50);});}catch(_){ }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot32,{once:true});else setTimeout(boot32,100);
 })();
 </script>
