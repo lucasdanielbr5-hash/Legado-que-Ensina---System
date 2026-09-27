@@ -19241,3 +19241,184 @@ body.final27-dark .final36-post-payment{background:#121b17!important;border-colo
 })();
 </script>
 </body>
+
+
+<!-- ============================================================
+     FINAL 40 — LIMPEZA DEFINITIVA DO AVISO DE ATENDIMENTO + CHAT FECHADO
+     ============================================================ -->
+<style id="final40Styles">
+  /* O professor não terá mais um indicador flutuante de atendimento. */
+  #final38AttendanceStatus,
+  #final33ActiveControl,
+  #final33NextAppointment,
+  #final33ActiveAppointment,
+  #final29AttendanceBar,
+  #final32StartBar,
+  #final32AppointmentToast,
+  #final29NotificationToast,
+  #final38StartProxy,
+  #final38StartToast,
+  .final38-attendance-status,
+  .final40-attendance-notice{
+    display:none!important;
+    visibility:hidden!important;
+    pointer-events:none!important;
+  }
+
+  /* A Central de Conversas começa SEMPRE fechada. Só aparece depois do clique no launcher. */
+  #final32ChatWidget:not(.final40-open){
+    display:none!important;
+    visibility:hidden!important;
+    opacity:0!important;
+    pointer-events:none!important;
+  }
+  #final32ChatWidget.final40-open{
+    display:flex!important;
+    visibility:visible!important;
+    opacity:1!important;
+    pointer-events:auto!important;
+  }
+
+  /* Um único launcher visual. O widget nunca fica estourado aberto sozinho. */
+  #final32ChatLauncher{
+    display:grid!important;
+    visibility:visible!important;
+    opacity:1!important;
+  }
+
+  /* Não permitir popup antigo de conversa. */
+  #final27EnhancedThreadModal,
+  .final27EnhancedThreadModal{
+    display:none!important;
+  }
+</style>
+
+<script id="final40Stability">
+(function(){
+  'use strict';
+  const W=window;
+  const q=(s,r=document)=>r.querySelector(s);
+  const qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
+
+  /* ------------------------------------------------------------
+     1) REMOVE DEFINITIVAMENTE O INDICADOR DE ATENDIMENTO
+     ------------------------------------------------------------ */
+  const attendanceIds=[
+    'final38AttendanceStatus','final33ActiveControl','final33NextAppointment',
+    'final33ActiveAppointment','final29AttendanceBar','final32StartBar',
+    'final32AppointmentToast','final29NotificationToast','final38StartProxy','final38StartToast'
+  ];
+  function purgeAttendanceUI40(){
+    attendanceIds.forEach(id=>document.getElementById(id)?.remove());
+    qa('.final38-attendance-status,.final40-attendance-notice').forEach(el=>el.remove());
+  }
+
+  /* ------------------------------------------------------------
+     2) CHAT: UM ÚNICO LAUNCHER, JANELA FECHADA POR PADRÃO
+     ------------------------------------------------------------ */
+  function closeChat40(){
+    const w=q('#final32ChatWidget');
+    if(w){w.classList.remove('final40-open');w.hidden=true;w.setAttribute('aria-hidden','true');}
+  }
+  function openChat40(){
+    const launcher=q('#final32ChatLauncher');
+    const w=q('#final32ChatWidget');
+    if(!launcher || !w)return;
+    /* Usa o handler original apenas para carregar as conversas. */
+    try{
+      if(typeof launcher.onclick==='function') launcher.onclick();
+    }catch(_){ }
+    setTimeout(()=>{
+      w.hidden=false;
+      w.classList.add('final40-open');
+      w.setAttribute('aria-hidden','false');
+    },20);
+  }
+
+  function bindChat40(){
+    const launcher=q('#final32ChatLauncher');
+    const widget=q('#final32ChatWidget');
+    if(!launcher || !widget)return false;
+
+    closeChat40();
+
+    /* Intercepta o clique para impedir múltiplos handlers antigos de alternarem o estado. */
+    if(!launcher.__final40Capture){
+      launcher.__final40Capture=true;
+      launcher.addEventListener('click',function(e){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        if(widget.classList.contains('final40-open')) closeChat40();
+        else openChat40();
+      },true);
+    }
+
+    const close=q('#final32ChatClose',widget);
+    if(close && !close.__final40Capture){
+      close.__final40Capture=true;
+      close.addEventListener('click',function(e){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        closeChat40();
+      },true);
+    }
+    return true;
+  }
+
+  /* ------------------------------------------------------------
+     3) SE HOUVER ALGUM POPUP DE CONVERSA ANTIGO, FECHA.
+     ------------------------------------------------------------ */
+  function purgeLegacyChat40(){
+    qa('#final27EnhancedThreadModal,.final27EnhancedThreadModal').forEach(el=>el.remove());
+    qa('body > .saas-payment-modal').forEach(el=>{
+      if(el.querySelector('.final27-chat-shell')) el.remove();
+    });
+  }
+
+  /* ------------------------------------------------------------
+     4) NÃO DEIXA O WIDGET SER REABERTO SOZINHO.
+     ------------------------------------------------------------ */
+  function stabilize40(){
+    purgeAttendanceUI40();
+    purgeLegacyChat40();
+    const launcher=q('#final32ChatLauncher');
+    const widget=q('#final32ChatWidget');
+    if(launcher && widget){
+      bindChat40();
+      if(!widget.classList.contains('final40-open')){
+        widget.hidden=true;
+        widget.setAttribute('aria-hidden','true');
+      }
+    }
+  }
+
+  /* Remove a UI antiga imediatamente e preserva somente o chatbot fechado. */
+  const boot40=()=>{
+    stabilize40();
+    setTimeout(stabilize40,120);
+    setTimeout(stabilize40,500);
+    setTimeout(stabilize40,1200);
+  };
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',boot40,{once:true});
+  }else boot40();
+
+  /* Curto watchdog de compatibilidade para as camadas antigas que ainda podem renderizar elementos.
+     Ele não cria DOM nem observa mutações; apenas limpa os IDs legados já conhecidos. */
+  const timer=setInterval(stabilize40,1500);
+  window.addEventListener('beforeunload',()=>clearInterval(timer),{once:true});
+
+  /* Ao mudar de página, a central continua fechada até o professor clicar no ícone. */
+  const nav=W.navigate;
+  if(typeof nav==='function' && !nav.__final40){
+    const wrapped=function(){
+      const r=nav.apply(this,arguments);
+      setTimeout(closeChat40,50);
+      return r;
+    };
+    wrapped.__final40=true;
+    W.navigate=wrapped;
+  }
+})();
+</script>
