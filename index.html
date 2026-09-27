@@ -13398,7 +13398,7 @@ body.final27-dark .final33-value{fill:#cfe0d7!important}.final33-label{fill:#91a
     return `<svg viewBox="0 0 ${w} ${h}"><line class="final33-axis" x1="${p}" y1="${p+ih}" x2="${w-p}" y2="${p+ih}"></line><path class="final33-line" d="${path}"></path><path class="final33-area" d="${path} L ${pts[pts.length-1]?.[0]||p} ${p+ih} L ${pts[0]?.[0]||p} ${p+ih} Z"></path>${pts.map((q,i)=>`<circle class="final33-dot" cx="${q[0]}" cy="${q[1]}" r="5"></circle><text class="final33-value" x="${q[0]}" y="${Math.max(14,q[1]-9)}" text-anchor="middle">${money(values[i])}</text><text class="final33-label" x="${q[0]}" y="${h-15}" text-anchor="middle">${esc(labels[i])}</text>`).join('')}</svg>`;
   }
   function buildDashboardShell(){
-    return `<div class="final33-dashboard"><div id="final33DashboardHead" class="final33-dashboard-head"><div><div class="final33-eyebrow">VISÃO GERAL</div><h1>Dashboard</h1><p>Acompanhe sua prática em um só lugar.</p></div><div class="final33-head-actions"><button class="btn btn-primary" type="button" onclick="navigate('alunos')"><i data-lucide="user-plus"></i>Novo aluno</button></div></div><div id="final33DashboardAlerts"></div><div id="final33Kpis" class="final33-kpis"></div><div class="final33-two-col"><section class="final33-panel"><div class="final33-panel-head"><div><h2>Próximos atendimentos</h2><p>Os próximos compromissos ficam separados dos gráficos.</p></div><button id="final33UpcomingToggle" class="final33-upcoming-toggle" type="button">Ver próximos atendimentos</button></div><div id="final33UpcomingBody" class="final33-upcoming-body" hidden></div></section><section class="final33-panel"><div class="final33-panel-head"><div><h2>Próximos aniversariantes</h2><p>Veja quem fará aniversário e envie uma mensagem pelo WhatsApp.</p></div></div><div id="final33Birthdays" class="final33-birthdays"></div><div id="final33BirthdayNote"></div></section></div><div class="final33-chart-grid"><section class="final33-chart-shell"><div class="final33-panel-head"><div><h2>Atendimentos da semana</h2><p>Distribuição da agenda.</p></div><button class="btn btn-outline btn-sm" type="button" onclick="navigate('agenda')">Abrir agenda</button></div><div id="final33WeekChart" class="final33-chart"></div></section><section class="final33-chart-shell"><div class="final33-panel-head"><div><h2>Receita dos últimos meses</h2><p>Pagamentos confirmados.</p></div><button class="btn btn-outline btn-sm" type="button" onclick="navigate('financeiro')">Ver financeiro</button></div><div id="final33FinanceChart" class="final33-chart"></div></section></div></div>`;
+    return `<div class="final33-dashboard"><div id="final33DashboardHead" class="final33-dashboard-head"><div><div class="final33-eyebrow">VISÃO GERAL</div><h1>Dashboard</h1><p>Acompanhe sua prática em um só lugar.</p></div><div class="final33-head-actions"><button class="btn btn-primary" type="button" onclick="navigate('alunos')"><i data-lucide="user-plus"></i>Novo aluno</button></div></div><div id="final33DashboardAlerts"></div><div id="final33Kpis" class="final33-kpis"></div><div class="final33-two-col"><section class="final33-panel"><div class="final33-panel-head"><div><h2>Próximos atendimentos</h2><p>Os próximos compromissos ficam separados dos gráficos.</p></div></div><div id="final33UpcomingBody" class="final33-upcoming-body"></div></section><section class="final33-panel"><div class="final33-panel-head"><div><h2>Próximos aniversariantes</h2><p>Veja quem fará aniversário e envie uma mensagem pelo WhatsApp.</p></div></div><div id="final33Birthdays" class="final33-birthdays"></div><div id="final33BirthdayNote"></div></section></div><div class="final33-chart-grid"><section class="final33-chart-shell"><div class="final33-panel-head"><div><h2>Atendimentos da semana</h2><p>Distribuição da agenda.</p></div><button class="btn btn-outline btn-sm" type="button" onclick="navigate('agenda')">Abrir agenda</button></div><div id="final33WeekChart" class="final33-chart"></div></section><section class="final33-chart-shell"><div class="final33-panel-head"><div><h2>Receita dos últimos meses</h2><p>Pagamentos confirmados.</p></div><button class="btn btn-outline btn-sm" type="button" onclick="navigate('financeiro')">Ver financeiro</button></div><div id="final33FinanceChart" class="final33-chart"></div></section></div></div>`;
   }
   async function renderDashboard33(){
     const c=$('#dashboardContent');if(!c)return;
@@ -13417,7 +13417,6 @@ body.final27-dark .final33-value{fill:#cfe0d7!important}.final33-label{fill:#91a
     $('#final33Kpis').innerHTML=[['users','Alunos ativos',active.length,'Cadastros ativos'],['calendar-check-2','Atendimentos hoje',todayApps.length,'Na agenda de hoje'],['wallet','Receita do mês',money(revenue),'Pagamentos confirmados'],['clipboard-clock','Avaliações pendentes',pendingEval,'Acompanhar']].map(x=>`<div class="final33-kpi"><div class="final33-kpi-icon"><i data-lucide="${x[0]}"></i></div><div><span>${x[1]}</span><strong>${x[2]}</strong><small>${x[3]}</small></div></div>`).join('');
     const body=$('#final33UpcomingBody');
     body.innerHTML=upcoming.length?upcoming.map(a=>{const s=studentMap.get(String(a.student_id));const d=dateOnly(a.appointment_date||a.date);return `<div class="final33-appointment-row"><div class="final33-date-chip"><strong>${d.slice(8,10)}</strong><span>${new Date(`${d}T12:00:00`).toLocaleDateString('pt-BR',{month:'short'}).replace('.','')}</span></div><div class="final33-ap-main"><strong>${esc(studentName(s)||a.student_name||'Aluno')}</strong><span>${esc(time(a.appointment_time||a.start_time||a.time))} · ${esc(a.type||'Atendimento psicopedagógico')} · ${esc(d)}</span></div><span class="final33-ap-status">${esc(statusLabel(a.status||'scheduled'))}</span></div>`}).join(''):`<div class="final33-empty">Nenhum próximo atendimento.</div>`;
-    const toggle=$('#final33UpcomingToggle');toggle.onclick=()=>{const open=!body.hidden;body.hidden=open;toggle.textContent=open?'Ver próximos atendimentos':'Ocultar próximos atendimentos';};
     const b=$('#final33Birthdays');
     if(birthList.length){b.innerHTML=birthList.map(({s,info})=>`<div class="final33-birthday-row ${info.isToday?'today':''}"><div class="final33-bday-day"><i data-lucide="cake"></i></div><div class="final33-bday-main"><strong>${esc(studentName(s))}</strong><span>${info.isToday?'Hoje · aniversário 🎉':`Em ${info.diff} ${info.diff===1?'dia':'dias'} · ${String(info.day).padStart(2,'0')}/${String(info.month).padStart(2,'0')}`}</span></div><button type="button" class="final33-birthday-whatsapp" title="Enviar parabéns pelo WhatsApp" data-bday-id="${esc(s.id)}"><i data-lucide="message-circle"></i></button></div>`).join('');
       $$('#final33Birthdays .final33-birthday-whatsapp').forEach(btn=>btn.onclick=()=>{const row=birthList.find(x=>String(x.s.id)===String(btn.dataset.bdayId));if(row)waBirthday(row.s,row.info);});
@@ -13436,7 +13435,7 @@ body.final27-dark .final33-value{fill:#cfe0d7!important}.final33-label{fill:#91a
      4) PRÓXIMO ATENDIMENTO — CHECK POR INTERVALO, NÃO SÓ TIMER
      ============================================================ */
   function apDateTime(a){const d=dateOnly(a?.appointment_date||a?.date),t=time(a?.appointment_time||a?.start_time||a?.time);if(!d||!t)return null;const x=new Date(`${d}T${t}:00`);return Number.isFinite(x.getTime())?x:null}
-  async function todayAppointments(){const c=db(),id=me();if(!c||!id||isMaster())return [];try{const r=await c.from('appointments').select('id,student_id,student_name,appointment_date,appointment_time,start_time,time,status,type,duration').eq('user_id',id).eq('appointment_date',today()).order('appointment_time',{ascending:true}).limit(100);if(r.error)throw r.error;return r.data||[]}catch(_){return []}}
+  async function todayAppointments(){const c=db(),id=me();if(!c||!id||isMaster())return [];try{const r=await c.from('appointments').select('id,student_id,student_name,appointment_date,appointment_time,start_time,status,type,duration').eq('user_id',id).eq('appointment_date',today()).order('appointment_time',{ascending:true}).limit(100);if(r.error)throw r.error;return r.data||[]}catch(_){return []}}
   function remove33AppointmentNotices(){['final33NextAppointment','final33ActiveAppointment'].forEach(id=>document.getElementById(id)?.remove());}
   function show33Next(a,diff){
     document.getElementById('final33NextAppointment')?.remove();
@@ -15652,7 +15651,7 @@ body.final27-dark .final32-newbox>textarea{background:#0c1213!important;color:#f
      ============================================================ */
   async function getTodayAppointments(){
     const c=DB(),me=UID();if(!c||!me)return [];
-    const r=await c.from(table('appointments','appointments')).select('id,student_id,student_name,appointment_date,appointment_time,start_time,time,status,type,duration').eq('user_id',me).eq('appointment_date',today()).order('appointment_time',{ascending:true}).limit(100);
+    const r=await c.from(table('appointments','appointments')).select('id,student_id,student_name,appointment_date,appointment_time,start_time,status,type,duration').eq('user_id',me).eq('appointment_date',today()).order('appointment_time',{ascending:true}).limit(100);
     if(r.error)throw r.error;return (r.data||[]).filter(a=>!['cancelled','canceled'].includes(String(a.status||'').toLowerCase()));
   }
   async function nextTodayAppointment(){try{const list=await getTodayAppointments();const now=new Date();return list.find(a=>{const dt=new Date(`${dateOnly(a.appointment_date)}T${timeOnly(a.appointment_time||a.start_time||a.time)||'00:00'}:00`);return dt>=new Date(now.getTime()-5*60000)&&!['completed','cancelled','canceled'].includes(String(a.status||'').toLowerCase());})||null;}catch(_){return null;}}
@@ -17020,7 +17019,7 @@ body.final27-dark .view .card-white{
   async function appointments32(){
     const c=db32(),me=uid32();if(!c||!me||isMaster32())return [];
     try{
-      const r=await c.from((W.DASHBOARD_TABLES?.appointments||W.V3Core?.TABLE?.appointments||'appointments')).select('id,student_id,student_name,appointment_date,appointment_time,start_time,time,status,type,duration').eq('user_id',me).eq('appointment_date',today32()).order('appointment_time',{ascending:true}).limit(100);
+      const r=await c.from((W.DASHBOARD_TABLES?.appointments||W.V3Core?.TABLE?.appointments||'appointments')).select('id,student_id,student_name,appointment_date,appointment_time,start_time,status,type,duration').eq('user_id',me).eq('appointment_date',today32()).order('appointment_time',{ascending:true}).limit(100);
       if(r.error)throw r.error;
       return (r.data||[]).filter(a=>!['cancelled','canceled','completed','in_progress'].includes(String(a.status||'').toLowerCase()));
     }catch(e){console.warn('[FINAL32 appointments]',e?.message||e);return [];}
@@ -17526,5 +17525,36 @@ body.final27-dark .final34-finance-note{background:#18211d!important;border-colo
   if(typeof oldFin34==='function'&&!oldFin34.__final34){W.renderFinance=async function(){const r=await oldFin34.apply(this,arguments);setTimeout(()=>{$$('#financeiroContent button').forEach(b=>{if(/novo lançamento|novo recebimento/i.test((b.textContent||'').trim()))b.onclick=openFinanceInline34});},50);return r};W.renderFinance.__final34=true;}
   if(permTimer)clearInterval(permTimer);permTimer=setInterval(()=>{if(W.state?.currentView==='dashboard')showPermission34();if(W.state?.currentView==='recados')ensureChatVisibility34();},1200);
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot34,{once:true});else setTimeout(boot34,100);
+})();
+</script>
+
+
+<style id="final35RuntimeFixes">
+/* FINAL 35 — correções de compatibilidade com o schema real e Dashboard */
+#final33UpcomingBody[hidden]{display:block!important}
+.final33-upcoming-body{display:block!important}
+</style>
+<script id="final35RuntimeFixesScript">
+(function(){
+  'use strict';
+  const W=window;
+  function forceUpcomingOpen(){
+    const body=document.getElementById('final33UpcomingBody');
+    if(body){ body.hidden=false; body.style.display='block'; }
+    document.getElementById('final33UpcomingToggle')?.remove();
+  }
+  function afterDashboard(){ if(W.state?.currentView==='dashboard') setTimeout(forceUpcomingOpen,60); }
+  const oldNav=W.navigate;
+  if(typeof oldNav==='function' && !oldNav.__final35){
+    const nav=function(){ const r=oldNav.apply(this,arguments); setTimeout(afterDashboard,120); return r; };
+    nav.__final35=true; W.navigate=nav;
+  }
+  const oldRender=W.renderDashboard;
+  if(typeof oldRender==='function' && !oldRender.__final35){
+    const render=async function(){ const r=await oldRender.apply(this,arguments); forceUpcomingOpen(); return r; };
+    render.__final35=true; W.renderDashboard=render;
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',afterDashboard,{once:true});
+  else setTimeout(afterDashboard,150);
 })();
 </script>
