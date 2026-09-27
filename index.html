@@ -18957,4 +18957,287 @@ body.final27-dark .final36-post-payment{background:#121b17!important;border-colo
 })();
 </script>
 
+
+
+<!-- ============================================================
+     FINAL 39 — BLOQUEIO DEFINITIVO DE DUPLICAÇÃO
+     ============================================================ -->
+<style id="final39Styles">
+  /* O atendimento ativo fica representado SOMENTE pelo ícone do topo.
+     As barras flutuantes antigas não são mais exibidas. */
+  #final33ActiveControl,
+  #final33NextAppointment,
+  #final33ActiveAppointment,
+  #final29AttendanceBar,
+  #final32StartBar,
+  #final32AppointmentToast,
+  #final29NotificationToast,
+  #final29AttendanceBar,
+  #final38StartProxy{
+    display:none!important;
+  }
+  #final38AttendanceStatus{
+    position:relative!important;
+    flex:none!important;
+    width:34px!important;
+    height:34px!important;
+    min-width:34px!important;
+    padding:0!important;
+    margin:0!important;
+    display:grid!important;
+    place-items:center!important;
+    border:1px solid #4d9874!important;
+    border-radius:10px!important;
+    background:#143024!important;
+    color:#8ed2aa!important;
+    box-shadow:none!important;
+    cursor:pointer!important;
+  }
+  #final38AttendanceStatus[hidden]{display:none!important}
+  #final38AttendanceStatus:hover{filter:brightness(1.08)}
+  #final38AttendanceStatus.is-active::after{
+    content:"";
+    position:absolute;
+    width:7px;height:7px;border-radius:50%;
+    top:4px;right:4px;
+    background:#77d59d;
+    box-shadow:0 0 0 3px rgba(119,213,157,.12);
+  }
+
+  /* Apenas um launcher do chat. */
+  #final32ChatLauncher.final39-chat-hidden,
+  #final32ChatWidget.final39-chat-hidden{display:none!important}
+  #final32ChatLauncher{z-index:1270!important}
+  #final32ChatWidget{z-index:1271!important}
+
+  /* Esconde os popups antigos de conversa de forma definitiva. */
+  #final27EnhancedThreadModal,
+  .final27EnhancedThreadModal,
+  body > .saas-payment-modal:has(.final27-chat-shell){display:none!important}
+</style>
+
+<script id="final39Stability">
+(function(){
+  'use strict';
+  const W=window;
+  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const $=(s,r=document)=>r.querySelector(s);
+  const closedKey='legado:final39:chat-closed';
+  const activeKey='legado:active-appointment';
+
+  function active(){
+    try{return JSON.parse(sessionStorage.getItem(activeKey)||'null')}catch(_){return null}
+  }
+  function chatClosed(){try{return sessionStorage.getItem(closedKey)==='1'}catch(_){return false}}
+  function setChatClosed(v){try{v?sessionStorage.setItem(closedKey,'1'):sessionStorage.removeItem(closedKey)}catch(_){} }
+
+  /* ------------------------------------------------------------
+     1) NÃO DEIXA AS ROTINAS ANTIGAS CRIAREM BARRAS REPETIDAS
+     ------------------------------------------------------------ */
+  const blockedIds=new Set([
+    'final33ActiveControl','final33NextAppointment','final33ActiveAppointment',
+    'final29AttendanceBar','final32StartBar','final32AppointmentToast','final29NotificationToast'
+  ]);
+  function shouldBlockNode(node){
+    if(!(node instanceof Element))return false;
+    const id=String(node.id||'');
+    if(blockedIds.has(id))return true;
+    if(node.matches('#final27EnhancedThreadModal,.final27EnhancedThreadModal'))return true;
+    if(node.matches('.saas-payment-modal') && node.querySelector('.final27-chat-shell'))return true;
+    return false;
+  }
+  if(!Node.prototype.__final39AppendGuard){
+    const originalAppend=Node.prototype.appendChild;
+    Node.prototype.appendChild=function(node){
+      if(shouldBlockNode(node))return node;
+      if(node instanceof Element){
+        if(node.id==='final32ChatLauncher' && document.querySelector('#final32ChatLauncher'))return node;
+        if(node.id==='final32ChatWidget' && document.querySelector('#final32ChatWidget'))return node;
+      }
+      return originalAppend.call(this,node);
+    };
+    Node.prototype.__final39AppendGuard=true;
+  }
+
+  function purgeLegacyNodes(){
+    blockedIds.forEach(id=>$$('#'+id).forEach(n=>n.remove()));
+    $$('#final27EnhancedThreadModal,.final27EnhancedThreadModal').forEach(n=>n.remove());
+    $$('body > .saas-payment-modal').forEach(n=>{if(n.querySelector('.final27-chat-shell'))n.remove()});
+    /* nunca deixe dois ícones/duas janelas */
+    $$('#final38AttendanceStatus').slice(1).forEach(n=>n.remove());
+    $$('#final32ChatLauncher').slice(1).forEach(n=>n.remove());
+    $$('#final32ChatWidget').slice(1).forEach(n=>n.remove());
+  }
+
+  /* ------------------------------------------------------------
+     2) CHAT FECHADO = ÍCONE SOME. SÓ VOLTA AO INICIAR NOVA CONVERSA.
+     ------------------------------------------------------------ */
+  function syncChatVisibility(){
+    purgeLegacyNodes();
+    const launcher=$('#final32ChatLauncher');
+    const widget=$('#final32ChatWidget');
+    if(chatClosed()){
+      if(launcher){launcher.hidden=true;launcher.classList.add('final39-chat-hidden');launcher.setAttribute('aria-hidden','true')}
+      if(widget){widget.hidden=true;widget.classList.add('final39-chat-hidden')}
+    }else{
+      if(launcher){launcher.hidden=false;launcher.classList.remove('final39-chat-hidden');launcher.setAttribute('aria-hidden','false')}
+      if(widget&&!widget.classList.contains('final39-chat-hidden'))widget.hidden=false;
+    }
+  }
+
+  function allowNewChat(){
+    setChatClosed(false);
+    try{sessionStorage.removeItem('legado:final38:chat-closed')}catch(_){ }
+    const launcher=$('#final32ChatLauncher');
+    if(launcher){launcher.hidden=false;launcher.classList.remove('final39-chat-hidden');launcher.setAttribute('aria-hidden','false');launcher.click();}
+    else W.showError?.('O chat ainda está carregando. Tente novamente.');
+  }
+
+  /* Cards/atalhos que representam “Conversas privadas” reabrem o chat explicitamente. */
+  document.addEventListener('click',e=>{
+    const card=e.target.closest('.final32-recados-stat,[data-final36-open-chat],[data-final39-open-chat]');
+    if(!card||!/conversas? privadas?/i.test(card.textContent||''))return;
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+    allowNewChat();
+  },true);
+
+  /* Fechar popup/chat ≠ encerrar conversa. O X apenas recolhe o chat. */
+  document.addEventListener('click',e=>{
+    const end=e.target.closest('#final37ChatEnd');
+    if(!end)return;
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+    const thread=String(W.__final29ConversationThread||'');
+    if(typeof W.__final38CloseThread==='function' && thread){
+      Promise.resolve(W.__final38CloseThread(thread)).then(()=>{setChatClosed(true);syncChatVisibility()});
+    }else{
+      setChatClosed(true);syncChatVisibility();
+    }
+  },true);
+
+  /* garante encerramento também se o código anterior chamar outro handler */
+  const oldClose=W.__final38CloseThread;
+  if(typeof oldClose==='function' && !oldClose.__final39wrapped){
+    const wrapped=async function(thread){
+      const r=await oldClose.apply(this,arguments);
+      setChatClosed(true);
+      syncChatVisibility();
+      return r;
+    };
+    wrapped.__final39wrapped=true;
+    W.__final38CloseThread=wrapped;
+  }
+
+  /* ------------------------------------------------------------
+     3) ATENDIMENTO: UMA ÚNICA SESSÃO, SEM BARRA FLUTUANTE
+     ------------------------------------------------------------ */
+  function ensureTopStatus(){
+    const tools=$('#final27TopTools');
+    if(!tools)return;
+    let icon=$('#final38AttendanceStatus');
+    if(!icon){
+      icon=document.createElement('button');
+      icon.type='button';icon.id='final38AttendanceStatus';
+      icon.title='Atendimento em andamento';icon.setAttribute('aria-label',icon.title);
+      icon.innerHTML='<i data-lucide="play-circle"></i>';
+      const server=$('#final26ServerWrap');
+      tools.insertBefore(icon,server||tools.firstChild||null);
+      icon.onclick=()=>focusActive();
+    }
+    const a=active();icon.hidden=!a;icon.classList.toggle('is-active',!!a);
+    if(a){
+      const label=`Atendimento em andamento${a.student_name?` · ${a.student_name}`:''}`;
+      icon.title=label;icon.setAttribute('aria-label',label);
+    }
+    W.refreshIcons?.();
+  }
+
+  let focusing=false;
+  async function focusActive(){
+    if(focusing)return;
+    const a=active();if(!a)return;
+    focusing=true;
+    try{
+      W.state=W.state||{};
+      W.state.currentStudentId=a.student_id;
+      W.V3=W.V3||{};
+      W.V3.studentSection='appointments';
+      if(String(W.state.currentView||'')!=='aluno-perfil' && typeof W.openStudentProfile==='function'){
+        await Promise.resolve(W.openStudentProfile(a.student_id));
+      }
+      /* uma única tentativa curta; não clicar na aba em loop */
+      for(let i=0;i<15;i++){
+        const c=$('#studentProfileContent');
+        const tab=c&&$$('.v3-tabs button',c).find(x=>/Atendimentos/i.test(x.textContent||''));
+        if(tab && !tab.classList.contains('active'))tab.click();
+        const form=c&&$('#v3RecordForm',c);
+        if(form){
+          form.scrollIntoView({behavior:'smooth',block:'center'});
+          setTimeout(()=>form.querySelector('[type="submit"]')?.scrollIntoView({behavior:'smooth',block:'center'}),80);
+          break;
+        }
+        await new Promise(r=>setTimeout(r,160));
+      }
+    }finally{focusing=false}
+  }
+
+  /* Os botões antigos “Ir para encerrar” deixam de chamar qualquer navegação. */
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('#final33FocusEnd');
+    if(!b)return;
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+    focusActive();
+  },true);
+
+  /* impede iniciar novamente uma sessão que já está ativa */
+  ['startAttendance','start33','startAppointment38'].forEach(name=>{
+    const fn=W[name];
+    if(typeof fn==='function' && !fn.__final39guard){
+      const wrapped=async function(ap){
+        const a=active();
+        if(a){await focusActive();return a;}
+        return fn.apply(this,arguments);
+      };
+      wrapped.__final39guard=true;
+      W[name]=wrapped;
+    }
+  });
+
+  /* Ao finalizar, garante que o ícone do topo desapareça sem criar outra barra. */
+  function syncActive(){
+    purgeLegacyNodes();
+    ensureTopStatus();
+    const a=active();
+    if(!a){
+      const icon=$('#final38AttendanceStatus');
+      if(icon)icon.hidden=true;
+    }
+  }
+
+  /* ------------------------------------------------------------
+     4) NÃO DEIXA UMA NAVEGAÇÃO REPETIDA REABRIR O MESMO PERFIL
+     ------------------------------------------------------------ */
+  const nav=W.navigate;
+  if(typeof nav==='function'&&!nav.__final39Nav){
+    let lastView='',lastStudent='';
+    const wrappedNav=function(view){
+      const a=active();
+      if(view==='aluno-perfil' && a?.student_id){
+        W.state=W.state||{};W.state.currentStudentId=a.student_id;
+      }
+      if(view===lastView && view==='aluno-perfil' && lastStudent===String(a?.student_id||'')){
+        return;
+      }
+      lastView=String(view||'');lastStudent=String(a?.student_id||'');
+      return nav.apply(this,arguments);
+    };
+    wrappedNav.__final39Nav=true;
+    W.navigate=wrappedNav;
+  }
+
+  purgeLegacyNodes();
+  syncChatVisibility();
+  syncActive();
+  setInterval(()=>{purgeLegacyNodes();syncChatVisibility();syncActive()},500);
+})();
+</script>
 </body>
