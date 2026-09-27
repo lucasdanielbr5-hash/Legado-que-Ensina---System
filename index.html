@@ -12676,7 +12676,7 @@ body.legado-v4-modal-open{overflow:hidden}
      ============================================================ -->
 
 
-</body></html>`);w.document.close();w.focus();setTimeout(()=>w.print(),250);
+</html>`);w.document.close();w.focus();setTimeout(()=>w.print(),250);
   }
 
   /* ============================================================
@@ -13545,7 +13545,6 @@ body.final27-dark .final33-value{fill:#cfe0d7!important}.final33-label{fill:#91a
 })();
 </script>
 
-</body>
 
 <style id="final30DesignOverride">
 /* =============================================================
@@ -17558,3 +17557,791 @@ body.final27-dark .final34-finance-note{background:#18211d!important;border-colo
   else setTimeout(afterDashboard,150);
 })();
 </script>
+
+
+<style id="final36Styles">
+/* =============================================================
+   FINAL 36 — fluxo de atendimento + agenda + dashboard + chat + finance
+   ============================================================= */
+:root{
+  --f36-bg:#f5f7f6;
+  --f36-surface:#ffffff;
+  --f36-surface2:#f8faf9;
+  --f36-border:#dbe5e0;
+  --f36-text:#23342d;
+  --f36-muted:#6f7e76;
+  --f36-primary:#5c9b79;
+  --f36-primary-dark:#3f775a;
+  --f36-dark-bg:#070b0a;
+  --f36-dark-surface:#0f1513;
+  --f36-dark-surface2:#141c19;
+  --f36-dark-surface3:#19231f;
+  --f36-dark-border:#2b3933;
+  --f36-dark-text:#f1f7f4;
+  --f36-dark-muted:#9baba3;
+}
+
+/* ---------- DARK GLOBAL: evita fundo claro + texto claro em qualquer tela ---------- */
+body.final27-dark .view.active,
+body.final27-dark .view.active > div,
+body.final27-dark .view.active section,
+body.final27-dark .view.active article,
+body.final27-dark .view.active aside,
+body.final27-dark .view.active form,
+body.final27-dark .view.active fieldset,
+body.final27-dark .view.active .card,
+body.final27-dark .view.active [class*="card"],
+body.final27-dark .view.active [class*="panel"],
+body.final27-dark .view.active [class*="box"],
+body.final27-dark .view.active [class*="item"],
+body.final27-dark .view.active [class*="summary"],
+body.final27-dark .view.active [class*="history"],
+body.final27-dark .view.active [class*="detail"],
+body.final27-dark .view.active [class*="stat"],
+body.final27-dark .view.active [class*="kpi"],
+body.final27-dark .view.active [class*="table"]{
+  border-color:var(--f36-dark-border)!important;
+}
+body.final27-dark .view.active h1,
+body.final27-dark .view.active h2,
+body.final27-dark .view.active h3,
+body.final27-dark .view.active h4,
+body.final27-dark .view.active h5,
+body.final27-dark .view.active h6,
+body.final27-dark .view.active strong,
+body.final27-dark .view.active b,
+body.final27-dark .view.active p,
+body.final27-dark .view.active span,
+body.final27-dark .view.active small,
+body.final27-dark .view.active label,
+body.final27-dark .view.active li,
+body.final27-dark .view.active td,
+body.final27-dark .view.active th{
+  text-shadow:none!important;
+}
+body.final27-dark .view.active h1,
+body.final27-dark .view.active h2,
+body.final27-dark .view.active h3,
+body.final27-dark .view.active h4,
+body.final27-dark .view.active strong,
+body.final27-dark .view.active b{color:var(--f36-dark-text)!important}
+body.final27-dark .view.active p,
+body.final27-dark .view.active span,
+body.final27-dark .view.active small,
+body.final27-dark .view.active label,
+body.final27-dark .view.active li,
+body.final27-dark .view.active td,
+body.final27-dark .view.active th{color:#c3d0ca!important}
+body.final27-dark .view.active input,
+body.final27-dark .view.active select,
+body.final27-dark .view.active textarea,
+body.final27-dark .view.active option{
+  background:#0d1311!important;
+  background-color:#0d1311!important;
+  color:var(--f36-dark-text)!important;
+  border-color:#34443d!important;
+}
+body.final27-dark .view.active input::placeholder,
+body.final27-dark .view.active textarea::placeholder{color:#778680!important;opacity:1!important}
+body.final27-dark .view.active .v3-tag,
+body.final27-dark .view.active .status-pill{
+  background:#1a2a22!important;color:#a7e0c0!important;border-color:#385746!important
+}
+body.final27-dark .view.active .v3-panel,
+body.final27-dark .view.active .v3-stat,
+body.final27-dark .view.active .v3-history-item,
+body.final27-dark .view.active .v3-progress-item,
+body.final27-dark .view.active .l14-panel,
+body.final27-dark .view.active .l14-slot,
+body.final27-dark .view.active .l14-up-item,
+body.final27-dark .view.active .v4-model,
+body.final27-dark .view.active .rz-panel,
+body.final27-dark .view.active .rz-kpi,
+body.final27-dark .view.active .final33-panel,
+body.final27-dark .view.active .final33-kpi,
+body.final27-dark .view.active .final33-chart-shell,
+body.final27-dark .view.active .final34-finance-editor,
+body.final27-dark .view.active .final32-recados-card{
+  background:var(--f36-dark-surface)!important;
+  background-image:none!important;
+  color:var(--f36-dark-text)!important;
+}
+body.final27-dark .view.active .v3-detail-grid > div,
+body.final27-dark .view.active .v3-note-block,
+body.final27-dark .view.active .v3-form-note,
+body.final27-dark .view.active .rz-fin-summary div,
+body.final27-dark .view.active .l14-day,
+body.final27-dark .view.active .l14-breaks,
+body.final27-dark .view.active .final34-finance-note,
+body.final27-dark .view.active .final32-recados-stat{
+  background:var(--f36-dark-surface2)!important;
+  color:var(--f36-dark-text)!important;
+  border-color:var(--f36-dark-border)!important;
+}
+body.final27-dark .view.active .v3-icon,
+body.final27-dark .view.active .rz-icon,
+body.final27-dark .view.active .l14-day small,
+body.final27-dark .view.active .final32-recados-stat i{
+  background:#192822!important;color:#9ad4b6!important
+}
+
+/* ---------- DASHBOARD: aviso de mensalidade no topo, sempre visível ---------- */
+#dashboardContent .final33-renewal-alert,
+#dashboardContent .final27-renewal-alert,
+#dashboardContent [data-final27-renewal]#final33RenewalAlert{
+  position:relative!important;
+  order:-10!important;
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+  margin:0 0 14px!important;
+  padding:14px 16px!important;
+  border-radius:16px!important;
+  background:#fff1cf!important;
+  border:1px solid #dfc17c!important;
+  color:#604716!important;
+  box-shadow:0 10px 26px rgba(110,78,32,.08)!important;
+  z-index:8!important;
+}
+#dashboardContent .final33-renewal-alert .final33-alert-main strong,
+#dashboardContent .final27-renewal-alert .final27-renewal-main strong{color:#5f4518!important}
+#dashboardContent .final33-renewal-alert .final33-alert-main span,
+#dashboardContent .final27-renewal-alert .final27-renewal-main span{color:#765f36!important}
+#dashboardContent .final33-renewal-alert .final33-alert-btn,
+#dashboardContent .final27-renewal-alert .final27-renewal-cta{background:#fff!important;color:#6d4d1f!important;border-color:#d5b36a!important}
+#dashboardContent .final33-renewal-alert .final33-alert-close{background:#fff!important;color:#6d4d1f!important;border-color:#d5b36a!important}
+body.final27-dark #dashboardContent .final33-renewal-alert,
+body.final27-dark #dashboardContent .final27-renewal-alert{
+  background:#2a2418!important;border-color:#69542f!important;color:#f3e4bd!important;
+  box-shadow:0 12px 30px rgba(0,0,0,.26)!important;
+}
+body.final27-dark #dashboardContent .final33-renewal-alert .final33-alert-main strong,
+body.final27-dark #dashboardContent .final27-renewal-alert .final27-renewal-main strong{color:#f4d99b!important}
+body.final27-dark #dashboardContent .final33-renewal-alert .final33-alert-main span,
+body.final27-dark #dashboardContent .final27-renewal-alert .final27-renewal-main span{color:#d4c19b!important}
+
+/* ---------- DASHBOARD: gráficos claramente visíveis ---------- */
+#dashboardContent .final33-chart-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px!important;margin-top:16px!important}
+#dashboardContent .final33-chart-shell{min-height:320px!important;overflow:hidden!important}
+#dashboardContent .final33-chart{min-height:250px!important;display:flex!important;align-items:center!important}
+#dashboardContent .final33-chart svg{width:100%!important;height:auto!important;display:block!important}
+body.final27-dark #dashboardContent .final33-axis{stroke:#31433c!important}
+body.final27-dark #dashboardContent .final33-label{fill:#a9b7b0!important}
+body.final27-dark #dashboardContent .final33-value{fill:#eef5f1!important}
+
+/* ---------- AGENDA: Visão rápida no topo ---------- */
+#agendaContent .l14-agenda-page > .l14-panel.final36-upcoming-top{margin:0 0 16px!important}
+#agendaContent .l14-agenda-page > .l14-agenda-layout{margin-top:0!important}
+#agendaContent .final36-upcoming-top .l14-upcoming{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px!important}
+#agendaContent .final36-upcoming-top .l14-up-item{border:1px solid #dce7e1!important;border-radius:13px!important;padding:11px!important;background:#fbfdfc!important}
+body.final27-dark #agendaContent .final36-upcoming-top .l14-up-item{background:var(--f36-dark-surface)!important;border-color:var(--f36-dark-border)!important}
+body.final27-dark #agendaContent .final36-upcoming-top .l14-up-item strong{color:var(--f36-dark-text)!important}
+
+/* ---------- ATENDIMENTO ATIVO: card recolhível ---------- */
+.final36-active-card{border:1px solid #b9d7c6;border-radius:20px;background:#f9fdfb;overflow:hidden;box-shadow:0 12px 34px rgba(35,77,57,.08);margin-bottom:14px}
+.final36-active-card.is-collapsed .final36-active-body{display:none!important}
+.final36-active-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;background:linear-gradient(90deg,#edf8f1,#f9fdfb);border-bottom:1px solid #d9e9df}
+.final36-active-head-main{min-width:0;display:flex;align-items:center;gap:11px}
+.final36-live-dot{width:11px;height:11px;border-radius:50%;background:#5ca77b;box-shadow:0 0 0 5px rgba(92,167,123,.13);flex:none}
+.final36-active-head strong{display:block;color:#29453a;font-size:12px}
+.final36-active-head span{display:block;color:#71867b;font-size:8px;margin-top:2px}
+.final36-collapse{display:inline-flex;align-items:center;gap:6px;border:1px solid #cfe0d5;border-radius:10px;background:#fff;color:#496357;padding:8px 10px;font:800 8px Inter,Arial,sans-serif;cursor:pointer;flex:none}
+.final36-active-body{padding:14px}
+.final36-active-body .v3-form-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:11px!important}
+.final36-active-body .v3-form-grid label.full{grid-column:1/-1!important}
+.final36-fieldset{display:grid;gap:6px;min-width:0}
+.final36-fieldset-title{font-size:9px;font-weight:900;color:#50665b}
+.final36-mood-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}
+.final36-mood-option{position:relative;border:1px solid #d8e4de;border-radius:12px;background:#fff;padding:8px 5px;cursor:pointer;text-align:center;transition:.15s}
+.final36-mood-option:hover{transform:translateY(-1px);border-color:#92b9a3}
+.final36-mood-option.active{background:#eaf6ef;border-color:#75a889;box-shadow:0 0 0 2px rgba(92,155,121,.1)}
+.final36-mood-emoji{display:block;font-size:21px;line-height:1}
+.final36-mood-label{display:block;margin-top:4px;font-size:7px;font-weight:800;color:#65776e}
+.final36-scale-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.final36-scale{border:1px solid #d9e4df;border-radius:12px;background:#fbfdfc;padding:9px}
+.final36-scale-head{display:flex;justify-content:space-between;gap:5px;align-items:center;margin-bottom:7px}
+.final36-scale-head strong{font-size:8px;color:#52675d}
+.final36-scale-head output{font-size:8px;font-weight:900;color:#5a9675}
+.final36-scale input{width:100%;accent-color:#5c9b79}
+.final36-graph{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:11px}
+.final36-graph-card{padding:9px 10px;border:1px solid #dfe8e3;border-radius:12px;background:#f7faf8}
+.final36-graph-label{display:flex;justify-content:space-between;gap:6px;font-size:7px;color:#6f8177;margin-bottom:5px}
+.final36-graph-track{height:7px;border-radius:99px;background:#e2ebe6;overflow:hidden}
+.final36-graph-fill{height:100%;width:50%;border-radius:inherit;background:#5c9b79;transition:width .15s}
+.final36-rich-note{margin-top:10px;padding:10px 11px;border:1px solid #dfe8e3;border-radius:12px;background:#f7faf8;color:#65766e;font-size:8px;line-height:1.5}
+.final36-rich-note strong{color:#4f6359}
+body.final27-dark .final36-active-card{background:var(--f36-dark-surface)!important;border-color:#355344!important}
+body.final27-dark .final36-active-head{background:linear-gradient(90deg,#16251e,#111815)!important;border-color:#2e4338!important}
+body.final27-dark .final36-active-head strong{color:#eef5f1!important}.final36-active-head span{color:#98aaa1!important}
+body.final27-dark .final36-collapse{background:#151d1a!important;color:#dbe7e1!important;border-color:#395048!important}
+body.final27-dark .final36-fieldset-title,
+body.final27-dark .final36-scale-head strong{color:#d2dfd9!important}
+body.final27-dark .final36-mood-option,
+body.final27-dark .final36-scale,
+body.final27-dark .final36-graph-card,
+body.final27-dark .final36-rich-note{background:#151d1a!important;border-color:#2f4038!important;color:#d9e5df!important}
+body.final27-dark .final36-mood-label,
+body.final27-dark .final36-graph-label{color:#a3b2aa!important}
+body.final27-dark .final36-mood-option.active{background:#203329!important;border-color:#4e8064!important}
+body.final27-dark .final36-graph-track{background:#273630!important}
+
+/* ---------- CHAT: ação real da conversa privada + encerrar conversa ---------- */
+.final32-recados-stat[data-final36-open-chat]{cursor:pointer;transition:.15s}
+.final32-recados-stat[data-final36-open-chat]:hover{transform:translateY(-1px);border-color:#9ac4ab!important;box-shadow:0 8px 18px rgba(43,87,65,.08)}
+.final36-chat-end{display:inline-flex;align-items:center;gap:5px;border:1px solid #d7e2dc;border-radius:9px;background:#fff;color:#6a786f;padding:7px 8px;font:800 7px Inter,Arial,sans-serif;cursor:pointer;white-space:nowrap}
+.final36-chat-end:hover{background:#f4f7f5}
+body.final27-dark .final36-chat-end{background:#151d1a!important;color:#dce7e1!important;border-color:#3b4c44!important}
+
+/* ---------- WHATSAPP: ícone visual do WhatsApp ---------- */
+.final36-wa-logo{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#25d366;color:#fff;box-shadow:0 4px 10px rgba(37,211,102,.18)}
+.final36-wa-logo svg{width:18px;height:18px;display:block}
+.final33-birthday-whatsapp{display:grid!important;place-items:center!important;width:36px!important;height:36px!important;border-radius:11px!important;border:0!important;background:#25d366!important;color:#fff!important;cursor:pointer!important;box-shadow:0 6px 14px rgba(37,211,102,.18)!important}
+.final33-birthday-whatsapp:hover{filter:brightness(.96);transform:translateY(-1px)}
+
+/* ---------- FINANCEIRO: editor elegante e 100% na página ---------- */
+#financeiroContent .final36-finance-page-editor{margin:0 0 18px;padding:21px;border:1px solid #dbe6e0;border-radius:20px;background:#fbfdfc;box-shadow:0 12px 32px rgba(31,61,48,.06)}
+#financeiroContent .final36-finance-page-editor[hidden]{display:none!important}
+.final36-finance-page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
+.final36-finance-page-head .kicker{font-size:9px;font-weight:900;letter-spacing:.13em;color:#5d8b72;text-transform:uppercase}
+.final36-finance-page-head h2{margin:4px 0 0;font-size:20px;color:#263b31}
+.final36-finance-page-head p{margin:5px 0 0;font-size:9px;color:#7a8880;line-height:1.5}
+.final36-finance-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.final36-finance-grid label{display:grid;gap:6px}.final36-finance-grid label.full{grid-column:1/-1}
+.final36-finance-grid label span{font-size:8px;font-weight:900;color:#61736a}
+.final36-finance-grid input,.final36-finance-grid select{width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #d6e2dc;border-radius:11px;background:#fff;color:#2f4038;font:500 11px Inter,Arial,sans-serif}
+.final36-finance-grid input:focus,.final36-finance-grid select:focus{border-color:#70a18a;box-shadow:0 0 0 3px rgba(92,155,121,.10);outline:none}
+.final36-finance-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}
+body.final27-dark #financeiroContent .final36-finance-page-editor{background:#101714!important;border-color:#2e3d36!important}
+body.final27-dark .final36-finance-page-head h2{color:#eef5f1!important}.final36-finance-page-head p{color:#9eaca5!important}
+body.final27-dark .final36-finance-grid label span{color:#a9b7b0!important}
+body.final27-dark .final36-finance-grid input,
+body.final27-dark .final36-finance-grid select{background:#0d1311!important;color:#eff6f2!important;border-color:#34443d!important}
+
+@media(max-width:980px){.final36-active-body .v3-form-grid,.final36-finance-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.final36-mood-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.final36-graph{grid-template-columns:repeat(2,minmax(0,1fr))}.final36-upcoming-top .l14-upcoming{grid-template-columns:1fr!important}}
+@media(max-width:620px){.final36-active-body .v3-form-grid,.final36-finance-grid{grid-template-columns:1fr!important}.final36-active-body .v3-form-grid label.full,.final36-finance-grid label.full{grid-column:auto!important}.final36-scale-grid,.final36-graph{grid-template-columns:1fr 1fr}.final36-mood-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.final36-active-head{align-items:flex-start}.final36-active-head-main{align-items:flex-start}.final36-chat-end{font-size:6px}.final36-finance-actions{justify-content:stretch}.final36-finance-actions .btn{flex:1}}
+</style>
+
+<script id="final36Enhancements">
+(function(){
+  'use strict';
+  const W=window;
+  const $=(s,r=document)=>r.querySelector(s);
+  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(String(v??'')):String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+  const uid=()=>W.state?.user?.id||W.state?.session?.user?.id||null;
+  const today=()=>typeof W.todayInputDate==='function'?W.todayInputDate():new Date().toISOString().slice(0,10);
+  const dateOnly=v=>String(v||'').slice(0,10);
+  const timeOnly=v=>String(v||'').slice(0,5);
+  const apTable=()=>W.DASHBOARD_TABLES?.appointments||W.V3Core?.TABLE?.appointments||'appointments';
+  const financeTable=()=>W.V3Core?.TABLE?.finance||'financial_entries';
+  const recordsTable=()=>W.V3Core?.TABLE?.records||'student_records';
+  const studentName=s=>String(s?.name||s?.full_name||s?.student_name||'Aluno').trim()||'Aluno';
+  const isMaster=()=>typeof W.isMaster==='function'?W.isMaster():String(W.state?.user?.email||'').toLowerCase()==='contato@legadoqueensina.com.br';
+
+  /* -------------------------------------------------------------
+     1) DARK REPAIR RUNTIME — pega superfícies brancas inline/herdadas
+     ------------------------------------------------------------- */
+  function darkRepair36(){
+    if(!document.body.classList.contains('final27-dark'))return;
+    const view=document.querySelector('.view.active');if(!view)return;
+    const els=view.querySelectorAll('*');let scanned=0;
+    for(const el of els){
+      if(scanned>850)break;scanned++;
+      const cs=getComputedStyle(el);
+      const bg=cs.backgroundColor;
+      if(bg && bg!=='transparent' && bg!=='rgba(0, 0, 0, 0)'){
+        const m=bg.match(/rgba?\(([^)]+)\)/i);
+        if(m){const parts=m[1].split(',').map(x=>parseFloat(x.trim()));const a=parts.length===4?parts[3]:1;
+          if(a>.92 && parts[0]>245 && parts[1]>245 && parts[2]>245){el.style.setProperty('background-color','#101714','important');el.style.setProperty('background-image','none','important');el.style.setProperty('border-color','#2e3d36','important');}
+        }
+      }
+      if(cs.backgroundImage&&cs.backgroundImage!=='none'&&/linear-gradient|radial-gradient/i.test(cs.backgroundImage)){
+        el.style.setProperty('background-image','none','important');
+      }
+    }
+  }
+
+  /* -------------------------------------------------------------
+     2) DASHBOARD — aviso no topo e sem desaparecimento automático
+     ------------------------------------------------------------- */
+  function moveDashboardAlerts36(){
+    const dashboard=$('#dashboardContent');if(!dashboard)return;
+    const head=dashboard.querySelector('.final33-dashboard-head,.rz-head,.v3-head,.page-heading');
+    const anchors=[
+      dashboard.querySelector('#final33RenewalAlert'),
+      dashboard.querySelector('.final33-renewal-alert'),
+      dashboard.querySelector('.final27-renewal-alert'),
+      dashboard.querySelector('[data-final27-renewal]'),
+      dashboard.querySelector('#final34PermissionBanner'),
+      dashboard.querySelector('.final32-permission-banner'),
+      dashboard.querySelector('#final33PermissionBanner')
+    ].filter(Boolean);
+    anchors.forEach(el=>{
+      el.style.display='flex';el.style.visibility='visible';el.style.opacity='1';
+      if(head&&el!==head)head.insertAdjacentElement('afterend',el);
+      else dashboard.prepend(el);
+    });
+    const renewal=dashboard.querySelector('.final33-renewal-alert,.final27-renewal-alert,[data-final27-renewal]');
+    if(renewal){renewal.style.zIndex='9';}
+    darkRepair36();
+  }
+
+  /* -------------------------------------------------------------
+     3) AGENDA — move visão rápida para cima
+     ------------------------------------------------------------- */
+  function moveUpcomingAgenda36(){
+    const root=$('#agendaContent .l14-agenda-page');if(!root)return;
+    const quick=$$(':scope > .l14-panel',root).find(x=>x.querySelector('.l14-upcoming'));
+    const layout=root.querySelector('.l14-agenda-layout');
+    if(quick&&layout&&!root.classList.contains('final36-agenda-fixed')){
+      quick.classList.add('final36-upcoming-top');
+      root.insertBefore(quick,layout);
+      root.classList.add('final36-agenda-fixed');
+    }
+  }
+
+  /* -------------------------------------------------------------
+     4) CONVERSA PRIVADA — o card realmente abre o chatbot
+     ------------------------------------------------------------- */
+  function bindPrivateConversation36(){
+    const root=$('#recadosContent');if(!root)return;
+    $$('.final32-recados-stat',root).forEach(card=>{
+      if(!/Conversas privadas/i.test(card.textContent||''))return;
+      card.dataset.final36OpenChat='1';
+      if(card.__final36Bound)return;card.__final36Bound=true;
+      card.setAttribute('role','button');card.setAttribute('tabindex','0');
+      const open=()=>{const b=$('#final32ChatLauncher');if(b){b.click();}else{const w=$('#final32ChatWidget');if(w){w.hidden=false;W.renderChat32?.();}}};
+      card.addEventListener('click',open);card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+    });
+  }
+
+  /* -------------------------------------------------------------
+     5) CHAT — encerrar conversa atual sem apagar histórico
+     ------------------------------------------------------------- */
+  const closedKey=()=>`legado:final36:closed-threads:${uid()||'guest'}`;
+  function closedThreads(){try{return JSON.parse(localStorage.getItem(closedKey())||'[]')}catch(_){return[]}}
+  function saveClosedThreads(v){try{localStorage.setItem(closedKey(),JSON.stringify(v.slice(-100)))}catch(_){}}
+  function injectChatEndButton36(){
+    const head=$('#final32ChatWidget .final32-chat-widget-head');if(!head)return;
+    if($('#final36ChatEnd',head))return;
+    const btn=document.createElement('button');btn.type='button';btn.id='final36ChatEnd';btn.className='final36-chat-end';btn.title='Encerrar esta conversa';btn.innerHTML='<i data-lucide="archive-x"></i><span>Encerrar conversa</span>';
+    const close=$('#final32ChatClose',head);head.insertBefore(btn,close||null);
+    btn.onclick=()=>{
+      const th=String(W.__final29ConversationThread||'');if(!th)return;
+      const all=closedThreads();if(!all.includes(th))all.push(th);saveClosedThreads(all);
+      W.__final29ConversationThread=null;
+      const widget=$('#final32ChatWidget');if(widget)widget.hidden=true;
+      const launcher=$('#final32ChatLauncher');if(launcher)launcher.focus?.();
+      W.showSuccess?.('Conversa encerrada. O histórico foi mantido.');
+    };
+    W.refreshIcons?.();
+  }
+  function applyClosedThreads36(){
+    const ids=new Set(closedThreads());
+    $$('.final32-thread').forEach(btn=>{if(ids.has(String(btn.dataset.th||''))){btn.style.display='none';}});
+  }
+  function chatPolish36(){
+    const widget=$('#final32ChatWidget');if(!widget)return;
+    injectChatEndButton36();applyClosedThreads36();darkRepair36();
+  }
+
+  /* -------------------------------------------------------------
+     6) WHATSAPP aniversariante — logo verdadeiro em SVG
+     ------------------------------------------------------------- */
+  function whatsappSvg36(){
+    return `<span class="final36-wa-logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10.5" fill="#25D366" stroke="#fff" stroke-width="1.2"/><path d="M8.1 17.1l.8-2.35a5.55 5.55 0 1 1 2.05 1.55L8.1 17.1Z" fill="#25D366" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/><path d="M10.05 9.15c.18-.32.37-.34.64-.34h.43c.16 0 .32.03.44.3l.55 1.32c.08.2.06.36-.08.53l-.42.52c-.1.13-.12.23-.03.38.32.56.75 1.02 1.3 1.34.16.1.27.08.4-.04l.5-.47c.12-.12.25-.15.44-.07l1.3.62c.18.09.28.17.25.37-.04.37-.17.69-.45.96-.29.28-.65.4-1.03.4-.95 0-2.5-.8-3.67-1.86-1-.91-1.79-2.15-2.04-2.99-.12-.42-.1-.8.04-1.03.14-.23.42-.47.73-.58Z" fill="#fff"/></svg></span>`;
+  }
+  function patchBirthdayWhatsApp36(){
+    $$('.final33-birthday-whatsapp').forEach(btn=>{btn.innerHTML=whatsappSvg36();btn.title='Enviar parabéns pelo WhatsApp';});
+  }
+
+  /* -------------------------------------------------------------
+     7) ATENDIMENTO — formulário rico + humor + gráficos
+     ------------------------------------------------------------- */
+  function activeAppointment36(){try{return JSON.parse(sessionStorage.getItem('legado:active-appointment')||'null')}catch(_){return null}}
+  function buildRichAttendanceHtml36(form){
+    const val=(name)=>String(form.querySelector(`[name="${name}"]`)?.value||'');
+    const date=val('record_date')||today();
+    const title=val('title');const duration=val('duration')||'50 min';const oldMood=val('mood');const next=val('next_step');const oldContent=val('content');
+    const moodOptions=[['feliz','😊','Feliz'],['tranquilo','🙂','Tranquilo'],['ansioso','😟','Ansioso'],['nervoso','😬','Nervoso'],['triste','😔','Triste'],['irritado','😠','Irritado']];
+    const selectedMood=moodOptions.some(x=>x[0]===oldMood)?oldMood:'';
+    return `<div class="final36-active-head"><div class="final36-active-head-main"><span class="final36-live-dot"></span><div><strong>Atendimento em andamento</strong><span>Registre a sessão com calma. Você pode recolher este cartão sem perder os dados preenchidos.</span></div></div><button type="button" class="final36-collapse" id="final36CollapseAttendance"><i data-lucide="chevron-up"></i><span>Recolher</span></button></div><div class="final36-active-body">
+      <div class="final36-active-body-inner">
+        <div class="v3-form-grid">
+          <label><span>Data *</span><input type="date" name="record_date" value="${esc(date)}" required></label>
+          <label><span>Título da sessão</span><input name="title" value="${esc(title)}" placeholder="Ex.: Sessão de leitura e consciência fonológica"></label>
+          <label><span>Duração</span><input name="duration" value="${esc(duration)}" placeholder="50 min"></label>
+          <label><span>Objetivo principal</span><input name="session_objective" placeholder="O que foi trabalhado nesta sessão?"></label>
+
+          <div class="final36-fieldset" style="grid-column:1/-1"><div class="final36-fieldset-title">Humor / estado emocional observado</div><input type="hidden" name="mood" value="${esc(selectedMood)}"><div class="final36-mood-grid">${moodOptions.map(x=>`<button type="button" class="final36-mood-option ${selectedMood===x[0]?'active':''}" data-mood="${x[0]}"><span class="final36-mood-emoji">${x[1]}</span><span class="final36-mood-label">${x[2]}</span></button>`).join('')}</div></div>
+
+          <label class="full"><span>Objetivo e planejamento da sessão</span><textarea name="plan_session" rows="4" placeholder="Meta da sessão, habilidade priorizada, estratégia planejada..."> </textarea></label>
+          <label class="full"><span>Atividades realizadas</span><textarea name="activities" rows="5" placeholder="Descreva jogos, tarefas, materiais, estratégias e situações propostas..."></textarea></label>
+          <label class="full"><span>Intervenções e estratégias psicopedagógicas</span><textarea name="interventions" rows="5" placeholder="O que foi feito pela profissional? Quais mediações foram necessárias?"></textarea></label>
+          <label><span>Resposta / desempenho do aluno</span><textarea name="student_response" rows="5" placeholder="Como o aluno respondeu às propostas?"></textarea></label>
+          <label><span>Dificuldades observadas</span><textarea name="difficulties" rows="5" placeholder="Quais obstáculos apareceram? Houve recusa, dispersão, insegurança...?"></textarea></label>
+          <label><span>Observações relevantes</span><textarea name="observations" rows="5" placeholder="Registre fatos importantes da sessão."></textarea></label>
+          <label><span>Orientações para família / escola</span><textarea name="family_guidance" rows="5" placeholder="Alguma orientação ou combinado para o próximo período?"></textarea></label>
+
+          <div class="final36-fieldset" style="grid-column:1/-1"><div class="final36-fieldset-title">Indicadores da sessão</div><div class="final36-scale-grid">
+            ${[['attention','Atenção / concentração'],['engagement','Participação'],['regulation','Regulação emocional'],['autonomy','Autonomia']].map(([n,l])=>`<div class="final36-scale"><div class="final36-scale-head"><strong>${l}</strong><output id="final36Out-${n}">3/5</output></div><input type="range" min="1" max="5" value="3" name="${n}" data-scale="${n}"></div>`).join('')}
+          </div><div class="final36-graph">${[['attention','Atenção'],['engagement','Participação'],['regulation','Regulação'],['autonomy','Autonomia']].map(([n,l])=>`<div class="final36-graph-card"><div class="final36-graph-label"><span>${l}</span><b data-graph-value="${n}">3/5</b></div><div class="final36-graph-track"><div class="final36-graph-fill" data-graph-fill="${n}" style="width:60%"></div></div></div>`).join('')}</div></div>
+
+          <label class="full"><span>Registro detalhado da sessão *</span><textarea name="content" rows="8" required placeholder="Síntese clínica/pedagógica do atendimento, evolução percebida, evidências e pontos importantes...">${esc(oldContent)}</textarea></label>
+          <label class="full"><span>Encaminhamento / próximo passo</span><textarea name="next_step" rows="4">${esc(next)}</textarea></label>
+        </div>
+        <div class="final36-rich-note"><strong>Fechamento do atendimento:</strong> ao clicar em <b>Encerrar atendimento</b>, a sessão será salva no prontuário, o agendamento será concluído e você seguirá diretamente para o próximo passo no Financeiro. ${esc(oldContent)?'':''}</div>
+        <div class="v3-form-actions"><button type="submit" class="btn btn-primary"><i data-lucide="check-circle-2"></i>Encerrar atendimento</button></div>
+      </div></div>`;
+  }
+  function wrapActiveForm36(){
+    const c=$('#studentProfileContent');if(!c||W.state?.currentView!=='aluno-perfil')return;
+    const ap=activeAppointment36();if(!ap)return;
+    let form=$('#v3RecordForm',c);if(!form)return;
+    let card=form.closest('.v3-inline-editor')||form.parentElement;
+    if(!card)return;
+    if(!card.classList.contains('final36-active-card')){
+      const section=document.createElement('section');section.className='final36-active-card';
+      card.parentNode.insertBefore(section,card);section.appendChild(card);section.dataset.final36Active='1';
+    }
+    const section=card.closest('.final36-active-card');
+    if(section.dataset.final36Enhanced==='1')return;
+    section.dataset.final36Enhanced='1';
+    const originalFields={};$$("[name]",form).forEach(x=>{originalFields[x.name]=x.value});
+    const oldHtml=buildRichAttendanceHtml36(form);
+    const replacement=document.createElement('form');replacement.id='v3RecordForm';replacement.className='v3-form';replacement.innerHTML=oldHtml;
+    // Keep the real form inside the section, discarding every old event listener.
+    form.replaceWith(replacement);
+    const newForm=$('#v3RecordForm',section);
+    if(originalFields.content&&!newForm.querySelector('[name="content"]').value)newForm.querySelector('[name="content"]').value=originalFields.content;
+    bindRichAttendance36(newForm,ap,section);
+    W.refreshIcons?.();
+  }
+  function bindRichAttendance36(form,ap,section){
+    if(!form)return;
+    const saved={};
+    $$('[name="mood"] + .final36-mood-grid .final36-mood-option',form).forEach(btn=>btn.addEventListener('click',()=>{const hidden=form.querySelector('[name="mood"]');hidden.value=btn.dataset.mood||'';$$('.final36-mood-option',form).forEach(x=>x.classList.toggle('active',x===btn));}));
+    $$('input[data-scale]',form).forEach(input=>{const out=$(`#final36Out-${input.dataset.scale}`,form);const gv=$(`[data-graph-value="${input.dataset.scale}"]`,form);const fill=$(`[data-graph-fill="${input.dataset.scale}"]`,form);const upd=()=>{const v=Number(input.value||3);if(out)out.textContent=`${v}/5`;if(gv)gv.textContent=`${v}/5`;if(fill)fill.style.width=`${v*20}%`;};input.addEventListener('input',upd);upd();});
+    const collapse=$('#final36CollapseAttendance',section);collapse?.addEventListener('click',()=>{const collapsed=section.classList.toggle('is-collapsed');const icon=collapse.querySelector('i');const label=collapse.querySelector('span');if(label)label.textContent=collapsed?'Expandir':'Recolher';if(icon)icon.setAttribute('data-lucide',collapsed?'chevron-down':'chevron-up');W.refreshIcons?.();});
+    form.addEventListener('submit',async ev=>{ev.preventDefault();ev.stopPropagation();
+      const btn=form.querySelector('[type="submit"]');if(btn?.disabled)return;btn&&(btn.disabled=true);
+      try{await finishAttendance36(ap,form);}
+      catch(e){W.showError?.(e?.message||'Não foi possível encerrar o atendimento.');if(btn)btn.disabled=false;}
+    });
+  }
+  async function finishAttendance36(ap,form){
+    const c=W.supabaseClient,me=uid();if(!c||!me)throw new Error('Sessão não encontrada.');
+    const fd=new FormData(form);
+    const date=fd.get('record_date')||dateOnly(ap.appointment_date)||today();
+    const mood=String(fd.get('mood')||'').trim();
+    const sections=[
+      ['Objetivo da sessão',fd.get('session_objective')],
+      ['Planejamento',fd.get('plan_session')],
+      ['Atividades realizadas',fd.get('activities')],
+      ['Intervenções e estratégias',fd.get('interventions')],
+      ['Resposta / desempenho do aluno',fd.get('student_response')],
+      ['Dificuldades observadas',fd.get('difficulties')],
+      ['Observações relevantes',fd.get('observations')],
+      ['Orientações para família / escola',fd.get('family_guidance')],
+      ['Registro detalhado',fd.get('content')]
+    ].filter(([,v])=>String(v||'').trim()).map(([k,v])=>`[${k}]\n${String(v).trim()}`);
+    if(!sections.length)throw new Error('Preencha pelo menos o registro detalhado da sessão.');
+    const ratings=['attention','engagement','regulation','autonomy'].map(n=>`${n}:${Number(fd.get(n)||3)}/5`).join(' · ');
+    sections.push(`[Indicadores da sessão]\n${ratings}`);
+    const payload={user_id:me,student_id:ap.student_id,record_type:'atendimento',record_date:date,title:String(fd.get('title')||'Atendimento').trim()||'Atendimento',content:sections.join('\n\n'),duration:String(fd.get('duration')||'').trim()||null,mood:mood||null,next_step:String(fd.get('next_step')||'').trim()||null};
+    const rr=await c.from(recordsTable()).insert(payload);if(rr.error)throw rr.error;
+    const ar=await c.from(apTable()).update({status:'completed'}).eq('id',ap.id).eq('user_id',me);if(ar.error)throw ar.error;
+    W.__final36CompletedAppointment=ap;
+    try{sessionStorage.removeItem('legado:active-appointment')}catch(_){ }
+    ['final33ActiveControl','final33NextAppointment','final33ActiveAppointment','final32StartBar','final32AppointmentToast','final29AttendanceBar','final29NotificationToast'].forEach(id=>document.getElementById(id)?.remove());
+    W.showSuccess?.('Atendimento encerrado e registrado no prontuário.');
+    // Próxima etapa: vai para o Financeiro e abre o preenchimento na própria página.
+    await goToFinanceAfterAttendance36(ap);
+  }
+  async function findPaidForAppointment36(ap){
+    try{
+      const c=W.supabaseClient,me=uid();if(!c||!me)return null;
+      const r=await c.from('payments').select('*').eq('user_id',me).eq('student_id',ap.student_id).eq('payment_date',dateOnly(ap.appointment_date)||today()).order('created_at',{ascending:false}).limit(30);
+      if(r.error)return null;
+      return (r.data||[]).find(p=>String(p.status||'').toLowerCase()==='paid'&&String(p.description||'').includes(String(ap.id)))||null;
+    }catch(_){return null}
+  }
+  async function lastAmount36(ap){
+    try{const r=await W.supabaseClient.from('payments').select('amount').eq('user_id',uid()).eq('student_id',ap.student_id).order('payment_date',{ascending:false}).limit(1).maybeSingle();return r.data?.amount??''}catch(_){return ''}
+  }
+  async function goToFinanceAfterAttendance36(ap){
+    const paid=await findPaidForAppointment36(ap);
+    W.__final36PaymentRegistered=!!paid;
+    if(typeof W.navigate==='function')W.navigate('financeiro');
+    setTimeout(async()=>{
+      if(typeof W.openPaymentModal==='function')await W.openPaymentModal({studentId:ap.student_id,appointmentId:ap.id,amount:paid?.amount||await lastAmount36(ap),description:`Atendimento ${ap.id} · ${ap.student_name||'Aluno'}`,autoPayment:!!paid});
+      setTimeout(()=>prefillFinanceForAttendance36(ap,paid),150);
+    },350);
+  }
+  function prefillFinanceForAttendance36(ap,paid){
+    const root=$('#financeiroContent');if(!root)return;
+    const editor=$('#final36FinancePageEditor',root)||$('#final34FinanceEditor',root)||$('#v3FinanceEditor',root);if(!editor)return;
+    const studentSel=editor.querySelector('[name="student_id"]');if(studentSel){studentSel.value=String(ap.student_id||'')};
+    const desc=editor.querySelector('[name="description"]');if(desc&&!desc.value)desc.value=`Atendimento ${ap.id} · ${ap.student_name||'Aluno'}`;
+    const amount=editor.querySelector('[name="amount"]');if(amount&&!amount.value&&paid?.amount!=null)amount.value=String(paid.amount).replace('.',',');
+  }
+  function attachAttendanceIfPresent36(){
+    const ap=activeAppointment36();if(ap&&W.state?.currentView==='aluno-perfil')setTimeout(wrapActiveForm36,80);
+  }
+
+  /* -------------------------------------------------------------
+     8) FINANCEIRO — substitui popup global por editor na página
+     ------------------------------------------------------------- */
+  let financeBusy36=false;
+  async function openFinanceInline36(options={}){
+    const root=$('#financeiroContent');
+    if(!root){if(typeof W.navigate==='function'){W.navigate('financeiro');setTimeout(()=>openFinanceInline36(options),350);}return;}
+    if(financeBusy36)return;financeBusy36=true;
+    try{
+      let students=W.studentsState?.data||W.state?.students||[];
+      if(!students.length&&typeof W.loadStudents==='function'){try{students=await W.loadStudents()}catch(_){}}
+      const page=root.querySelector('.rz-page,.legado-fin-page,.v3-page')||root.firstElementChild||root;
+      let editor=root.querySelector('#final36FinancePageEditor');
+      if(!editor){editor=document.createElement('section');editor.id='final36FinancePageEditor';editor.className='final36-finance-page-editor';const head=page.querySelector('.rz-head,.v3-head,.page-heading');head?.after(editor);if(!head)page.prepend(editor);}
+      editor.hidden=false;
+      const pre=options||{};
+      editor.innerHTML=`<div class="final36-finance-page-head"><div><div class="kicker">NOVO LANÇAMENTO</div><h2>Registrar movimentação financeira</h2><p>Preencha tudo diretamente nesta página. Nenhuma janela externa será aberta.</p></div><button type="button" class="icon-button" id="final36FinanceClose" aria-label="Fechar"><i data-lucide="x"></i></button></div>
+      <form id="final36FinanceForm"><div class="final36-finance-grid">
+      <label><span>Tipo *</span><select name="kind"><option value="income">Receita / recebimento</option><option value="expense">Despesa</option></select></label>
+      <label><span>Aluno</span><select name="student_id"><option value="">Não vincular</option>${(students||[]).map(s=>`<option value="${esc(s.id)}">${esc(studentName(s))}</option>`).join('')}</select></label>
+      <label><span>Valor *</span><input name="amount" inputmode="decimal" value="${esc(pre.amount==null?'':pre.amount)}" placeholder="0,00" required></label>
+      <label><span>Data de competência *</span><input type="date" name="competence_date" value="${esc(pre.competenceDate||today())}" required></label>
+      <label><span>Vencimento</span><input type="date" name="due_date" value="${esc(pre.dueDate||pre.competenceDate||today())}"></label>
+      <label><span>Status</span><select name="status"><option value="paid">Pago / recebido</option><option value="pending">Pendente</option><option value="overdue">Em atraso</option></select></label>
+      <label><span>Forma de pagamento</span><select name="payment_method"><option value="pix">Pix</option><option value="cash">Dinheiro</option><option value="debit">Cartão de débito</option><option value="credit_spot">Cartão de crédito</option><option value="credit_installment">Cartão de crédito parcelado</option><option value="transfer">Transferência</option><option value="boleto">Boleto</option></select></label>
+      <label><span>Parcelas</span><select name="installment_total"><option value="1">1 parcela</option><option value="2">2 parcelas</option><option value="3">3 parcelas</option><option value="4">4 parcelas</option><option value="5">5 parcelas</option><option value="6">6 parcelas</option><option value="10">10 parcelas</option><option value="12">12 parcelas</option></select></label>
+      <label class="full"><span>Descrição</span><input name="description" value="${esc(pre.description||'')}" placeholder="Ex.: Atendimento psicopedagógico, mensalidade, material..." required></label>
+      </div><div class="final34-finance-note"><i data-lucide="info"></i><span>O lançamento ficará disponível no histórico financeiro. Em parcelamentos, as parcelas futuras serão criadas automaticamente.</span></div>
+      <div class="final36-finance-actions"><button type="button" class="btn btn-outline" id="final36FinanceCancel">Cancelar</button><button type="submit" class="btn btn-primary"><i data-lucide="save"></i>Salvar lançamento</button></div></form>`;
+      const close=()=>{editor.hidden=true;editor.innerHTML=''};
+      $('#final36FinanceClose',editor).onclick=close;$('#final36FinanceCancel',editor).onclick=close;
+      const sel=$('[name="student_id"]',editor);if(pre.studentId&&sel)sel.value=String(pre.studentId);
+      if(pre.autoPayment){W.__final36PaymentRegistered=true;close();return;}
+      $('#final36FinanceForm',editor).addEventListener('submit',async ev=>{
+        ev.preventDefault();const btn=ev.currentTarget.querySelector('[type="submit"]');btn.disabled=true;
+        try{
+          const fd=new FormData(ev.currentTarget);let raw=String(fd.get('amount')||'').replace(/\s/g,'');if(raw.includes(',')&&raw.includes('.'))raw=raw.replace(/\./g,'').replace(',','.');else raw=raw.replace(',','.');const amount=Number(raw);if(!(amount>0))throw new Error('Informe um valor maior que zero.');
+          const total=Math.max(1,Number(fd.get('installment_total')||1));const start=new Date(`${fd.get('competence_date')}T12:00:00`);const group=(crypto?.randomUUID?crypto.randomUUID():String(Date.now()));
+          const st=(students||[]).find(s=>String(s.id)===String(fd.get('student_id')));const baseCents=Math.floor(Math.round(amount*100)/total);let remainder=Math.round(amount*100)-baseCents*total;
+          for(let i=1;i<=total;i++){
+            const cents=baseCents+(remainder>0?1:0);if(remainder>0)remainder--;const d=new Date(start.getFullYear(),start.getMonth()+i-1,start.getDate());const competence=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+            const payload={user_id:uid(),student_id:st?.id||null,student_name:st?studentName(st):null,kind:String(fd.get('kind')||'income'),amount:cents/100,competence_date:competence,due_date:String(fd.get('due_date')||competence),status:i===1?String(fd.get('status')||'paid'):'pending',payment_method:String(fd.get('payment_method')||'')||null,description:String(fd.get('description')||'').trim()||null,installment_group:group,installment_number:i,installment_total:total};
+            const rr=await cInsertFinance36(payload);if(rr.error)throw rr.error;
+          }
+          W.__final36PaymentRegistered=true;
+          W.showSuccess?.(total>1?'Lançamento e parcelas futuras criados.':'Lançamento salvo no Financeiro.');close();await W.renderFinance?.();
+        }catch(e){W.showError?.(e?.message||'Não foi possível salvar o lançamento.');btn.disabled=false;}
+      });
+      W.refreshIcons?.();
+    }finally{financeBusy36=false;darkRepair36();}
+  }
+  async function cInsertFinance36(payload){
+    const c=W.supabaseClient;if(!c)throw new Error('Supabase não está disponível.');
+    const r=await c.from(financeTable()).insert(payload);return r;
+  }
+
+  /* Force old global entry points to the page editor, not modal */
+  W.openPaymentModal=openFinanceInline36;
+  W.v3OpenFinanceEditor=openFinanceInline36;
+
+  function bindFinanceButtons36(){
+    const root=$('#financeiroContent');if(!root)return;
+    $$('#financeiroContent button').forEach(b=>{
+      const text=String(b.textContent||'').replace(/\s+/g,' ').trim();
+      if(!/novo lançamento|novo recebimento/i.test(text))return;
+      b.onclick=ev=>{ev?.preventDefault?.();openFinanceInline36();};
+    });
+  }
+
+  /* -------------------------------------------------------------
+     9) NOVO ATENDIMENTO: quando o formulário estiver ativo, preparar
+        automaticamente o fluxo rico.
+     ------------------------------------------------------------- */
+  function rerunAll36(){
+    try{moveUpcomingAgenda36()}catch(_){ }
+    try{moveDashboardAlerts36()}catch(_){ }
+    try{bindPrivateConversation36()}catch(_){ }
+    try{chatPolish36()}catch(_){ }
+    try{patchBirthdayWhatsApp36()}catch(_){ }
+    try{attachAttendanceIfPresent36()}catch(_){ }
+    try{bindFinanceButtons36()}catch(_){ }
+    try{darkRepair36()}catch(_){ }
+  }
+
+  /* Wrap navigation/renderers once, preserving all prior modules. */
+  const nav0=W.navigate;
+  if(typeof nav0==='function'&&!nav0.__final36){
+    const nav36=function(view){const r=nav0.apply(this,arguments);setTimeout(()=>{rerunAll36();if(view==='financeiro')bindFinanceButtons36();if(view==='recados'){bindPrivateConversation36();chatPolish36();}},160);return r;};nav36.__final36=true;W.navigate=nav36;
+  }
+  const rd0=W.renderDashboard;
+  if(typeof rd0==='function'&&!rd0.__final36){
+    const rd36=async function(){const r=await rd0.apply(this,arguments);setTimeout(()=>moveDashboardAlerts36(),60);return r;};rd36.__final36=true;W.renderDashboard=rd36;
+  }
+  const ra0=W.renderAgenda;
+  if(typeof ra0==='function'&&!ra0.__final36){
+    const ra36=async function(){const r=await ra0.apply(this,arguments);setTimeout(moveUpcomingAgenda36,50);return r;};ra36.__final36=true;W.renderAgenda=ra36;
+  }
+  const rm0=W.renderMessages;
+  if(typeof rm0==='function'&&!rm0.__final36){
+    const rm36=async function(){const r=await rm0.apply(this,arguments);setTimeout(()=>{bindPrivateConversation36();chatPolish36();},80);return r;};rm36.__final36=true;W.renderMessages=rm36;
+  }
+  const rfin0=W.renderFinance;
+  if(typeof rfin0==='function'&&!rfin0.__final36){
+    const rfin36=async function(){const r=await rfin0.apply(this,arguments);setTimeout(bindFinanceButtons36,40);return r;};rfin36.__final36=true;W.renderFinance=rfin36;
+  }
+  const timer=setInterval(()=>rerunAll36(),1800);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(rerunAll36,220),{once:true});else setTimeout(rerunAll36,220);
+  window.addEventListener('focus',rerunAll36);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)rerunAll36()});
+})();
+</script>
+
+
+
+<style id="final36bStyles">
+/* FINAL 36B — refinamentos de fluxo e microinterações */
+#final33ActiveControl.final36-control-collapsible{padding-right:7px!important}
+#final33ActiveControl.final36-control-collapsible .final33-active-main{max-width:520px}
+#final33ActiveControl.final36-control-collapsible.is-collapsed .final33-active-main{display:none!important}
+.final36-control-collapse{width:31px;height:31px;border:1px solid #cfe0d8;border-radius:10px;background:#fff;color:#557064;display:grid;place-items:center;cursor:pointer;flex:none}
+body.final27-dark .final36-control-collapse{background:#151d1a!important;color:#e0ebe5!important;border-color:#3b4d45!important}
+.final36-post-payment{margin:0 0 16px;padding:16px 18px;border:1px solid #cfe1d6;border-radius:17px;background:#f6fbf8;display:flex;align-items:center;gap:12px;justify-content:space-between}
+.final36-post-payment-main{min-width:0}.final36-post-payment-main strong{display:block;font-size:11px;color:#29483a}.final36-post-payment-main span{display:block;margin-top:3px;font-size:8px;color:#708279}
+.final36-post-payment-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+body.final27-dark .final36-post-payment{background:#121b17!important;border-color:#2f4338!important}.final36-post-payment-actions .btn{white-space:nowrap}
+@media(max-width:700px){.final36-post-payment{align-items:flex-start;flex-direction:column}.final36-post-payment-actions{width:100%;justify-content:stretch}.final36-post-payment-actions .btn{flex:1}}
+</style>
+<script id="final36bEnhancements">
+(function(){
+  'use strict';
+  const W=window;
+  const $=(s,r=document)=>r.querySelector(s);
+  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const uid=()=>W.state?.user?.id||W.state?.session?.user?.id||null;
+  const studentName=s=>String(s?.name||s?.full_name||s?.student_name||'Aluno').trim()||'Aluno';
+  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(String(v??'')):String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+  const dateOnly=v=>String(v||'').slice(0,10);
+  const timeOnly=v=>String(v||'').slice(0,5);
+
+  /* Atendimento em andamento: o aviso flutuante também é recolhível. */
+  function makeActiveControlCollapsible(){
+    const bar=$('#final33ActiveControl');if(!bar)return;
+    bar.classList.add('final36-control-collapsible');
+    let btn=$('#final36ActiveControlCollapse',bar);
+    if(!btn){
+      btn=document.createElement('button');btn.type='button';btn.id='final36ActiveControlCollapse';btn.className='final36-control-collapse';btn.setAttribute('aria-label','Recolher atendimento em andamento');btn.innerHTML='<i data-lucide="chevron-down"></i>';
+      const old=bar.querySelector('#final33FocusEnd');bar.insertBefore(btn,old||null);
+      btn.onclick=()=>{const collapsed=bar.classList.toggle('is-collapsed');btn.setAttribute('aria-label',collapsed?'Expandir atendimento em andamento':'Recolher atendimento em andamento');btn.innerHTML=`<i data-lucide="${collapsed?'chevron-up':'chevron-down'}"></i>`;W.refreshIcons?.();};
+    }
+    W.refreshIcons?.();
+  }
+
+  /* Garante que qualquer clique antigo em Novo lançamento jamais abra o modal legado. */
+  function killLegacyFinanceModal(){
+    $('#uxModal')?.remove();
+  }
+  function forceFinanceEntry36(){
+    const root=$('#financeiroContent');if(!root)return;
+    $$('#financeiroContent button').forEach(b=>{
+      const t=(b.textContent||'').replace(/\s+/g,' ').trim();
+      if(/novo lançamento|novo recebimento/i.test(t)){
+        b.onclick=e=>{e.preventDefault();e.stopPropagation();killLegacyFinanceModal();W.openPaymentModal?.();return false;};
+      }
+    });
+  }
+
+  /* Pós-pagamento: mantém o fluxo pedido, mas sem outro popup de financeiro. */
+  function preparedValues36(type,ap,payment){
+    let st=(W.state?.students||W.studentsState?.data||[]).find(s=>String(s.id)===String(ap?.student_id))||null;
+    const name=studentName(st)||ap?.student_name||'Aluno';
+    if(type==='recibo')return {payer:st?.responsible_name||st?.guardian_name||name,amount:payment?.amount??'',reference:'Atendimento psicopedagógico',date:dateOnly(ap?.appointment_date)||new Date().toISOString().slice(0,10),method:payment?.payment_method||'',note:`Aluno: ${name}`};
+    return {person:name,document:st?.cpf||'',purpose:'Comparecimento/acompanhamento psicopedagógico',period:dateOnly(ap?.appointment_date)||new Date().toISOString().slice(0,10),note:`Atendimento realizado às ${timeOnly(ap?.appointment_time||ap?.start_time||'')}.`};
+  }
+  function openDoc36(type,ap,payment){
+    try{
+      if(typeof W.openDocModal!=='function'){W.showError?.('A área de documentos não está disponível.');return;}
+      if(W.state?.currentView!=='documentos')W.navigate?.('documentos');
+      setTimeout(()=>{
+        W.openDocModal(type);
+        const vals=preparedValues36(type,ap,payment);
+        Object.entries(vals).forEach(([k,v])=>{const input=document.querySelector(`#final19DocModal [name="${k}"]`);if(input&&v!=null)input.value=String(v);});
+        W.refreshIcons?.();
+      },500);
+    }catch(e){W.showError?.(e.message||'Não foi possível abrir o documento.');}
+  }
+  function showPostPayment36(){
+    const ap=W.__final36CompletedAppointment;if(!ap||W.__final36PaymentRegistered!==true)return;
+    const page=$('#financeiroContent .rz-page,#financeiroContent .legado-fin-page,#financeiroContent .v3-page');if(!page)return;
+    $('#final36PostPayment',page)?.remove();
+    const box=document.createElement('section');box.id='final36PostPayment';box.className='final36-post-payment';
+    box.innerHTML=`<div class="final36-post-payment-main"><strong>Atendimento encerrado e pagamento registrado.</strong><span>Deseja preparar um recibo ou uma declaração para este aluno?</span></div><div class="final36-post-payment-actions"><button type="button" class="btn btn-outline" id="final36PostReceipt"><i data-lucide="receipt-text"></i>Gerar recibo</button><button type="button" class="btn btn-primary" id="final36PostDecl"><i data-lucide="file-check-2"></i>Gerar declaração</button><button type="button" class="btn btn-outline" id="final36PostClose">Fechar</button></div>`;
+    const head=page.querySelector('.rz-head,.v3-head,.page-heading');head?.after(box);if(!head)page.prepend(box);
+    $('#final36PostReceipt',box).onclick=()=>openDoc36('recibo',ap,{amount:'',payment_method:''});
+    $('#final36PostDecl',box).onclick=()=>openDoc36('declaracao',ap,null);
+    $('#final36PostClose',box).onclick=()=>{box.remove();delete W.__final36CompletedAppointment;};
+    W.refreshIcons?.();
+  }
+
+  function normalizeFinanceAfterRender(){
+    forceFinanceEntry36();
+    setTimeout(showPostPayment36,80);
+  }
+
+  /* Ajusta permissões: um clique solicita diretamente; nunca mostra “Como liberar”. */
+
+  function cleanLegacyDashboardNotice36(){
+    const d=$('#dashboardContent');if(!d)return;
+    $$('.final33-notification-banner,.final29-notification-banner,.final31-notification-banner,.final32-permission-banner,#final33PermissionBanner',d).forEach(e=>e.remove());
+  }
+
+  function normalizePermissionBanner36(){
+    const dashboard=$('#dashboardContent');if(!dashboard||String(W.state?.profile?.role||'').toLowerCase()==='master')return;
+    cleanLegacyDashboardNotice36();
+    $$('.final32-permission-banner,.final34-permission-banner,.final33-notification-banner,#final33PermissionBanner',dashboard).forEach(old=>old.remove());
+    if(!('Notification' in W))return;
+    if(Notification.permission==='granted')return;
+    try{if(sessionStorage.getItem('legado:final36:permission-dismissed')==='1')return;}catch(_){}
+    let box=$('#final36PermissionBanner',dashboard);
+    if(!box){
+      box=document.createElement('section');box.id='final36PermissionBanner';box.className='final34-permission-banner';
+      box.innerHTML='<div class="f34-icon"><i data-lucide="bell-ring"></i></div><div class="final34-permission-main"><strong>Ative as notificações do navegador</strong><span>Receba alertas de novas mensagens e 10 minutos antes de cada atendimento.</span></div><div class="final34-permission-actions"><button type="button" class="final34-permission-btn" id="final36PermissionAllow">Ativar notificações</button><button type="button" class="final34-permission-close" id="final36PermissionClose" aria-label="Fechar"><i data-lucide="x"></i></button></div>';
+      const head=dashboard.querySelector('.final33-dashboard-head,.rz-head,.v3-head,.page-heading');head?.after(box);if(!head)dashboard.prepend(box);
+      box.querySelector('#final36PermissionClose').onclick=()=>{box.remove();try{sessionStorage.setItem('legado:final36:permission-dismissed','1')}catch(_){};};
+      box.querySelector('#final36PermissionAllow').onclick=async()=>{
+        try{
+          const p=await Notification.requestPermission();
+          if(p==='granted'){box.remove();W.showSuccess?.('Notificações ativadas.');}
+          else W.showError?.('O navegador não autorizou as notificações.');
+        }catch(e){W.showError?.(e.message||'Não foi possível solicitar a permissão.');}
+      };
+    }
+    // Checa sessionStorage apenas para X; não bloqueia a criação se usuário voltar ao Dashboard depois de autorizar.
+    W.refreshIcons?.();
+  }
+
+  function run36b(){
+    try{makeActiveControlCollapsible()}catch(_){}
+    try{forceFinanceEntry36()}catch(_){}
+    try{normalizeFinanceAfterRender()}catch(_){}
+    try{normalizePermissionBanner36()}catch(_){}
+    try{cleanLegacyDashboardNotice36()}catch(_){}
+    try{window.patchBirthdayWhatsApp36?.()}catch(_){}
+  }
+  const oldNav=W.navigate;
+  if(typeof oldNav==='function'&&!oldNav.__final36b){
+    const nav=function(view){const r=oldNav.apply(this,arguments);setTimeout(()=>{run36b();if(view==='aluno-perfil')makeActiveControlCollapsible();},220);return r};nav.__final36b=true;W.navigate=nav;
+  }
+  const oldFin=W.renderFinance;
+  if(typeof oldFin==='function'&&!oldFin.__final36b){
+    const rf=async function(){const r=await oldFin.apply(this,arguments);setTimeout(normalizeFinanceAfterRender,50);return r};rf.__final36b=true;W.renderFinance=rf;
+  }
+  setInterval(run36b,1800);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(run36b,400),{once:true});else setTimeout(run36b,400);
+})();
+</script>
+</body>
