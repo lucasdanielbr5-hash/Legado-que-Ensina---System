@@ -19240,185 +19240,263 @@ body.final27-dark .final36-post-payment{background:#121b17!important;border-colo
   setInterval(()=>{purgeLegacyNodes();syncChatVisibility();syncActive()},500);
 })();
 </script>
-</body>
 
 
-<!-- ============================================================
-     FINAL 40 — LIMPEZA DEFINITIVA DO AVISO DE ATENDIMENTO + CHAT FECHADO
+\n<!-- ============================================================
+     FINAL 41 — ESTABILIZAÇÃO GLOBAL / ZERO DUPLICAÇÃO
      ============================================================ -->
-<style id="final40Styles">
-  /* O professor não terá mais um indicador flutuante de atendimento. */
-  #final38AttendanceStatus,
-  #final33ActiveControl,
-  #final33NextAppointment,
-  #final33ActiveAppointment,
-  #final29AttendanceBar,
-  #final32StartBar,
-  #final32AppointmentToast,
-  #final29NotificationToast,
-  #final38StartProxy,
-  #final38StartToast,
-  .final38-attendance-status,
-  .final40-attendance-notice{
-    display:none!important;
-    visibility:hidden!important;
-    pointer-events:none!important;
+<style id="final41Styles">
+  /* -------------------- DASHBOARD / ALERTAS -------------------- */
+  #final33RenewalAlert,
+  .final27-renewal-alert,
+  .final33-renewal-alert,
+  #final27RenewalAlert,
+  .final29-renewal-alert,
+  #final34RenewalAlert { display:none!important; opacity:1!important; visibility:hidden!important; }
+  #final41RenewalAlert{
+    display:flex!important; align-items:center!important; gap:14px!important;
+    width:100%!important; box-sizing:border-box!important; margin:0 0 18px!important;
+    padding:16px 18px!important; border-radius:16px!important;
+    border:1px solid #e5c978!important; background:#fff8df!important; color:#4e3b0a!important;
+    min-height:74px!important; position:relative!important; z-index:2!important;
   }
+  #final41RenewalAlert .f41-icon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:#f5dea0;color:#75580b;flex:none}
+  #final41RenewalAlert .f41-main{min-width:0;flex:1}
+  #final41RenewalAlert .f41-main strong{display:block;font-size:12px;line-height:1.3;color:#513d08}
+  #final41RenewalAlert .f41-main span{display:block;margin-top:5px;font-size:9px;line-height:1.45;color:#735e25}
+  #final41RenewalAlert .f41-actions{display:flex;gap:8px;align-items:center;flex:none}
+  #final41RenewalAlert .f41-wa{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;text-decoration:none;border:1px solid #d9c06b;border-radius:10px;background:#fff;color:#503c09;padding:9px 11px;font-size:9px;font-weight:800}
+  #final41RenewalAlert .f41-close{display:grid;place-items:center;width:31px;height:31px;border:1px solid #d9c06b;border-radius:10px;background:transparent;color:#5f4b15;cursor:pointer}
+  body.final27-dark #final41RenewalAlert{background:#2a2515!important;border-color:#6f5c29!important;color:#f4e7bc!important}
+  body.final27-dark #final41RenewalAlert .f41-icon{background:#4b3f20!important;color:#f4dc8c!important}
+  body.final27-dark #final41RenewalAlert .f41-main strong{color:#fff0bd!important}
+  body.final27-dark #final41RenewalAlert .f41-main span{color:#dfcf9f!important}
+  body.final27-dark #final41RenewalAlert .f41-wa{background:#1a1d18!important;color:#f8edc4!important;border-color:#766532!important}
+  body.final27-dark #final41RenewalAlert .f41-close{color:#eadcae!important;border-color:#766532!important}
 
-  /* A Central de Conversas começa SEMPRE fechada. Só aparece depois do clique no launcher. */
-  #final32ChatWidget:not(.final40-open){
-    display:none!important;
-    visibility:hidden!important;
-    opacity:0!important;
-    pointer-events:none!important;
-  }
-  #final32ChatWidget.final40-open{
-    display:flex!important;
-    visibility:visible!important;
-    opacity:1!important;
-    pointer-events:auto!important;
-  }
+  /* -------------------- ATENDIMENTO: SOMENTE UM EDITOR -------------------- */
+  #studentProfileContent .final36-active-card.final41-duplicate,
+  #studentProfileContent .legado-active-session-duplicate{display:none!important}
+  #studentProfileContent .final36-active-card{position:relative;}
+  #studentProfileContent .final36-active-card .final36-active-body{display:block!important;}
+  #studentProfileContent .final36-active-card.is-collapsed .final36-active-body{display:none!important;}
 
-  /* Um único launcher visual. O widget nunca fica estourado aberto sozinho. */
-  #final32ChatLauncher{
-    display:grid!important;
-    visibility:visible!important;
-    opacity:1!important;
-  }
-
-  /* Não permitir popup antigo de conversa. */
-  #final27EnhancedThreadModal,
-  .final27EnhancedThreadModal{
-    display:none!important;
+  /* -------------------- RECADOS ESTÁVEL -------------------- */
+  #recadosContent .final41-recados{width:100%;max-width:100%;}
+  .final41-recados-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin:0 0 18px}
+  .final41-recados-head .kicker{font-size:10px;letter-spacing:.13em;font-weight:900;color:#617069}
+  .final41-recados-head h1{margin:5px 0 0;font-size:30px;line-height:1.05;color:#1c2e28}
+  .final41-recados-head p{margin:7px 0 0;color:#738078;font-size:12px;line-height:1.5}
+  .final41-recados-tabs{display:flex;gap:7px;flex-wrap:wrap;padding:6px;border:1px solid #dbe6e1;border-radius:14px;background:#f7faf8;margin-bottom:14px}
+  .final41-recados-tab{display:inline-flex;align-items:center;gap:7px;border:1px solid transparent;border-radius:10px;padding:9px 12px;background:transparent;color:#5e6c66;font-size:9px;font-weight:800;cursor:pointer}
+  .final41-recados-tab.active{background:#fff;border-color:#d4e2dc;color:#19382c;box-shadow:0 3px 10px rgba(30,60,48,.06)}
+  .final41-recados-count{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:20px;background:#e8f0ec;font-size:8px}
+  .final41-message-list{display:grid;gap:10px}
+  .final41-message-card{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:start;gap:12px;padding:14px 15px;border:1px solid #dde7e2;border-radius:16px;background:#fff;box-shadow:0 4px 16px rgba(22,50,39,.04)}
+  .final41-message-icon{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:#e9f4ee;color:#39745b}
+  .final41-message-main{min-width:0}.final41-message-main strong{display:block;color:#20352d;font-size:11px;line-height:1.35}.final41-message-main small{display:block;margin-top:4px;color:#89958f;font-size:8px}.final41-message-main p{margin:7px 0 0;color:#617069;font-size:9px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+  .final41-message-actions{display:flex;gap:6px;align-items:center}
+  .final41-empty{padding:34px 18px;text-align:center;border:1px dashed #d9e5df;border-radius:16px;background:#fbfdfc;color:#78857f}
+  .final41-empty strong{display:block;color:#2a4037;font-size:11px;margin-top:7px}.final41-empty span{display:block;font-size:9px;margin-top:4px}
+  body.final27-dark #recadosContent .final41-recados-tabs{background:#121916!important;border-color:#2f4039!important}
+  body.final27-dark .final41-recados-head h1{color:#f3f7f5!important}.final41-recados-head p{color:#9baaa3!important}
+  body.final27-dark .final41-recados-tab{color:#aebbb5!important}.final41-recados-tab.active{background:#18201d!important;border-color:#3a4a43!important;color:#eff6f2!important}
+  body.final27-dark .final41-message-card{background:#151d1a!important;border-color:#31413a!important;box-shadow:none!important}
+  body.final27-dark .final41-message-main strong{color:#edf5f1!important}.final41-message-main small{color:#98a69f!important}.final41-message-main p{color:#c0cbc6!important}
+  body.final27-dark .final41-empty{background:#121916!important;border-color:#34463d!important;color:#9ca9a3!important}.final41-empty strong{color:#ecf4f0!important}
+  @media(max-width:720px){
+    #final41RenewalAlert{align-items:flex-start;flex-wrap:wrap}.final41-recados-head{align-items:flex-start;flex-direction:column}.final41-message-card{grid-template-columns:auto minmax(0,1fr)}.final41-message-actions{grid-column:2;justify-content:flex-start}
   }
 </style>
-
-<script id="final40Stability">
+<script id="final41Stabilizer">
 (function(){
   'use strict';
   const W=window;
-  const q=(s,r=document)=>r.querySelector(s);
-  const qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const $=(s,r=document)=>r.querySelector(s);
+  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const uid=()=>W.state?.user?.id||W.state?.session?.user?.id||null;
+  const db=()=>W.supabaseClient||null;
+  const master=()=>typeof W.isMasterUser==='function'?W.isMasterUser():String(W.state?.user?.email||'').toLowerCase()==='contato@legadoqueensina.com.br';
+  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(String(v??'')):String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
+  const day=v=>String(v||'').slice(0,10);
+  const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+  const support='5543991466210';
 
   /* ------------------------------------------------------------
-     1) REMOVE DEFINITIVAMENTE O INDICADOR DE ATENDIMENTO
+     1) ALERTA DE MENSALIDADE — UMA ÚNICA INSTÂNCIA, NO TOPO
      ------------------------------------------------------------ */
-  const attendanceIds=[
-    'final38AttendanceStatus','final33ActiveControl','final33NextAppointment',
-    'final33ActiveAppointment','final29AttendanceBar','final32StartBar',
-    'final32AppointmentToast','final29NotificationToast','final38StartProxy','final38StartToast'
-  ];
-  function purgeAttendanceUI40(){
-    attendanceIds.forEach(id=>document.getElementById(id)?.remove());
-    qa('.final38-attendance-status,.final40-attendance-notice').forEach(el=>el.remove());
+  function removeLegacyRenewals(){
+    $$('.final27-renewal-alert,.final33-renewal-alert,#final33RenewalAlert,#final27RenewalAlert,.final29-renewal-alert,#final34RenewalAlert').forEach(e=>e.remove());
+  }
+  function ensureRenewal(){
+    const d=$('#dashboardContent');if(!d||master())return;
+    removeLegacyRenewals();
+    const expiry=W.state?.profile?.access_expires_at||W.state?.profile?.plan_expires_at||W.state?.profile?.subscription_expires_at;
+    if(!expiry){$('#final41RenewalAlert',d)?.remove();return;}
+    const diff=new Date(expiry).getTime()-Date.now();
+    if(!Number.isFinite(diff)||diff<=0||diff>15*86400000){$('#final41RenewalAlert',d)?.remove();return;}
+    let dismissed=false;try{dismissed=sessionStorage.getItem('legado:final41:renew-dismissed')==='1'}catch(_){ }
+    if(dismissed){$('#final41RenewalAlert',d)?.remove();return;}
+    const days=Math.max(1,Math.ceil(diff/86400000));
+    let box=$('#final41RenewalAlert',d);
+    if(!box){
+      box=document.createElement('section');box.id='final41RenewalAlert';
+      const name=String(W.state?.profile?.full_name||W.state?.profile?.name||'Professor').split('@')[0];
+      const msg=`Olá! Sou ${name}. Vi o aviso de vencimento da minha mensalidade no Legado Que Ensina e gostaria de regularizar meu acesso.`;
+      box.innerHTML=`<div class="f41-icon"><i data-lucide="calendar-clock"></i></div><div class="f41-main"><strong>Faltam ${days===1?'1 dia':days+' dias'} para vencer sua mensalidade.</strong><span>Após a não conclusão do pagamento, o seu acesso poderá ser restrito. Fale com a gestão para regularizar.</span></div><div class="f41-actions"><a class="f41-wa" href="https://wa.me/${support}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">Falar pelo WhatsApp</a><button type="button" class="f41-close" aria-label="Fechar aviso"><i data-lucide="x"></i></button></div>`;
+      const host=$('#final33DashboardAlerts',d)||d.querySelector('.final33-dashboard-head,.page-heading,.rz-head,.v3-head');
+      if(host && host.id==='final33DashboardAlerts')host.prepend(box);
+      else if(host)host.insertAdjacentElement('afterend',box);
+      else d.prepend(box);
+      box.querySelector('.f41-close').onclick=()=>{try{sessionStorage.setItem('legado:final41:renew-dismissed','1')}catch(_){ } box.remove();};
+      W.refreshIcons?.();
+    }else{
+      const strong=box.querySelector('strong');if(strong)strong.textContent=`Faltam ${days===1?'1 dia':days+' dias'} para vencer sua mensalidade.`;
+    }
   }
 
   /* ------------------------------------------------------------
-     2) CHAT: UM ÚNICO LAUNCHER, JANELA FECHADA POR PADRÃO
+     2) ATENDIMENTO — BLOQUEIA RE-RENDER/CLIQUE EM LOOP
      ------------------------------------------------------------ */
-  function closeChat40(){
-    const w=q('#final32ChatWidget');
-    if(w){w.classList.remove('final40-open');w.hidden=true;w.setAttribute('aria-hidden','true');}
+  const active=()=>{try{return JSON.parse(sessionStorage.getItem('legado:active-appointment')||'null')}catch(_){return null}};
+  let repairing=false;
+  function mergeFields(keep,other){
+    $$('[name]',other).forEach(src=>{const dst=keep.querySelector(`[name="${CSS.escape(src.name)}"]`);if(!dst)return;const sv=src.value||'';const dv=dst.value||'';if((!dv||dv==='3')&&sv&&sv!=='3')dst.value=sv;});
   }
-  function openChat40(){
-    const launcher=q('#final32ChatLauncher');
-    const w=q('#final32ChatWidget');
-    if(!launcher || !w)return;
-    /* Usa o handler original apenas para carregar as conversas. */
-    try{
-      if(typeof launcher.onclick==='function') launcher.onclick();
-    }catch(_){ }
-    setTimeout(()=>{
-      w.hidden=false;
-      w.classList.add('final40-open');
-      w.setAttribute('aria-hidden','false');
-    },20);
+  function removeDuplicateAttendanceEditors(){
+    const c=$('#studentProfileContent');if(!c||String(W.state?.currentView||'')!=='aluno-perfil')return;
+    const a=active();if(!a)return;
+    const forms=$$('#v3RecordForm',c);
+    if(forms.length){
+      let keep=forms.find(f=>f.closest('.final36-active-card'))||forms[0];
+      forms.forEach(f=>{if(f!==keep){mergeFields(keep,f);const card=f.closest('.v3-inline-editor,.final36-active-card,.legado-active-session');if(card&&card!==keep.closest('.v3-inline-editor,.final36-active-card,.legado-active-session'))card.remove();else f.remove();}});
+      const cards=$$('.final36-active-card',c);
+      const keepCard=keep.closest('.final36-active-card');
+      cards.forEach(card=>{if(card!==keepCard){card.classList.add('final41-duplicate');card.remove();}});
+      const panels=$$('.legado-active-session',c);panels.forEach((p,i)=>{if(i>0)p.classList.add('legado-active-session-duplicate')});
+      keep.dataset.final41Stable='1';
+    }
   }
-
-  function bindChat40(){
-    const launcher=q('#final32ChatLauncher');
-    const widget=q('#final32ChatWidget');
-    if(!launcher || !widget)return false;
-
-    closeChat40();
-
-    /* Intercepta o clique para impedir múltiplos handlers antigos de alternarem o estado. */
-    if(!launcher.__final40Capture){
-      launcher.__final40Capture=true;
-      launcher.addEventListener('click',function(e){
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        if(widget.classList.contains('final40-open')) closeChat40();
-        else openChat40();
+  function stopAppointmentTabLoop(){
+    const a=active();if(!a||String(W.state?.currentView||'')!=='aluno-perfil')return;
+    const c=$('#studentProfileContent');if(!c)return;
+    const forms=$$('#v3RecordForm',c);if(!forms.length)return;
+    const tab=$$('.v3-tabs button',c).find(x=>/Atendimentos/i.test(x.textContent||''));
+    if(tab&&!tab.__final41){
+      tab.__final41=true;
+      tab.addEventListener('click',e=>{
+        if(tab.classList.contains('active') && $('#v3RecordForm',c)){e.preventDefault();e.stopImmediatePropagation();}
       },true);
     }
-
-    const close=q('#final32ChatClose',widget);
-    if(close && !close.__final40Capture){
-      close.__final40Capture=true;
-      close.addEventListener('click',function(e){
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        closeChat40();
-      },true);
-    }
-    return true;
   }
-
-  /* ------------------------------------------------------------
-     3) SE HOUVER ALGUM POPUP DE CONVERSA ANTIGO, FECHA.
-     ------------------------------------------------------------ */
-  function purgeLegacyChat40(){
-    qa('#final27EnhancedThreadModal,.final27EnhancedThreadModal').forEach(el=>el.remove());
-    qa('body > .saas-payment-modal').forEach(el=>{
-      if(el.querySelector('.final27-chat-shell')) el.remove();
-    });
-  }
-
-  /* ------------------------------------------------------------
-     4) NÃO DEIXA O WIDGET SER REABERTO SOZINHO.
-     ------------------------------------------------------------ */
-  function stabilize40(){
-    purgeAttendanceUI40();
-    purgeLegacyChat40();
-    const launcher=q('#final32ChatLauncher');
-    const widget=q('#final32ChatWidget');
-    if(launcher && widget){
-      bindChat40();
-      if(!widget.classList.contains('final40-open')){
-        widget.hidden=true;
-        widget.setAttribute('aria-hidden','true');
+  const origSection=W.v3StudentSection;
+  if(typeof origSection==='function'&&!origSection.__final41){
+    const wrap=function(sec){
+      const a=active();
+      if(sec==='appointments'&&a&&String(W.state?.currentView||'')==='aluno-perfil'&&$('#studentProfileContent #v3RecordForm')){
+        stopAppointmentTabLoop();removeDuplicateAttendanceEditors();return;
       }
-    }
-  }
-
-  /* Remove a UI antiga imediatamente e preserva somente o chatbot fechado. */
-  const boot40=()=>{
-    stabilize40();
-    setTimeout(stabilize40,120);
-    setTimeout(stabilize40,500);
-    setTimeout(stabilize40,1200);
-  };
-
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',boot40,{once:true});
-  }else boot40();
-
-  /* Curto watchdog de compatibilidade para as camadas antigas que ainda podem renderizar elementos.
-     Ele não cria DOM nem observa mutações; apenas limpa os IDs legados já conhecidos. */
-  const timer=setInterval(stabilize40,1500);
-  window.addEventListener('beforeunload',()=>clearInterval(timer),{once:true});
-
-  /* Ao mudar de página, a central continua fechada até o professor clicar no ícone. */
-  const nav=W.navigate;
-  if(typeof nav==='function' && !nav.__final40){
-    const wrapped=function(){
-      const r=nav.apply(this,arguments);
-      setTimeout(closeChat40,50);
-      return r;
+      return origSection.apply(this,arguments);
     };
-    wrapped.__final40=true;
-    W.navigate=wrapped;
+    wrap.__final41=true;W.v3StudentSection=wrap;
   }
+  const origProfile=W.renderStudentProfileView;
+  if(typeof origProfile==='function'&&!origProfile.__final41){
+    const wrap=async function(){
+      const a=active();
+      if(a&&String(W.state?.currentView||'')==='aluno-perfil'&&String(W.state?.currentStudentId||'')===String(a.student_id||'')&&$('#studentProfileContent #v3RecordForm')){
+        removeDuplicateAttendanceEditors();stopAppointmentTabLoop();return;
+      }
+      return origProfile.apply(this,arguments);
+    };
+    wrap.__final41=true;W.renderStudentProfileView=wrap;
+  }
+  document.addEventListener('click',e=>{
+    const t=e.target.closest('.v3-tabs button');if(!t||!/Atendimentos/i.test(t.textContent||''))return;
+    const a=active();if(!a||String(W.state?.currentView||'')!=='aluno-perfil')return;
+    const c=$('#studentProfileContent');
+    if(t.classList.contains('active')&&$('#v3RecordForm',c)){
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+      removeDuplicateAttendanceEditors();
+    }
+  },true);
+
+  /* ------------------------------------------------------------
+     3) RECADOS — RENDER ÚNICO, SEM POPUPS/DUPLICAÇÕES
+     ------------------------------------------------------------ */
+  let msgBusy=false,msgQueued=false,msgSeq=0;
+  async function fetchMessages(){
+    const c=db(),me=uid();if(!c||!me)return {rows:[],trash:[]};
+    let query=c.from('messages').select('*').order('created_at',{ascending:false}).limit(500);
+    if(!master())query=query.or(`user_id.eq.${me},target_all.eq.true,recipient_id.eq.${me}`);
+    const r=await query;if(r.error)throw r.error;
+    let reads=[];const rr=await c.from('message_reads').select('message_id,read_at,hidden_at,deleted_at').eq('user_id',me).limit(1500);if(!rr.error)reads=rr.data||[];
+    const rm=new Map(reads.map(x=>[String(x.message_id),x]));
+    const all=(r.data||[]).map(x=>{const m=rm.get(String(x.id));return {...x,_read:Boolean(x.read||m?.read_at),_hidden:Boolean(m?.hidden_at||m?.deleted_at)};});
+    return {rows:all.filter(x=>!x._hidden),trash:all.filter(x=>x._hidden)};
+  }
+  function messageDate(v){try{return new Date(v).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}catch(_){return '—'}}
+  function classify(rows){
+    const me=uid();
+    const received=rows.filter(x=>{
+      if(String(x.user_id||'')===String(me))return false;
+      return !x.target_all && String(x.recipient_id||'')===String(me);
+    });
+    const broadcasts=rows.filter(x=>Boolean(x.target_all));
+    const sent=rows.filter(x=>String(x.user_id||'')===String(me));
+    return {received,broadcasts,sent};
+  }
+  async function markRead41(id){const c=db(),me=uid();if(!c||!me)return;const r=await c.from('message_reads').upsert({message_id:String(id),user_id:me,read_at:new Date().toISOString(),seen_at:new Date().toISOString(),updated_at:new Date().toISOString()},{onConflict:'message_id,user_id'});if(r.error)throw r.error;}
+  async function hide41(id){const c=db(),me=uid();if(!c||!me)return;const row=await c.from('messages').select('id,user_id,target_all').eq('id',id).maybeSingle();if(row.error)throw row.error;if(!row.data)throw new Error('Recado não encontrado.');if(master()||String(row.data.user_id||'')===String(me)){const d=await c.from('messages').delete().eq('id',id);if(d.error)throw d.error;}else{const d=await c.from('message_reads').upsert({message_id:String(id),user_id:me,hidden_at:new Date().toISOString(),deleted_at:new Date().toISOString(),updated_at:new Date().toISOString()},{onConflict:'message_id,user_id'});if(d.error)throw d.error;}}
+  async function restore41(id){const c=db(),me=uid();if(!c||!me)return;const r=await c.from('message_reads').update({hidden_at:null,deleted_at:null,updated_at:new Date().toISOString()}).eq('message_id',String(id)).eq('user_id',me);if(r.error)throw r.error;}
+  function card41(m,trash=false){const icon=trash?'trash-2':(m.target_all?'megaphone':(String(m.recipient_id||'')===String(uid())?'inbox':'send'));return `<article class="final41-message-card"><div class="final41-message-icon"><i data-lucide="${icon}"></i></div><div class="final41-message-main"><strong>${esc(m.title||'Recado')}</strong><small>${esc(messageDate(m.created_at))}${m.type?` · ${esc(m.type)}`:''}</small><p>${esc(m.message||'')}</p></div><div class="final41-message-actions">${trash?`<button type="button" class="btn btn-outline btn-sm" data-f41-restore="${esc(m.id)}"><i data-lucide="rotate-ccw"></i>Restaurar</button>`:`${!m._read&&String(m.user_id||'')!==String(uid())?`<button type="button" class="btn btn-outline btn-sm" data-f41-read="${esc(m.id)}"><i data-lucide="check"></i>Lido</button>`:''}`}<button type="button" class="btn btn-danger btn-sm" data-f41-delete="${esc(m.id)}"><i data-lucide="trash-2"></i>Excluir</button></div></article>`}
+  async function renderMessages41(){
+    const c=$('#recadosContent');if(!c)return;
+    if(msgBusy){msgQueued=true;return;}
+    msgBusy=true;const seq=++msgSeq;
+    try{
+      const data=await fetchMessages();
+      if(seq!==msgSeq)return;
+      const {received,broadcasts,sent}=classify(data.rows);
+      const unread=received.filter(x=>!x._read).length;
+      c.innerHTML=`<div class="final41-recados"><div class="final41-recados-head"><div><div class="kicker">COMUNICAÇÃO</div><h1>Recados</h1><p>Comunicados e mensagens organizados em um só lugar.</p></div>${master()?'<button type="button" class="btn btn-primary" id="final41NewBroadcast"><i data-lucide="megaphone"></i>Novo comunicado</button>':''}</div><div class="final41-recados-tabs"><button class="final41-recados-tab active" data-f41-tab="received"><i data-lucide="inbox"></i>Recebidos <span class="final41-recados-count">${received.length}</span></button><button class="final41-recados-tab" data-f41-tab="broadcasts"><i data-lucide="megaphone"></i>Comunicados <span class="final41-recados-count">${broadcasts.length}</span></button><button class="final41-recados-tab" data-f41-tab="sent"><i data-lucide="send"></i>Enviados <span class="final41-recados-count">${sent.length}</span></button><button class="final41-recados-tab" data-f41-tab="trash"><i data-lucide="trash-2"></i>Lixeira <span class="final41-recados-count">${data.trash.length}</span></button></div><section data-f41-panel="received">${received.length?`<div class="final41-message-list">${received.map(m=>card41(m)).join('')}</div>`:`<div class="final41-empty"><i data-lucide="inbox"></i><strong>Nenhum recado recebido</strong><span>Novos comunicados aparecerão aqui.</span></div>`}</section><section data-f41-panel="broadcasts" hidden>${broadcasts.length?`<div class="final41-message-list">${broadcasts.map(m=>card41(m)).join('')}</div>`:`<div class="final41-empty"><i data-lucide="megaphone"></i><strong>Nenhum comunicado</strong><span>Quando houver um comunicado, ele aparecerá nesta aba.</span></div>`}</section><section data-f41-panel="sent" hidden>${sent.length?`<div class="final41-message-list">${sent.map(m=>card41(m)).join('')}</div>`:`<div class="final41-empty"><i data-lucide="send"></i><strong>Nenhuma mensagem enviada</strong><span>Suas mensagens enviadas aparecerão aqui.</span></div>`}</section><section data-f41-panel="trash" hidden>${data.trash.length?`<div class="final41-message-list">${data.trash.map(m=>card41(m,true)).join('')}</div>`:`<div class="final41-empty"><i data-lucide="trash-2"></i><strong>Lixeira vazia</strong><span>Não há recados arquivados.</span></div>`}</section></div>`;
+      c.querySelectorAll('[data-f41-tab]').forEach(btn=>btn.addEventListener('click',()=>{c.querySelectorAll('[data-f41-tab]').forEach(x=>x.classList.toggle('active',x===btn));c.querySelectorAll('[data-f41-panel]').forEach(p=>p.hidden=p.dataset.f41Panel!==btn.dataset.f41Tab);}));
+      c.querySelector('#final41NewBroadcast')?.addEventListener('click',()=>W.v3OpenMessageEditor?.());
+      c.querySelectorAll('[data-f41-read]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;try{await markRead41(b.dataset.f41Read);await renderMessages41();}catch(e){W.showError?.(e.message||'Não foi possível marcar como lido.');b.disabled=false;}}));
+      c.querySelectorAll('[data-f41-delete]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;try{await hide41(b.dataset.f41Delete);await renderMessages41();}catch(e){W.showError?.(e.message||'Não foi possível excluir o recado.');b.disabled=false;}}));
+      c.querySelectorAll('[data-f41-restore]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;try{await restore41(b.dataset.f41Restore);await renderMessages41();}catch(e){W.showError?.(e.message||'Não foi possível restaurar o recado.');b.disabled=false;}}));
+      const badge=$('#recadosBadge');if(badge){badge.textContent=String(unread);badge.style.display=unread?'':'none';}
+      W.refreshIcons?.();
+    }catch(e){c.innerHTML=`<div class="final41-empty"><i data-lucide="circle-alert"></i><strong>Não foi possível carregar os recados.</strong><span>${esc(e.message||e)}</span><button type="button" class="btn btn-primary btn-sm" id="final41Retry">Tentar novamente</button></div>`;c.querySelector('#final41Retry')?.addEventListener('click',()=>renderMessages41());W.refreshIcons?.();}
+    finally{msgBusy=false;if(msgQueued){msgQueued=false;setTimeout(()=>renderMessages41(),50)}}
+  }
+  W.renderMessages=renderMessages41;
+
+  /* ------------------------------------------------------------
+     4) CHAT — LIMPA DUPLICADOS, MAS NÃO O ABRE SOZINHO
+     ------------------------------------------------------------ */
+  function cleanChat(){
+    const launchers=$$('#final32ChatLauncher');launchers.slice(1).forEach(x=>x.remove());
+    const widgets=$$('#final32ChatWidget');widgets.slice(1).forEach(x=>x.remove());
+    $$('#final27EnhancedThreadModal,.final27EnhancedThreadModal').forEach(x=>x.remove());
+    const w=$('#final32ChatWidget');if(w&&!w.classList.contains('final40-open')){w.hidden=true;w.setAttribute('aria-hidden','true');}
+  }
+
+  /* ------------------------------------------------------------
+     5) RUNNER — APENAS LEITURA/REPARO, SEM RE-RENDER INFINITO
+     ------------------------------------------------------------ */
+  function stabilize(){
+    ensureRenewal();
+    removeDuplicateAttendanceEditors();
+    stopAppointmentTabLoop();
+    cleanChat();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(stabilize,120),{once:true});else setTimeout(stabilize,120);
+  let tick=0;const timer=setInterval(()=>{tick++;stabilize();if(tick>180)clearInterval(timer)},1200);
+  W.addEventListener('focus',()=>stabilize());
+  W.addEventListener('popstate',()=>setTimeout(stabilize,120));
 })();
 </script>
+
+</body>
+</html>
