@@ -12599,8 +12599,8 @@ body.legado-v4-modal-open{overflow:hidden}
      4) NOVA PÁGINA: MODELOS E DOCUMENTOS
      ============================================================ */
   const DOCS=[
-    {id:'recibo',title:'Recibo de pagamento',desc:'Comprovante simples e profissional de pagamento recebido.',icon:'receipt-text'},
-    {id:'declaracao',title:'Declaração',desc:'Modelo para declarar comparecimento ou acompanhamento.',icon:'file-check-2'},
+    {id:'recibo',title:'Recibo digital',desc:'Escreva, revise e gere o recibo em PDF pronto para imprimir.',icon:'receipt-text'},
+    {id:'declaracao',title:'Declaração digital',desc:'Escreva sua declaração, revise e gere o PDF pronto para imprimir.',icon:'file-check-2'},
     {id:'encaminhamento',title:'Encaminhamento',desc:'Modelo de encaminhamento para outro especialista.',icon:'send'},
     {id:'contrato',title:'Declaração de acompanhamento',desc:'Modelo de declaração de acompanhamento psicopedagógico.',icon:'file-text'}
   ];
@@ -12620,35 +12620,56 @@ body.legado-v4-modal-open{overflow:hidden}
     c.querySelectorAll('[data-final19-doc]').forEach(b=>b.addEventListener('click',()=>openDocModal(b.dataset.final19Doc)));
     W.refreshIcons?.();
   }
+  function docTemplate(type){
+    const t=teacherName()||'________________________________';
+    const today=new Date().toLocaleDateString('pt-BR');
+    if(type==='recibo')return `RECIBO DE PAGAMENTO\n\nRecebi de [NOME DE QUEM PAGOU] a importância de R$ [VALOR], referente a [REFERENTE A].\nForma de pagamento: [FORMA DE PAGAMENTO].\nData do pagamento: [DATA].\n\nObservação: [OBSERVAÇÃO]\n\n${t}\nProfessor(a) / Psicopedagogo(a)`;
+    if(type==='declaracao')return `DECLARAÇÃO\n\nDeclaro, para os devidos fins, que [NOME DO(A) INTERESSADO(A)] participou de [FINALIDADE] [PERÍODO].\nDocumento: [DOCUMENTO].\n\n[ESCREVA AQUI O TEXTO DA DECLARAÇÃO]\n\n${t}\nProfessor(a) / Psicopedagogo(a)\n${today}`;
+    if(type==='encaminhamento')return `ENCAMINHAMENTO\n\nEncaminho o(a) aluno(a) [NOME DO(A) ALUNO(A)], [IDADE] anos, para avaliação/atendimento na área de [ESPECIALISTA / ÁREA].\n\nMotivo do encaminhamento:\n[ESCREVA AQUI O MOTIVO]\n\n${t}\nProfessor(a) / Psicopedagogo(a)\n${today}`;
+    return `DECLARAÇÃO DE ACOMPANHAMENTO\n\nDeclaro que o(a) aluno(a) [NOME DO(A) ALUNO(A)] encontra-se em acompanhamento psicopedagógico [PERÍODO].\n\n[ESCREVA AQUI O TEXTO DA DECLARAÇÃO]\n\n${t}\nProfessor(a) / Psicopedagogo(a)\n${today}`;
+  }
   function docFields(type){
+    const dateDefault=W.todayInputDate?.()||new Date().toISOString().slice(0,10);
+    const common=`<label class="full final19-doc-editor"><span>Texto do documento *</span><textarea name="document_text" rows="14" required></textarea><small>Você pode apagar o modelo e escrever o documento exatamente como quiser. O conteúdo desta caixa será o texto usado no PDF e na impressão.</small></label>`;
     if(type==='recibo')return `
       <label><span>Nome de quem pagou *</span><input name="payer" required></label>
       <label><span>Valor *</span><input name="amount" inputmode="decimal" placeholder="0,00" required></label>
       <label><span>Referente a</span><input name="reference" value="Atendimento psicopedagógico"></label>
-      <label><span>Data do pagamento</span><input type="date" name="date" value="${W.todayInputDate?.()||new Date().toISOString().slice(0,10)}"></label>
+      <label><span>Data do pagamento</span><input type="date" name="date" value="${dateDefault}"></label>
       <label><span>Forma de pagamento</span><input name="method" placeholder="PIX, dinheiro, cartão..."></label>
-      <label class="full"><span>Observação</span><textarea name="note" rows="3"></textarea></label>`;
+      <label class="full"><span>Observação</span><textarea name="note" rows="3"></textarea></label>${common}`;
     if(type==='declaracao')return `
       <label><span>Nome do(a) interessado(a) *</span><input name="person" required></label>
       <label><span>Documento (opcional)</span><input name="document"></label>
       <label><span>Finalidade</span><input name="purpose" value="Declarar comparecimento/acompanhamento psicopedagógico"></label>
       <label><span>Período</span><input name="period" placeholder="Ex.: agosto de 2026"></label>
-      <label class="full"><span>Texto adicional</span><textarea name="note" rows="4"></textarea></label>`;
+      <label class="full"><span>Texto adicional</span><textarea name="note" rows="3"></textarea></label>${common}`;
     if(type==='encaminhamento')return `
       <label><span>Nome do(a) aluno(a) *</span><input name="student" required></label>
       <label><span>Idade</span><input name="age"></label>
       <label><span>Especialista / área *</span><input name="specialist" placeholder="Ex.: fonoaudiologia, neurologia, psicologia..." required></label>
-      <label><span>Data</span><input type="date" name="date" value="${W.todayInputDate?.()||new Date().toISOString().slice(0,10)}"></label>
-      <label class="full"><span>Motivo do encaminhamento *</span><textarea name="reason" rows="5" required></textarea></label>`;
+      <label><span>Data</span><input type="date" name="date" value="${dateDefault}"></label>
+      <label class="full"><span>Motivo do encaminhamento *</span><textarea name="reason" rows="5" required></textarea></label>${common}`;
     return `
       <label><span>Nome do(a) aluno(a) *</span><input name="student" required></label>
       <label><span>Período de acompanhamento</span><input name="period"></label>
-      <label><span>Data de emissão</span><input type="date" name="date" value="${W.todayInputDate?.()||new Date().toISOString().slice(0,10)}"></label>
-      <label class="full"><span>Observações</span><textarea name="note" rows="5"></textarea></label>`;
+      <label><span>Data de emissão</span><input type="date" name="date" value="${dateDefault}"></label>
+      <label class="full"><span>Observações</span><textarea name="note" rows="4"></textarea></label>${common}`;
   }
   function docTitle(type){return DOCS.find(x=>x.id===type)?.title||'Documento';}
   function buildDocText(type,fd){
     const t=teacherName();const today=dateOnly(fd.get('date'))||new Date().toLocaleDateString('pt-BR');
+    const custom=String(fd.get('document_text')||'').trim();
+    if(custom){
+      const replacements={
+        '[NOME DE QUEM PAGOU]':fd.get('payer')||'', '[VALOR]':fd.get('amount')||'', '[REFERENTE A]':fd.get('reference')||'', '[FORMA DE PAGAMENTO]':fd.get('method')||'', '[DATA]':today, '[OBSERVAÇÃO]':fd.get('note')||'',
+        '[NOME DO(A) INTERESSADO(A)]':fd.get('person')||'', '[DOCUMENTO]':fd.get('document')||'', '[FINALIDADE]':fd.get('purpose')||'', '[PERÍODO]':fd.get('period')||'',
+        '[NOME DO(A) ALUNO(A)]':fd.get('student')||'', '[IDADE]':fd.get('age')||'', '[ESPECIALISTA / ÁREA]':fd.get('specialist')||'', '[ESCREVA AQUI O TEXTO DA DECLARAÇÃO]':fd.get('note')||'', '[ESCREVA AQUI O MOTIVO]':fd.get('reason')||''
+      };
+      let text=custom;Object.entries(replacements).forEach(([k,v])=>{text=text.split(k).join(String(v||''));});
+      const lines=text.split(/\n+/);const title=lines.shift()?.trim()||docTitle(type).toUpperCase();
+      return {title,body:[lines.join('\n').trim()].filter(Boolean)};
+    }
     if(type==='recibo')return {title:'RECIBO DE PAGAMENTO',body:[`Recebi de ${fd.get('payer')||'________________________________'} a importância de R$ ${fd.get('amount')||'__________'}, referente a ${fd.get('reference')||'________________________________'}.`,`Forma de pagamento: ${fd.get('method')||'____________________'}.`,`Data do pagamento: ${today}.`,fd.get('note')?`Observação: ${fd.get('note')}`:'',`\n${t}\nProfessor(a) / Psicopedagogo(a)`].filter(Boolean)};
     if(type==='declaracao')return {title:'DECLARAÇÃO',body:[`Declaro, para os devidos fins, que ${fd.get('person')||'________________________________'} participou de ${fd.get('purpose')||'acompanhamento psicopedagógico'} ${fd.get('period')?`no período de ${fd.get('period')}`:''}.`,`Documento: ${fd.get('document')||'não informado'}.`,fd.get('note')||'',`\n${t}\nProfessor(a) / Psicopedagogo(a)\n${today}`].filter(Boolean)};
     if(type==='encaminhamento')return {title:'ENCAMINHAMENTO',body:[`Encaminho o(a) aluno(a) ${fd.get('student')||'________________________________'}, ${fd.get('age')?fd.get('age')+' anos.':''}`,`Solicito avaliação/atendimento na área de ${fd.get('specialist')||'________________________'}.`,`Motivo do encaminhamento:\n${fd.get('reason')||'________________________________'}`,`\n${t}\nProfessor(a) / Psicopedagogo(a)\n${today}`]};
@@ -12659,9 +12680,12 @@ body.legado-v4-modal-open{overflow:hidden}
     const root=document.createElement('div');root.id='final19DocModal';root.className='final19-modal-overlay';
     root.innerHTML=`<div class="final19-doc-modal" role="dialog" aria-modal="true"><button type="button" class="final19-choice-close" id="final19DocClose"><i data-lucide="x"></i></button><div class="final19-choice-kicker">MODELO PROFISSIONAL</div><h2>${esc(docTitle(type))}</h2><p>Preencha os campos e depois escolha a saída desejada.</p><form id="final19DocForm" class="final19-doc-form"><div class="final19-doc-fields">${docFields(type)}</div><div class="final19-doc-actions"><button type="button" class="btn btn-outline" id="final19DocPrint"><i data-lucide="printer"></i>Imprimir</button><button type="button" class="btn btn-primary" id="final19DocPdf"><i data-lucide="file-down"></i>Salvar em PDF</button></div></form></div>`;
     document.body.appendChild(root);W.refreshIcons?.();
+    const form=byId('final19DocForm');
+    const editor=form?.querySelector('[name="document_text"]');
+    if(editor) editor.value=docTemplate(type);
     byId('final19DocClose').onclick=()=>root.remove();root.addEventListener('click',e=>{if(e.target===root)root.remove();});
-    byId('final19DocPrint').onclick=()=>printDoc(type,new FormData(byId('final19DocForm')));
-    byId('final19DocPdf').onclick=()=>saveDocPdf(type,new FormData(byId('final19DocForm')));
+    byId('final19DocPrint').onclick=()=>{if(!form?.reportValidity())return;printDoc(type,new FormData(form));};
+    byId('final19DocPdf').onclick=()=>{if(!form?.reportValidity())return;saveDocPdf(type,new FormData(form));};
   }
   function saveDocPdf(type,fd){
     const Js=W.jspdf?.jsPDF;if(!Js){W.showError?.('Biblioteca de PDF não disponível.');return;}
@@ -19520,6 +19544,38 @@ body.final27-dark .final36-post-payment{background:#121b17!important;border-colo
       window.showError?.('Não foi possível encerrar o atendimento.');
     }
   };
+})();
+</script>
+\n<script id="legado-no-recados-final">
+(function(){
+  'use strict';
+  function removeRecadosUI(){
+    document.querySelectorAll('#mainNav [data-view="recados"], [data-view="recados"]').forEach(el=>el.remove());
+    document.querySelectorAll('#recadosBadge').forEach(el=>el.remove());
+    document.querySelectorAll('.view[id="view-recados"], #recadosContent').forEach(el=>el.remove());
+    document.querySelectorAll('[aria-label*="conversa" i],[aria-label*="chat" i],[title*="conversa" i],[title*="chat" i]').forEach(el=>{
+      if(!el.closest('#studentProfileContent') && !el.closest('.whatsapp')) el.remove();
+    });
+    document.querySelectorAll('button, a').forEach(el=>{
+      const txt=(el.textContent||'').trim().toLowerCase();
+      const oc=el.getAttribute('onclick')||'';
+      if((txt==='recados'||txt==='nova conversa'||txt==='nova mensagem') && !el.closest('#final19DocModal')) el.remove();
+      if(/navigate\\(\\s*["']recados["']\\s*\\)/.test(oc)) el.remove();
+    });
+  }
+  const oldNavigate=window.navigate;
+  if(typeof oldNavigate==='function'&&!oldNavigate.__noRecadosFinal){
+    const nav=function(view){
+      if(view==='recados') return oldNavigate.call(this,'dashboard');
+      return oldNavigate.apply(this,arguments);
+    };
+    nav.__noRecadosFinal=true;
+    window.navigate=nav;
+  }
+  removeRecadosUI();
+  const obs=new MutationObserver(()=>removeRecadosUI());
+  if(document.body) obs.observe(document.body,{childList:true,subtree:true});
+  window.addEventListener('load',removeRecadosUI,{once:true});
 })();
 </script>
 </body>
