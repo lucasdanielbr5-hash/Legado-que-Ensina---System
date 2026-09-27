@@ -1064,7 +1064,7 @@
       }
     }
   </style>
-<meta name="legado-build" content="2026-09-26-final19-corrigido">
+<meta name="legado-build" content="2026-09-26-final18">
 </head>
 <body>
 
@@ -1386,6 +1386,22 @@
           <i data-lucide="wallet-cards"></i>
           <span class="nav-label">Financeiro</span>
         </button>
+
+        <button
+          type="button"
+          data-view="recados"
+          onclick="navigate('recados')"
+        >
+          <i data-lucide="message-square"></i>
+          <span class="nav-label">Recados</span>
+          <span
+            id="recadosBadge"
+            class="nav-badge"
+          >
+            0
+          </span>
+        </button>
+
         <button
           type="button"
           data-view="lista-espera"
@@ -1531,6 +1547,19 @@
         >
           <div id="financeiroContent"></div>
         </section>
+
+
+        <!-- ======================================================
+             RECADOS
+             ====================================================== -->
+        <section
+          id="view-recados"
+          class="view"
+        >
+          <div id="recadosContent"></div>
+        </section>
+
+
         <!-- ======================================================
              LISTA DE ESPERA
              ====================================================== -->
@@ -3465,6 +3494,23 @@
 
               <i data-lucide="chevron-right"></i>
             </button>
+
+            <button
+              type="button"
+              class="quick-action"
+              onclick="navigate('recados')"
+            >
+              <span class="quick-action-icon orange">
+                <i data-lucide="send"></i>
+              </span>
+
+              <span>
+                <strong>Enviar recado</strong>
+                <small>Falar com responsáveis</small>
+              </span>
+
+              <i data-lucide="chevron-right"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -3529,7 +3575,16 @@
         color: 'purple',
         view: 'avaliacoes'
       })}
-`;
+
+      ${dashboardStatCard({
+        icon: 'message-circle',
+        label: 'Recados não lidos',
+        value: stats.unreadMessages,
+        helper: 'Aguardando resposta',
+        color: 'orange',
+        view: 'recados'
+      })}
+    `;
 
     const badge = byId('recadosBadge');
 
@@ -11166,7 +11221,7 @@ body.legado-v4-modal-open{overflow:hidden}
   /* ============================================================
      ROTEAMENTO FINAL: nunca voltar a renderizador antigo
   ============================================================ */
-  const route12={dashboard:()=>window.renderDashboard?.(),alunos:()=>window.renderStudents?.(),'aluno-perfil':()=>window.renderStudentProfileView?.(),agenda:()=>window.renderAgenda?.(),avaliacoes:()=>window.renderEvaluations?.(),financeiro:()=>window.renderFinance?.(),'lista-espera':()=>window.renderWaitlist?.(),perfil:()=>window.renderProfile?.(),master:()=>window.renderMaster?.()};
+  const route12={dashboard:()=>window.renderDashboard?.(),alunos:()=>window.renderStudents?.(),'aluno-perfil':()=>window.renderStudentProfileView?.(),agenda:()=>window.renderAgenda?.(),avaliacoes:()=>window.renderEvaluations?.(),financeiro:()=>window.renderFinance?.(),recados:()=>window.renderMessages?.(),'lista-espera':()=>window.renderWaitlist?.(),perfil:()=>window.renderProfile?.(),master:()=>window.renderMaster?.()};
   window.renderCurrentView=async function(view){const fn=route12[view]||route12.dashboard;if(typeof fn!=='function')throw new Error('Tela não disponível.');return await fn();};
 
   /* WhatsApp: logo explícita em qualquer botão da lista de espera. */
@@ -11363,7 +11418,7 @@ body.legado-v4-modal-open{overflow:hidden}
           <section class="l14-panel"><div class="l14-calendar-head"><button class="icon-button" onclick="window.l14AgendaMonth(-1)"><i data-lucide="chevron-left"></i></button><button class="icon-button" onclick="window.l14AgendaMonth(1)"><i data-lucide="chevron-right"></i></button><h2>${esc(monthLabel(month))}</h2><button class="btn btn-outline btn-sm" onclick="window.l14AgendaToday()">Hoje</button></div><div class="l14-weekheads">${['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'].map(x=>`<span>${x}</span>`).join('')}</div><div class="l14-days">${monthDays}</div></section>
           <section class="l14-panel"><div class="v3-panel-head"><div><div class="v3-kicker">DIA SELECIONADO</div><h2>${esc(dateBR(selected))}</h2><p>${dayApps.length} atendimento${dayApps.length===1?'':'s'} registrado${dayApps.length===1?'':'s'}.</p></div><button class="btn btn-primary btn-sm" type="button" onclick="window.v4OpenAppointmentModal?.('${selected}')">Adicionar</button></div><div class="l14-slot-list">${slotsHtml||'<div class="v4-empty"><strong>Nenhum horário disponível</strong><span>Configure sua disponibilidade acima.</span></div>'}</div></section>
         </div>
-        <section class="l14-panel"><div class="v3-panel-head"><div><div class="v3-kicker">VISÃO RÁPIDA</div><h2>Próximos atendimentos</h2><p>Os próximos compromissos aparecem aqui para facilitar sua rotina.</p></div></div><div class="l14-upcoming">${upcoming.length?upcoming.map(a=>{const s=studentMap.get(String(a.student_id));const tm=String(a.appointment_time||a.start_time||a.time||'').slice(0,5);return `<div class="l14-up-item"><div class="l14-up-date"><strong>${esc(dateBR(a.appointment_date||a.date))}</strong><span>${esc(tm)}</span></div><div class="l14-up-main"><strong>${esc(studentName(s)||a.student_name)}</strong><span>${esc(a.type||'Atendimento')}</span></div><span class="v3-tag">${esc(statusBR(a.status))}</span></div>`}).join(''):'<div class="v4-empty"><strong>Nenhum próximo atendimento</strong><span>Os próximos compromissos aparecerão aqui.</span></div>'}</div></section>
+        <section class="l14-panel"><div class="v3-panel-head"><div><div class="v3-kicker">VISÃO RÁPIDA</div><h2>Próximos atendimentos</h2><p>Os próximos compromissos aparecem aqui para facilitar sua rotina.</p></div></div><div class="l14-upcoming">${upcoming.length?upcoming.map(a=>{const s=studentMap.get(String(a.student_id));const tm=String(a.appointment_time||a.start_time||a.time||'').slice(0,5);return `<div class="l14-up-item"><div class="l14-up-date"><strong>${esc(dateBR(a.appointment_date||a.date))}</strong><span>${esc(tm)}</span></div><div class="l14-up-main"><strong>${esc(studentName(s)||a.student_name)}</strong><span>${esc(a.type||'Atendimento')}</span></div><span class="v3-tag">${esc(statusBR(a.status))}</span><button class="btn btn-primary btn-sm" type="button" onclick="window.legadoStartOrEndAttendance?.('${esc(a.id)}')"><i data-lucide="check-circle"></i>Encerrar atendimento</button></div>`}).join(''):'<div class="v4-empty"><strong>Nenhum próximo atendimento</strong><span>Os próximos compromissos aparecerão aqui.</span></div>'}</div></section>
       </div>`;
       const f=el('l14AvailabilityForm');
       f?.addEventListener('submit',async ev=>{ev.preventDefault();try{const fd=new FormData(ev.currentTarget);const start=String(fd.get('start')),end=String(fd.get('end'));const ls=String(fd.get('lunch_start')||''),le=String(fd.get('lunch_end')||'');if(mins(end)<=mins(start))throw new Error('O horário final precisa ser maior que o início.');if((ls&&!le)||(le&&!ls)||(ls&&le&&mins(le)<=mins(ls)))throw new Error('Confira o horário do almoço.');const weekdays=fd.getAll('weekday').map(Number);const existing=await safeSelect(avTable(),{filters:{user_id:userId()},limit:50})||[];for(const row of existing){if(!weekdays.includes(Number(row.weekday))){await safeUpdate(avTable(),row.id,{active:false});}}
@@ -11663,8 +11718,7 @@ body.legado-v4-modal-open{overflow:hidden}
   /* Override the router rather than stacking another wrapper. This keeps
      the final/current window.renderAgenda and other screens authoritative. */
   W.navigate=function(view){
-    if(view==='recados') view='dashboard';
-    const FINAL_TITLES={dashboard:{label:'Início',icon:'layout-dashboard'},alunos:{label:'Alunos',icon:'users'},'aluno-perfil':{label:'Perfil do aluno',icon:'user-round'},agenda:{label:'Agenda',icon:'calendar-days'},avaliacoes:{label:'Avaliações',icon:'clipboard-check'},financeiro:{label:'Financeiro',icon:'wallet-cards'},'lista-espera':{label:'Lista de espera',icon:'list-ordered'},perfil:{label:'Meu perfil',icon:'user-round-cog'},master:{label:'Administração',icon:'shield'}};
+    const FINAL_TITLES={dashboard:{label:'Início',icon:'layout-dashboard'},alunos:{label:'Alunos',icon:'users'},'aluno-perfil':{label:'Perfil do aluno',icon:'user-round'},agenda:{label:'Agenda',icon:'calendar-days'},avaliacoes:{label:'Avaliações',icon:'clipboard-check'},financeiro:{label:'Financeiro',icon:'wallet-cards'},recados:{label:'Recados',icon:'message-square'},'lista-espera':{label:'Lista de espera',icon:'list-ordered'},perfil:{label:'Meu perfil',icon:'user-round-cog'},master:{label:'Administração',icon:'shield'}};
     const valid=FINAL_TITLES[view]?view:'dashboard';
     if(W.state)W.state.currentView=valid;
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
@@ -11682,7 +11736,7 @@ body.legado-v4-modal-open{overflow:hidden}
   /* If the final current-view router still holds an older route table,
      recreate it using current window render functions dynamically. */
   W.renderCurrentView=async function(view){
-    const map={dashboard:'renderDashboard',alunos:'renderStudents','aluno-perfil':'renderStudentProfileView',agenda:'renderAgenda',avaliacoes:'renderEvaluations',financeiro:'renderFinance','lista-espera':'renderWaitlist',perfil:'renderProfile',master:'renderMaster'};
+    const map={dashboard:'renderDashboard',alunos:'renderStudents','aluno-perfil':'renderStudentProfileView',agenda:'renderAgenda',avaliacoes:'renderEvaluations',financeiro:'renderFinance',recados:'renderMessages','lista-espera':'renderWaitlist',perfil:'renderProfile',master:'renderMaster'};
     const fn=W[map[view]||'renderDashboard'];
     if(typeof fn!=='function')throw new Error(`Tela "${view}" não possui um renderizador ativo.`);
     const result=await fn();
@@ -12628,11 +12682,11 @@ body.legado-v4-modal-open{overflow:hidden}
   /* ============================================================
      5) ROTEAMENTO FINAL — inclui DOCUMENTOS sem mexer nas demais telas
      ============================================================ */
-  const titles={dashboard:{label:'Início',icon:'layout-dashboard'},alunos:{label:'Alunos',icon:'users'},'aluno-perfil':{label:'Perfil do aluno',icon:'user-round'},agenda:{label:'Agenda',icon:'calendar-days'},avaliacoes:{label:'Avaliações',icon:'clipboard-check'},financeiro:{label:'Financeiro',icon:'wallet-cards'},'lista-espera':{label:'Lista de espera',icon:'list-ordered'},perfil:{label:'Meu perfil',icon:'user-round-cog'},master:{label:'Administração',icon:'shield'},documentos:{label:'Modelos e documentos',icon:'file-text'}};
+  const titles={dashboard:{label:'Início',icon:'layout-dashboard'},alunos:{label:'Alunos',icon:'users'},'aluno-perfil':{label:'Perfil do aluno',icon:'user-round'},agenda:{label:'Agenda',icon:'calendar-days'},avaliacoes:{label:'Avaliações',icon:'clipboard-check'},financeiro:{label:'Financeiro',icon:'wallet-cards'},recados:{label:'Recados',icon:'message-square'},'lista-espera':{label:'Lista de espera',icon:'list-ordered'},perfil:{label:'Meu perfil',icon:'user-round-cog'},master:{label:'Administração',icon:'shield'},documentos:{label:'Modelos e documentos',icon:'file-text'}};
   W.renderCurrentView=async function(view){
     ensureDocsView();
     if(view==='documentos'){docsView();return;}
-    const fnMap={dashboard:'renderDashboard',alunos:'renderStudents','aluno-perfil':'renderStudentProfileView',agenda:'renderAgenda',avaliacoes:'renderEvaluations',financeiro:'renderFinance','lista-espera':'renderWaitlist',perfil:'renderProfile',master:'renderMaster'};
+    const fnMap={dashboard:'renderDashboard',alunos:'renderStudents','aluno-perfil':'renderStudentProfileView',agenda:'renderAgenda',avaliacoes:'renderEvaluations',financeiro:'renderFinance',recados:'renderMessages','lista-espera':'renderWaitlist',perfil:'renderProfile',master:'renderMaster'};
     const fn=W[fnMap[view]||'renderDashboard'];
     if(typeof fn!=='function')throw new Error(`Tela "${view}" não possui um renderizador ativo.`);
     const r=await fn();
@@ -16848,10 +16902,7 @@ body.final27-dark .view .card-white{
     return p?.full_name||p?.name||p?.email||(isMaster32()?'Professor':'Gestão');
   }
   function ensureChatShell32(){
-    // Central de conversas removida conforme configuração do sistema.
-    document.getElementById('final32ChatLauncher')?.remove();
-    document.getElementById('final32ChatWidget')?.remove();
-    return;
+    if(document.getElementById('final32ChatLauncher'))return;
     const b=document.createElement('button');b.type='button';b.id='final32ChatLauncher';b.className='final32-chat-launcher';b.setAttribute('aria-label','Abrir conversas');b.innerHTML='<i data-lucide="message-circle-more"></i><span class="final32-chat-unread" id="final32ChatUnread" hidden></span>';
     b.onclick=()=>{chat32Open=!chat32Open;const w=document.getElementById('final32ChatWidget');if(w)w.hidden=!chat32Open;if(chat32Open)renderChat32();};
     document.body.appendChild(b);
@@ -19447,7 +19498,29 @@ body.final27-dark .final36-post-payment{background:#121b17!important;border-colo
 })();
 </script>
 
+<script id="legado-attendance-close-final">
+(function(){
+  window.legadoStartOrEndAttendance = async function(id){
+    try {
+      if(!id) return;
+      const ok = window.confirm('Deseja encerrar este atendimento?');
+      if(!ok) return;
+      if(typeof window.safeUpdate === 'function') {
+        await window.safeUpdate('appointments', id, { status: 'completed', completed_at: new Date().toISOString() });
+      } else if(window.supabase?.from) {
+        const {error}=await window.supabase.from('appointments').update({status:'completed', completed_at:new Date().toISOString()}).eq('id',id);
+        if(error) throw error;
+      }
+      window.showSuccess?.('Atendimento encerrado com sucesso.');
+      if(typeof window.renderAgenda==='function') await window.renderAgenda();
+      if(typeof window.renderDashboard==='function') await window.renderDashboard();
+      window.refreshIcons?.();
+    } catch(e) {
+      console.error(e);
+      window.showError?.('Não foi possível encerrar o atendimento.');
+    }
+  };
+})();
+</script>
 </body>
 </html>
-
-<style id="removed-recados-chat-final">#final32ChatLauncher,#final32ChatWidget{display:none!important}</style>
