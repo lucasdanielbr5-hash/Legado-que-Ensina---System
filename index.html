@@ -18627,4 +18627,334 @@ body.final27-dark .final36-post-payment{background:#121b17!important;border-colo
   window.addEventListener('focus',sync37);
 })();
 </script>
+<style id="final38Styles">
+  /* ============================================================
+     FINAL 38 — ESTABILIDADE VISUAL / ATENDIMENTO / CHAT
+     ============================================================ */
+  #final38AttendanceStatus{
+    display:none;align-items:center;justify-content:center;
+    width:34px;height:34px;border:1px solid #b8dfca;border-radius:11px;
+    background:#edf8f1;color:#2e8054;cursor:pointer;flex:none;
+    box-shadow:0 5px 14px rgba(42,91,67,.10);
+  }
+  #final38AttendanceStatus.is-active{display:flex}
+  #final38AttendanceStatus:hover{background:#dff2e7}
+  #final38AttendanceStatus i{width:18px;height:18px}
+  body.final27-dark #final38AttendanceStatus{
+    background:#14261e!important;border-color:#39604c!important;color:#9be1b6!important;
+    box-shadow:0 5px 18px rgba(0,0,0,.25)!important;
+  }
+  body.final27-dark #final38AttendanceStatus:hover{background:#1a3428!important}
+
+  /* Apenas uma superfície de chat: a conversa antiga em modal é removida. */
+  #final27EnhancedThreadModal,.final27EnhancedThreadModal,
+  .saas-payment-modal:has(.final27-chat-shell){display:none!important}
+
+  /* Evita duplicidade de ícones/controles do chat legado. */
+  #final32ChatLauncher.final38-hidden{display:none!important}
+  #final32ChatWidget.final38-chat-hidden{display:none!important}
+  #final32ChatWidget .final37-chat-end{margin:0 10px 10px}
+
+  /* Barra de atendimento no topo, alinhada à esquerda do servidor. */
+  #final38AttendanceStatus + #final26ServerWrap{margin-left:0!important}
+  #final27TopTools{align-items:center!important;gap:8px!important}
+
+  /* Uma única barra pré-atendimento por vez. */
+  #final33ActiveAppointment,#final29AttendanceBar,#final32StartBar{
+    z-index:1250!important;
+  }
+  #final38StartProxy{position:fixed;right:18px;top:18px;z-index:1260;display:none}
+
+  @media(max-width:720px){
+    #final38AttendanceStatus{width:32px;height:32px}
+    #final27TopTools{gap:5px!important}
+  }
+</style>
+<script id="final38StabilityLayer">
+(function(){
+  'use strict';
+  const W=window;
+  const $=(s,r=document)=>r.querySelector(s);
+  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const uid=()=>W.state?.user?.id||W.state?.session?.user?.id||null;
+  const db=()=>W.supabaseClient||null;
+  const today=()=>typeof W.todayInputDate==='function'?W.todayInputDate():new Date().toISOString().slice(0,10);
+  const dateOnly=v=>String(v||'').slice(0,10);
+  const timeOnly=v=>String(v||'').slice(0,5);
+  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(String(v??'')):String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
+
+  let starting38=false;
+
+  function active38(){
+    try{return JSON.parse(sessionStorage.getItem('legado:active-appointment')||'null')}catch(_){return null}
+  }
+  function isClosedChat38(){try{return sessionStorage.getItem('legado:final38:chat-closed')==='1'}catch(_){return false}}
+  function setClosedChat38(v){try{if(v)sessionStorage.setItem('legado:final38:chat-closed','1');else sessionStorage.removeItem('legado:final38:chat-closed')}catch(_){} }
+
+  /* ------------------------------------------------------------
+     1) STATUS DO ATENDIMENTO AO LADO DO SERVIDOR
+     ------------------------------------------------------------ */
+  function syncTopAttendance38(){
+    const tools=$('#final27TopTools');
+    if(!tools)return;
+    let b=$('#final38AttendanceStatus');
+    if(!b){
+      b=document.createElement('button');
+      b.type='button';
+      b.id='final38AttendanceStatus';
+      b.title='Atendimento em andamento';
+      b.setAttribute('aria-label','Atendimento em andamento');
+      b.innerHTML='<i data-lucide="play-circle"></i>';
+      const server=$('#final26ServerWrap');
+      if(server&&server.parentElement===tools)tools.insertBefore(b,server);
+      else tools.insertBefore(b,tools.firstChild||null);
+      b.onclick=()=>focusActive38();
+    }
+    const active=active38();
+    b.classList.toggle('is-active',!!active);
+    b.hidden=!active;
+    if(active){
+      b.title=`Atendimento em andamento${active.student_name?` · ${active.student_name}`:''}`;
+      b.setAttribute('aria-label',b.title);
+    }
+    W.refreshIcons?.();
+  }
+  async function focusActive38(){
+    const active=active38();
+    if(!active)return;
+    if(String(W.state?.currentView||'')!=='aluno-perfil' && active.student_id && typeof W.openStudentProfile==='function'){
+      W.state=W.state||{};W.state.currentStudentId=active.student_id;W.V3=W.V3||{};W.V3.studentSection='appointments';
+      W.openStudentProfile(active.student_id);
+    }
+    let tries=0;
+    const timer=setInterval(()=>{
+      tries++;
+      const c=$('#studentProfileContent');
+      const tab=c&&$$('.v3-tabs button',c).find(x=>/Atendimentos/i.test(x.textContent||''));
+      tab?.click();
+      const form=c&&$('#v3RecordForm',c);
+      if(form){
+        form.scrollIntoView({behavior:'smooth',block:'center'});
+        form.querySelector('[type="submit"]')?.scrollIntoView({behavior:'smooth',block:'center'});
+        clearInterval(timer);
+      }
+      if(tries>15)clearInterval(timer);
+    },180);
+  }
+
+  /* ------------------------------------------------------------
+     2) ATENDIMENTO — UMA ÚNICA INICIALIZAÇÃO
+     ------------------------------------------------------------ */
+  async function findAppointmentForNotice38(el){
+    const c=db(),me=uid();if(!c||!me)return null;
+    const label=(el?.textContent||'').replace(/\s+/g,' ').trim();
+    const timeMatch=label.match(/\b(\d{1,2}:\d{2})\b/);
+    const tm=timeMatch?timeMatch[1].padStart(5,'0'):'';
+    const list=c.from(W.DASHBOARD_TABLES?.appointments||W.V3Core?.TABLE?.appointments||'appointments')
+      .select('id,student_id,student_name,appointment_date,appointment_time,start_time,status,type,duration')
+      .eq('user_id',me).eq('appointment_date',today()).limit(200);
+    const r=await list;if(r.error)throw r.error;
+    const rows=r.data||[];
+    const clean=rows.filter(a=>!['completed','cancelled','canceled','in_progress'].includes(String(a.status||'').toLowerCase()));
+    let hit=tm?clean.find(a=>timeOnly(a.appointment_time||a.start_time)===tm):null;
+    if(!hit&&label){
+      hit=clean.find(a=>String(a.student_name||'').trim() && label.includes(String(a.student_name).trim()));
+    }
+    return hit||null;
+  }
+
+  async function startAppointment38(ap){
+    if(!ap||starting38)return;
+    const existing=active38();
+    if(existing){
+      await focusActive38();
+      return;
+    }
+    starting38=true;
+    try{
+      const c=db(),me=uid();if(!c||!me)throw new Error('Sessão não encontrada.');
+      /* trava local imediata: impede duplo clique/duplo evento */
+      try{sessionStorage.setItem('legado:starting-appointment',String(ap.id));}catch(_){ }
+      const r=await c.from(W.DASHBOARD_TABLES?.appointments||W.V3Core?.TABLE?.appointments||'appointments')
+        .update({status:'in_progress'}).eq('id',ap.id).eq('user_id',me);
+      if(r.error)throw r.error;
+      try{sessionStorage.removeItem('legado:starting-appointment');sessionStorage.setItem('legado:active-appointment',JSON.stringify({
+        id:ap.id,student_id:ap.student_id,student_name:ap.student_name||'Aluno',appointment_date:ap.appointment_date,
+        appointment_time:ap.appointment_time||ap.start_time,type:ap.type||'Atendimento psicopedagógico'
+      }));}catch(_){ }
+      hideAllStartSurfaces38();
+      W.state=W.state||{};W.state.currentStudentId=ap.student_id;W.V3=W.V3||{};W.V3.studentSection='appointments';
+      if(ap.student_id&&typeof W.openStudentProfile==='function'){
+        W.openStudentProfile(ap.student_id);
+      }else if(typeof W.navigate==='function'){
+        W.navigate('aluno-perfil');
+      }
+      syncTopAttendance38();
+      await focusAfterNavigation38(ap.student_id);
+    }catch(e){
+      try{sessionStorage.removeItem('legado:starting-appointment');}catch(_){ }
+      W.showError?.(e.message||'Não foi possível iniciar o atendimento.');
+    }finally{starting38=false;}
+  }
+  async function focusAfterNavigation38(studentId){
+    let tries=0;
+    return new Promise(resolve=>{
+      const tick=()=>{
+        tries++;
+        if(studentId&&W.state?.currentStudentId==null)W.state.currentStudentId=studentId;
+        const c=$('#studentProfileContent');
+        const tab=c&&$$('.v3-tabs button',c).find(x=>/Atendimentos/i.test(x.textContent||''));
+        tab?.click();
+        const form=c&&$('#v3RecordForm',c);
+        if(form){
+          form.dataset.final38Attendance='1';
+          const submit=form.querySelector('[type="submit"]');
+          if(submit){submit.innerHTML='<i data-lucide="check-circle-2"></i>Encerrar atendimento';submit.classList.add('final33-end-attendance');}
+          form.scrollIntoView({behavior:'smooth',block:'start'});
+          W.refreshIcons?.();
+          return resolve(true);
+        }
+        if(tries>=20)return resolve(false);
+        setTimeout(tick,180);
+      };
+      tick();
+    });
+  }
+
+  function hideAllStartSurfaces38(){
+    ['final33ActiveAppointment','final29AttendanceBar','final32StartBar','final32AppointmentToast','final33NextAppointment','final29NotificationToast'].forEach(id=>document.getElementById(id)?.remove());
+  }
+  function dedupeStartSurfaces38(){
+    const ids=['final33ActiveAppointment','final29AttendanceBar','final32StartBar'];
+    const seen=new Set();
+    ids.forEach(id=>{
+      $$('#'+id).forEach((el,i)=>{if(seen.has(id)||i>0)el.remove();else seen.add(id);});
+    });
+    /* se já há atendimento iniciado, nenhum aviso pré-início continua visível */
+    if(active38())hideAllStartSurfaces38();
+  }
+
+  /* Captura botões legados de iniciar ANTES do onclick antigo. */
+  document.addEventListener('click',async e=>{
+    const b=e.target.closest('#final33StartGo,#final29StartAttendance,#final32StartAttendance');
+    if(!b)return;
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+    if(active38()){await focusActive38();return;}
+    try{
+      const ap=await findAppointmentForNotice38(b.closest('#final33ActiveAppointment,#final29AttendanceBar,#final32StartBar'));
+      if(!ap)throw new Error('Não foi possível localizar o atendimento agendado.');
+      await startAppointment38(ap);
+    }catch(err){W.showError?.(err.message||'Não foi possível iniciar o atendimento.');}
+  },true);
+
+  /* “Ir para encerrar”: nunca inicia outro atendimento nem navega em loop. */
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('#final33FocusEnd');if(!b)return;
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+    focusActive38();
+  },true);
+
+  /* Se o código legado tentar reiniciar pelo nome global, protegemos a segunda chamada. */
+  ['startAttendance','start33'].forEach(name=>{
+    const fn=W[name];
+    if(typeof fn==='function'&&!fn.__final38guard){
+      const wrapped=async function(ap){if(active38()){focusActive38();return active38();}return fn.apply(this,arguments)};
+      wrapped.__final38guard=true;W[name]=wrapped;
+    }
+  });
+
+  /* ------------------------------------------------------------
+     3) CHAT — SOMENTE UM WIDGET, E ÍCONE SOME AO ENCERRAR
+     ------------------------------------------------------------ */
+  function removeLegacyChatModals38(){
+    $$('#final27EnhancedThreadModal,.final27EnhancedThreadModal').forEach(x=>x.remove());
+    $$('body > .saas-payment-modal').forEach(x=>{if(x.querySelector('.final27-chat-shell'))x.remove()});
+  }
+  function dedupeChatNodes38(){
+    const launchers=$$('#final32ChatLauncher');
+    launchers.slice(1).forEach(x=>x.remove());
+    const widgets=$$('#final32ChatWidget');
+    widgets.slice(1).forEach(x=>x.remove());
+    removeLegacyChatModals38();
+    const w=$('#final32ChatWidget');
+    const l=$('#final32ChatLauncher');
+    if(w){w.classList.remove('final38-chat-hidden');}
+    if(l){
+      const hide=isClosedChat38() && String(W.state?.currentView||'')!=='recados';
+      l.classList.toggle('final38-hidden',hide);
+      l.hidden=hide;
+      l.setAttribute('aria-hidden',hide?'true':'false');
+    }
+    /* um único botão de fechar no cabeçalho e um único ícone de abertura */
+    if(w){
+      $$('.final32-chat-widget-head .final32-close',w).slice(1).forEach(x=>x.remove());
+      $$('.final32-chat-widget-head [data-final37-chat-end],.final32-chat-widget-head #final36ChatEnd',w).forEach(x=>x.remove());
+    }
+  }
+  function bindChatClose38(){
+    const w=$('#final32ChatWidget');if(!w)return;
+    const close=$('#final32ChatClose',w);if(close&&!close.dataset.final38){
+      close.dataset.final38='1';
+      close.onclick=e=>{e.preventDefault();e.stopPropagation();w.hidden=true;};
+    }
+    const end=$('#final37ChatEnd',w);
+    if(end&&!end.dataset.final38){
+      end.dataset.final38='1';
+      end.onclick=async e=>{
+        e.preventDefault();e.stopPropagation();
+        const th=String(W.__final29ConversationThread||'');
+        if(!th)return;
+        if(typeof W.__final38CloseThread==='function')return W.__final38CloseThread(th);
+      };
+    }
+  }
+  /* Expõe um único encerramento para o render do FINAL 37. */
+  W.__final38CloseThread=async function(thread){
+    if(!thread)return;
+    try{
+      const c=db(),me=uid();if(!c||!me)throw new Error('Sessão não encontrada.');
+      const r=await c.from('conversation_threads').upsert({thread_id:thread,closed_at:new Date().toISOString(),closed_by:me},{onConflict:'thread_id'});
+      if(r.error)throw r.error;
+      W.__final29ConversationThread=null;
+      setClosedChat38(true);
+      const w=$('#final32ChatWidget');if(w){w.hidden=true;w.classList.add('final38-chat-hidden');}
+      const l=$('#final32ChatLauncher');if(l){l.hidden=true;l.classList.add('final38-hidden');l.setAttribute('aria-hidden','true');}
+      W.showSuccess?.('Conversa encerrada. O chat foi fechado para você e para a gestão.');
+    }catch(err){W.showError?.(err.message||'Não foi possível encerrar a conversa. Execute a migração de conversas do FINAL 37.');}
+  };
+
+  /* Substitui o encerramento inserido pelo FINAL 37. */
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('#final37ChatEnd');if(!b)return;
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+    W.__final38CloseThread?.(String(W.__final29ConversationThread||''));
+  },true);
+
+  /* Quando o professor volta para Recados, o botão pode ser usado novamente para nova conversa. */
+  const navBase=W.navigate;
+  if(typeof navBase==='function'&&!navBase.__final38Nav){
+    const nav=async function(view){
+      if(view==='recados')setClosedChat38(false);
+      return navBase.apply(this,arguments);
+    };
+    nav.__final38Nav=true;W.navigate=nav;
+  }
+
+  /* ------------------------------------------------------------
+     4) POLIMENTO — impede recriação contínua dos elementos antigos
+     ------------------------------------------------------------ */
+  function sync38(){
+    try{dedupeStartSurfaces38()}catch(_){ }
+    try{syncTopAttendance38()}catch(_){ }
+    try{dedupeChatNodes38();bindChatClose38()}catch(_){ }
+  }
+
+  let syncTimer=setInterval(sync38,900);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(sync38,120),{once:true});
+  else setTimeout(sync38,120);
+  window.addEventListener('focus',sync38);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync38()});
+})();
+</script>
+
 </body>
