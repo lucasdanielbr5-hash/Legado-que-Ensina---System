@@ -12974,6 +12974,102 @@ label{color:#52645f!important;font-weight:700!important}
 })();
 </script>
 
+
+<!-- AJUSTE FINAL DA LOGO DO MENU: centralizada, grande e sem a área branca -->
+<style id="legado-final-menu-logo-centered-2026">
+  .sidebar .brand{
+    width:100%!important;
+    height:118px!important;
+    min-height:118px!important;
+    padding:12px 8px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:0!important;
+    overflow:hidden!important;
+    background:transparent!important;
+    border:0!important;
+    box-shadow:none!important;
+  }
+
+  .sidebar .brand-mark{
+    width:174px!important;
+    height:94px!important;
+    flex:0 0 174px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    overflow:visible!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+
+  .sidebar .brand-mark img{
+    display:block!important;
+    width:174px!important;
+    height:94px!important;
+    max-width:174px!important;
+    max-height:94px!important;
+    object-fit:contain!important;
+    object-position:center!important;
+    background:transparent!important;
+    border:0!important;
+    border-radius:0!important;
+    filter:none!important;
+    opacity:1!important;
+  }
+
+  .sidebar .brand-text{
+    display:none!important;
+  }
+
+  @media(max-width:760px){
+    .sidebar .brand{
+      height:92px!important;
+      min-height:92px!important;
+      padding:8px 2px!important;
+    }
+    .sidebar .brand-mark{
+      width:52px!important;
+      height:52px!important;
+      flex-basis:52px!important;
+    }
+    .sidebar .brand-mark img{
+      width:52px!important;
+      height:52px!important;
+      max-width:52px!important;
+      max-height:52px!important;
+    }
+  }
+</style>
+<script id="legado-final-menu-logo-centered-2026-js">
+(function(){
+  'use strict';
+  var MENU_LOGO='https://i.imgur.com/e6bn3Tg.png';
+  function fixMenuLogo(){
+    document.querySelectorAll('.sidebar .brand-mark img').forEach(function(img){
+      img.src=MENU_LOGO;
+      img.alt='Legado Que Ensina';
+      img.setAttribute('data-logo-variant','color-menu');
+      img.style.display='block';
+      img.style.filter='none';
+      img.style.opacity='1';
+      img.style.background='transparent';
+    });
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',fixMenuLogo,{once:true});
+  }else{
+    fixMenuLogo();
+  }
+  window.addEventListener('load',fixMenuLogo,{once:true});
+  setTimeout(fixMenuLogo,250);
+  setTimeout(fixMenuLogo,1000);
+})();
+</script>
+
 </html>`);w.document.close();w.focus();setTimeout(()=>w.print(),250);
   }
 
@@ -22988,6 +23084,102 @@ img,svg,video,canvas{max-width:100%!important}
     enforceLogoAndUploads();
   }
   window.addEventListener('load',enforceLogoAndUploads,{once:true});
+})();
+</script>
+
+
+<!-- AJUSTE FINAL DA LOGO DO MENU: centralizada, grande e sem a área branca -->
+<style id="legado-final-menu-logo-centered-2026">
+  .sidebar .brand{
+    width:100%!important;
+    height:118px!important;
+    min-height:118px!important;
+    padding:12px 8px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:0!important;
+    overflow:hidden!important;
+    background:transparent!important;
+    border:0!important;
+    box-shadow:none!important;
+  }
+
+  .sidebar .brand-mark{
+    width:174px!important;
+    height:94px!important;
+    flex:0 0 174px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    overflow:visible!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+
+  .sidebar .brand-mark img{
+    display:block!important;
+    width:174px!important;
+    height:94px!important;
+    max-width:174px!important;
+    max-height:94px!important;
+    object-fit:contain!important;
+    object-position:center!important;
+    background:transparent!important;
+    border:0!important;
+    border-radius:0!important;
+    filter:none!important;
+    opacity:1!important;
+  }
+
+  .sidebar .brand-text{
+    display:none!important;
+  }
+
+  @media(max-width:760px){
+    .sidebar .brand{
+      height:92px!important;
+      min-height:92px!important;
+      padding:8px 2px!important;
+    }
+    .sidebar .brand-mark{
+      width:52px!important;
+      height:52px!important;
+      flex-basis:52px!important;
+    }
+    .sidebar .brand-mark img{
+      width:52px!important;
+      height:52px!important;
+      max-width:52px!important;
+      max-height:52px!important;
+    }
+  }
+</style>
+<script id="legado-final-menu-logo-centered-2026-js">
+(function(){
+  'use strict';
+  var MENU_LOGO='https://i.imgur.com/e6bn3Tg.png';
+  function fixMenuLogo(){
+    document.querySelectorAll('.sidebar .brand-mark img').forEach(function(img){
+      img.src=MENU_LOGO;
+      img.alt='Legado Que Ensina';
+      img.setAttribute('data-logo-variant','color-menu');
+      img.style.display='block';
+      img.style.filter='none';
+      img.style.opacity='1';
+      img.style.background='transparent';
+    });
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',fixMenuLogo,{once:true});
+  }else{
+    fixMenuLogo();
+  }
+  window.addEventListener('load',fixMenuLogo,{once:true});
+  setTimeout(fixMenuLogo,250);
+  setTimeout(fixMenuLogo,1000);
 })();
 </script>
 
