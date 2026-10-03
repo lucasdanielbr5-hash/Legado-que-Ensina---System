@@ -20828,7 +20828,7 @@ body.final27-dark #uxModalCard{background:#111a16!important;color:#e9f2ed!import
   /* ------------------------------------------------------------
      FINANCEIRO — visão geral + contas/pagamentos em subpágina
      ------------------------------------------------------------ */
-  let fin43=[],finSub43='visao';
+  let fin43=[];W.__finSub43=W.__finSub43||'visao';
   async function loadFinance43(){
     const c=db(),me=uid();if(!c||!me)throw new Error('Sessão não encontrada.');
     const [a,b]=await Promise.allSettled([c.from('financial_entries').select('*').eq('user_id',me).order('competence_date',{ascending:false}).limit(3000),c.from('payments').select('*').eq('user_id',me).order('payment_date',{ascending:false}).limit(3000)]);
@@ -20848,11 +20848,11 @@ body.final27-dark #uxModalCard{background:#111a16!important;color:#e9f2ed!import
     try{if(typeof W.ensureDocsView==='function')W.ensureDocsView();W.navigate?.('documentos');let tries=0;const timer=setInterval(()=>{tries++;const b=document.querySelector('[data-final19-doc="recibo"]');if(b){clearInterval(timer);b.click();setTimeout(()=>{const root=$('#final19DocModal');if(!root)return;const set=(n,v)=>{const el=root.querySelector(`[name="${n}"]`);if(el)el.value=v==null?'':String(v)};set('payer',e.responsible_name||e.guardian_name||e.parent_name||e.student_name||'');set('amount',Number(e.amount||0).toFixed(2).replace('.',','));set('reference',e.description||'Atendimento psicopedagógico');set('date',dateOnly(e.payment_date||e.competence_date)||today());set('method',e.payment_method||'');set('note',e.student_name?`Aluno: ${e.student_name}`:'');},200)}else if(tries>20){clearInterval(timer);notify('Não foi possível abrir o Recibo Digital.',false)}},150)}catch(err){notify(err.message||'Não foi possível abrir o recibo.',false)}};
   function renderFinance43(){
     const c=$('#financeiroContent');if(!c)return;c.innerHTML='<div class="v3-loading"><i data-lucide="loader-circle"></i>Carregando financeiro...</div>';refresh();
-    (async()=>{try{const entries=await loadFinance43(),now=new Date(),key=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`,s=financeSummary43(entries,key),months=Array.from({length:6},(_,i)=>{const d=new Date(now.getFullYear(),now.getMonth()-5+i,1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`});const page=D.createElement('div');page.className='v3-page';page.innerHTML=`<div class="v3-head"><div><div class="v3-kicker">GESTÃO</div><h1>Financeiro</h1><p>Receitas, despesas, contas e pagamentos organizados em um só lugar.</p></div><div class="v3-head-actions"><button class="btn btn-outline" id="lqFinancePdf43"><i data-lucide="file-down"></i>Salvar em PDF</button><button class="btn btn-primary" id="lqFinanceNew43"><i data-lucide="plus"></i>Novo lançamento</button></div></div><div class="final-clean-subnav"><button data-fin-sub43="visao"><i data-lucide="layout-dashboard"></i>Visão geral</button><button data-fin-sub43="contas"><i data-lucide="receipt-text"></i>Contas e pagamentos</button></div><div id="lqFinanceBody43"></div><div class="v3-panel v3-inline-editor" id="v3FinanceEditor" hidden></div>`;c.innerHTML='';c.appendChild(page);page.querySelectorAll('[data-fin-sub43]').forEach(b=>b.onclick=()=>{finSub43=b.dataset.finSub43;renderFinanceBody43(page,entries,months,key)});$('#lqFinancePdf43').onclick=lqSaveFinancePdf43;$('#lqFinanceNew43').onclick=()=>{const box=$('#v3FinanceEditor',page);box.hidden=false;W.v3OpenFinanceEditor?.()};renderFinanceBody43(page,entries,months,key);refresh();}catch(e){c.innerHTML=`<div class="v3-panel"><strong>Não foi possível carregar o Financeiro.</strong><p class="final43-muted">${esc(e.message||e)}</p><button type="button" class="btn btn-outline" id="lqRetryFin43">Tentar novamente</button></div>`;$('#lqRetryFin43').onclick=renderFinance43;refresh()}})();
+    (async()=>{try{const entries=await loadFinance43(),now=new Date(),key=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`,s=financeSummary43(entries,key),months=Array.from({length:6},(_,i)=>{const d=new Date(now.getFullYear(),now.getMonth()-5+i,1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`});const page=D.createElement('div');page.className='v3-page';page.innerHTML=`<div class="v3-head"><div><div class="v3-kicker">GESTÃO</div><h1>Financeiro</h1><p>Receitas, despesas, contas e pagamentos organizados em um só lugar.</p></div><div class="v3-head-actions"><button class="btn btn-outline" id="lqFinancePdf43"><i data-lucide="file-down"></i>Salvar em PDF</button><button class="btn btn-primary" id="lqFinanceNew43"><i data-lucide="plus"></i>Novo lançamento</button></div></div><div class="final-clean-subnav"><button data-fin-sub43="visao"><i data-lucide="layout-dashboard"></i>Visão geral</button><button data-fin-sub43="contas"><i data-lucide="receipt-text"></i>Contas e pagamentos</button></div><div id="lqFinanceBody43"></div><div class="v3-panel v3-inline-editor" id="v3FinanceEditor" hidden></div>`;c.innerHTML='';c.appendChild(page);page.querySelectorAll('[data-fin-sub43]').forEach(b=>b.onclick=()=>{W.__finSub43=b.dataset.finSub43;renderFinanceBody43(page,entries,months,key)});$('#lqFinancePdf43').onclick=lqSaveFinancePdf43;$('#lqFinanceNew43').onclick=()=>{const box=$('#v3FinanceEditor',page);box.hidden=false;W.v3OpenFinanceEditor?.()};renderFinanceBody43(page,entries,months,key);refresh();}catch(e){c.innerHTML=`<div class="v3-panel"><strong>Não foi possível carregar o Financeiro.</strong><p class="final43-muted">${esc(e.message||e)}</p><button type="button" class="btn btn-outline" id="lqRetryFin43">Tentar novamente</button></div>`;$('#lqRetryFin43').onclick=renderFinance43;refresh()}})();
   }
   function renderFinanceBody43(page,entries,months,key){
-    page.querySelectorAll('[data-fin-sub43]').forEach(b=>b.classList.toggle('active',b.dataset.finSub43===finSub43));const body=$('#lqFinanceBody43',page);if(!body)return;
-    if(finSub43==='visao'){const series=months.map(k=>({label:monthLabel43(k),value:entries.filter(e=>monthKey43(e.competence_date||e.payment_date)===k&&e.kind!=='expense'&&String(e.status||'').toLowerCase()==='paid').reduce((s,e)=>s+Number(e.amount||0),0)}));body.innerHTML=`<div class="v3-stats">${W.statCard?W.statCard('arrow-down-left','Recebido',money(financeSummary43(entries,key).received),'Pagamentos confirmados'):''}${W.statCard?W.statCard('clock-3','A receber',money(financeSummary43(entries,key).pending),'Pendências do mês'):''}${W.statCard?W.statCard('arrow-up-right','Despesas pagas',money(financeSummary43(entries,key).spent),'Saídas confirmadas'):''}${W.statCard?W.statCard('scale','Resultado',money(financeSummary43(entries,key).result),'Saldo do mês',financeSummary43(entries,key).result>=0?'good':'bad'):''}</div><div class="v3-two-col"><section class="v3-panel"><div class="v3-panel-head"><div><h2>Receita dos últimos meses</h2><p>Pagamentos confirmados.</p></div></div><div class="v3-chart" id="lqFinanceChart43"></div></section><section class="v3-panel"><div class="v3-panel-head"><div><h2>Resumo do mês</h2><p>${esc(monthLabel43(key))} de ${esc(key.slice(0,4))}</p></div></div><div class="v3-finance-summary"><div><span>Recebido</span><strong>${money(financeSummary43(entries,key).received)}</strong></div><div><span>A receber</span><strong>${money(financeSummary43(entries,key).pending)}</strong></div><div><span>Despesas pagas</span><strong>${money(financeSummary43(entries,key).spent)}</strong></div></div></section></div>`;const chart=$('#lqFinanceChart43',body);if(W.svgFinanceChart)chart.innerHTML=W.svgFinanceChart(series.map(x=>({label:x.label,income:x.value,expense:0})));else chart.innerHTML='<div class="v3-empty">Dados financeiros prontos para análise.</div>';}
+    page.querySelectorAll('[data-fin-sub43]').forEach(b=>b.classList.toggle('active',b.dataset.finSub43===W.__finSub43));const body=$('#lqFinanceBody43',page);if(!body)return;
+    if(W.__finSub43==='visao'){const series=months.map(k=>({label:monthLabel43(k),value:entries.filter(e=>monthKey43(e.competence_date||e.payment_date)===k&&e.kind!=='expense'&&String(e.status||'').toLowerCase()==='paid').reduce((s,e)=>s+Number(e.amount||0),0)}));body.innerHTML=`<div class="v3-stats">${W.statCard?W.statCard('arrow-down-left','Recebido',money(financeSummary43(entries,key).received),'Pagamentos confirmados'):''}${W.statCard?W.statCard('clock-3','A receber',money(financeSummary43(entries,key).pending),'Pendências do mês'):''}${W.statCard?W.statCard('arrow-up-right','Despesas pagas',money(financeSummary43(entries,key).spent),'Saídas confirmadas'):''}${W.statCard?W.statCard('scale','Resultado',money(financeSummary43(entries,key).result),'Saldo do mês',financeSummary43(entries,key).result>=0?'good':'bad'):''}</div><div class="v3-two-col"><section class="v3-panel"><div class="v3-panel-head"><div><h2>Receita dos últimos meses</h2><p>Pagamentos confirmados.</p></div></div><div class="v3-chart" id="lqFinanceChart43"></div></section><section class="v3-panel"><div class="v3-panel-head"><div><h2>Resumo do mês</h2><p>${esc(monthLabel43(key))} de ${esc(key.slice(0,4))}</p></div></div><div class="v3-finance-summary"><div><span>Recebido</span><strong>${money(financeSummary43(entries,key).received)}</strong></div><div><span>A receber</span><strong>${money(financeSummary43(entries,key).pending)}</strong></div><div><span>Despesas pagas</span><strong>${money(financeSummary43(entries,key).spent)}</strong></div></div></section></div>`;const chart=$('#lqFinanceChart43',body);if(W.svgFinanceChart)chart.innerHTML=W.svgFinanceChart(series.map(x=>({label:x.label,income:x.value,expense:0})));else chart.innerHTML='<div class="v3-empty">Dados financeiros prontos para análise.</div>';}
     else {const rows=entries.slice().sort((a,b)=>String(b.competence_date||b.payment_date).localeCompare(String(a.competence_date||a.payment_date))).slice(0,100);body.innerHTML=`<section class="v3-panel"><div class="v3-panel-head"><div><h2>Contas e pagamentos</h2><p>Registre recebimentos, acompanhe pendências e encaminhe recibos digitais.</p></div></div><div class="final43-fin-table"><div class="final43-fin-row header"><span>Data</span><span>Descrição / aluno</span><span>Forma</span><span>Valor</span><span>Ações</span></div>${rows.length?rows.map(e=>{const paid=String(e.status||'').toLowerCase()==='paid';return `<div class="final43-fin-row"><span>${esc(dateBR(e.competence_date||e.payment_date))}</span><span class="desc"><strong>${esc(e.description||'Lançamento')}</strong>${e.student_name?`<small>${esc(e.student_name)}</small>`:''}</span><span>${esc(({pix:'Pix',cash:'Dinheiro',debit:'Débito',credit_spot:'Crédito à vista',credit_installment:'Crédito parcelado',transfer:'Transferência'}[e.payment_method]||e.payment_method||'—'))}</span><span>${money(e.amount)}</span><div class="final43-fin-actions">${paid?`<button type="button" class="btn final43-receipt-btn" data-forward-receipt43="${esc(e.id)}"><i data-lucide="send"></i>Encaminhar recibo</button>`:''}${!paid&&!e.legacy?`<button type="button" class="btn btn-primary" data-paid43="${esc(e.id)}"><i data-lucide="check"></i>Dar baixa</button>`:''}</div></div>`}).join(''):'<div class="v3-empty">Nenhum lançamento encontrado.</div>'}</div></section>`;$$('[data-forward-receipt43]',body).forEach(b=>b.onclick=()=>{const e=entries.find(x=>String(x.id)===String(b.dataset.forwardReceipt43));if(e)W.lqOpenReceipt43(e)});$$('[data-paid43]',body).forEach(b=>b.onclick=async()=>{try{const r=await db().from('financial_entries').update({status:'paid',paid_at:new Date().toISOString()}).eq('id',b.dataset.paid43).eq('user_id',uid());if(r.error)throw r.error;notify('Pagamento registrado.');await renderFinance43()}catch(e){notify(e.message||'Não foi possível registrar o pagamento.',false)}})}refresh();
   }
   W.renderFinance=renderFinance43;
@@ -22426,6 +22426,208 @@ function boot47(){
 }
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot47,{once:true});else setTimeout(boot47,80);
 const oldNav=W.navigate;if(typeof oldNav==='function'&&!oldNav.__final47){const nav=function(){const r=oldNav.apply(this,arguments);setTimeout(()=>{cleanDashboardSubnav47();if(W.state?.currentView==='alunos'){decorateStudentRegisterTab();addTagFilter();patchStudentCard43();observeStudentEditor()}if(W.state?.currentView==='aluno-perfil')setOverviewObserver47();W.refreshIcons?.()},220);return r};nav.__final47=true;W.navigate=nav;}
+})();
+</script>
+
+<style id="legado-final49-system-polish">
+:root{
+  --lq-font:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --lq-text:#26382f;
+  --lq-muted:#77877e;
+  --lq-line:#e2ebe6;
+  --lq-surface:#ffffff;
+  --lq-soft:#f6faf7;
+  --lq-brand:#2f735a;
+  --lq-brand-dark:#255b49;
+  --lq-radius:14px;
+  --lq-shadow:0 2px 10px rgba(26,52,40,.045);
+}
+html,body,#app,.app,.main,.content,.view,.view.active,button,input,select,textarea,optgroup,option,table,th,td,
+.card,.v3-panel,.v3-stat,.stat-card,.metric-card,.dashboard-card,.report-panel,.student-card,.v3-student-card,
+.v3-wait-card,.final42-doc-card,.final42-editor,.modal,.modal-content,.page-title,.page-heading,.section-title,
+.v3-head,.v3-head h1,.v3-head h2,.v3-head h3,.v3-panel-head h2,.v3-student-ident h3,.v3-hero-left h1{
+  font-family:var(--lq-font)!important;
+}
+body{color:var(--lq-text)!important;font-size:13px!important;line-height:1.5!important;-webkit-font-smoothing:antialiased!important;text-rendering:optimizeLegibility!important}
+button,input,select,textarea{font-size:12px!important;line-height:1.35!important}
+.content{padding-top:24px!important}
+.v3-head{margin-bottom:16px!important}.v3-head h1{font-size:27px!important;line-height:1.12!important;font-weight:800!important}.v3-head p{font-size:12px!important}
+.v3-panel,.card,.report-panel{padding:18px!important;border-radius:15px!important;box-shadow:var(--lq-shadow)!important;border-color:var(--lq-line)!important}
+.v3-panel-head{margin-bottom:13px!important}.v3-panel-head h2{font-size:16px!important;font-weight:800!important}.v3-panel-head p{font-size:11px!important}
+.btn{font-family:var(--lq-font)!important;font-size:11px!important;font-weight:750!important;min-height:34px!important;border-radius:9px!important;white-space:nowrap!important}
+.btn-sm{min-height:30px!important;padding:6px 9px!important;font-size:10px!important}
+
+/* Identidade: marca branca, limpa e sem a imagem antiga estourada */
+.sidebar .brand{height:64px!important;padding:0 10px!important;gap:10px!important;border:0!important;background:transparent!important;box-shadow:none!important}
+.sidebar .brand-mark{width:40px!important;height:40px!important;flex:0 0 40px!important;border-radius:12px!important;background:transparent!important;color:#fff!important;display:grid!important;place-items:center!important;overflow:visible!important}
+.sidebar .brand-mark img{display:none!important}
+.sidebar .brand-mark .lq-logo-svg{width:34px!important;height:34px!important;display:block!important}
+.sidebar .brand-text .main{font-size:13px!important;line-height:1.12!important;font-weight:850!important;letter-spacing:-.02em!important;color:#fff!important}
+.sidebar .brand-text .sub{font-size:9px!important;line-height:1.2!important;font-weight:600!important;color:rgba(255,255,255,.68)!important;margin-top:4px!important}
+
+/* Cards: compactos, alinhados e sem cortes */
+.v3-student-grid,.v3-wait-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;align-items:stretch!important}
+.v3-student-card,.v3-wait-card{
+  height:205px!important;min-height:205px!important;max-width:100%!important;width:100%!important;
+  overflow:hidden!important;box-sizing:border-box!important;padding:14px!important;border-radius:14px!important;
+  display:flex!important;flex-direction:column!important;
+}
+.v3-student-top{gap:10px!important;min-height:42px!important}.v3-avatar{width:40px!important;height:40px!important;border-radius:12px!important}
+.v3-student-ident h3{font-size:14px!important;line-height:1.25!important;font-weight:800!important}.v3-student-ident span{font-size:10px!important;margin-top:2px!important}
+.v3-tag{font-size:9px!important;padding:4px 7px!important}
+.v3-student-meta{gap:6px!important;margin:11px 0!important;padding:9px 0!important}.v3-student-meta span{font-size:10px!important;line-height:1.35!important}
+.v3-student-meta svg{width:12px!important;height:12px!important}
+.v3-student-foot{gap:8px!important;min-height:35px!important}.v3-student-foot>span{font-size:9px!important;line-height:1.2!important}
+.v3-student-foot>div{gap:4px!important;max-width:72%!important}
+.v3-student-foot .btn{min-height:29px!important;padding:6px 8px!important;font-size:9px!important}
+.final47-tag-row{margin-top:5px!important;gap:4px!important;min-height:18px!important}.final47-tag{font-size:8px!important;padding:3px 7px!important}
+.v3-wait-card{padding:14px!important}.v3-wait-card .v3-form-actions{gap:4px!important}.v3-wait-card .btn{min-height:29px!important;padding:6px 8px!important;font-size:9px!important}
+
+/* Busca/filtro na mesma linha, sem estourar largura */
+.v3-toolbar{display:grid!important;grid-template-columns:minmax(240px,1fr) minmax(170px,220px) auto!important;align-items:center!important;gap:8px!important}
+.v3-search{max-width:none!important;min-width:0!important;box-sizing:border-box!important}.v3-search input,.v3-search select{min-width:0!important}
+.final47-tag-filter{min-width:0!important;width:100%!important}
+
+/* Desativar = neutro */
+[data-disable43]{background:#e9edeb!important;color:#65736b!important;border:1px solid #d2dad5!important;box-shadow:none!important}
+[data-disable43]:hover{background:#dde4df!important;color:#4e5c55!important;border-color:#c5d0ca!important}
+
+/* Documento digital: mesma escala do sistema + campo que realmente sincroniza */
+.final42-editor-overlay{padding:16px!important;background:rgba(16,31,24,.52)!important}
+.final42-editor{width:min(920px,100%)!important;max-height:calc(100vh - 32px)!important;border-radius:18px!important}
+.final42-editor-head{padding:18px 22px 13px!important}.final42-editor-head h2{font-size:19px!important}.final42-editor-head p{font-size:10px!important}
+.final42-editor-body{padding:16px 22px 20px!important}.final42-editor-tip{font-size:10px!important}
+.final42-meta{gap:10px!important}.final42-field{gap:5px!important}.final42-field label{font-size:10px!important}
+.final42-field input,.final42-field textarea{font-family:var(--lq-font)!important;font-size:12px!important;line-height:1.5!important;border-radius:10px!important}
+.final42-field textarea{min-height:320px!important;line-height:1.65!important}
+.final42-token{font-family:var(--lq-font)!important;font-size:9px!important}
+.final47-doc-sync-note{font-size:9px!important}
+
+/* Subpágina de cadastro: fica visualmente como uma página, não um popup */
+#alunosContent.final47-register-mode #lqStudentEditor43{max-width:100%!important;margin:0 0 16px!important;border-radius:15px!important}
+#alunosContent.final47-register-mode #lqStudentEditor43 .v3-editor-head h3{font-size:18px!important}
+
+/* Remover visualmente redundâncias do Dashboard */
+#dashboardContent .nav-subgroup.dashboard-sub,.nav-subgroup.dashboard-sub{display:none!important}
+
+/* Escala responsiva */
+@media(max-width:1180px){
+  .sidebar{width:228px!important;flex-basis:228px!important}.main{width:calc(100% - 228px)!important}
+  .v3-student-grid,.v3-wait-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:900px){
+  .v3-toolbar{grid-template-columns:1fr!important}.v3-student-card,.v3-wait-card{height:auto!important;min-height:190px!important}
+}
+@media(max-width:760px){
+  .content{padding-top:16px!important}.v3-head h1{font-size:23px!important}
+  .sidebar .brand-text{display:flex!important}.sidebar .brand{justify-content:flex-start!important}
+  .v3-student-grid,.v3-wait-grid{grid-template-columns:1fr!important}
+}
+</style>
+
+<script id="legado-final49-runtime-fixes">
+(function(){
+  'use strict';
+  const d=document,W=window;
+  const $=(s,r=d)=>r.querySelector(s);
+  const $$=(s,r=d)=>Array.from(r.querySelectorAll(s));
+  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v==null?'':String(v)):String(v==null?'':v).replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[c]));
+  const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+  const today=()=>{const x=new Date();return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')};
+  const dateBR=v=>{if(!v)return '';const p=String(v).slice(0,10).split('-');return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:String(v)};
+  const students=()=>Array.isArray(W.state?.students)?W.state.students:(Array.isArray(W.studentsState?.data)?W.studentsState.data:[]);
+  const studentName=s=>s?.name||s?.full_name||'';
+
+  function installLogo(){
+    $$('.sidebar .brand-mark').forEach(mark=>{
+      if(mark.querySelector('.lq-logo-svg'))return;
+      mark.innerHTML='<svg class="lq-logo-svg" viewBox="0 0 48 48" aria-label="Legado Que Ensina" role="img" xmlns="http://www.w3.org/2000/svg"><path d="M10 30.5c8.7-.4 18-5.2 26-15.5 1.2 9.8-2.1 19.1-9.7 23.1-5.9 3.1-11.9.8-16.3-2.9Z" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 33c7.7-1.8 13.8-5.8 19.1-12.2M15 37.5c6.6 1.1 13.2-.8 17.6-5.6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
+    });
+  }
+
+  function applyDocTokens(text,vals){
+    const map={
+      '{NOME}':vals.nome||'',
+      '{VALOR}':vals.valor||'R$ __________',
+      '{REFERENTE}':vals.referente||'Atendimento psicopedagógico',
+      '{FORMA_PAGAMENTO}':vals.forma||'________________',
+      '{DATA}':vals.data?dateBR(vals.data):dateBR(today()),
+      '{OBSERVAÇÃO}':vals.obs||'',
+      '{FINALIDADE}':vals.finalidade||'acompanhamento psicopedagógico',
+      '{DOCUMENTO}':vals.documento||'não informado',
+      '{ESPECIALISTA}':vals.especialista||'________________',
+      '{MOTIVO}':vals.motivo||'________________'
+    };
+    return String(text||'').replace(/\{[A-ZÁÉÍÓÚÇ_]+\}/g,k=>Object.prototype.hasOwnProperty.call(map,k)?map[k]:k);
+  }
+
+  function docEditor(type){
+    const templates={
+      recibo:{title:'Recibo digital',text:'RECIBO DE PAGAMENTO\n\nRecebi de {NOME} a importância de {VALOR}, referente a {REFERENTE}.\n\nForma de pagamento: {FORMA_PAGAMENTO}.\nData do pagamento: {DATA}.\n\n{OBSERVAÇÃO}\n\nLegado Que Ensina\nProfessor(a) / Psicopedagogo(a)'},
+      declaracao:{title:'Declaração digital',text:'DECLARAÇÃO\n\nDeclaro, para os devidos fins, que {NOME} participou de {FINALIDADE}.\n\nDocumento: {DOCUMENTO}.\nData: {DATA}.\n\n{OBSERVAÇÃO}\n\nLegado Que Ensina\nProfessor(a) / Psicopedagogo(a)'},
+      encaminhamento:{title:'Encaminhamento digital',text:'ENCAMINHAMENTO\n\nEncaminho o(a) aluno(a) {NOME} para avaliação/atendimento na área de {ESPECIALISTA}.\n\nMotivo do encaminhamento:\n{MOTIVO}\n\nData: {DATA}.\n\n{OBSERVAÇÃO}\n\nLegado Que Ensina\nProfessor(a) / Psicopedagogo(a)'}
+    };
+    const d0=templates[type]||templates.recibo;
+    $('#final42DocEditor')?.remove();
+    const overlay=d.createElement('div');overlay.id='final42DocEditor';overlay.className='final42-editor-overlay';
+    const opts=students().slice().sort((a,b)=>norm(studentName(a)).localeCompare(norm(studentName(b)),'pt-BR')).map(s=>`<option value="${esc(s.id)}">${esc(studentName(s))}</option>`).join('');
+    overlay.innerHTML=`<div class="final42-editor" role="dialog" aria-modal="true"><div class="final42-editor-head"><div><div class="final42-doc-kicker">DOCUMENTO DIGITAL</div><h2>${esc(d0.title)}</h2><p>Escolha o aluno e o modelo será preenchido automaticamente. Depois edite o texto livremente.</p></div><button type="button" class="final42-editor-close" id="final49DocClose">×</button></div><div class="final42-editor-body"><div class="final42-editor-tip">O preenchimento automático acontece ao selecionar o aluno e também ao alterar os campos abaixo.</div><div class="final42-meta"><div class="final42-field final49-student-field"><label>Aluno</label><select name="student_id" id="final49DocStudent"><option value="">Selecione o aluno</option>${opts}</select></div><div class="final42-field"><label>Nome / pessoa</label><input name="nome" placeholder="Nome completo"></div><div class="final42-field"><label>Data</label><input name="data" type="date" value="${today()}"></div>${type==='recibo'?'<div class="final42-field"><label>Valor</label><input name="valor" placeholder="R$ 0,00"></div><div class="final42-field"><label>Referente a</label><input name="referente" value="Atendimento psicopedagógico"></div><div class="final42-field"><label>Forma de pagamento</label><input name="forma" placeholder="Pix, dinheiro, cartão..."></div>':''}${type==='declaracao'?'<div class="final42-field"><label>Documento</label><input name="documento" placeholder="CPF, RG etc."></div><div class="final42-field full"><label>Finalidade</label><input name="finalidade" value="acompanhamento psicopedagógico"></div>':''}${type==='encaminhamento'?'<div class="final42-field"><label>Especialista / área</label><input name="especialista" placeholder="Fonoaudiologia, Psicologia..."></div><div class="final42-field full"><label>Motivo do encaminhamento</label><input name="motivo" placeholder="Descreva o motivo"></div>':''}<div class="final42-field full"><label>Observação adicional</label><input name="obs" placeholder="Opcional"></div></div><div class="final42-field full"><label>Texto do documento — escreva aqui</label><textarea name="document_text" spellcheck="true"></textarea><small>O texto abaixo é o texto final usado para PDF/impressão.</small></div><div class="final42-template-row"><button type="button" class="final42-token" data-token="{NOME}">Inserir nome</button><button type="button" class="final42-token" data-token="{DATA}">Inserir data</button><button type="button" class="final42-token" data-token="{OBSERVAÇÃO}">Inserir observação</button></div><div class="final42-editor-actions"><button type="button" class="btn btn-outline" id="final49DocPrint">Imprimir</button><button type="button" class="btn btn-primary" id="final49DocPdf">Gerar PDF</button></div></div></div>`;
+    d.body.appendChild(overlay);
+    const form=$('.final42-editor-body',overlay),ta=$('[name="document_text"]',overlay),name=$('[name="nome"]',overlay),sel=$('#final49DocStudent',overlay);
+    ta.value=d0.text;
+    function getVals(){const fd=new FormData(form);return Object.fromEntries(fd.entries())}
+    function sync(force=true){
+      const v=getVals();
+      const s=students().find(x=>String(x.id)===String(v.student_id));
+      if(s&&name.value!==studentName(s)) name.value=studentName(s);
+      const vals=getVals();
+      if(force || !ta.dataset.userEdited){ta.value=applyDocTokens(d0.text,vals);}
+    }
+    sel.addEventListener('change',()=>{ta.dataset.userEdited='';sync(true)});
+    [name,$('[name="data"]',overlay),$('[name="valor"]',overlay),$('[name="referente"]',overlay),$('[name="forma"]',overlay),$('[name="documento"]',overlay),$('[name="finalidade"]',overlay),$('[name="especialista"]',overlay),$('[name="motivo"]',overlay),$('[name="obs"]',overlay)].filter(Boolean).forEach(el=>el.addEventListener('input',()=>{if(!ta.dataset.userEdited)sync(true)}));
+    ta.addEventListener('input',()=>{ta.dataset.userEdited='1'});
+    $$('.final42-token',overlay).forEach(b=>b.addEventListener('click',()=>{const start=ta.selectionStart,end=ta.selectionEnd;ta.setRangeText(b.dataset.token,start,end,'end');ta.focus();ta.dispatchEvent(new Event('input',{bubbles:true}))}));
+    $('#final49DocClose',overlay).onclick=()=>overlay.remove();overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove()});
+    const collect=()=>{ta.dataset.userEdited='';const vals=getVals();return {title:String(ta.value.split('\n')[0]||d0.title).trim()||d0.title,text:applyDocTokens(ta.value,vals)}};
+    $('#final49DocPdf',overlay).onclick=()=>{const data=collect(),Js=W.jspdf?.jsPDF;if(!Js){W.showError?.('Biblioteca de PDF não disponível.');return}const pdf=new Js({unit:'mm',format:'a4'});let y=25;pdf.setTextColor(38,50,56);pdf.setFont('helvetica','bold');pdf.setFontSize(18);pdf.text(data.title,105,y,{align:'center'});y+=15;pdf.setFont('helvetica','normal');pdf.setFontSize(11);for(const p of String(data.text).split('\n').slice(1)){const lines=pdf.splitTextToSize(p||' ',170);for(const line of lines){if(y>272){pdf.addPage();y=24}pdf.text(line,20,y);y+=7}y+=2}pdf.setFontSize(8);pdf.setTextColor(125,135,130);pdf.text('Legado Que Ensina',20,287);pdf.save((String(data.title).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'-').replace(/^-+|-+$/g,'').toLowerCase()||'documento')+'-'+today()+'.pdf');W.showSuccess?.('PDF gerado com sucesso.')};
+    $('#final49DocPrint',overlay).onclick=()=>{const data=collect(),w=W.open('','_blank','width=900,height=1000');if(!w){W.showError?.('O navegador bloqueou a impressão. Permita pop-ups.');return}const html=String(data.text).split('\n').slice(1).map(x=>`<p>${esc(x||'')}</p>`).join('');w.document.write(`<html lang="pt-BR"><head><meta charset="utf-8"><title>${esc(data.title)}</title><style>@page{size:A4;margin:20mm}body{font-family:Inter,Arial,sans-serif;color:#26382f;line-height:1.65;font-size:12pt}h1{font-size:18pt;text-align:center;margin:0 0 24pt}p{margin:0 0 8pt;white-space:pre-wrap}</style></head><body><h1>${esc(data.title)}</h1>${html}</body></html>`);w.document.close();setTimeout(()=>{w.focus();w.print()},250)};
+    const active=W.state?.currentStudentId||W.state?.selectedStudent?.id;
+    if(active){sel.value=String(active);sync(true)}
+    else sync(true);
+    W.refreshIcons?.();
+  }
+
+  W.__legadoFinal49OpenDoc=docEditor;
+
+  function patchDocuments(){
+    if(typeof W.openFinalDocument==='function' && !W.openFinalDocument.__final49){W.openFinalDocument=Object.assign(docEditor,{__final49:true})}
+  }
+  function normalizeExisting(){
+    installLogo();patchDocuments();
+    $$('.v3-student-card,.v3-wait-card').forEach(c=>{c.style.boxSizing='border-box'});
+  }
+  if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',()=>setTimeout(normalizeExisting,20),{once:true});else setTimeout(normalizeExisting,20);
+  setTimeout(normalizeExisting,350);
+})();
+</script>
+
+
+
+<script id="legado-final51-document-click-fix">
+(function(){
+  'use strict';
+  const W=window,D=document;
+  function install(){
+    if(D.__legadoFinal51DocClick)return;
+    D.__legadoFinal51DocClick=true;
+    D.addEventListener('click',function(e){
+      const b=e.target?.closest?.('[data-final42-open-doc]');
+      if(!b||typeof W.__legadoFinal49OpenDoc!=='function')return;
+      e.preventDefault();e.stopImmediatePropagation();
+      W.__legadoFinal49OpenDoc(b.dataset.final42OpenDoc);
+    },true);
+  }
+  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',install,{once:true});else install();
 })();
 </script>
 
