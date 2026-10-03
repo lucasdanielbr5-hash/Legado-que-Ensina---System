@@ -20770,7 +20770,7 @@ body.final27-dark #uxModalCard{background:#111a16!important;color:#e9f2ed!import
   }
   function studentCard43(s,disabled=false){
     const name=studentName(s),resp=s.responsible_name||s.guardian_name||s.parent_name||'Responsável não informado',birth=s.birth_date||s.date_of_birth,phone=s.phone||s.responsible_phone||'Telefone não informado';
-    return `<article class="v3-student-card" data-student43="${esc(s.id)}"><div class="v3-student-top"><div class="v3-avatar">${s.photo_url?`<img src="${esc(s.photo_url)}" alt="Foto de ${esc(name)}">`:`<span>${esc(name.split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase())}</span>`}</div><div class="v3-student-ident"><h3>${esc(name)}</h3><span>${esc(resp)}</span></div><span class="v3-tag ${disabled?'muted':''}">${disabled?'Desativado':'Ativo'}</span></div><div class="v3-student-meta"><span><i data-lucide="cake"></i>${birth?esc(dateBR(birth)):'Nascimento não informado'}</span><span><i data-lucide="phone"></i>${esc(phone)}</span></div><div class="v3-student-foot"><span>Prontuário completo</span><div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end"><button type="button" class="btn btn-outline btn-sm" data-edit-student43="${esc(s.id)}"><i data-lucide="pencil"></i>Editar</button>${disabled?`<button type="button" class="btn btn-soft btn-sm" data-reactivate43="${esc(s.id)}"><i data-lucide="rotate-ccw"></i>Reativar</button>`:`<button type="button" class="btn btn-danger btn-sm" data-disable43="${esc(s.id)}"><i data-lucide="archive"></i>Desativar</button>`}</div></div></article>`;
+    return `<article class="v3-student-card" data-student43="${esc(s.id)}"><div class="v3-student-top"><div class="v3-avatar">${s.photo_url?`<img src="${esc(s.photo_url)}" alt="Foto de ${esc(name)}">`:`<span>${esc(name.split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase())}</span>`}</div><div class="v3-student-ident"><h3>${esc(name)}</h3><span>${esc(resp)}</span></div><span class="v3-tag ${disabled?'muted':''}">${disabled?'Desativado':'Ativo'}</span></div><div class="v3-student-meta"><span><i data-lucide="cake"></i>${birth?esc(dateBR(birth)):'Nascimento não informado'}</span><span><i data-lucide="phone"></i>${esc(phone)}</span></div><div class="v3-student-foot"><span>Prontuário completo</span><div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end"><button type="button" class="btn btn-outline btn-sm" data-edit-student43="${esc(s.id)}"><i data-lucide="pencil"></i>Editar</button>${disabled?`<button type="button" class="btn btn-soft btn-sm" data-reactivate43="${esc(s.id)}"><i data-lucide="rotate-ccw"></i>Reativar</button>`:`<button type="button" class="btn btn-danger btn-sm" data-disable43="${esc(s.id)}"><i data-lucide="archive"></i>Desativar</button>`}<button type="button" class="btn btn-danger btn-sm" data-delete-student43="${esc(s.id)}"><i data-lucide="trash-2"></i>Excluir</button></div></div></article>`;
   }
   function studentSubnav43(page,sub){
     let bar=$('#lqStudentsSubnav43',page);if(!bar){bar=D.createElement('div');bar.id='lqStudentsSubnav43';bar.className='final-clean-subnav';const head=page.querySelector('.v3-head');head?.insertAdjacentElement('afterend',bar);}
@@ -20801,7 +20801,7 @@ body.final27-dark #uxModalCard{background:#111a16!important;color:#e9f2ed!import
   }
   async function renderStudents43(sub='ativos'){
     const c=$('#alunosContent');if(!c)return;c.innerHTML='<div class="v3-loading"><i data-lucide="loader-circle"></i>Carregando alunos...</div>';refresh();
-    try{const all=await loadStudents43(),active=all.filter(s=>String(s.status||'active').toLowerCase()!=='inactive'),inactive=all.filter(s=>String(s.status||'').toLowerCase()==='inactive');c.innerHTML=`${W.pageShell?W.pageShell('ACOMPANHAMENTO','Alunos','Cada aluno possui um prontuário vivo, com histórico, progresso e documentos.'):`<div class="v3-head"><div><div class="v3-kicker">ACOMPANHAMENTO</div><h1>Alunos</h1><p>Prontuários e acompanhamento.</p></div></div>`}<div class="v3-stats">${W.statCard?W.statCard('users','Total de alunos',all.length,'Cadastros mantidos'):''}${W.statCard?W.statCard('user-check','Ativos',active.length,'Em acompanhamento'):''}${W.statCard?W.statCard('archive','Desativados',inactive.length,'Histórico preservado'):''}${W.statCard?W.statCard('clipboard-plus','Prontuários',all.length,'Perfis disponíveis'):''}</div><div class="v3-panel" id="lqStudentEditor43" hidden></div><div class="v3-panel"><div class="v3-panel-head"><div><h2>${sub==='ativos'?'Alunos ativos':'Alunos desativados'}</h2><p>${sub==='ativos'?'Alunos em acompanhamento.':'Registros preservados e prontos para eventual reativação.'}</p></div><button type="button" class="btn btn-primary" id="lqNewStudent43"><i data-lucide="user-plus"></i>Novo aluno</button></div><div class="v3-toolbar"><div class="v3-search"><i data-lucide="search"></i><input id="lqStudentSearch43" placeholder="Buscar por nome, responsável ou telefone..."></div><div class="v3-view-note">${sub==='ativos'?active.length:inactive.length} registro${(sub==='ativos'?active.length:inactive.length)===1?'':'s'}</div></div><div id="lqStudentGrid43" class="v3-student-grid"></div></div>`;const page=c.querySelector('.v3-page')||c;studentSubnav43(page,sub);const list=sub==='ativos'?active:inactive;const grid=$('#lqStudentGrid43');const renderList=q=>{const arr=list.filter(s=>normalize(`${studentName(s)} ${s.responsible_name||s.guardian_name||''} ${s.phone||''}`).includes(normalize(q)));grid.innerHTML=arr.length?arr.map(s=>studentCard43(s,sub==='desativados')).join(''):(W.empty?W.empty(sub==='ativos'?'Nenhum aluno ativo.':'Nenhum aluno desativado.','O histórico aparecerá aqui quando necessário.'):`<div class="v3-empty">Nenhum registro.</div>`);refresh();$$('[data-edit-student43]',grid).forEach(b=>b.onclick=e=>{e.stopPropagation();W.lqEditStudent43(b.dataset.editStudent43)});$$('[data-disable43]',grid).forEach(b=>b.onclick=e=>{e.stopPropagation();W.lqToggleStudent43(b.dataset.disable43,false)});$$('[data-reactivate43]',grid).forEach(b=>b.onclick=e=>{e.stopPropagation();W.lqToggleStudent43(b.dataset.reactivate43,true)});grid.querySelectorAll('.v3-student-card').forEach(card=>card.onclick=e=>{if(e.target.closest('button'))return;W.lqOpenStudent43(card.dataset.student43)});};renderList('');$('#lqStudentSearch43').oninput=e=>renderList(e.target.value);$('#lqNewStudent43').onclick=()=>openStudentEditor43();refresh();}
+    try{const all=await loadStudents43(),active=all.filter(s=>String(s.status||'active').toLowerCase()!=='inactive'),inactive=all.filter(s=>String(s.status||'').toLowerCase()==='inactive');c.innerHTML=`${W.pageShell?W.pageShell('ACOMPANHAMENTO','Alunos','Cada aluno possui um prontuário vivo, com histórico, progresso e documentos.'):`<div class="v3-head"><div><div class="v3-kicker">ACOMPANHAMENTO</div><h1>Alunos</h1><p>Prontuários e acompanhamento.</p></div></div>`}<div class="v3-stats">${W.statCard?W.statCard('users','Total de alunos',all.length,'Cadastros mantidos'):''}${W.statCard?W.statCard('user-check','Ativos',active.length,'Em acompanhamento'):''}${W.statCard?W.statCard('archive','Desativados',inactive.length,'Histórico preservado'):''}${W.statCard?W.statCard('clipboard-plus','Prontuários',all.length,'Perfis disponíveis'):''}</div><div class="v3-panel" id="lqStudentEditor43" hidden></div><div class="v3-panel"><div class="v3-panel-head"><div><h2>${sub==='ativos'?'Alunos ativos':'Alunos desativados'}</h2><p>${sub==='ativos'?'Alunos em acompanhamento.':'Registros preservados e prontos para eventual reativação.'}</p></div><button type="button" class="btn btn-primary" id="lqNewStudent43"><i data-lucide="user-plus"></i>Novo aluno</button></div><div class="v3-toolbar"><div class="v3-search"><i data-lucide="search"></i><input id="lqStudentSearch43" placeholder="Buscar por nome, responsável ou telefone..."></div><div class="v3-view-note">${sub==='ativos'?active.length:inactive.length} registro${(sub==='ativos'?active.length:inactive.length)===1?'':'s'}</div></div><div id="lqStudentGrid43" class="v3-student-grid"></div></div>`;const page=c.querySelector('.v3-page')||c;studentSubnav43(page,sub);const list=sub==='ativos'?active:inactive;const grid=$('#lqStudentGrid43');const renderList=q=>{const arr=list.filter(s=>normalize(`${studentName(s)} ${s.responsible_name||s.guardian_name||''} ${s.phone||''}`).includes(normalize(q)));grid.innerHTML=arr.length?arr.map(s=>studentCard43(s,sub==='desativados')).join(''):(W.empty?W.empty(sub==='ativos'?'Nenhum aluno ativo.':'Nenhum aluno desativado.','O histórico aparecerá aqui quando necessário.'):`<div class="v3-empty">Nenhum registro.</div>`);refresh();$$('[data-edit-student43]',grid).forEach(b=>b.onclick=e=>{e.stopPropagation();W.lqEditStudent43(b.dataset.editStudent43)});$$('[data-disable43]',grid).forEach(b=>b.onclick=e=>{e.stopPropagation();W.lqToggleStudent43(b.dataset.disable43,false)});$$('[data-delete-student43]',grid).forEach(b=>b.onclick=e=>{e.stopPropagation();W.confirmDeleteStudent?.(b.dataset.deleteStudent43);});$$('[data-reactivate43]',grid).forEach(b=>b.onclick=e=>{e.stopPropagation();W.lqToggleStudent43(b.dataset.reactivate43,true)});grid.querySelectorAll('.v3-student-card').forEach(card=>card.onclick=e=>{if(e.target.closest('button'))return;W.lqOpenStudent43(card.dataset.student43)});};renderList('');$('#lqStudentSearch43').oninput=e=>renderList(e.target.value);$('#lqNewStudent43').onclick=()=>openStudentEditor43();refresh();}
     catch(e){c.innerHTML=`<div class="v3-panel"><strong>Não foi possível carregar os alunos.</strong><p class="final43-muted">${esc(e.message||e)}</p></div>`;refresh();}
   }
   const baseStudentRender=W.renderStudents;W.renderStudents=renderStudents43;W.v3ShowStudentEditor=async s=>openStudentEditor43(s||null);W.openEditStudentModal=id=>W.lqEditStudent43(id);W.openNewStudentModal=()=>openStudentEditor43();
@@ -22030,10 +22030,10 @@ body.final27-dark .final44-actions{background:rgba(17,26,23,.97)!important}
   function renderFinanceRows45(body,entries){
     const q=normalize45($('#final45FinSearch',body)?.value||'');const kind=$('#final45FinKind',body)?.value||'all';const status=$('#final45FinStatus',body)?.value||'all';
     const rows=entries.slice().sort((a,b)=>String(b.competence_date||b.payment_date).localeCompare(String(a.competence_date||a.payment_date))).filter(e=>{const text=normalize45([e.student_name,e.description,e.payment_method].join(' '));const k=e.kind==='expense'?'expense':'income';return(!q||text.includes(q))&&(kind==='all'||k===kind)&&(status==='all'||String(e.status||'').toLowerCase()===status)}).slice(0,500);
-    const host=$('#final45FinanceRows',body);if(!host)return;host.innerHTML=rows.length?rows.map(e=>{const k=e.kind==='expense'?'expense':'income',paid=String(e.status||'').toLowerCase()==='paid';return `<div class="final45-fin-row ${k}"><span>${esc(dateBR45(e.competence_date||e.payment_date))}</span><span class="desc"><strong>${esc(e.student_name||e.description||'Lançamento')}</strong>${e.student_name&&e.description?`<small>${esc(e.description)}</small>`:''}${Number(e.installment_total||1)>1?`<small>Parcela ${esc(e.installment_number||1)}/${esc(e.installment_total)}</small>`:''}</span><span><span class="final45-type ${k}">${k==='expense'?'Despesa':'Conta / receita'}</span></span><span><strong>${esc(money45(e.amount))}</strong><br><span class="final45-status">${esc(String(e.status||'').replace('paid','Pago').replace('pending','Pendente').replace('overdue','Em atraso').replace('cancelled','Cancelado'))}</span></span><div class="final45-fin-actions"><button type="button" class="btn btn-outline" data-fin-edit45="${esc(e.id)}"><i data-lucide="pencil"></i>Editar</button><button type="button" class="btn final45-delete" data-fin-delete45="${esc(e.id)}"><i data-lucide="trash-2"></i>Excluir</button>${k==='income'&&!paid?`<button type="button" class="btn btn-primary" data-fin-paid45="${esc(e.id)}"><i data-lucide="check"></i>Dar baixa</button>`:''}</div></div>`}).join(''):'<div class="final45-empty">Nenhum lançamento corresponde aos filtros.</div>';
+    const host=$('#final45FinanceRows',body);if(!host)return;host.innerHTML=rows.length?rows.map(e=>{const k=e.kind==='expense'?'expense':'income',paid=String(e.status||'').toLowerCase()==='paid';return `<div class="final45-fin-row ${k}"><span>${esc(dateBR45(e.competence_date||e.payment_date))}</span><span class="desc"><strong>${esc(e.student_name||e.description||'Lançamento')}</strong>${e.student_name&&e.description?`<small>${esc(e.description)}</small>`:''}${Number(e.installment_total||1)>1?`<small>Parcela ${esc(e.installment_number||1)}/${esc(e.installment_total)}</small>`:''}</span><span><span class="final45-type ${k}">${k==='expense'?'Despesa':'Conta / receita'}</span></span><span><strong>${esc(money45(e.amount))}</strong><br><span class="final45-status">${esc(String(e.status||'').replace('paid','Pago').replace('pending','Pendente').replace('overdue','Em atraso').replace('cancelled','Cancelado'))}</span></span><div class="final45-fin-actions"><button type="button" class="btn btn-outline" data-fin-edit45="${esc(e.id)}"><i data-lucide="pencil"></i>Editar</button><button type="button" class="btn final45-delete" data-fin-delete45="${esc(e.id)}"><i data-lucide="trash-2"></i>Excluir</button>${k==='income'&&!paid&&!e.legacy?`<button type="button" class="btn btn-primary" data-fin-paid45="${esc(e.id)}"><i data-lucide="check"></i>Dar baixa</button>`:''}</div></div>`}).join(''):'<div class="final45-empty">Nenhum lançamento corresponde aos filtros.</div>';
     $$('[data-fin-edit45]',body).forEach(b=>b.onclick=()=>editFin45(b.dataset.finEdit45));
     $$('[data-fin-delete45]',body).forEach(b=>b.onclick=()=>deleteFin45(b.dataset.finDelete45));
-    $$('[data-fin-paid45]',body).forEach(b=>b.onclick=async()=>{try{b.disabled=true;const e=fin45Entries.find(x=>String(x.id)===String(b.dataset.finPaid45));if(!e)throw new Error('Lançamento não encontrado.');const r=e.legacy?await db().from('payments').update({status:'paid',paid_at:new Date().toISOString()}).eq('id',e.source_payment_id).eq('user_id',uid()):await db().from('financial_entries').update({status:'paid',paid_at:new Date().toISOString()}).eq('id',e.id).eq('user_id',uid());if(r.error)throw r.error;notify45('Baixa registrada.');await renderFinance45()}catch(e){notify45(e.message||'Não foi possível registrar a baixa.',false)}finally{b.disabled=false}});
+    $$('[data-fin-paid45]',body).forEach(b=>b.onclick=async()=>{try{b.disabled=true;const r=await db().from('financial_entries').update({status:'paid',paid_at:new Date().toISOString()}).eq('id',b.dataset.finPaid45).eq('user_id',uid());if(r.error)throw r.error;notify45('Pagamento registrado.');await renderFinance45()}catch(e){notify45(e.message||'Não foi possível registrar o pagamento.',false)}finally{b.disabled=false}});
     refresh45();
   }
   async function renderFinance45(){
@@ -22140,140 +22140,17 @@ function fixWait46(){
   const c=$('#waitlistContent');if(!c)return;
   c.querySelectorAll('.v3-kicker,.eyebrow,.page-heading .eyebrow').forEach(el=>{if(/gest[aã]o\s+psicopedag[oó]gica/i.test(el.textContent||''))el.textContent='LISTA DE ESPERA'});
 }
-new MutationObserver(()=>fixWait46()).observe(D.body,{subtree:true,childList:true});
+
+fixWait46();
 refresh();
 })();
 </script>
 
-<style id="legado-stable-layout-final">
-html,body{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important}
-#app.app,.app{display:flex!important;width:100vw!important;max-width:100vw!important;min-width:0!important}
-#app .sidebar,.app .sidebar{flex:0 0 238px!important;width:238px!important;min-width:238px!important}
-#app .main,.app .main{flex:1 1 auto!important;width:auto!important;max-width:none!important;min-width:0!important;margin:0!important;box-sizing:border-box!important}
-#app .topbar,.app .topbar{width:100%!important;max-width:none!important;box-sizing:border-box!important}
-#app .content,.app .content{width:100%!important;max-width:none!important;min-width:0!important;box-sizing:border-box!important}
-.v3-page,.v3-panel,.v3-head,.v3-two-col,.v3-form-grid{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
-
-/* Ações semânticas */
-.btn-primary,
-[data-paid43],
-[data-fin-paid45]{
-  background:#2f735a!important;
-  border-color:#2f735a!important;
-  color:#fff!important;
-}
-.btn-primary:hover,
-[data-paid43]:hover,
-[data-fin-paid45]:hover{
-  background:#255b49!important;
-  border-color:#255b49!important;
-}
-.btn-danger,
-.final45-delete,
-.final44-delete,
-[data-fin-delete45],
-[data-fin-delete44],
-[data-delete-student43]{
-  background:#fff2f2!important;
-  border:1px solid #e3caca!important;
-  color:#a44e54!important;
-}
-.btn-danger:hover,
-.final45-delete:hover,
-.final44-delete:hover,
-[data-fin-delete45]:hover,
-[data-fin-delete44]:hover,
-[data-delete-student43]:hover{
-  background:#fde5e5!important;
-  color:#943f46!important;
-}
-
-/* Financeiro */
-.final45-fin-actions{display:flex!important;align-items:center!important;gap:7px!important;flex-wrap:wrap!important}
-.final45-fin-actions .btn{min-height:34px!important}
-.final45-fin-filter{display:flex!important;gap:8px!important;flex-wrap:wrap!important;align-items:center!important}
-
-/* Cards de aluno */
-.v3-student-foot>div{display:flex!important;align-items:center!important;gap:6px!important;flex-wrap:wrap!important;justify-content:flex-end!important}
-
-@media(max-width:1180px){
-  #app .sidebar,.app .sidebar{flex-basis:220px!important;width:220px!important;min-width:220px!important}
-}
-@media(max-width:900px) and (min-width:761px){
-  #app .sidebar,.app .sidebar{flex-basis:84px!important;width:84px!important;min-width:84px!important}
-  #app .main,.app .main{width:auto!important}
-}
-@media(max-width:760px){
-  #app .sidebar,.app .sidebar{width:min(290px,86vw)!important;min-width:min(290px,86vw)!important}
-  #app .main,.app .main{width:100%!important;max-width:100%!important}
-  #app .content,.app .content{padding-left:12px!important;padding-right:12px!important}
-  .v3-head-actions,.final45-fin-filter{width:100%!important}
-  .final45-fin-filter input,.final45-fin-filter select{flex:1 1 160px!important;min-width:0!important}
-}
+<style id="legado-22k-sem-simplificar-final">
+.btn-primary,[data-fin-paid45]{background:#2f735a!important;border-color:#2f735a!important;color:#fff!important}
+.btn-primary:hover,[data-fin-paid45]:hover{background:#255b49!important;border-color:#255b49!important}
+.btn-danger,.final45-delete,.icon-button.danger{background:#fff2f2!important;border-color:#e3caca!important;color:#a04e55!important}
+.btn-danger:hover,.final45-delete:hover,.icon-button.danger:hover{background:#fde5e5!important}
+[data-delete-student43]{background:#fff2f2!important;border-color:#e3caca!important;color:#a04e55!important}
 </style>
-
-<script id="legado-stable-student-delete-final">
-(function(){
-  'use strict';
-  const W=window,D=document;
-  const $=(s,r=D)=>r.querySelector(s);
-  const $$=(s,r=D)=>Array.from(r.querySelectorAll(s));
-  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v==null?'':String(v)):String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-  const uid=()=>W.state?.user?.id||W.state?.session?.user?.id||null;
-  const db=()=>W.supabaseClient||W.supabase||null;
-
-  async function deleteStudent(id){
-    const c=db(),me=uid();
-    if(!c||!me){W.showError?.('Sessão não encontrada.');return;}
-    const list=Array.isArray(W.state?.students)?W.state.students:[];
-    const st=list.find(x=>String(x.id)===String(id));
-    const name=st?.name||st?.full_name||'este aluno';
-    if(!W.confirm(`Excluir definitivamente "${name}"?\\n\\nO cadastro e os registros vinculados serão removidos. Esta ação não pode ser desfeita.`))return;
-
-    const dependencies=[
-      ['student_context','student_id'],
-      ['student_contacts','student_id'],
-      ['student_progress','student_id'],
-      ['student_records','student_id'],
-      ['evaluations','student_id'],
-      ['appointments','student_id'],
-      ['payments','student_id'],
-      ['financial_entries','student_id']
-    ];
-
-    try{
-      for(const [table,column] of dependencies){
-        try{
-          const r=await c.from(table).delete().eq(column,id).eq('user_id',me);
-          if(r.error && !/relation .* does not exist|could not find the table|schema cache/i.test(r.error.message||'')) throw r.error;
-        }catch(e){
-          if(!/relation .* does not exist|could not find the table|schema cache/i.test(e?.message||'')) throw e;
-        }
-      }
-      const r=await c.from('students').delete().eq('id',id).eq('user_id',me);
-      if(r.error)throw r.error;
-
-      if(W.state){
-        W.state.currentStudentId=null;
-        W.state.selectedStudent=null;
-      }
-      W.showSuccess?.('Aluno excluído definitivamente.');
-      await W.renderStudents?.();
-    }catch(e){
-      console.error('Excluir aluno',e);
-      W.showError?.('Não foi possível excluir o aluno: '+(e.message||e));
-    }
-  }
-
-  W.legadoDeleteStudentStable=deleteStudent;
-
-  D.addEventListener('click',ev=>{
-    const b=ev.target.closest?.('[data-delete-student43]');
-    if(!b)return;
-    ev.preventDefault();
-    ev.stopPropagation();
-    deleteStudent(b.dataset.deleteStudent43);
-  },true);
-})();
-</script>
 </html>
