@@ -21503,22 +21503,80 @@ body.final27-dark .final44-section-note{background:#14221c!important;border-colo
   }
 
   async function openForm(ap,mode){
-    const s=await studentFor(ap.student_id);const nm=s?.name||s?.full_name||ap.student_name||'Aluno';
-    const title=mode==='end'?'Encerrar atendimento':'Iniciar atendimento';
-    const submitText=mode==='end'?'Encerrar atendimento e salvar registro':'Iniciar atendimento e abrir registro';
-    const body=modalShell(title,'ATENDIMENTO EM '+(mode==='end'?'ENCERRAMENTO':'ANDAMENTO'),`<div class="final44-attendance-intro"><div><strong>${esc(nm)}</strong><span>${esc(dateOnly(ap.appointment_date))}${timeOnly(ap.appointment_time||ap.start_time||ap.time)?` · ${esc(timeOnly(ap.appointment_time||ap.start_time||ap.time))}`:''} · ${esc(ap.type||'Atendimento psicopedagógico')}</span></div><span class="legado-live-pill">${mode==='end'?'Finalização':'Sessão iniciada'}</span></div><form id="v10AttendanceForm"><div class="final44-grid"><label class="final44-field"><span>Data *</span><input type="date" name="record_date" value="${esc(dateOnly(ap.appointment_date)||today())}" required></label><label class="final44-field"><span>Título da sessão *</span><input name="title" value="${esc(ap.type||'Atendimento psicopedagógico')}" required></label><label class="final44-field"><span>Duração</span><input name="duration" value="${esc(ap.duration||'')}" placeholder="Ex.: 50 min"></label><label class="final44-field"><span>Estado observado</span><select name="mood"><option value="">Selecione</option><option>Tranquilo e disponível</option><option>Colaborativo</option><option>Oscilante</option><option>Cansado</option><option>Resistente</option><option>Ansioso</option><option>Outro</option></select></label>${field('Objetivo da sessão','objetivo','O que foi planejado trabalhar? Qual habilidade, competência ou objetivo pedagógico estava sendo desenvolvido?',true)}${field('Atividade / situação proposta','atividade','Descreva a proposta, material, jogo, texto, problema, recurso ou situação de aprendizagem.',true)}${field('Resposta e participação do aluno','resposta','Como iniciou, participou, respondeu, sustentou a tarefa e reagiu às mediações?',true)}${field('Dificuldades observadas','dificuldades','Registre barreiras, dificuldades, erros recorrentes e momentos em que precisou de ajuda.')}${field('Potencialidades / avanços observados','avancos','O que conseguiu fazer melhor, com mais autonomia ou com menos mediação?')}${field('Intervenções e estratégias utilizadas','intervencoes','Registre mediações, perguntas, modelos, recursos e estratégias que foram utilizadas.')}${field('Orientações para família / escola','orientacoes','Registre orientações, combinados e ações que precisam continuar fora da sessão.')}${field('Encaminhamento / próximo passo','next_step','O que será retomado? Quais metas, encaminhamentos ou ações ficam para a próxima sessão?',true)}${field('Observações finais','observacoes','Outras informações relevantes para o prontuário.')}</div><div class="final44-actions"><button type="button" class="btn btn-outline" id="v10AttCancel">Cancelar</button><button type="submit" class="btn btn-primary"><i data-lucide="check-circle-2"></i>${submitText}</button></div></form>`);
-    const form=body.querySelector('#v10AttendanceForm');body.querySelector('#v10AttCancel').onclick=close;
+    const s=await studentFor(ap.student_id);
+    const nm=s?.name||s?.full_name||ap.student_name||'Aluno';
+    const draftKey='legado:attendance-draft-v10:'+String(ap.id);
+    let draft={};
+    try{draft=JSON.parse(sessionStorage.getItem(draftKey)||'{}')||{}}catch(_){draft={}};
+    const isEnd=mode==='end';
+    const title=isEnd?'Encerrar atendimento':'Registrar atendimento';
+    const submitText=isEnd?'Encerrar atendimento e salvar registro':'Salvar registro e iniciar atendimento';
+    const val=(name,fallback='')=>esc(draft[name]??fallback??'');
+    const body=modalShell(title,'ATENDIMENTO · '+(isEnd?'FINALIZAÇÃO':'REGISTRO'),
+      `<div class="final44-attendance-intro"><div><strong>${esc(nm)}</strong><span>${esc(dateOnly(ap.appointment_date)||today())}${timeOnly(ap.appointment_time||ap.start_time||ap.time)?` · ${esc(timeOnly(ap.appointment_time||ap.start_time||ap.time))}`:''} · ${esc(ap.type||'Atendimento psicopedagógico')}</span></div><span class="legado-live-pill">${isEnd?'Pronto para finalizar':'Novo atendimento'}</span></div>
+      <form id="v10AttendanceForm" autocomplete="off">
+        <div class="final44-grid">
+          <label class="final44-field"><span>Data *</span><input type="date" name="record_date" value="${val('record_date',dateOnly(ap.appointment_date)||today())}" required></label>
+          <label class="final44-field"><span>Título da sessão *</span><input name="title" value="${val('title',ap.type||'Atendimento psicopedagógico')}" required></label>
+          <label class="final44-field"><span>Duração</span><input name="duration" value="${val('duration',ap.duration||'')}" placeholder="Ex.: 50 min"></label>
+          <label class="final44-field"><span>Estado observado</span><select name="mood"><option value="">Selecione</option>${['Tranquilo e disponível','Colaborativo','Oscilante','Cansado','Resistente','Ansioso','Outro'].map(x=>`<option ${String(draft.mood||'')===x?'selected':''}>${esc(x)}</option>`).join('')}</select></label>
+          ${field('Objetivo da sessão','objetivo','O que foi planejado trabalhar? Qual habilidade, competência ou objetivo pedagógico estava sendo desenvolvido?',true)}
+          ${field('Atividade / situação proposta','atividade','Descreva a proposta, material, jogo, texto, problema, recurso ou situação de aprendizagem.',true)}
+          ${field('Resposta e participação do aluno','resposta','Como iniciou, participou, respondeu, sustentou a tarefa e reagiu às mediações?',true)}
+          ${field('Dificuldades observadas','dificuldades','Registre barreiras, dificuldades, erros recorrentes e momentos em que precisou de ajuda.')}
+          ${field('Potencialidades / avanços observados','avancos','O que conseguiu fazer melhor, com mais autonomia ou com menos mediação?')}
+          ${field('Intervenções e estratégias utilizadas','intervencoes','Registre mediações, perguntas, modelos, recursos e estratégias que foram utilizadas.')}
+          ${field('Orientações para família / escola','orientacoes','Registre orientações, combinados e ações que precisam continuar fora da sessão.')}
+          ${field('Encaminhamento / próximo passo','next_step','O que será retomado? Quais metas, encaminhamentos ou ações ficam para a próxima sessão?',true)}
+          ${field('Observações finais','observacoes','Outras informações relevantes para o prontuário.')}
+        </div>
+        <div class="final44-actions"><button type="button" class="btn btn-outline" id="v10AttCancel">Cancelar</button><button type="submit" class="btn btn-primary"><i data-lucide="${isEnd?'check-circle-2':'play-circle'}"></i>${submitText}</button></div>
+      </form>`);
+    const form=body?.querySelector('#v10AttendanceForm');
+    if(!form)return;
+    ['objetivo','atividade','resposta','dificuldades','avancos','intervencoes','orientacoes','next_step','observacoes'].forEach(n=>{
+      const el=form.elements[n]; if(el && draft[n]!=null) el.value=String(draft[n]);
+    });
+    body.querySelector('#v10AttCancel').onclick=close;
+    form.addEventListener('input',()=>{
+      const data=Object.fromEntries(new FormData(form).entries());
+      try{sessionStorage.setItem(draftKey,JSON.stringify(data))}catch(_){ }
+    });
     form.onsubmit=async e=>{
-      e.preventDefault();const btn=form.querySelector('[type=submit]');btn.disabled=true;
+      e.preventDefault();
+      const btn=form.querySelector('[type=submit]');
+      if(btn.disabled)return;
+      btn.disabled=true; btn.classList.add('is-loading');
       try{
         const fd=new FormData(form);
-        const blocks=[['Objetivo da sessão',fd.get('objetivo')],['Atividade / situação proposta',fd.get('atividade')],['Resposta e participação do aluno',fd.get('resposta')],['Dificuldades observadas',fd.get('dificuldades')],['Potencialidades / avanços observados',fd.get('avancos')],['Intervenções e estratégias utilizadas',fd.get('intervencoes')],['Orientações para família / escola',fd.get('orientacoes')],['Encaminhamento / próximo passo',fd.get('next_step')],['Observações finais',fd.get('observacoes')]].filter(([,v])=>String(v||'').trim()).map(([k,v])=>`[${k}]\n${String(v).trim()}`).join('\n\n');
-        if(!blocks)throw new Error('Preencha o registro da sessão antes de concluir.');
-        const c=db();const rr=await c.from('student_records').insert({user_id:uid(),student_id:ap.student_id,record_type:'atendimento',record_date:fd.get('record_date'),title:String(fd.get('title')||'Atendimento').trim(),content:blocks,duration:String(fd.get('duration')||'').trim()||null,mood:String(fd.get('mood')||'').trim()||null,next_step:String(fd.get('next_step')||'').trim()||null});
+        if(isEnd && !String(fd.get('objetivo')||'').trim()) throw new Error('Preencha o objetivo da sessão.');
+        if(isEnd && !String(fd.get('atividade')||'').trim()) throw new Error('Preencha a atividade / situação proposta.');
+        if(isEnd && !String(fd.get('resposta')||'').trim()) throw new Error('Preencha a resposta e participação do aluno.');
+        if(isEnd && !String(fd.get('next_step')||'').trim()) throw new Error('Preencha o encaminhamento / próximo passo.');
+        const data={record_date:fd.get('record_date'),title:String(fd.get('title')||'Atendimento').trim(),duration:String(fd.get('duration')||'').trim()||null,mood:String(fd.get('mood')||'').trim()||null,objetivo:fd.get('objetivo'),atividade:fd.get('atividade'),resposta:fd.get('resposta'),dificuldades:fd.get('dificuldades'),avancos:fd.get('avancos'),intervencoes:fd.get('intervencoes'),orientacoes:fd.get('orientacoes'),next_step:fd.get('next_step'),observacoes:fd.get('observacoes')};
+        try{sessionStorage.setItem(draftKey,JSON.stringify(data))}catch(_){ }
+        if(!isEnd){
+          await updateStatus(ap.id,'in_progress');
+          setActive({id:ap.id,student_id:ap.student_id,student_name:nm,started_at:new Date().toISOString()});
+          close(); W.__legadoActiveSession=ap.id;
+          W.showSuccess?.('Atendimento iniciado. O registro ficou salvo como rascunho para você concluir ao encerrar.');
+          await W.renderAgenda?.(); await W.renderDashboard?.(); return;
+        }
+        const blocks=[['Objetivo da sessão',data.objetivo],['Atividade / situação proposta',data.atividade],['Resposta e participação do aluno',data.resposta],['Dificuldades observadas',data.dificuldades],['Potencialidades / avanços observados',data.avancos],['Intervenções e estratégias utilizadas',data.intervencoes],['Orientações para família / escola',data.orientacoes],['Encaminhamento / próximo passo',data.next_step],['Observações finais',data.observacoes]].filter(([,v])=>String(v||'').trim()).map(([k,v])=>`[${k}]\n${String(v).trim()}`).join('\n\n');
+        const c=db(); if(!c)throw new Error('Conexão com o banco de dados não está disponível.');
+        const rr=await c.from('student_records').insert({user_id:uid(),student_id:ap.student_id,record_type:'atendimento',record_date:data.record_date,title:data.title,content:blocks,duration:data.duration,mood:data.mood,next_step:String(data.next_step||'').trim()||null});
         if(rr.error)throw rr.error;
-        await updateStatus(ap.id,'completed');setActive(null);W.__legadoActiveSession=null;close();W.showSuccess?.('Atendimento encerrado e registrado no prontuário.');await W.renderAgenda?.();await W.renderDashboard?.();
-      }catch(err){W.showError?.('Não foi possível registrar o atendimento: '+(err.message||err));}finally{btn.disabled=false;}
+        await updateStatus(ap.id,'completed');
+        setActive(null); W.__legadoActiveSession=null;
+        try{sessionStorage.removeItem(draftKey)}catch(_){ }
+        close(); W.showSuccess?.('Atendimento encerrado e registrado no prontuário.');
+        await W.renderAgenda?.(); await W.renderDashboard?.();
+      }catch(err){
+        W.showError?.(err.message||'Não foi possível salvar o atendimento.');
+        btn.disabled=false; btn.classList.remove('is-loading');
+      }
     };
+    setTimeout(()=>{const first=form.elements.objetivo||form.elements.title; first?.focus?.();},60);
   }
 
   W.__legadoActiveSession=null;
@@ -21695,4 +21753,121 @@ tbody tr:hover td{background:#f8fbfa!important}
 })();
 </script>
 
+
+<style id="legado-responsive-final-v11">
+/* V11 — estrutura responsiva real: o conteúdo ocupa todo o espaço restante do menu */
+html,body{width:100%;min-width:0;max-width:100%;overflow:hidden!important}
+.app{width:100vw!important;max-width:100vw!important;min-width:0!important;overflow:hidden!important}
+.main{margin-left:0!important;width:calc(100% - 238px)!important;max-width:none!important;min-width:0!important;flex:1 1 auto!important}
+.topbar{width:100%!important;box-sizing:border-box!important;flex:0 0 74px!important}
+.content{width:100%!important;max-width:none!important;margin:0!important;box-sizing:border-box!important;min-width:0!important;overflow:auto!important}
+
+/* evita que grids e tabelas empurrem a página para fora da viewport */
+.content>*{max-width:100%!important;min-width:0!important}
+.v3-panel,.card,.l14-panel,.final33-panel,.final44-modal,.v3-student-card,.v3-assessment-card{min-width:0!important;box-sizing:border-box!important}
+.v3-panel-head,.v3-head,.page-heading,.panel-head,.v3-section-intro{min-width:0!important}
+
+/* modal de atendimento: área clicável, digitável e rolável em qualquer tela */
+.final44-modal-backdrop{position:fixed!important;inset:0!important;z-index:99999!important;display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;overflow:auto!important;padding:clamp(10px,3vw,28px)!important;pointer-events:auto!important;touch-action:auto!important}
+.final44-modal-backdrop>.final44-modal{width:min(960px,100%)!important;max-width:100%!important;max-height:calc(100dvh - 24px)!important;margin:auto!important;overflow:auto!important;pointer-events:auto!important;touch-action:auto!important;box-sizing:border-box!important}
+.final44-modal-body{min-width:0!important;overflow:visible!important}
+.final44-grid{min-width:0!important}
+.final44-field{min-width:0!important}
+.final44-field input,.final44-field select,.final44-field textarea{width:100%!important;max-width:100%!important;box-sizing:border-box!important;pointer-events:auto!important;user-select:text!important}
+.final44-actions{position:sticky!important;bottom:0!important;z-index:3!important;background:rgba(255,255,255,.97)!important;padding-bottom:4px!important}
+body.final27-dark .final44-actions{background:rgba(17,26,23,.97)!important}
+
+/* tablet / notebook */
+@media (max-width:1180px){
+  .sidebar{width:220px!important;flex-basis:220px!important}
+  .main{width:calc(100% - 220px)!important}
+  .content{padding-left:20px!important;padding-right:20px!important}
+}
+@media (max-width:900px) and (min-width:761px){
+  .sidebar{width:84px!important;flex-basis:84px!important;padding-left:8px!important;padding-right:8px!important}
+  .brand{justify-content:center!important;padding-left:6px!important;padding-right:6px!important}
+  .brand-text,.nav-label,.side-bottom .nav-label{display:none!important}
+  .nav button{justify-content:center!important;padding-left:0!important;padding-right:0!important}
+  .main{width:calc(100% - 84px)!important}
+  .topbar{padding-left:16px!important;padding-right:16px!important}
+  .content{padding:18px 16px 30px!important}
+}
+
+/* celular: menu lateral vira gaveta e a área de trabalho ocupa 100% */
+.mobile-menu-toggle{display:none}
+.mobile-sidebar-backdrop{display:none}
+@media (max-width:760px){
+  html,body{overflow:hidden!important}
+  .app{position:relative!important;overflow:hidden!important}
+  .sidebar{position:fixed!important;left:0!important;top:0!important;bottom:0!important;width:min(290px,86vw)!important;height:100dvh!important;z-index:100001!important;transform:translateX(-105%)!important;transition:transform .22s ease!important;box-shadow:18px 0 45px rgba(12,31,25,.22)!important;overflow-y:auto!important}
+  body.mobile-menu-open .sidebar{transform:translateX(0)!important}
+  .main{width:100%!important;max-width:100%!important;margin:0!important}
+  .topbar{height:64px!important;flex-basis:64px!important;padding:0 12px!important;gap:8px!important;position:relative!important;z-index:1000!important}
+  .topbar #pageTitle{font-size:16px!important;margin-right:0!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+  .topbar .user-mini{margin-left:auto!important;min-width:0!important}
+  .topbar .user-mini .nav-label{display:none!important}
+  .content{height:calc(100dvh - 64px)!important;padding:14px 12px 26px!important}
+  .mobile-menu-toggle{display:grid!important;place-items:center!important;width:40px!important;height:40px!important;flex:0 0 40px!important;border:1px solid #dbe6e1!important;border-radius:11px!important;background:#fff!important;color:#2d6f67!important;cursor:pointer!important}
+  .mobile-menu-toggle svg{width:19px!important;height:19px!important}
+  .mobile-sidebar-backdrop{position:fixed!important;inset:0!important;z-index:100000!important;background:rgba(10,25,20,.42)!important;backdrop-filter:blur(2px)!important}
+  body.mobile-menu-open .mobile-sidebar-backdrop{display:block!important}
+  .v3-head h1{font-size:24px!important}
+  .v3-head{gap:12px!important;padding-bottom:14px!important}
+  .v3-head-actions{width:100%!important;display:flex!important;flex-wrap:wrap!important}
+  .v3-head-actions .btn{flex:1 1 auto!important}
+  .v3-panel{padding:16px!important;border-radius:14px!important}
+  .v3-stats,.v3-profile-stats,.final33-kpis,.final44-indicator-grid{grid-template-columns:1fr!important}
+  .v3-form-grid,.final44-grid,.final19-doc-fields{grid-template-columns:1fr!important}
+  .final44-field.full{grid-column:auto!important}
+  .final44-modal-backdrop{align-items:flex-start!important;padding:10px!important}
+  .final44-modal-backdrop>.final44-modal{width:100%!important;max-height:calc(100dvh - 20px)!important;border-radius:16px!important}
+  .final44-modal-head{padding:15px 16px!important}
+  .final44-modal-body{padding:14px 16px 16px!important}
+  .final44-actions{flex-direction:column-reverse!important;align-items:stretch!important;gap:8px!important;padding-top:12px!important}
+  .final44-actions .btn{width:100%!important;min-height:44px!important}
+  .final44-attendance-intro{align-items:flex-start!important;flex-direction:column!important}
+  .l14-up-item{grid-template-columns:1fr!important}
+  .legado-slot-actions{width:100%!important}
+  .legado-slot-actions .btn{flex:1 1 150px!important}
+}
+@media (max-width:420px){
+  .content{padding-left:9px!important;padding-right:9px!important}
+  .v3-panel{padding:13px!important}
+  .btn{min-height:40px!important}
+  .final44-modal-head h2{font-size:18px!important}
+}
+</style>
+
+<script id="legado-responsive-final-v11-js">
+(function(){
+  'use strict';
+  const d=document, body=d.body;
+  function setup(){
+    const sidebar=d.querySelector('.sidebar'), topbar=d.querySelector('.topbar');
+    if(!sidebar||!topbar)return;
+    if(!d.querySelector('.mobile-menu-toggle')){
+      const b=d.createElement('button');
+      b.type='button'; b.className='mobile-menu-toggle'; b.setAttribute('aria-label','Abrir menu'); b.setAttribute('aria-expanded','false');
+      b.innerHTML='<i data-lucide="menu"></i>';
+      topbar.insertBefore(b,topbar.firstChild);
+      b.addEventListener('click',()=>{
+        const open=!body.classList.contains('mobile-menu-open');
+        body.classList.toggle('mobile-menu-open',open); b.setAttribute('aria-expanded',String(open));
+        b.innerHTML=`<i data-lucide="${open?'x':'menu'}"></i>`; window.refreshIcons?.();
+      });
+    }
+    if(!d.querySelector('.mobile-sidebar-backdrop')){
+      const bg=d.createElement('div'); bg.className='mobile-sidebar-backdrop'; bg.setAttribute('aria-hidden','true');
+      bg.addEventListener('click',()=>{body.classList.remove('mobile-menu-open');const b=d.querySelector('.mobile-menu-toggle');b?.setAttribute('aria-expanded','false');if(b){b.innerHTML='<i data-lucide="menu"></i>';window.refreshIcons?.()}});
+      d.body.appendChild(bg);
+    }
+    sidebar.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{
+      if(window.matchMedia('(max-width:760px)').matches){body.classList.remove('mobile-menu-open');const b=d.querySelector('.mobile-menu-toggle');b?.setAttribute('aria-expanded','false');if(b){b.innerHTML='<i data-lucide="menu"></i>';window.refreshIcons?.()}}
+    },{passive:true}));
+    window.refreshIcons?.();
+  }
+  if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',setup,{once:true});else setup();
+  window.addEventListener('resize',()=>{if(!window.matchMedia('(max-width:760px)').matches)body.classList.remove('mobile-menu-open')},{passive:true});
+})();
+</script>
 </html>
