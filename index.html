@@ -12468,294 +12468,6 @@ body.legado-v4-modal-open{overflow:hidden}
   @media(max-width:520px){.final19-greeting{align-items:flex-start}.final19-plan-card{align-items:flex-start}.final19-plan-status{margin-left:auto}.final19-doc-card .btn{width:100%}.final19-doc-actions{flex-direction:column}.final19-doc-actions .btn{width:100%}.final19-choice-card,.final19-doc-modal{padding:22px}.final19-up-actions{justify-content:flex-start}}
 </style>
 
-<script id="legado-final19">
-(function(){
-  'use strict';
-  const W=window;
-  const esc=W.escapeHtml||(v=>String(v??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[m])));
-  const byId=id=>document.getElementById(id);
-  const uid=()=>W.state?.user?.id||null;
-  const sb=()=>W.supabaseClient;
-  const schemaName=n=>W.SUPABASE_SCHEMA?.[n]||W.TABLE?.[n]||n;
-  const financeTable=()=>W.SUPABASE_SCHEMA?.finance||W.TABLE?.finance||'financial_entries';
-  const dateOnly=v=>{
-    if(!v)return '';
-    const d=new Date(String(v).slice(0,10)+'T12:00:00');
-    return Number.isNaN(d.getTime())?'':d.toLocaleDateString('pt-BR');
-  };
-  const teacherName=()=>String(W.state?.profile?.full_name||W.state?.profile?.name||W.state?.user?.user_metadata?.full_name||W.state?.user?.user_metadata?.name||W.state?.user?.email?.split('@')[0]||'Professor').trim();
-
-  /* ============================================================
-     1) AGENDA: CANCELAR x EXCLUIR DE VERDADE
-     ============================================================ */
-  W.l14CancelAppointment=async function(id){
-    const client=sb(), me=uid();
-    if(!client||!me){W.showError?.('Sessão não encontrada.');return;}
-    const old=W.openModal;
-    const close=()=>{
-      if(byId('final19AppointmentChoice')) byId('final19AppointmentChoice').remove();
-    };
-    close();
-    const root=document.createElement('div');
-    root.id='final19AppointmentChoice';
-    root.className='final19-modal-overlay';
-    root.innerHTML=`<div class="final19-choice-card" role="dialog" aria-modal="true">
-      <div class="final19-choice-icon"><i data-lucide="calendar-x-2"></i></div>
-      <div class="final19-choice-kicker">GERENCIAR ATENDIMENTO</div>
-      <h2>O que deseja fazer?</h2>
-      <p>Você pode apenas cancelar este horário, mantendo o registro, ou excluir o atendimento definitivamente.</p>
-      <div class="final19-choice-actions">
-        <button type="button" class="btn btn-outline" id="final19CancelOnly"><i data-lucide="calendar-off"></i>Cancelar atendimento</button>
-        <button type="button" class="btn btn-danger" id="final19DeleteForever"><i data-lucide="trash-2"></i>Excluir definitivamente</button>
-      </div>
-      <button type="button" class="final19-choice-close" id="final19ChoiceClose" aria-label="Fechar"><i data-lucide="x"></i></button>
-    </div>`;
-    document.body.appendChild(root);
-    W.refreshIcons?.();
-    const finish=()=>root.remove();
-    byId('final19ChoiceClose').onclick=finish;
-    root.addEventListener('click',e=>{if(e.target===root)finish();});
-    byId('final19CancelOnly').onclick=async()=>{
-      const b=byId('final19CancelOnly'); if(b)b.disabled=true;
-      try{
-        const {error}=await client.from(schemaName('appointments')).update({status:'cancelled',updated_at:new Date().toISOString()}).eq('id',id).eq('user_id',me);
-        if(error)throw error;
-        finish(); W.showSuccess?.('Atendimento cancelado.'); await W.renderAgenda?.();
-      }catch(e){if(b)b.disabled=false;W.showError?.('Não foi possível cancelar: '+(e.message||e));}
-    };
-    byId('final19DeleteForever').onclick=async()=>{
-      const b=byId('final19DeleteForever'); if(b)b.disabled=true;
-      try{
-        const {error}=await client.from(schemaName('appointments')).delete().eq('id',id).eq('user_id',me);
-        if(error)throw error;
-        finish(); W.showSuccess?.('Atendimento excluído definitivamente.'); await W.renderAgenda?.();
-      }catch(e){if(b)b.disabled=false;W.showError?.('Não foi possível excluir o atendimento: '+(e.message||e));}
-    };
-  };
-
-  async function decorateUpcomingAppointmentActions(){
-    const root=byId('agendaContent'); if(!root||!uid()||!sb())return;
-    const items=[...root.querySelectorAll('.l14-up-item')]; if(!items.length)return;
-    try{
-      const today=W.todayInputDate?.()||new Date().toISOString().slice(0,10);
-      const {data,error}=await sb().from(schemaName('appointments')).select('*').eq('user_id',uid()).gte('appointment_date',today).order('appointment_date',{ascending:true}).order('appointment_time',{ascending:true}).limit(50);
-      if(error)return;
-      const apps=(data||[]).filter(a=>!['cancelled','canceled','completed'].includes(String(a.status||'').toLowerCase()));
-      items.forEach(item=>{
-        if(item.querySelector('.final19-up-actions'))return;
-        const dateTxt=item.querySelector('.l14-up-date strong')?.textContent?.trim()||'';
-        const timeTxt=item.querySelector('.l14-up-date span')?.textContent?.trim()||'';
-        const nameTxt=item.querySelector('.l14-up-main strong')?.textContent?.trim()||'';
-        const app=apps.find(a=>dateOnly(a.appointment_date)===dateTxt && String(a.appointment_time||a.start_time||a.time||'').slice(0,5)===timeTxt && String(a.student_name||'').trim()===nameTxt) || apps.find(a=>dateOnly(a.appointment_date)===dateTxt && String(a.appointment_time||a.start_time||a.time||'').slice(0,5)===timeTxt);
-        if(!app)return;
-        const actions=document.createElement('div'); actions.className='final19-up-actions';
-        actions.innerHTML=`<button type="button" class="btn btn-outline btn-sm" data-final19-reagendar="${esc(app.id)}"><i data-lucide="calendar-sync"></i>Reagendar</button><button type="button" class="btn btn-danger btn-sm" data-final19-excluir="${esc(app.id)}"><i data-lucide="trash-2"></i>Excluir</button>`;
-        item.appendChild(actions);
-        actions.querySelector('[data-final19-reagendar]')?.addEventListener('click',()=>W.v4OpenAppointmentModal?.(app.appointment_date,String(app.appointment_time||app.start_time||app.time||'').slice(0,5),app.student_id||''));
-        actions.querySelector('[data-final19-excluir]')?.addEventListener('click',()=>W.l14CancelAppointment(app.id));
-      });
-      W.refreshIcons?.();
-    }catch(_){/* não interrompe a agenda */}
-  }
-
-  /* ============================================================
-     2) DASHBOARD: SAUDAÇÃO DINÂMICA
-     ============================================================ */
-  function greeting(){
-    const h=new Date().getHours();
-    if(h>=5&&h<12)return 'Bom dia';
-    if(h>=12&&h<18)return 'Boa tarde';
-    return 'Boa noite';
-  }
-  function ensureDashboardGreeting(){
-    const c=byId('dashboardContent'); if(!c)return;
-    let g=c.querySelector('[data-final19-greeting]');
-    if(!g){
-      g=document.createElement('section');g.dataset.final19Greeting='1';g.className='final19-greeting';
-      c.prepend(g);
-    }
-    g.innerHTML=`<div class="final19-greeting-icon"><i data-lucide="sun-medium"></i></div><div><div class="final19-greeting-kicker">SEJA BEM-VINDO</div><h2>${esc(greeting())}, ${esc(teacherName())}!</h2><p>Que seu atendimento hoje seja organizado, acolhedor e produtivo.</p></div>`;
-    W.refreshIcons?.();
-  }
-
-  const originalDashboard=W.renderDashboard;
-  if(typeof originalDashboard==='function'&&!originalDashboard.__final19){
-    W.renderDashboard=async function(){const r=await originalDashboard.apply(this,arguments);ensureDashboardGreeting();return r;};
-    W.renderDashboard.__final19=true;
-  }
-
-  /* ============================================================
-     3) MEU PERFIL: MOSTRAR PLANO CONTRATADO
-     ============================================================ */
-  function ensurePlanCard(){
-    const c=byId('perfilContent'); if(!c)return;
-    const host=c.querySelector('.v3-profile-editor'); if(!host)return;
-    let card=c.querySelector('[data-final19-plan]');
-    if(!card){card=document.createElement('section');card.dataset.final19Plan='1';card.className='final19-plan-card';host.insertAdjacentElement('afterend',card);}
-    const p=W.state?.profile||{};
-    const plan=p.plan_name||p.plan||'Plano não informado';
-    const price=p.plan_price!=null&&p.plan_price!=='' ? (W.formatCurrency?W.formatCurrency(Number(p.plan_price)):'R$ '+Number(p.plan_price).toFixed(2).replace('.',',')) : 'Valor não informado';
-    const expiry=p.access_expires_at||p.subscription_expires_at||p.plan_expires_at||null;
-    const status=expiry&&new Date(expiry).getTime()<Date.now()?'Vencido':'Ativo';
-    card.innerHTML=`<div class="final19-plan-icon"><i data-lucide="badge-check"></i></div><div class="final19-plan-main"><div class="final19-plan-kicker">SEU PLANO</div><h3>${esc(plan)}</h3><p>${esc(price)}${expiry?' · acesso até '+esc(dateOnly(expiry)):''}</p></div><span class="final19-plan-status ${status==='Ativo'?'good':'bad'}">${status}</span>`;
-    W.refreshIcons?.();
-  }
-  const originalProfile=W.renderProfile;
-  if(typeof originalProfile==='function'&&!originalProfile.__final19){
-    W.renderProfile=async function(){const r=await originalProfile.apply(this,arguments);ensurePlanCard();return r;};
-    W.renderProfile.__final19=true;
-  }
-
-  /* ============================================================
-     4) NOVA PÁGINA: MODELOS E DOCUMENTOS
-     ============================================================ */
-  const DOCS=[
-    {id:'recibo',title:'Recibo digital',desc:'Escreva, revise e gere o recibo em PDF pronto para imprimir.',icon:'receipt-text'},
-    {id:'declaracao',title:'Declaração digital',desc:'Escreva sua declaração, revise e gere o PDF pronto para imprimir.',icon:'file-check-2'},
-    {id:'encaminhamento',title:'Encaminhamento',desc:'Modelo de encaminhamento para outro especialista.',icon:'send'},
-    {id:'contrato',title:'Declaração de acompanhamento',desc:'Modelo de declaração de acompanhamento psicopedagógico.',icon:'file-text'}
-  ];
-  function ensureDocsView(){
-    const content=byId('content'); if(!content)return;
-    if(!byId('view-documentos')){
-      const s=document.createElement('section');s.id='view-documentos';s.className='view';s.innerHTML='<div id="documentosContent"></div>';content.appendChild(s);
-    }
-    const nav=byId('mainNav');
-    if(nav&&!nav.querySelector('[data-view="documentos"]')){
-      const b=document.createElement('button');b.type='button';b.dataset.view='documentos';b.onclick=()=>W.navigate('documentos');b.innerHTML='<i data-lucide="file-text"></i><span class="nav-label">Modelos e documentos</span>';nav.appendChild(b);W.refreshIcons?.();
-    }
-  }
-  function docsView(){
-    const c=byId('documentosContent'); if(!c)return;
-    c.innerHTML=`<div class="final19-doc-page"><div class="v3-head"><div><div class="v3-kicker">DOCUMENTOS</div><h1>Modelos e documentos</h1><p>Escolha um modelo, preencha as informações e depois salve em PDF ou imprima.</p></div></div><div class="final19-doc-grid">${DOCS.map(d=>`<article class="final19-doc-card"><div class="final19-doc-icon"><i data-lucide="${d.icon}"></i></div><div><div class="final19-doc-kicker">MODELO</div><h3>${d.title}</h3><p>${d.desc}</p></div><button type="button" class="btn btn-primary btn-sm" data-final19-doc="${d.id}"><i data-lucide="pencil-line"></i>Preencher</button></article>`).join('')}</div><div class="final19-doc-tip"><i data-lucide="lightbulb"></i><div><strong>Como funciona</strong><p>Preencha o modelo, revise o texto e escolha entre <b>Salvar em PDF</b> ou <b>Imprimir</b>. O documento usa os dados do professor logado.</p></div></div></div>`;
-    c.querySelectorAll('[data-final19-doc]').forEach(b=>b.addEventListener('click',()=>openDocModal(b.dataset.final19Doc)));
-    W.refreshIcons?.();
-  }
-  function docTemplate(type){
-    const t=teacherName()||'________________________________';
-    const today=new Date().toLocaleDateString('pt-BR');
-    if(type==='recibo')return `RECIBO DE PAGAMENTO\n\nRecebi de [NOME DE QUEM PAGOU] a importância de R$ [VALOR], referente a [REFERENTE A].\nForma de pagamento: [FORMA DE PAGAMENTO].\nData do pagamento: [DATA].\n\nObservação: [OBSERVAÇÃO]\n\n${t}\nProfessor(a) / Psicopedagogo(a)`;
-    if(type==='declaracao')return `DECLARAÇÃO\n\nDeclaro, para os devidos fins, que [NOME DO(A) INTERESSADO(A)] participou de [FINALIDADE] [PERÍODO].\nDocumento: [DOCUMENTO].\n\n[ESCREVA AQUI O TEXTO DA DECLARAÇÃO]\n\n${t}\nProfessor(a) / Psicopedagogo(a)\n${today}`;
-    if(type==='encaminhamento')return `ENCAMINHAMENTO\n\nEncaminho o(a) aluno(a) [NOME DO(A) ALUNO(A)], [IDADE] anos, para avaliação/atendimento na área de [ESPECIALISTA / ÁREA].\n\nMotivo do encaminhamento:\n[ESCREVA AQUI O MOTIVO]\n\n${t}\nProfessor(a) / Psicopedagogo(a)\n${today}`;
-    return `DECLARAÇÃO DE ACOMPANHAMENTO\n\nDeclaro que o(a) aluno(a) [NOME DO(A) ALUNO(A)] encontra-se em acompanhamento psicopedagógico [PERÍODO].\n\n[ESCREVA AQUI O TEXTO DA DECLARAÇÃO]\n\n${t}\nProfessor(a) / Psicopedagogo(a)\n${today}`;
-  }
-  function docFields(type){
-    const dateDefault=W.todayInputDate?.()||new Date().toISOString().slice(0,10);
-    const common=`<label class="full final19-doc-editor"><span>Texto do documento *</span><textarea name="document_text" rows="14" required></textarea><small>Você pode apagar o modelo e escrever o documento exatamente como quiser. O conteúdo desta caixa será o texto usado no PDF e na impressão.</small></label>`;
-    if(type==='recibo')return `
-      <label><span>Nome de quem pagou *</span><input name="payer" required></label>
-      <label><span>Valor *</span><input name="amount" inputmode="decimal" placeholder="0,00" required></label>
-      <label><span>Referente a</span><input name="reference" value="Atendimento psicopedagógico"></label>
-      <label><span>Data do pagamento</span><input type="date" name="date" value="${dateDefault}"></label>
-      <label><span>Forma de pagamento</span><input name="method" placeholder="PIX, dinheiro, cartão..."></label>
-      <label class="full"><span>Observação</span><textarea name="note" rows="3"></textarea></label>${common}`;
-    if(type==='declaracao')return `
-      <label><span>Nome do(a) interessado(a) *</span><input name="person" required></label>
-      <label><span>Documento (opcional)</span><input name="document"></label>
-      <label><span>Finalidade</span><input name="purpose" value="Declarar comparecimento/acompanhamento psicopedagógico"></label>
-      <label><span>Período</span><input name="period" placeholder="Ex.: agosto de 2026"></label>
-      <label class="full"><span>Texto adicional</span><textarea name="note" rows="3"></textarea></label>${common}`;
-    if(type==='encaminhamento')return `
-      <label><span>Nome do(a) aluno(a) *</span><input name="student" required></label>
-      <label><span>Idade</span><input name="age"></label>
-      <label><span>Especialista / área *</span><input name="specialist" placeholder="Ex.: fonoaudiologia, neurologia, psicologia..." required></label>
-      <label><span>Data</span><input type="date" name="date" value="${dateDefault}"></label>
-      <label class="full"><span>Motivo do encaminhamento *</span><textarea name="reason" rows="5" required></textarea></label>${common}`;
-    return `
-      <label><span>Nome do(a) aluno(a) *</span><input name="student" required></label>
-      <label><span>Período de acompanhamento</span><input name="period"></label>
-      <label><span>Data de emissão</span><input type="date" name="date" value="${dateDefault}"></label>
-      <label class="full"><span>Observações</span><textarea name="note" rows="4"></textarea></label>${common}`;
-  }
-  function docTitle(type){return DOCS.find(x=>x.id===type)?.title||'Documento';}
-  function buildDocText(type,fd){
-    const t=teacherName();const today=dateOnly(fd.get('date'))||new Date().toLocaleDateString('pt-BR');
-    const custom=String(fd.get('document_text')||'').trim();
-    if(custom){
-      const replacements={
-        '[NOME DE QUEM PAGOU]':fd.get('payer')||'', '[VALOR]':fd.get('amount')||'', '[REFERENTE A]':fd.get('reference')||'', '[FORMA DE PAGAMENTO]':fd.get('method')||'', '[DATA]':today, '[OBSERVAÇÃO]':fd.get('note')||'',
-        '[NOME DO(A) INTERESSADO(A)]':fd.get('person')||'', '[DOCUMENTO]':fd.get('document')||'', '[FINALIDADE]':fd.get('purpose')||'', '[PERÍODO]':fd.get('period')||'',
-        '[NOME DO(A) ALUNO(A)]':fd.get('student')||'', '[IDADE]':fd.get('age')||'', '[ESPECIALISTA / ÁREA]':fd.get('specialist')||'', '[ESCREVA AQUI O TEXTO DA DECLARAÇÃO]':fd.get('note')||'', '[ESCREVA AQUI O MOTIVO]':fd.get('reason')||''
-      };
-      let text=custom;Object.entries(replacements).forEach(([k,v])=>{text=text.split(k).join(String(v||''));});
-      const lines=text.split(/\n+/);const title=lines.shift()?.trim()||docTitle(type).toUpperCase();
-      return {title,body:[lines.join('\n').trim()].filter(Boolean)};
-    }
-    if(type==='recibo')return {title:'RECIBO DE PAGAMENTO',body:[`Recebi de ${fd.get('payer')||'________________________________'} a importância de R$ ${fd.get('amount')||'__________'}, referente a ${fd.get('reference')||'________________________________'}.`,`Forma de pagamento: ${fd.get('method')||'____________________'}.`,`Data do pagamento: ${today}.`,fd.get('note')?`Observação: ${fd.get('note')}`:'',`\n${t}\nProfessor(a) / Psicopedagogo(a)`].filter(Boolean)};
-    if(type==='declaracao')return {title:'DECLARAÇÃO',body:[`Declaro, para os devidos fins, que ${fd.get('person')||'________________________________'} participou de ${fd.get('purpose')||'acompanhamento psicopedagógico'} ${fd.get('period')?`no período de ${fd.get('period')}`:''}.`,`Documento: ${fd.get('document')||'não informado'}.`,fd.get('note')||'',`\n${t}\nProfessor(a) / Psicopedagogo(a)\n${today}`].filter(Boolean)};
-    if(type==='encaminhamento')return {title:'ENCAMINHAMENTO',body:[`Encaminho o(a) aluno(a) ${fd.get('student')||'________________________________'}, ${fd.get('age')?fd.get('age')+' anos.':''}`,`Solicito avaliação/atendimento na área de ${fd.get('specialist')||'________________________'}.`,`Motivo do encaminhamento:\n${fd.get('reason')||'________________________________'}`,`\n${t}\nProfessor(a) / Psicopedagogo(a)\n${today}`]};
-    return {title:'DECLARAÇÃO DE ACOMPANHAMENTO',body:[`Declaro que o(a) aluno(a) ${fd.get('student')||'________________________________'} encontra-se em acompanhamento psicopedagógico ${fd.get('period')?`no período de ${fd.get('period')}`:''}.`,fd.get('note')||'',`\n${t}\nProfessor(a) / Psicopedagogo(a)\n${today}`].filter(Boolean)};
-  }
-  function openDocModal(type){
-    byId('final19DocModal')?.remove();
-    const root=document.createElement('div');root.id='final19DocModal';root.className='final19-modal-overlay';
-    root.innerHTML=`<div class="final19-doc-modal" role="dialog" aria-modal="true"><button type="button" class="final19-choice-close" id="final19DocClose"><i data-lucide="x"></i></button><div class="final19-choice-kicker">MODELO PROFISSIONAL</div><h2>${esc(docTitle(type))}</h2><p>Preencha os campos e depois escolha a saída desejada.</p><form id="final19DocForm" class="final19-doc-form"><div class="final19-doc-fields">${docFields(type)}</div><div class="final19-doc-actions"><button type="button" class="btn btn-outline" id="final19DocPrint"><i data-lucide="printer"></i>Imprimir</button><button type="button" class="btn btn-primary" id="final19DocPdf"><i data-lucide="file-down"></i>Salvar em PDF</button></div></form></div>`;
-    document.body.appendChild(root);W.refreshIcons?.();
-    const form=byId('final19DocForm');
-    const editor=form?.querySelector('[name="document_text"]');
-    if(editor) editor.value=docTemplate(type);
-    byId('final19DocClose').onclick=()=>root.remove();root.addEventListener('click',e=>{if(e.target===root)root.remove();});
-    byId('final19DocPrint').onclick=()=>{if(!form?.reportValidity())return;printDoc(type,new FormData(form));};
-    byId('final19DocPdf').onclick=()=>{if(!form?.reportValidity())return;saveDocPdf(type,new FormData(form));};
-  }
-  function saveDocPdf(type,fd){
-    const Js=W.jspdf?.jsPDF;if(!Js){W.showError?.('Biblioteca de PDF não disponível.');return;}
-    const data=buildDocText(type,fd),pdf=new Js({unit:'mm',format:'a4'}),w=210,m=20;pdf.setTextColor(38,50,56);pdf.setFont('helvetica','bold');pdf.setFontSize(18);pdf.text(data.title,w/2,30,{align:'center'});pdf.setFont('helvetica','normal');pdf.setFontSize(11);let y=52;for(const block of data.body){const lines=pdf.splitTextToSize(String(block),w-m*2);pdf.text(lines,m,y);y+=lines.length*7+6;if(y>270){pdf.addPage();y=25;}}pdf.setFontSize(9);pdf.setTextColor(120,130,125);pdf.text('Legado Que Ensina',m,287);pdf.save(`${type}-${new Date().toISOString().slice(0,10)}.pdf`);W.showSuccess?.('PDF gerado com sucesso.');}
-  function printDoc(type,fd){
-    const data=buildDocText(type,fd),w=window.open('','_blank','noopener,noreferrer');
-    if(!w){W.showError?.('O navegador bloqueou a janela de impressão. Permita pop-ups para imprimir.');return;}
-    w.document.write(`<html lang="pt-BR"><head><meta charset="utf-8"><title>${esc(data.title)}</title><style>body{font-family:Arial,sans-serif;padding:42px;line-height:1.7;color:#263238}h1{text-align:center;font-size:20px;margin-bottom:36px}p{white-space:pre-wrap;margin:0 0 18px}.sign{margin-top:80px;text-align:center}</style></head><body><h1>${esc(data.title)}</h1>${data.body.map(x=>`<p>${esc(x)}</p>`).join('')}
-
-<!-- ============================================================
-     FINAL 25 — PRESENÇA ONLINE EXCLUSIVA DA CONTA MASTER
-     ============================================================ -->
-
-
-</html>`);w.document.close();w.focus();setTimeout(()=>w.print(),250);
-  }
-
-  /* ============================================================
-     5) ROTEAMENTO FINAL — inclui DOCUMENTOS sem mexer nas demais telas
-     ============================================================ */
-  const titles={dashboard:{label:'Início',icon:'layout-dashboard'},alunos:{label:'Alunos',icon:'users'},'aluno-perfil':{label:'Perfil do aluno',icon:'user-round'},agenda:{label:'Agenda',icon:'calendar-days'},avaliacoes:{label:'Avaliações',icon:'clipboard-check'},financeiro:{label:'Financeiro',icon:'wallet-cards'},recados:{label:'Recados',icon:'message-square'},'lista-espera':{label:'Lista de espera',icon:'list-ordered'},perfil:{label:'Meu perfil',icon:'user-round-cog'},master:{label:'Administração',icon:'shield'},documentos:{label:'Modelos e documentos',icon:'file-text'}};
-  W.renderCurrentView=async function(view){
-    ensureDocsView();
-    if(view==='documentos'){docsView();return;}
-    const fnMap={dashboard:'renderDashboard',alunos:'renderStudents','aluno-perfil':'renderStudentProfileView',agenda:'renderAgenda',avaliacoes:'renderEvaluations',financeiro:'renderFinance',recados:'renderMessages','lista-espera':'renderWaitlist',perfil:'renderProfile',master:'renderMaster'};
-    const fn=W[fnMap[view]||'renderDashboard'];
-    if(typeof fn!=='function')throw new Error(`Tela "${view}" não possui um renderizador ativo.`);
-    const r=await fn();
-    if(view==='dashboard')ensureDashboardGreeting();
-    if(view==='perfil')ensurePlanCard();
-    if(view==='agenda'){await decorateUpcomingAppointmentActions();}
-    return r;
-  };
-  W.navigate=function(view){
-    const valid=titles[view]?view:'dashboard';
-    if(W.state)W.state.currentView=valid;
-    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-    byId(`view-${valid}`)?.classList.add('active');
-    document.querySelectorAll('#mainNav button[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===valid));
-    const pt=byId('pageTitle'),info=titles[valid];
-    if(pt)pt.innerHTML=`<i data-lucide="${info.icon}"></i><span>${esc(info.label)}</span>`;
-    W.refreshIcons?.();
-    Promise.resolve(W.renderCurrentView(valid)).catch(e=>{console.error('[FINAL19 router]',e);W.showError?.(e.message||'Não foi possível abrir a página.');});
-  };
-
-  /* Disponibilidade continua recolhida ao entrar na Agenda. */
-  const keepAvailabilityClosed=()=>document.querySelectorAll('.l14-agenda-availability').forEach(d=>d.removeAttribute('open'));
-  const originalAgenda=W.renderAgenda;
-  if(typeof originalAgenda==='function'&&!originalAgenda.__final19){
-    W.renderAgenda=async function(){const r=await originalAgenda.apply(this,arguments);keepAvailabilityClosed();await decorateUpcomingAppointmentActions();return r;};
-    W.renderAgenda.__final19=true;
-  }
-
-  function init(){ensureDocsView();if(W.state?.currentView==='dashboard')ensureDashboardGreeting();if(byId('perfilContent')?.querySelector('.v3-profile-editor'))ensurePlanCard();keepAvailabilityClosed();}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else setTimeout(init,0);
-})();
-
-</script>
-
 <!-- FINAL 23 — ACEITE ELETRÔNICO DOS TERMOS: VERIFICAÇÃO POR CONTA -->
 <script id="legado-final20-terms">
 (function(){
@@ -13935,8 +13647,6 @@ body.final27-dark .final32-newbox>textarea{background:#0c1213!important;color:#f
   else setTimeout(normalizeRecados,150);
 })();
 </script>
-
-</html>
 
 <!-- ============================================================
      FINAL 24 — APRIMORAMENTO DE PERFIL + TERMOS + MODAL FINANCEIRO
@@ -19727,233 +19437,6 @@ body.final27-dark .final36-post-payment{background:#121b17!important;border-colo
   body.final27-dark #dashboardContent .final42-notification-close{background:#18211d!important;border-color:#37473f!important;color:#c6d2cd!important}
 </style>
 
-<script id="legado-final42-documents-and-dashboard-fix">
-(function(){
-  'use strict';
-  const W=window;
-  const $=(s,r=document)=>r.querySelector(s);
-  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-  const byId=id=>document.getElementById(id);
-  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(String(v??'')):String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-  const today=()=>typeof W.todayInputDate==='function'?W.todayInputDate():new Date().toISOString().slice(0,10);
-  const dateBR=v=>{const d=new Date(String(v||'').length<=10?String(v)+'T12:00:00':v);return Number.isNaN(d.getTime())?'':d.toLocaleDateString('pt-BR');};
-
-  /* ============================================================
-     1) DASHBOARD — REMOVE DUPLICAÇÃO DE ALERTAS E TEXTO DE MENSAGENS
-     ============================================================ */
-  const legacyPermissionSelectors=[
-    '#final33PermissionBanner','#final34PermissionBanner','#final36PermissionBanner',
-    '.final33-notification-banner','.final29-notification-banner','.final31-notification-banner',
-    '.final32-permission-banner','.final34-permission-banner'
-  ];
-  function removeLegacyNotificationBanners(root=document){
-    legacyPermissionSelectors.forEach(sel=>$$(`${sel}`,root).forEach(el=>el.remove()));
-  }
-  function notificationState(){
-    try{return ('Notification' in W)?Notification.permission:'unsupported';}catch(_){return 'unsupported';}
-  }
-  function renderOneNotificationBanner(){
-    const dashboard=byId('dashboardContent');if(!dashboard)return;
-    removeLegacyNotificationBanners(dashboard);
-    $$('.final42-notification-banner',dashboard).forEach((el,i)=>{if(i>0)el.remove();});
-    let box=$('#final42NotificationBanner',dashboard);
-    const perm=notificationState();
-    if(perm==='unsupported'||perm==='granted'){
-      if(perm==='granted'){
-        if(box)box.remove();
-      } else if(box) box.remove();
-      return;
-    }
-    if(!box){
-      box=document.createElement('section');
-      box.id='final42NotificationBanner';
-      box.className='final42-notification-banner';
-      box.innerHTML='<div class="final42-notification-icon"><i data-lucide="bell-ring"></i></div><div class="final42-notification-main"><strong>Ative as notificações do navegador</strong><span>Receba um aviso 10 minutos antes de cada atendimento agendado.</span></div><div class="final42-notification-actions"><button type="button" id="final42NotificationAllow">Ativar notificações</button><button type="button" class="final42-notification-close" id="final42NotificationClose" aria-label="Fechar"><i data-lucide="x"></i></button></div>';
-      const head=dashboard.querySelector('.final33-dashboard-head,.final19-dashboard-head,.v3-head,.page-heading');
-      if(head)head.insertAdjacentElement('afterend',box); else dashboard.prepend(box);
-      $('#final42NotificationClose',box).onclick=()=>box.remove();
-      $('#final42NotificationAllow',box).onclick=async()=>{
-        try{
-          const p=await Notification.requestPermission();
-          if(p==='granted'){box.remove();try{new Notification('Legado Que Ensina',{body:'Notificações ativadas.',tag:'legado-final42-enabled'});}catch(_){} W.showSuccess?.('Notificações ativadas.');}
-          else {renderOneNotificationBanner(); if(p==='denied')W.showError?.('As notificações foram bloqueadas pelo navegador.');}
-        }catch(e){W.showError?.(e.message||'Não foi possível ativar as notificações.');}
-      };
-      W.refreshIcons?.();
-    }
-  }
-
-  function cleanAllNotificationDuplicates(){
-    const d=byId('dashboardContent');
-    if(!d)return;
-    removeLegacyNotificationBanners(d);
-    const ours=$$('.final42-notification-banner',d);
-    ours.slice(1).forEach(e=>e.remove());
-    if(ours.length===0)renderOneNotificationBanner();
-    else if(notificationState()==='granted'||notificationState()==='unsupported')ours.forEach(e=>e.remove());
-  }
-
-  const oldNotificationFns=['renderNotificationBanner','renderPermissionBanner','createPermissionBanner','ensurePermissionBanner','renderFinal33PermissionBanner'];
-  oldNotificationFns.forEach(name=>{
-    if(typeof W[name]==='function'&&!W[name].__final42Disabled){
-      const disabled=function(){cleanAllNotificationDuplicates();return Promise.resolve();};
-      disabled.__final42Disabled=true;W[name]=disabled;
-    }
-  });
-
-  /* ============================================================
-     2) MODELOS E DOCUMENTOS — DIGITAL, EDITÁVEL, PDF E IMPRESSÃO
-     ============================================================ */
-  const DOCS={
-    recibo:{
-      title:'Recibo digital',icon:'receipt-text',desc:'Preencha o recibo de pagamento online, revise o texto e gere o PDF pronto para imprimir.',
-      text:'RECIBO DE PAGAMENTO\n\nRecebi de {NOME} a importância de {VALOR}, referente a {REFERENTE}.\n\nForma de pagamento: {FORMA_PAGAMENTO}.\nData do pagamento: {DATA}.\n\n{OBSERVAÇÃO}\n\nLegado Que Ensina\nProfessor(a) / Psicopedagogo(a)'
-    },
-    declaracao:{
-      title:'Declaração digital',icon:'file-check-2',desc:'Escreva ou ajuste sua declaração, depois salve em PDF ou imprima diretamente.',
-      text:'DECLARAÇÃO\n\nDeclaro, para os devidos fins, que {NOME} participou de {FINALIDADE}.\n\nDocumento: {DOCUMENTO}.\nData: {DATA}.\n\n{OBSERVAÇÃO}\n\nLegado Que Ensina\nProfessor(a) / Psicopedagogo(a)'
-    },
-    encaminhamento:{
-      title:'Encaminhamento digital',icon:'send',desc:'Crie um encaminhamento personalizado com o motivo, especialista e informações que desejar.',
-      text:'ENCAMINHAMENTO\n\nEncaminho o(a) aluno(a) {NOME} para avaliação/atendimento na área de {ESPECIALISTA}.\n\nMotivo do encaminhamento:\n{MOTIVO}\n\nData: {DATA}.\n\n{OBSERVAÇÃO}\n\nLegado Que Ensina\nProfessor(a) / Psicopedagogo(a)'
-    }
-  };
-
-  function templateText(type){return DOCS[type]?.text||DOCS.recibo.text;}
-  function ensureDocumentsNav(){
-    const nav=byId('mainNav');
-    const content=byId('content');
-    if(content&&!byId('view-documentos')){
-      const s=document.createElement('section');s.id='view-documentos';s.className='view';s.innerHTML='<div id="documentosContent"></div>';content.appendChild(s);
-    }
-    if(nav&&!nav.querySelector('[data-view="documentos"]')){
-      const b=document.createElement('button');b.type='button';b.dataset.view='documentos';b.innerHTML='<i data-lucide="file-text"></i><span class="nav-label">Modelos e documentos</span>';
-      b.addEventListener('click',()=>W.navigate?.('documentos'));nav.appendChild(b);W.refreshIcons?.();
-    }
-  }
-  function renderDocumentsPage(){
-    ensureDocumentsNav();
-    const c=byId('documentosContent');if(!c)return;
-    c.innerHTML=`<div class="final42-docs-page"><div class="final42-doc-head"><div><div class="final42-doc-kicker">DOCUMENTOS DIGITAIS</div><h1>Modelos e documentos</h1><p>Crie seus documentos online, escreva o texto, revise e gere um PDF pronto para imprimir.</p></div></div><div class="final42-doc-grid">${Object.entries(DOCS).map(([id,d])=>`<article class="final42-doc-card"><div class="final42-doc-icon"><i data-lucide="${d.icon}"></i></div><div class="final42-doc-kicker">DOCUMENTO DIGITAL</div><h3>${esc(d.title)}</h3><p>${esc(d.desc)}</p><button type="button" class="btn btn-primary" data-final42-open-doc="${id}"><i data-lucide="pen-line"></i>Escrever documento</button></article>`).join('')}</div><div class="final42-doc-help"><strong>Como funciona</strong><span>Escolha um documento → escreva ou edite o conteúdo → revise → clique em <b>Gerar PDF</b> ou <b>Imprimir</b>. O conteúdo é gerado diretamente no navegador.</span></div></div>`;
-    $$('.final42-docs-page [data-final42-open-doc]',c).forEach(b=>b.onclick=()=>openFinalDocument(b.dataset.final42OpenDoc));
-    W.refreshIcons?.();
-  }
-
-  function applyTokens(text,vals){
-    const map={
-      '{NOME}':vals.nome||'________________________________',
-      '{VALOR}':vals.valor||'R$ __________',
-      '{REFERENTE}':vals.referente||'________________________________',
-      '{FORMA_PAGAMENTO}':vals.forma||'____________________________',
-      '{DATA}':vals.data?dateBR(vals.data):dateBR(today()),
-      '{OBSERVAÇÃO}':vals.obs||'',
-      '{FINALIDADE}':vals.finalidade||'acompanhamento psicopedagógico',
-      '{DOCUMENTO}':vals.documento||'não informado',
-      '{ESPECIALISTA}':vals.especialista||'____________________________',
-      '{MOTIVO}':vals.motivo||'________________________________\n________________________________'
-    };
-    return String(text||'').replace(/\{[A-ZÁÉÍÓÚÇ_]+\}/g,k=>map[k]??k);
-  }
-
-  function openFinalDocument(type){
-    const d=DOCS[type]||DOCS.recibo;
-    byId('final42DocEditor')?.remove();
-    const overlay=document.createElement('div');overlay.id='final42DocEditor';overlay.className='final42-editor-overlay';
-    overlay.innerHTML=`<div class="final42-editor" role="dialog" aria-modal="true" aria-labelledby="final42DocTitle"><div class="final42-editor-head"><div><div class="final42-doc-kicker">DOCUMENTO DIGITAL</div><h2 id="final42DocTitle">${esc(d.title)}</h2><p>Você pode alterar absolutamente todo o texto antes de gerar o PDF.</p></div><button type="button" class="final42-editor-close" id="final42DocClose" aria-label="Fechar"><i data-lucide="x"></i></button></div><div class="final42-editor-body"><div class="final42-editor-tip">Os campos abaixo servem para preencher o modelo rapidamente. Depois você pode editar o texto inteiro na área grande.</div><div class="final42-meta"><div class="final42-field"><label>Nome / pessoa</label><input name="nome" placeholder="Nome completo"></div><div class="final42-field"><label>Data</label><input name="data" type="date" value="${esc(today())}"></div>${type==='recibo'?'<div class="final42-field"><label>Valor</label><input name="valor" placeholder="R$ 0,00"></div><div class="final42-field"><label>Referente a</label><input name="referente" value="Atendimento psicopedagógico"></div><div class="final42-field"><label>Forma de pagamento</label><input name="forma" placeholder="Pix, dinheiro, cartão..."></div>':''}${type==='declaracao'?'<div class="final42-field"><label>Documento (CPF, RG etc.)</label><input name="documento" placeholder="Opcional"></div><div class="final42-field full"><label>Finalidade</label><input name="finalidade" value="acompanhamento psicopedagógico"></div>':''}${type==='encaminhamento'?'<div class="final42-field"><label>Especialista / área</label><input name="especialista" placeholder="Fonoaudiologia, Psicologia..."></div><div class="final42-field full"><label>Motivo do encaminhamento</label><input name="motivo" placeholder="Descreva o motivo"></div>':''}<div class="final42-field full"><label>Observação adicional</label><input name="obs" placeholder="Opcional"></div></div><div class="final42-field full"><label>Texto do documento — escreva aqui</label><textarea name="document_text" spellcheck="true">${esc(d.text)}</textarea></div><div class="final42-template-row"><button type="button" class="final42-token" data-token="{NOME}">Inserir nome</button><button type="button" class="final42-token" data-token="{DATA}">Inserir data</button><button type="button" class="final42-token" data-token="{OBSERVAÇÃO}">Inserir observação</button></div><div class="final42-editor-actions"><button type="button" class="btn btn-outline" id="final42DocPrint"><i data-lucide="printer"></i>Imprimir</button><button type="button" class="btn btn-primary" id="final42DocPdf"><i data-lucide="file-down"></i>Gerar PDF</button></div></div></div>`;
-    document.body.appendChild(overlay);W.refreshIcons?.();
-    const form=overlay.querySelector('.final42-editor-body');
-    const close=()=>overlay.remove();
-    $('#final42DocClose',overlay).onclick=close;overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
-    $$('.final42-token',overlay).forEach(btn=>btn.onclick=()=>{
-      const ta=$('[name="document_text"]',overlay);if(!ta)return;const token=btn.dataset.token;const start=ta.selectionStart,end=ta.selectionEnd;ta.setRangeText(token,start,end,'end');ta.focus();
-    });
-    const collect=()=>{
-      const fd=new FormData(form);const raw=String(fd.get('document_text')||'').trim();
-      return {title:String(raw.split('\n')[0]||d.title).trim()||d.title,text:applyTokens(raw,Object.fromEntries(fd.entries()))};
-    };
-    $('#final42DocPdf',overlay).onclick=()=>saveFinalPdf(collect());
-    $('#final42DocPrint',overlay).onclick=()=>printFinalDoc(collect());
-  }
-
-  function saveFinalPdf(data){
-    const Js=W.jspdf?.jsPDF;if(!Js){W.showError?.('Biblioteca de PDF não disponível.');return;}
-    const pdf=new Js({unit:'mm',format:'a4'});const margin=20;const pageWidth=210;let y=26;
-    pdf.setTextColor(38,50,56);pdf.setFont('helvetica','bold');pdf.setFontSize(18);
-    pdf.text(data.title,pageWidth/2,y,{align:'center'});y+=18;pdf.setFont('helvetica','normal');pdf.setFontSize(11);
-    const paragraphs=String(data.text||'').split('\n');
-    for(const line of paragraphs.slice(1)){ 
-      const text=line||' ';const lines=pdf.splitTextToSize(text,pageWidth-margin*2);
-      for(const ln of lines){if(y>272){pdf.addPage();y=24;}pdf.text(ln,margin,y);y+=7;}
-      y+=2;
-    }
-    pdf.setFontSize(8);pdf.setTextColor(125,135,130);pdf.text('Legado Que Ensina',margin,287);
-    pdf.save(`${slug(data.title)}-${today()}.pdf`);W.showSuccess?.('PDF gerado com sucesso.');
-  }
-  function printFinalDoc(data){
-    const w=window.open('','_blank');
-    if(!w){W.showError?.('O navegador bloqueou a janela de impressão. Permita pop-ups para imprimir.');return;}
-    const printLines=String(data.text||'').split('\n').slice(1); const html=printLines.map(x=>`<p>${esc(x||'')}</p>`).join('');
-    w.document.write(`<html lang="pt-BR"><head><meta charset="utf-8"><title>${esc(data.title)}</title><style>@page{size:A4;margin:18mm}body{font-family:Arial,sans-serif;color:#263238;line-height:1.65;font-size:12pt}h1{text-align:center;font-size:18pt;margin:0 0 28px}p{margin:0 0 8px;white-space:pre-wrap}</style></head><body><h1>${esc(data.title)}</h1>${html}</body></html>`);
-    w.document.close();w.focus();setTimeout(()=>w.print(),250);
-  }
-  function slug(v){return String(v||'documento').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'-').replace(/^-+|-+$/g,'').toLowerCase()||'documento';}
-
-  W.openFinalDocument=openFinalDocument;
-  W.renderFinalDocuments=renderDocumentsPage;
-  W.docsView=renderDocumentsPage;
-  W.ensureDocsView=ensureDocumentsNav;
-
-  /* ============================================================
-     3) ROTEAMENTO FINAL — DOCUMENTOS, SEM REINTRODUZIR RECADOS
-     ============================================================ */
-  const baseNavigate=W.navigate;
-  if(typeof baseNavigate==='function'&&!baseNavigate.__final42){
-    const nav=function(view){
-      if(view==='recados')view='dashboard';
-      if(view==='documentos'){
-        ensureDocumentsNav();
-        if(W.state)W.state.currentView='documentos';
-        $$('.view').forEach(v=>v.classList.remove('active'));
-        byId('view-documentos')?.classList.add('active');
-        $$('#mainNav button[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view==='documentos'));
-        const pt=byId('pageTitle');if(pt)pt.innerHTML='<i data-lucide="file-text"></i><span>Modelos e documentos</span>';
-        renderDocumentsPage();W.refreshIcons?.();return;
-      }
-      return baseNavigate.apply(this,arguments.length?[view]:arguments);
-    };
-    nav.__final42=true;W.navigate=nav;
-  }
-
-  /* ============================================================
-     4) PROTEÇÕES CONTRA CÓDIGO LEGADO
-     ============================================================ */
-  function hideCommunicationArtifacts(){
-    const recados=['#view-recados','#recadosContent','#recadosBadge','#mainNav [data-view="recados"]','[data-view="recados"]'];
-    recados.forEach(sel=>{try{$$(sel).forEach(e=>e.remove())}catch(_){} });
-    const chatIds=['#final32ChatLauncher','#final32ChatWidget','#final27ChatLauncher','#final27ChatWidget','#final33ChatLauncher','#final40ChatWidget'];
-    chatIds.forEach(sel=>$$(`${sel}`).forEach(e=>e.remove()));
-    $$('.final29-notification-banner,.final31-notification-banner,.final32-permission-banner,#final33PermissionBanner,#final34PermissionBanner,#final36PermissionBanner').forEach(e=>e.remove());
-  }
-
-  function init(){
-    hideCommunicationArtifacts();ensureDocumentsNav();cleanAllNotificationDuplicates();
-    if(W.state?.currentView==='documentos')renderDocumentsPage();
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,50),{once:true});else setTimeout(init,50);
-
-  function safeFinal42Cleanup(){
-    hideCommunicationArtifacts();
-    const d=byId('dashboardContent');
-    if(d && W.state?.currentView==='dashboard') cleanAllNotificationDuplicates();
-    if(byId('view-documentos') && !byId('documentosContent')) ensureDocumentsNav();
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',safeFinal42Cleanup,{once:true});
-  else setTimeout(safeFinal42Cleanup,80);
-  window.addEventListener('load',safeFinal42Cleanup,{once:true});
-})();
-</script>
-
-
 <style id="legado-final40-styles">
 /* ============================================================
    FINAL 40 — ESTABILIDADE / PDF / PROGRESSO VISUAL / UI
@@ -19978,7 +19461,62 @@ body.final27-dark .final36-post-payment{background:#121b17!important;border-colo
 @media(max-width:1050px){.final40-progress-hero{grid-template-columns:1fr 1fr}.final40-progress-intro{grid-column:1/-1}#waitlistContent .v3-wait-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:720px){.final40-progress-hero,.final40-progress-grid{grid-template-columns:1fr}.final40-progress-intro{grid-column:auto}#waitlistContent .v3-wait-grid{grid-template-columns:1fr!important}#waitlistContent .v3-wait-meta{grid-template-columns:1fr!important}}
 </style>
-<script id="legado-final40-stability">
+<style id="legado-final45-professional-css">
+/* ============================================================
+   FINAL 45 — CAMADA PROFISSIONAL
+   Uma única camada de UX para: prontuário, avaliações, financeiro,
+   documentos digitais e modo noturno.
+   ============================================================ */
+:root{
+  --f45-bg:#f6f8f7;--f45-surface:#fff;--f45-surface-2:#fbfcfb;--f45-border:#dde6e1;
+  --f45-text:#26352f;--f45-muted:#74827b;--f45-primary:#5c9478;--f45-primary-dark:#477661;
+  --f45-soft:#eaf4ee;--f45-blue:#5e88aa;--f45-blue-soft:#edf4f8;--f45-danger:#a95555;--f45-danger-soft:#fff0f0;
+  --f45-shadow:0 10px 28px rgba(34,52,44,.06);--f45-shadow-lg:0 24px 70px rgba(20,38,30,.20)
+}
+.final45-page{width:100%;min-width:0}
+.final45-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:18px}
+.final45-head-main{min-width:0}.final45-kicker{font-size:10px;letter-spacing:.14em;font-weight:900;color:var(--f45-primary);text-transform:uppercase}
+.final45-head h1{margin:5px 0 5px;font-size:28px;letter-spacing:-.035em;color:var(--f45-text)}
+.final45-head p{margin:0;color:var(--f45-muted);font-size:12px;line-height:1.6;max-width:820px}
+.final45-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.final45-tabs{display:flex;gap:6px;flex-wrap:wrap;padding:5px;margin-bottom:16px;border:1px solid var(--f45-border);border-radius:14px;background:var(--f45-surface-2);width:max-content;max-width:100%}
+.final45-tabs button{border:0;background:transparent;border-radius:10px;padding:10px 13px;color:var(--f45-muted);font:800 11px Inter,Arial,sans-serif;display:inline-flex;align-items:center;gap:7px;cursor:pointer}
+.final45-tabs button.active{background:var(--f45-surface);color:var(--f45-primary-dark);box-shadow:0 3px 10px rgba(30,50,42,.08)}
+.final45-tabs button b{min-width:20px;height:20px;display:grid;place-items:center;padding:0 5px;border-radius:999px;background:var(--f45-soft);color:var(--f45-primary-dark);font-size:9px}
+.final45-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.final45-kpi{padding:16px;border:1px solid var(--f45-border);border-radius:16px;background:var(--f45-surface);box-shadow:var(--f45-shadow);min-width:0}
+.final45-kpi-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.final45-kpi-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:var(--f45-soft);color:var(--f45-primary)}
+.final45-kpi-icon svg{width:18px;height:18px}.final45-kpi span{display:block;margin-top:10px;color:var(--f45-muted);font-size:10px;font-weight:800}.final45-kpi strong{display:block;margin-top:4px;color:var(--f45-text);font-size:22px;letter-spacing:-.03em}.final45-kpi small{display:block;margin-top:3px;color:#95a09b;font-size:9px;line-height:1.4}
+.final45-grid-2{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(0,.82fr);gap:14px}.final45-grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.final45-panel{border:1px solid var(--f45-border);border-radius:18px;background:var(--f45-surface);box-shadow:var(--f45-shadow);padding:18px;min-width:0}
+.final45-panel+.final45-panel{margin-top:14px}.final45-panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.final45-panel-head>div{min-width:0}.final45-panel-head h2,.final45-panel-head h3{margin:0;color:var(--f45-text);font-size:15px;letter-spacing:-.02em}.final45-panel-head p{margin:4px 0 0;color:var(--f45-muted);font-size:10px;line-height:1.55}
+.final45-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.final45-detail{padding:12px;border:1px solid #e7ede9;border-radius:13px;background:var(--f45-surface-2);min-width:0}.final45-detail span{display:block;color:#87938d;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}.final45-detail strong{display:block;margin-top:5px;color:var(--f45-text);font-size:12px;line-height:1.5;overflow-wrap:anywhere}.final45-note{padding:13px 14px;border-radius:13px;background:#f7faf8;border:1px solid #e3ebe7;color:#5f7168;font-size:11px;line-height:1.6}.final45-note strong{color:var(--f45-text)}
+.final45-list{display:grid;gap:9px}.final45-list-item{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px 12px;border:1px solid #e2e9e5;border-radius:13px;background:var(--f45-surface-2);min-width:0}.final45-list-icon{width:44px;height:44px;display:grid;place-items:center;border-radius:12px;background:var(--f45-soft);color:var(--f45-primary)}.final45-list-icon svg{width:18px}.final45-list-main{min-width:0}.final45-list-main strong{display:block;color:var(--f45-text);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.final45-list-main span{display:block;margin-top:3px;color:var(--f45-muted);font-size:9px;line-height:1.45}.final45-list-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.final45-models{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.final45-model{padding:16px;border:1px solid var(--f45-border);border-radius:16px;background:var(--f45-surface);box-shadow:var(--f45-shadow);min-width:0}.final45-model-top{display:flex;align-items:flex-start;gap:11px}.final45-model-icon{width:42px;height:42px;display:grid;place-items:center;flex:none;border-radius:13px;background:var(--f45-soft);color:var(--f45-primary)}.final45-model h3{margin:0;color:var(--f45-text);font-size:13px;line-height:1.35}.final45-model p{margin:6px 0 0;color:var(--f45-muted);font-size:10px;line-height:1.55}.final45-meta-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.final45-meta-chip{padding:5px 8px;border-radius:999px;background:#f2f6f4;color:#5e7268;font-size:8px;font-weight:800}.final45-steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:11px}.final45-step{display:flex;align-items:flex-start;gap:6px;color:#697971;font-size:8px;line-height:1.4}.final45-step b{width:18px;height:18px;display:grid;place-items:center;flex:none;border-radius:50%;background:var(--f45-soft);color:var(--f45-primary-dark);font-size:8px}.final45-model-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:13px;flex-wrap:wrap}
+.final45-history{display:grid;gap:10px}.final45-history-card{padding:15px;border:1px solid var(--f45-border);border-radius:16px;background:var(--f45-surface);box-shadow:var(--f45-shadow);min-width:0}.final45-history-head{display:grid;grid-template-columns:88px minmax(0,1fr) auto;gap:12px;align-items:start}.final45-date-box{padding:10px 8px;border-radius:13px;background:var(--f45-soft);color:var(--f45-primary-dark);text-align:center}.final45-date-box strong{display:block;font-size:12px}.final45-date-box span{display:block;margin-top:2px;font-size:8px}.final45-history-main{min-width:0}.final45-history-main h3{margin:0;color:var(--f45-text);font-size:13px}.final45-history-main p{margin:5px 0 0;color:var(--f45-muted);font-size:10px;line-height:1.55}.final45-chip-line{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.final45-status{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;background:#f0f4f2;color:#64756d;font-size:8px;font-weight:800}.final45-status.good{background:#eaf5ee;color:#4d7b61}.final45-status.warn{background:#fff6e6;color:#9b722f}.final45-status.bad{background:#fff0f0;color:#a95555}
+.final45-fin-table{display:grid;gap:7px}.final45-fin-row{display:grid;grid-template-columns:90px minmax(0,1.5fr) 110px 100px 180px;gap:10px;align-items:center;padding:10px 11px;border:1px solid #e4ebe7;border-radius:12px;background:var(--f45-surface-2);min-width:0}.final45-fin-row.header{border:0;background:transparent;color:#85928b;font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.05em}.final45-fin-row>span{min-width:0;font-size:9px;color:#5c6c65}.final45-fin-desc strong{display:block;color:var(--f45-text);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.final45-fin-desc small{display:block;margin-top:2px;color:#8a9791;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.final45-fin-actions{display:flex;justify-content:flex-end;gap:6px;flex-wrap:wrap}.final45-fin-actions .btn{font-size:9px;min-height:30px;padding:6px 9px}
+.final45-chart{width:100%;overflow:hidden}.final45-chart svg{display:block;width:100%;height:auto}.final45-chart-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:9px;color:#7b8982;font-size:9px}.final45-legend-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:currentColor;margin-right:5px}
+.final45-progress-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.final45-progress-card{padding:14px;border:1px solid var(--f45-border);border-radius:15px;background:var(--f45-surface);box-shadow:var(--f45-shadow)}.final45-progress-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.final45-progress-top strong{font-size:11px;color:var(--f45-text)}.final45-progress-level{padding:5px 8px;border-radius:999px;background:var(--f45-soft);color:var(--f45-primary-dark);font-size:8px;font-weight:800}.final45-progress-track{height:9px;margin:10px 0;border-radius:999px;background:#e9efec;overflow:hidden}.final45-progress-track span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#5d9579,#83b99c)}.final45-progress-card p{margin:0;color:var(--f45-muted);font-size:9px;line-height:1.55}.final45-goal{margin-top:9px;padding:8px 9px;border-left:3px solid var(--f45-primary);border-radius:7px;background:#f5faf7;color:#61746a;font-size:9px;line-height:1.5}
+.final45-timeline{display:grid;gap:0}.final45-timeline-item{position:relative;padding:0 0 16px 25px;margin-left:7px;border-left:1px solid #dce6e1}.final45-timeline-item:last-child{padding-bottom:0}.final45-timeline-item::before{content:"";position:absolute;left:-5px;top:2px;width:9px;height:9px;border-radius:50%;background:var(--f45-primary);box-shadow:0 0 0 4px var(--f45-soft)}.final45-timeline-date{font-size:8px;color:#8a9790}.final45-timeline-title{margin-top:4px;color:var(--f45-text);font-size:10px;font-weight:800}.final45-timeline-text{margin-top:4px;color:var(--f45-muted);font-size:9px;line-height:1.55}
+.final45-doc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.final45-doc-card{padding:17px;border:1px solid var(--f45-border);border-radius:16px;background:var(--f45-surface);box-shadow:var(--f45-shadow)}.final45-doc-icon{width:46px;height:46px;display:grid;place-items:center;border-radius:14px;background:var(--f45-soft);color:var(--f45-primary);margin-bottom:12px}.final45-doc-icon svg{width:20px}.final45-doc-card h3{margin:0;color:var(--f45-text);font-size:13px}.final45-doc-card p{margin:6px 0 13px;color:var(--f45-muted);font-size:10px;line-height:1.55}
+.final45-doc-modal{width:min(980px,96vw);max-height:92vh;display:flex;flex-direction:column;border-radius:22px;overflow:hidden;background:#fff;box-shadow:var(--f45-shadow-lg)}.final45-doc-header{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;padding:20px 22px;border-bottom:1px solid #e1e8e4}.final45-doc-body{padding:18px 22px;overflow:auto}.final45-doc-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.final45-doc-field{display:grid;gap:5px}.final45-doc-field.full{grid-column:1/-1}.final45-doc-field label{font-size:9px;font-weight:900;color:#66766e}.final45-doc-field input,.final45-doc-field select,.final45-doc-field textarea{width:100%;border:1px solid #dfe7e2;border-radius:11px;padding:10px 11px;background:#fbfcfb;color:var(--f45-text);font:500 11px Inter,Arial,sans-serif;outline:0}.final45-doc-field textarea{min-height:300px;resize:vertical;line-height:1.65}.final45-doc-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:14px;margin-top:14px;border-top:1px solid #e3eae6;flex-wrap:wrap}.final45-doc-primary-actions{display:flex;gap:7px;flex-wrap:wrap}.final45-doc-note{padding:11px 12px;border-radius:12px;background:#f3f8f5;border:1px solid #dcebe2;color:#60736a;font-size:9px;line-height:1.55;margin-bottom:12px}
+.final45-popup-backdrop{position:fixed;inset:0;z-index:12000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(16,28,23,.58);backdrop-filter:blur(4px)}.final45-popup{width:min(980px,96vw);max-height:90vh;display:flex;flex-direction:column;border-radius:22px;overflow:hidden;background:#fff;box-shadow:var(--f45-shadow-lg)}.final45-popup-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:20px 22px;border-bottom:1px solid #e0e7e3}.final45-popup-body{padding:20px 22px;overflow:auto}.final45-context{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-bottom:14px}.final45-context-card{padding:11px 12px;border-radius:12px;background:#f4f8f6;border:1px solid #dde8e2}.final45-context-card span{display:block;font-size:8px;color:#809088;text-transform:uppercase;letter-spacing:.06em;font-weight:900}.final45-context-card strong{display:block;margin-top:4px;font-size:10px;color:var(--f45-text);line-height:1.45}.final45-steps-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:12px 0 16px}.final45-view-step{display:flex;gap:7px;align-items:flex-start;padding:8px 9px;border-radius:10px;background:#f7faf8;border:1px solid #e5ece8;color:#6b7a73;font-size:8px;line-height:1.45}.final45-view-step b{width:18px;height:18px;display:grid;place-items:center;border-radius:50%;background:var(--f45-soft);color:var(--f45-primary-dark);font-size:8px;flex:none}.final45-view-fields{display:grid;gap:8px}.final45-view-field{padding:12px 13px;border-radius:12px;background:#fbfcfb;border:1px solid #e2e9e5}.final45-view-field span{display:block;color:#7f8d86;font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.05em}.final45-view-field p{margin:5px 0 0;color:#3f5048;font-size:10px;line-height:1.65;white-space:pre-wrap}.final45-view-section{margin-top:14px}.final45-view-section h3{margin:0 0 8px;color:var(--f45-text);font-size:12px}.final45-empty{padding:24px;text-align:center;color:#88958f;font-size:10px}.final45-empty strong{display:block;color:var(--f45-text);font-size:12px;margin-bottom:4px}
+/* Modo noturno: sem trilhas brancas nos módulos revisados */
+body.final27-dark,.final27-dark #app,.final27-dark .app,.final27-dark .main,.final27-dark .content,.final27-dark .view,.final27-dark #dashboardContent,.final27-dark #alunosContent,.final27-dark #agendaContent,.final27-dark #avaliacoesContent,.final27-dark #financeiroContent,.final27-dark #studentProfileContent,.final27-dark #perfilContent,.final27-dark #waitlistContent,.final27-dark #documentosContent{background:#0a0f0d!important;color:#eaf2ee!important}
+body.final27-dark .topbar,body.final27-dark .sidebar{background:#0d1311!important;border-color:#26332e!important}
+body.final27-dark .card,body.final27-dark .v3-panel,body.final27-dark .v4-model,body.final27-dark .final45-panel,body.final27-dark .final45-kpi,body.final27-dark .final45-model,body.final27-dark .final45-history-card,body.final27-dark .final45-progress-card,body.final27-dark .final45-doc-card{background:#111815!important;border-color:#2a3832!important;color:#eaf2ee!important}
+body.final27-dark .final45-subpage,body.final27-dark .final45-detail,body.final27-dark .final45-list-item,body.final27-dark .final45-note,body.final27-dark .final45-fin-row,body.final27-dark .final45-view-field,body.final27-dark .final45-view-step,body.final27-dark .final45-context-card{background:#151d19!important;border-color:#2c3a34!important;color:#dce7e2!important}
+body.final27-dark .final45-head h1,body.final27-dark .final45-panel-head h2,body.final27-dark .final45-panel-head h3,body.final27-dark .final45-detail strong,body.final27-dark .final45-list-main strong,body.final27-dark .final45-model h3,body.final27-dark .final45-history-main h3,body.final27-dark .final45-progress-top strong,body.final27-dark .final45-doc-card h3,body.final27-dark .final45-view-field p,body.final27-dark .final45-context-card strong,body.final27-dark .final45-popup h2,body.final27-dark .final45-doc-modal h2{color:#edf5f1!important}
+body.final27-dark .final45-head p,body.final27-dark .final45-panel-head p,body.final27-dark .final45-detail span,body.final27-dark .final45-list-main span,body.final27-dark .final45-model p,body.final27-dark .final45-history-main p,body.final27-dark .final45-progress-card p,body.final27-dark .final45-doc-card p,body.final27-dark .final45-note,body.final27-dark .final45-doc-note,body.final27-dark .final45-view-field span,body.final27-dark .final45-view-step,body.final27-dark .final45-context-card span{color:#9eafa7!important}
+body.final27-dark .final45-tabs{background:#101714;border-color:#2b3933}body.final27-dark .final45-tabs button{color:#9eafa7}body.final27-dark .final45-tabs button.active{background:#1a2621;color:#bfe3d0}
+body.final27-dark input,body.final27-dark select,body.final27-dark textarea,body.final27-dark .final45-doc-field input,body.final27-dark .final45-doc-field select,body.final27-dark .final45-doc-field textarea{background:#0e1512!important;color:#e9f3ee!important;border-color:#34443d!important}
+body.final27-dark .final45-doc-modal,body.final27-dark .final45-popup{background:#111815;border:1px solid #2b3933}.final45-popup-backdrop{color:#eaf2ee}
+body.final27-dark .final45-date-box,body.final27-dark .final45-progress-level,body.final27-dark .final45-status{background:#1b2a24!important;color:#bfe1cf!important}
+body.final27-dark .final45-step b,body.final27-dark .final45-view-step b,body.final27-dark .final45-list-icon,body.final27-dark .final45-model-icon,body.final27-dark .final45-doc-icon,body.final27-dark .final45-kpi-icon{background:#1a2b24!important;color:#9fceb4!important}
+@media(max-width:1100px){.final45-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.final45-doc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.final45-grid-2{grid-template-columns:1fr}.final45-models{grid-template-columns:1fr}.final45-fin-row{grid-template-columns:80px minmax(0,1fr) 90px 90px}.final45-fin-actions{grid-column:1/-1;justify-content:flex-start}}
+@media(max-width:760px){.final45-head{flex-direction:column}.final45-actions{width:100%}.final45-actions>*{flex:1}.final45-kpi-grid,.final45-grid-3,.final45-progress-grid,.final45-doc-grid,.final45-detail-grid{grid-template-columns:1fr}.final45-history-head{grid-template-columns:1fr}.final45-context,.final45-doc-meta,.final45-steps-grid{grid-template-columns:1fr}.final45-fin-row{grid-template-columns:1fr 1fr}.final45-fin-row.header{display:none}.final45-fin-desc{grid-column:1/-1}.final45-fin-actions{grid-column:1/-1}.final45-tabs{width:100%}.final45-tabs button{flex:1}.final45-doc-actions{flex-direction:column;align-items:stretch}.final45-doc-primary-actions{width:100%}.final45-doc-primary-actions .btn{flex:1}.final45-popup-head,.final45-doc-header{padding:15px 16px}.final45-popup-body,.final45-doc-body{padding:15px 16px}}
+</style>
+<script id="legado-final45-professional">
 (function(){
   'use strict';
   const W=window,D=document;
@@ -19987,272 +19525,249 @@ body.final27-dark .final36-post-payment{background:#121b17!important;border-colo
   const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v==null?'':String(v)):String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
   const uid=()=>W.state?.user?.id||W.state?.session?.user?.id||null;
   const db=()=>W.supabaseClient||null;
-  const today=()=>typeof W.todayInputDate==='function'?W.todayInputDate():new Date().toISOString().slice(0,10);
-  const money=v=>{try{return new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(v||0)||0)}catch(_){return `R$ ${Number(v||0).toFixed(2).replace('.',',')}`}};
-  const dateBR=v=>{const d=new Date(`${String(v||'').slice(0,10)}T12:00:00`);return Number.isNaN(d.getTime())?'—':d.toLocaleDateString('pt-BR')};
-  const levelMap={'Inicial':25,'Em desenvolvimento':50,'Consolidando':75,'Consolidado':100};
+  const today=()=>W.todayInputDate?.()||new Date().toISOString().slice(0,10);
+  const dateOnly=v=>String(v||'').slice(0,10);
+  const dateBR=v=>{const d=new Date(`${dateOnly(v)}T12:00:00`);return Number.isNaN(d.getTime())?'—':d.toLocaleDateString('pt-BR')};
+  const money=v=>{try{return new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(v||0)||0)}catch(_){return `R$ ${(Number(v||0)||0).toFixed(2).replace('.',',')}`}};
+  const refresh=()=>{try{W.refreshIcons?.()}catch(_){try{W.lucide?.createIcons()}catch(_2){}}};
+  const normalize=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+  const studentName=s=>String(s?.name||s?.full_name||s?.student_name||'Aluno');
+  const pct={Inicial:25,'Em desenvolvimento':50,Consolidando:75,Consolidado:100};
 
-  function bindConfirmCancel(){const b=$('#confirmCancelButton');if(!b)return;b.onclick=()=>{$('#confirmModal')?.style.setProperty('display','none')}}
+  function statusLabel(s){const x=String(s||'').toLowerCase();return ({completed:'Concluída',concluido:'Concluído',concluida:'Concluída',draft:'Rascunho',pending:'Pendente',scheduled:'Agendado',cancelled:'Cancelado',paid:'Pago',overdue:'Em atraso',waiting:'Aguardando',contacted:'Contatado'}[x]||String(s||'Registro'))}
 
-  function dedupePermissionBanner(){
-    const d=$('#dashboardContent');if(!d)return;
-    $$('.final29-notification-banner,.final31-notification-banner,.final32-permission-banner',d).forEach(x=>x.remove());
-    const ours=$$('.final42-notification-banner',d);ours.slice(1).forEach(x=>x.remove());
-    const box=$('#final42NotificationBanner',d);if(box){const span=$('.final42-notification-main span',box);if(span)span.textContent='Permita as notificações para receber avisos importantes e lembretes antes dos atendimentos.';}
-    const third=$$('.final33-notification-banner',d);third.slice(1).forEach(x=>x.remove());
+  /* ------------------------------------------------------------
+     AVALIAÇÕES — modelos + histórico em subpágina e visualização
+     integral no mesmo padrão do popup de aplicação.
+     ------------------------------------------------------------ */
+  function assessmentDefs45(){
+    const source=W.V4_ASSESSMENTS||W.PEDAGOGICAL_ASSESSMENTS||{};
+    return source&&typeof source==='object'?source:{};
   }
-
-  let jsPdfPromise=null;
-  async function getJsPDF(){
-    if(W.jspdf?.jsPDF)return W.jspdf.jsPDF;
-    if(jsPdfPromise)return jsPdfPromise;
-    jsPdfPromise=new Promise((resolve,reject)=>{
-      const sc=D.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';sc.async=true;sc.dataset.legadoJspdfLoader='1';
-      sc.onload=()=>W.jspdf?.jsPDF?resolve(W.jspdf.jsPDF):reject(new Error('Biblioteca de PDF não disponibilizou o jsPDF.'));
-      sc.onerror=()=>reject(new Error('Não foi possível carregar a biblioteca de PDF.'));D.head.appendChild(sc);
-    });
-    return jsPdfPromise;
-  }
-
-  async function financeRows(){
+  async function loadEvaluations45(){
     const c=db(),me=uid();if(!c||!me)throw new Error('Sessão não encontrada.');
-    const [a,b]=await Promise.all([c.from('financial_entries').select('*').eq('user_id',me).order('competence_date',{ascending:true}).limit(5000),c.from('payments').select('*').eq('user_id',me).order('payment_date',{ascending:true}).limit(5000)]);
-    if(a.error&&b.error)throw a.error;
-    const modern=(a.data||[]).map(e=>({...e,kind:e.kind||e.type||'income',competence_date:e.competence_date||e.entry_date||e.payment_date||e.date||today()}));
-    const ids=new Set(modern.map(e=>String(e.legacy_payment_id||'')));
-    const legacy=(b.data||[]).filter(p=>!ids.has(String(p.id))).map(p=>({id:`legacy-${p.id}`,kind:'income',amount:Number(p.amount||p.value||0),status:String(p.status||'paid').toLowerCase(),competence_date:String(p.payment_date||p.date||today()).slice(0,10),description:p.description||p.student_name||'Recebimento',student_name:p.student_name||null,payment_method:p.payment_method||p.method||''}));
-    return modern.concat(legacy);
+    const r=await c.from('evaluations').select('*').eq('user_id',me).order('evaluation_date',{ascending:false}).limit(1000);if(r.error)throw r.error;return r.data||[];
   }
-  async function saveFinancePdf40(year){
+  function evalValue45(e,f){
+    const data=e.assessment_data||{}; let value=data[f.k];
+    if(value==null||value===''){
+      if(f.k==='proximo_passo') value=data.next_lesson||e.next_lesson||'';
+      if(value==null||value==='') return '';
+    }
+    return Array.isArray(value)?value.join(', '):String(value);
+  }
+  function openEvaluation45(e){
+    const defs=assessmentDefs45();const def=defs[e.type]||{};const data=e.assessment_data||{};
+    const title=e.title||e.type||'Avaliação';
+    const recorded=(def.fields||[]).map(f=>({label:f.l||f.label||f.k,value:evalValue45(e,f)})).filter(x=>x.value.trim());
+    const ctx=`<div class="final45-context"><div class="final45-context-card"><span>Aluno</span><strong>${esc(e.student_name||'Aluno não informado')}</strong></div><div class="final45-context-card"><span>Área</span><strong>${esc(def.area||'Avaliação pedagógica')}</strong></div><div class="final45-context-card"><span>Data / status</span><strong>${esc(dateBR(e.evaluation_date||e.date))} · ${esc(statusLabel(e.status))}</strong></div><div class="final45-context-card"><span>Duração sugerida</span><strong>${esc(def.duration||'Definida pelo professor')}</strong></div><div class="final45-context-card"><span>Materiais-base</span><strong>${esc(def.materials||'Definidos pelo professor')}</strong></div><div class="final45-context-card"><span>Objetivo</span><strong>${esc(def.objective||'Objetivo registrado na aplicação')}</strong></div></div>`;
+    const steps=(def.steps||[]).map((x,i)=>`<div class="final45-view-step"><b>${i+1}</b><span>${esc(x)}</span></div>`).join('');
+    const fields=recorded.length?recorded.map(x=>`<div class="final45-view-field"><span>${esc(x.label)}</span><p>${esc(x.value)}</p></div>`).join(''):'<div class="final45-empty"><strong>Sem campos detalhados registrados</strong><span>Esta aplicação foi salva sem respostas estruturadas.</span></div>';
+    const body=`<div class="final45-popup-head"><div><div class="final45-kicker">AVALIAÇÃO COMPLETA</div><h2 style="margin:4px 0 0;font-size:21px">${esc(title)}</h2><p style="margin:5px 0 0;color:#74827b;font-size:10px">Visualização integral da aplicação, exatamente com o roteiro, contexto e respostas registradas.</p></div><button type="button" class="icon-button" id="final45CloseEval"><i data-lucide="x"></i></button></div><div class="final45-popup-body">${ctx}${steps?`<div class="final45-view-section"><h3>Roteiro de aplicação</h3><div class="final45-steps-grid">${steps}</div></div>`:''}<div class="final45-view-section"><h3>Registros da aplicação</h3><div class="final45-view-fields">${fields}</div></div>${e.summary?`<div class="final45-view-section"><h3>Síntese pedagógica</h3><div class="final45-view-field"><p>${esc(e.summary)}</p></div></div>`:''}${e.next_lesson||data.next_lesson?`<div class="final45-view-section"><h3>Próximo plano de aula</h3><div class="final45-view-field"><p>${esc(e.next_lesson||data.next_lesson)}</p></div></div>`:''}${e.notes?`<div class="final45-view-section"><h3>Observações gerais</h3><div class="final45-view-field"><p>${esc(e.notes)}</p></div></div>`:''}<div class="final45-actions" style="justify-content:flex-end;margin-top:16px"><button type="button" class="btn btn-outline" id="final45EvalCloseBottom">Fechar</button><button type="button" class="btn btn-primary" id="final45EvalEdit"><i data-lucide="pencil"></i>Editar aplicação</button></div></div>`;
+    $(`#final45EvaluationViewer`)?.remove();const root=D.createElement('div');root.id='final45EvaluationViewer';root.className='final45-popup-backdrop';root.innerHTML=`<section class="final45-popup" role="dialog" aria-modal="true">${body}</section>`;D.body.appendChild(root);
+    const close=()=>root.remove();$('#final45CloseEval',root).onclick=close;$('#final45EvalCloseBottom',root).onclick=close;$('#final45EvalEdit',root).onclick=()=>{close();W.v3EditEvaluation?.(e.id)};root.onclick=ev=>{if(ev.target===root)close()};refresh();
+  }
+  async function renderEvaluations45(){
+    const c=$('#avaliacoesContent');if(!c)return;c.innerHTML='<div class="v3-loading"><i data-lucide="loader-circle"></i><span>Preparando instrumentos e histórico...</span></div>';refresh();
     try{
-      const Js=await getJsPDF(),rows=await financeRows(),yNum=Number(year)||new Date().getFullYear(),selected=rows.filter(e=>String(e.competence_date||'').slice(0,4)===String(yNum));
-      const pdf=new Js({unit:'mm',format:'a4'}),teacher=String(W.state?.profile?.full_name||W.state?.profile?.name||W.state?.user?.email||'Professor');let y=18;
-      const header=()=>{pdf.setTextColor(38,50,56);pdf.setFont('helvetica','bold');pdf.setFontSize(17);pdf.text('RELATÓRIO FINANCEIRO',15,17);pdf.setFont('helvetica','normal');pdf.setFontSize(9);pdf.text(`Legado Que Ensina · ${yNum}`,15,24);pdf.text(`Responsável: ${teacher}`,15,29);pdf.setDrawColor(190,205,197);pdf.line(15,34,195,34);y=42};
-      header();pdf.setFont('helvetica','bold');pdf.setFontSize(10);pdf.text('Resumo anual',15,y);y+=6;pdf.setFontSize(8);pdf.text('Mês',15,y);pdf.text('Recebido',68,y);pdf.text('Despesas',108,y);pdf.text('Resultado',150,y);y+=5;pdf.setFont('helvetica','normal');
-      for(let m=1;m<=12;m++){const mm=String(m).padStart(2,'0'),mr=selected.filter(e=>String(e.competence_date||'').slice(5,7)===mm),inc=mr.filter(e=>e.kind!=='expense'&&String(e.status||'').toLowerCase()==='paid').reduce((s,e)=>s+Number(e.amount||0),0),exp=mr.filter(e=>e.kind==='expense'&&String(e.status||'').toLowerCase()==='paid').reduce((s,e)=>s+Number(e.amount||0),0);pdf.text(new Date(yNum,m-1,1).toLocaleDateString('pt-BR',{month:'long'}),15,y);pdf.text(money(inc),68,y);pdf.text(money(exp),108,y);pdf.text(money(inc-exp),150,y);y+=5;}
-      const received=selected.filter(e=>e.kind!=='expense'&&String(e.status||'').toLowerCase()==='paid').reduce((s,e)=>s+Number(e.amount||0),0),expenses=selected.filter(e=>e.kind==='expense'&&String(e.status||'').toLowerCase()==='paid').reduce((s,e)=>s+Number(e.amount||0),0);y+=3;pdf.setFont('helvetica','bold');pdf.setFontSize(10);pdf.text(`Total recebido: ${money(received)}`,15,y);pdf.text(`Total despesas: ${money(expenses)}`,108,y);y+=6;pdf.text(`Resultado: ${money(received-expenses)}`,15,y);y+=9;pdf.line(15,y,195,y);y+=8;pdf.setFontSize(10);pdf.text('Lançamentos',15,y);y+=6;pdf.setFontSize(7);pdf.text('Data',15,y);pdf.text('Descrição / aluno',38,y);pdf.text('Tipo',118,y);pdf.text('Valor',145,y);pdf.text('Status',172,y);y+=5;pdf.setFont('helvetica','normal');
-      const status=x=>({paid:'Pago',pending:'Pendente',overdue:'Em atraso',cancelled:'Cancelado',canceled:'Cancelado'}[String(x||'').toLowerCase()]||String(x||'—'));
-      for(const e of selected){if(y>283){pdf.addPage();header();pdf.setFont('helvetica','bold');pdf.setFontSize(7);pdf.text('Data',15,y);pdf.text('Descrição / aluno',38,y);pdf.text('Tipo',118,y);pdf.text('Valor',145,y);pdf.text('Status',172,y);y+=5;pdf.setFont('helvetica','normal')}const desc=String(e.student_name||e.description||'Lançamento').replace(/\s+/g,' ').slice(0,50),lines=pdf.splitTextToSize(desc,74);pdf.text(dateBR(e.competence_date),15,y);pdf.text(lines,38,y);pdf.text(e.kind==='expense'?'Despesa':'Receita',118,y);pdf.text(money(e.amount),145,y);pdf.text(status(e.status),172,y);y+=Math.max(5,lines.length*3.5)}
-      if(!selected.length)pdf.text('Nenhum lançamento encontrado para este ano.',15,y);pdf.setFontSize(7);pdf.setTextColor(105,120,112);pdf.text(`Gerado em ${new Date().toLocaleString('pt-BR')}`,15,290);pdf.save(`relatorio-financeiro-${yNum}.pdf`);W.showSuccess?.('Relatório financeiro salvo em PDF.');
-    }catch(e){console.error('[FINAL40 FIN PDF]',e);W.showError?.(e.message||'Não foi possível gerar o PDF financeiro.');}
+      const [list,students]=await Promise.all([loadEvaluations45(),W.v3LoadStudents?.()||Promise.resolve(W.state?.students||[])]);
+      const defs=assessmentDefs45(),names=Object.keys(defs),sub=W.state?.evaluationSub45||'instrumentos';
+      const applications=list.length,completed=list.filter(e=>String(e.status||'').toLowerCase()==='completed').length;
+      const models=names.map(name=>{const d=defs[name]||{};return `<article class="final45-model"><div class="final45-model-top"><div class="final45-model-icon"><i data-lucide="clipboard-check"></i></div><div><div class="final45-kicker">INSTRUMENTO PEDAGÓGICO</div><h3>${esc(name)}</h3><p>${esc(d.objective||'Roteiro estruturado para observar evidências de aprendizagem e planejar a próxima intervenção.')}</p></div></div><div class="final45-meta-row"><span class="final45-meta-chip">${esc(d.area||'Área pedagógica')}</span><span class="final45-meta-chip">${esc(d.duration||'Duração definida')}</span><span class="final45-meta-chip">${(d.fields||[]).length} campos</span></div><div class="final45-steps"><div class="final45-step"><b>•</b><span><strong>Materiais:</strong> ${esc(d.materials||'Definidos pelo professor')}</span></div>${(d.steps||[]).slice(0,5).map((x,i)=>`<div class="final45-step"><b>${i+1}</b><span>${esc(x)}</span></div>`).join('')}</div><div class="final45-model-actions"><button type="button" class="btn btn-outline btn-sm" data-eval-info45="${esc(name)}"><i data-lucide="info"></i>Ver roteiro</button><button type="button" class="btn btn-primary btn-sm" data-eval-apply45="${esc(name)}"><i data-lucide="play"></i>Aplicar agora</button></div></article>`}).join('');
+      const hist=list.map(e=>{const st=e.student_name||students.find(s=>String(s.id)===String(e.student_id))?.name||'Aluno não informado';const summary=e.summary||'Sem síntese registrada.';const status=statusLabel(e.status);const cls=String(e.status||'').toLowerCase()==='completed'?'good':String(e.status||'').toLowerCase()==='draft'?'warn':'';return `<article class="final45-history-card"><div class="final45-history-head"><div class="final45-date-box"><strong>${esc(dateOnly(e.evaluation_date||e.date).slice(8,10)||'—')}</strong><span>${esc(dateBR(e.evaluation_date||e.date))}</span></div><div class="final45-history-main"><h3>${esc(e.title||e.type||'Avaliação')}</h3><div class="final45-chip-line"><span class="final45-status ${cls}">${esc(status)}</span><span class="final45-status">${esc(st)}</span><span class="final45-status">${esc(e.type||'Avaliação')}</span></div><p>${esc(summary)}</p></div><div class="final45-list-actions"><button type="button" class="btn btn-outline btn-sm" data-eval-eye45="${esc(e.id)}" title="Visualizar avaliação completa"><i data-lucide="eye"></i></button><button type="button" class="btn btn-outline btn-sm" data-eval-edit45="${esc(e.id)}"><i data-lucide="pencil"></i>Editar</button><button type="button" class="btn btn-danger btn-sm" data-eval-delete45="${esc(e.id)}"><i data-lucide="trash-2"></i>Excluir</button></div></div></article>`}).join('');
+      const uniqueStudents=new Set(list.map(e=>e.student_id).filter(Boolean)).size;
+      c.innerHTML=`<div class="final45-page"><div class="final45-head"><div class="final45-head-main"><div class="final45-kicker">INVESTIGAÇÃO PEDAGÓGICA</div><h1>Avaliações</h1><p>Um espaço completo para planejar a aplicação, registrar evidências, acompanhar o histórico e voltar à aplicação quando precisar. Os instrumentos existentes permanecem disponíveis.</p></div><div class="final45-actions"><button class="btn btn-primary" id="final45NewEval"><i data-lucide="clipboard-plus"></i>Aplicar avaliação</button></div></div><div class="final45-tabs"><button data-eval-sub45="instrumentos" class="${sub==='instrumentos'?'active':''}"><i data-lucide="layout-grid"></i>Instrumentos</button><button data-eval-sub45="historico" class="${sub==='historico'?'active':''}"><i data-lucide="history"></i>Histórico de aplicações <b>${applications}</b></button></div><div class="final45-kpi-grid"><div class="final45-kpi"><div class="final45-kpi-top"><div class="final45-kpi-icon"><i data-lucide="clipboard-check"></i></div></div><span>Aplicações registradas</span><strong>${applications}</strong><small>Todas as aplicações salvas no prontuário.</small></div><div class="final45-kpi"><div class="final45-kpi-top"><div class="final45-kpi-icon"><i data-lucide="layout-grid"></i></div></div><span>Instrumentos disponíveis</span><strong>${names.length}</strong><small>Roteiros prontos para uso pedagógico.</small></div><div class="final45-kpi"><div class="final45-kpi-top"><div class="final45-kpi-icon"><i data-lucide="users"></i></div></div><span>Alunos avaliados</span><strong>${uniqueStudents}</strong><small>Alunos com pelo menos uma aplicação.</small></div><div class="final45-kpi"><div class="final45-kpi-top"><div class="final45-kpi-icon"><i data-lucide="circle-check"></i></div></div><span>Concluídas</span><strong>${completed}</strong><small>Aplicações finalizadas.</small></div></div><div class="final45-panel" id="final45EvalContent">${sub==='instrumentos'?`<div class="final45-panel-head"><div><h2>Instrumentos disponíveis</h2><p>Selecione um roteiro para entender o objetivo, os materiais, as etapas e os campos antes de aplicar.</p></div></div><div class="final45-models">${models||'<div class="final45-empty">Nenhum instrumento cadastrado.</div>'}</div>`:`<div class="final45-panel-head"><div><h2>Histórico de aplicações</h2><p>Consulte cada aplicação em detalhe pelo ícone de olho, edite o registro ou remova uma aplicação que não deve permanecer no prontuário.</p></div></div><div class="final45-history">${hist||'<div class="final45-empty"><strong>Nenhuma aplicação registrada</strong><span>Quando você aplicar uma avaliação, ela aparecerá aqui.</span></div>'}</div>`}</div><div class="final45-panel"><div class="final45-panel-head"><div><h2>Como usar esta área</h2><p>Planejamento → aplicação → registro de evidências → síntese → próximo foco. O histórico fica separado para consulta.</p></div></div><div class="final45-detail-grid"><div class="final45-detail"><span>Antes da aplicação</span><strong>Revise objetivo, materiais e etapas do instrumento.</strong></div><div class="final45-detail"><span>Durante</span><strong>Registre evidências observáveis, estratégias e respostas do aluno.</strong></div><div class="final45-detail"><span>Depois</span><strong>Feche com síntese pedagógica e próximo plano de aula.</strong></div><div class="final45-detail"><span>Prontuário</span><strong>A aplicação fica vinculada ao aluno e pode ser consultada novamente.</strong></div></div></div></div>`;
+      $('#final45NewEval').onclick=()=>{W.V3=W.V3||{};W.V3.assessmentType=names[0]||'Avaliação personalizada';W.v3OpenEvaluationEditor?.();};
+      $$('#avaliacoesContent [data-eval-sub45]').forEach(b=>b.onclick=()=>{W.state.evaluationSub45=b.dataset.evalSub45;renderEvaluations45()});
+      $$('[data-eval-apply45]',c).forEach(b=>b.onclick=()=>{W.V3=W.V3||{};W.V3.assessmentType=b.dataset.evalApply45;W.v3OpenEvaluationEditor?.();});
+      $$('[data-eval-eye45]',c).forEach(b=>b.onclick=()=>{const e=list.find(x=>String(x.id)===String(b.dataset.evalEye45));if(e)openEvaluation45(e)});
+      $$('[data-eval-edit45]',c).forEach(b=>b.onclick=()=>W.v3EditEvaluation?.(b.dataset.evalEdit45));
+      $$('[data-eval-delete45]',c).forEach(b=>b.onclick=()=>W.v3DeleteEvaluation?.(b.dataset.evalDelete45));
+      $$('[data-eval-info45]',c).forEach(b=>b.onclick=()=>{const d=defs[b.dataset.evalInfo45]||{};const body=`<div class="final45-context"><div class="final45-context-card"><span>Área</span><strong>${esc(d.area||'—')}</strong></div><div class="final45-context-card"><span>Duração</span><strong>${esc(d.duration||'—')}</strong></div><div class="final45-context-card"><span>Materiais</span><strong>${esc(d.materials||'—')}</strong></div></div><div class="final45-view-section"><h3>Objetivo</h3><div class="final45-view-field"><p>${esc(d.objective||'—')}</p></div></div><div class="final45-view-section"><h3>Etapas do roteiro</h3><div class="final45-steps-grid">${(d.steps||[]).map((x,i)=>`<div class="final45-view-step"><b>${i+1}</b><span>${esc(x)}</span></div>`).join('')}</div></div><div class="final45-actions" style="justify-content:flex-end;margin-top:15px"><button class="btn btn-primary" type="button" id="final45ModelApply"><i data-lucide="play"></i>Aplicar este instrumento</button></div>`;openSimple45(`Roteiro · ${b.dataset.evalInfo45}`,'INSTRUMENTO COMPLETO',body,()=>{W.V3=W.V3||{};W.V3.assessmentType=b.dataset.evalInfo45;W.v3OpenEvaluationEditor?.();});});
+      refresh();
+    }catch(e){c.innerHTML=`<div class="final45-panel"><div class="final45-empty"><strong>Não foi possível carregar as avaliações</strong><span>${esc(e.message||e)}</span></div></div>`;refresh();}
   }
-  W.legadoSaveFinanceYearPDF=saveFinancePdf40;
-  function bindFinancePdf(){const nav=$('#financeiroContent .v3-month-nav');if(!nav)return;$$('button',nav).forEach(btn=>{if(/imprimir\s+ano|salvar\s+em\s+pdf/i.test(btn.textContent||'')){btn.type='button';btn.innerHTML='<i data-lucide="file-down"></i>Salvar em PDF';btn.onclick=async()=>{btn.disabled=true;try{const d=W.V3?.financeMonth instanceof Date?W.V3.financeMonth:new Date();await saveFinancePdf40(d.getFullYear())}finally{btn.disabled=false;W.refreshIcons?.()}}}});W.refreshIcons?.()}
 
-  function modalDocType(){const m=$('#final19DocModal')||$('#final42DocEditor');if(!m)return 'recibo';const title=String($('h2',m)?.textContent||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();if(title.includes('declaracao de acompanhamento'))return 'contrato';if(title.includes('encaminhamento'))return 'encaminhamento';if(title.includes('declaracao'))return 'declaracao';return 'recibo'}
-  function readDocForm(){const f=$('#final19DocForm');if(f)return new FormData(f);const editor=$('#final42DocEditor');if(!editor)return null;const fd=new FormData();$$('input[name],textarea[name],select[name]',editor).forEach(el=>fd.append(el.name,el.value||''));return fd}
-  async function saveDocPdf40(type,fd){
-    try{
-      const Js=await getJsPDF();if(!Js)throw new Error('Biblioteca de PDF indisponível.');
-      const v=n=>String(fd?.get(n)||'').trim(), titleMap={recibo:'RECIBO DIGITAL',declaracao:'DECLARAÇÃO DIGITAL',encaminhamento:'ENCAMINHAMENTO DIGITAL',contrato:'DECLARAÇÃO DE ACOMPANHAMENTO'};
-      let text=String(fd?.get('document_text')||'').trim();
-      if(!text){
-        if(type==='recibo')text=`RECIBO DIGITAL\n\nRecebi de ${v('payer')||v('nome')||'[NOME DE QUEM PAGOU]'} a importância de R$ ${v('amount')||v('valor')||'[VALOR]'}, referente a ${v('reference')||v('referente')||'Atendimento psicopedagógico'}.\nForma de pagamento: ${v('method')||v('forma')||'[FORMA DE PAGAMENTO]'}.\nData: ${v('date')||v('data')||today()}.\n\n${v('note')||v('obs')}\n\n${String(W.state?.profile?.full_name||W.state?.profile?.name||'Professor(a) / Psicopedagogo(a)')}`;
-        else if(type==='declaracao')text=`DECLARAÇÃO DIGITAL\n\nDeclaro, para os devidos fins, que ${v('person')||v('nome')||'[NOME]'} participou de ${v('purpose')||v('finalidade')||'acompanhamento psicopedagógico'} ${v('period')||''}.\nDocumento: ${v('document')||v('documento')||'não informado'}.\nData: ${v('date')||v('data')||today()}.\n\n${v('note')||v('obs')}\n\n${String(W.state?.profile?.full_name||W.state?.profile?.name||'Professor(a) / Psicopedagogo(a)')}`;
-        else if(type==='encaminhamento')text=`ENCAMINHAMENTO DIGITAL\n\nEncaminho o(a) aluno(a) ${v('student')||v('nome')||'[NOME DO(A) ALUNO(A)]'}${v('age')?' , '+v('age')+' anos':''} para avaliação/atendimento na área de ${v('specialist')||v('especialista')||'[ESPECIALISTA / ÁREA]'}.\n\nMotivo do encaminhamento:\n${v('reason')||v('motivo')||'[ESCREVA AQUI O MOTIVO]'}\n\nData: ${v('date')||v('data')||today()}.\n\n${v('obs')}\n\n${String(W.state?.profile?.full_name||W.state?.profile?.name||'Professor(a) / Psicopedagogo(a)')}`;
-        else text=`DECLARAÇÃO DE ACOMPANHAMENTO\n\nDeclaro que o(a) aluno(a) ${v('student')||v('nome')||'[NOME DO(A) ALUNO(A)]'} encontra-se em acompanhamento psicopedagógico ${v('period')||''}.\n\n${v('note')||v('obs')}\n\n${String(W.state?.profile?.full_name||W.state?.profile?.name||'Professor(a) / Psicopedagogo(a)')}`;
-      }
-      const lines=text.split('\n'),title=(lines.shift()||titleMap[type]||'DOCUMENTO DIGITAL').trim(),body=lines.join('\n').trim(),pdf=new Js({unit:'mm',format:'a4'});let y=28;pdf.setTextColor(38,50,56);pdf.setFont('helvetica','bold');pdf.setFontSize(18);pdf.text(title,105,y,{align:'center'});y+=18;pdf.setFont('helvetica','normal');pdf.setFontSize(11);
-      for(const paragraph of body.split(/\n\s*\n/)){const wrapped=pdf.splitTextToSize(paragraph,170);for(const line of wrapped){if(y>275){pdf.addPage();y=25}pdf.text(line,20,y);y+=6}y+=5}
-      pdf.setFontSize(8);pdf.setTextColor(118,130,124);pdf.text('Legado Que Ensina',20,289);pdf.save(`${type}-digital-${today()}.pdf`);W.showSuccess?.('Documento PDF gerado com sucesso.');
-    }catch(e){console.error('[FINAL40 DOC PDF]',e);W.showError?.(e.message||'Não foi possível gerar o documento em PDF.');}
+  /* ------------------------------------------------------------
+     PERFIL DO ALUNO — prontuário mais completo, com subpáginas.
+     ------------------------------------------------------------ */
+  async function loadStudent45(id){
+    const c=db(),me=uid();if(!c||!me)throw new Error('Sessão não encontrada.');
+    const [st,att,ev,pay,contacts,progress,context]=await Promise.all([
+      c.from('students').select('*').eq('id',id).eq('user_id',me).single(),
+      c.from('student_records').select('*').eq('student_id',id).eq('user_id',me).order('record_date',{ascending:false}).limit(300),
+      c.from('evaluations').select('*').eq('student_id',id).eq('user_id',me).order('evaluation_date',{ascending:false}).limit(200),
+      c.from('payments').select('*').eq('student_id',id).eq('user_id',me).order('payment_date',{ascending:false}).limit(200),
+      c.from('student_contacts').select('*').eq('student_id',id).eq('user_id',me).order('contact_date',{ascending:false}).limit(200),
+      c.from('student_progress').select('*').eq('student_id',id).eq('user_id',me).order('record_date',{ascending:false}).limit(300),
+      c.from('student_context').select('*').eq('student_id',id).eq('user_id',me).order('updated_at',{ascending:false}).limit(1)
+    ]);
+    if(st.error)throw st.error;if(att.error)console.warn('[Perfil45] student_records',att.error.message);if(ev.error)console.warn('[Perfil45] evaluations',ev.error.message);if(pay.error)console.warn('[Perfil45] payments',pay.error.message);if(contacts.error)console.warn('[Perfil45] student_contacts',contacts.error.message);if(progress.error)console.warn('[Perfil45] student_progress',progress.error.message);if(context.error)console.warn('[Perfil45] student_context',context.error.message);
+    return {student:st.data,records:att.data||[],evaluations:ev.data||[],payments:pay.data||[],contacts:contacts.data||[],progress:progress.data||[],context:(context.data||[])[0]||{}};
   }
-  function printDoc40(type,fd){const f=fd||readDocForm();if(!f)return;let text=String(f.get('document_text')||'').trim();const titleMap={recibo:'RECIBO DIGITAL',declaracao:'DECLARAÇÃO DIGITAL',encaminhamento:'ENCAMINHAMENTO DIGITAL',contrato:'DECLARAÇÃO DE ACOMPANHAMENTO'};if(!text)text=titleMap[type];const w=W.open('','_blank','width=900,height=1000');if(!w){W.showError?.('O navegador bloqueou a janela de impressão. Permita pop-ups para imprimir.');return}w.document.write('<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>'+esc(titleMap[type]||'Documento digital')+'</title><style>@page{size:A4;margin:20mm}body{font-family:Arial,sans-serif;color:#263238;line-height:1.7;font-size:12pt}h1{text-align:center;font-size:20pt;margin:0 0 26pt}div{white-space:pre-wrap}footer{margin-top:60pt;text-align:center;font-size:9pt;color:#718078}</style></head><body><h1>'+esc(text.split('\n')[0]||titleMap[type])+'</h1><div>'+esc(text.split('\n').slice(1).join('\n').trim()||text)+'</div><footer>Legado Que Ensina</footer></body></html>');w.document.close();setTimeout(()=>{w.focus();w.print()},350)}
-
-  D.addEventListener('click',e=>{const pdfBtn=e.target?.closest?.('#final19DocPdf,#final42DocPdf'),printBtn=e.target?.closest?.('#final19DocPrint,#final42DocPrint');if(!pdfBtn&&!printBtn)return;e.preventDefault();e.stopImmediatePropagation();const type=modalDocType(),fd=readDocForm();if(!fd)return;if(pdfBtn)void saveDocPdf40(type,fd);else printDoc40(type,fd)},true);
-
-  function renderProgressVisual(){
-    const id=W.state?.currentStudentId,body=$('#v3StudentSectionBody');if(!id||!body)return Promise.resolve();
-    return (async()=>{try{const c=db(),me=uid();if(!c||!me)throw new Error('Sessão não encontrada.');const r=await c.from('student_progress').select('*').eq('user_id',me).eq('student_id',id).order('record_date',{ascending:false}).limit(300);if(r.error)throw r.error;const rows=r.data||[],byArea=new Map();rows.forEach(x=>{const k=String(x.domain||'Outra');if(!byArea.has(k))byArea.set(k,[]);byArea.get(k).push(x)});const areas=Array.from(byArea.entries()).map(([domain,items])=>{const latest=items[0],best=Math.max(...items.map(x=>levelMap[x.level]||0));return{domain,items,latest,best}}).sort((a,b)=>b.best-a.best||b.items.length-a.items.length);const consolidated=rows.filter(x=>['Consolidando','Consolidado'].includes(x.level)).length,latest=rows[0];
-      body.innerHTML=`<div class="final40-progress-shell"><section class="final40-progress-hero"><div class="final40-progress-intro"><div class="kicker">MAPA DE EVOLUÇÃO</div><h3>Avanços acompanhados</h3><p>Uma leitura visual do que já avançou, do que está em desenvolvimento e do próximo passo.</p></div><div class="final40-progress-kpi"><div class="icon"><i data-lucide="notebook-pen"></i></div><div><span>Registros</span><strong>${rows.length}</strong></div></div><div class="final40-progress-kpi"><div class="icon"><i data-lucide="layers-3"></i></div><div><span>Áreas</span><strong>${areas.length}</strong></div></div><div class="final40-progress-kpi"><div class="icon"><i data-lucide="badge-check"></i></div><div><span>Em consolidação</span><strong>${consolidated}</strong></div></div></section><section class="v3-panel final40-progress-form"><div class="final40-progress-form-head"><div><h3>Registrar um novo avanço</h3><p>Descreva o que foi observado e qual é a próxima habilidade.</p></div><span class="v3-tag">Registro pedagógico</span></div><form id="final40ProgressForm" class="v3-form"><div class="v3-form-grid"><label><span>Data *</span><input type="date" name="record_date" value="${esc(today())}" required></label><label><span>Área</span><select name="domain">${['Leitura','Escrita','Matemática','Funções executivas','Memória / atenção','Linguagem','Organização / autonomia','Socioemocional','Outra'].map(x=>`<option>${esc(x)}</option>`).join('')}</select></label><label><span>Nível</span><select name="level">${['Inicial','Em desenvolvimento','Consolidando','Consolidado'].map(x=>`<option>${esc(x)}</option>`).join('')}</select></label><label><span>Próxima meta</span><input name="next_goal" placeholder="Ex.: identificar ideia principal"></label><label class="full"><span>Avanço observado *</span><textarea name="observation" rows="4" required placeholder="Descreva a conquista, a autonomia e o tipo de mediação necessária."></textarea></label></div><div class="v3-form-actions"><button class="btn btn-primary" type="submit"><i data-lucide="plus"></i>Registrar avanço</button></div></form></section><section class="v3-panel"><div class="v3-panel-head"><div><h3>Mapa por área</h3><p>O nível mais alto registrado e o último avanço aparecem juntos.</p></div></div>${areas.length?`<div class="final40-progress-grid">${areas.map(a=>`<article class="final40-area-card"><div class="final40-area-head"><div class="final40-area-title">${esc(a.domain)}</div><span class="final40-level">${esc(a.latest.level||'Sem nível')}</span></div><div class="final40-area-track"><div class="final40-area-fill" style="width:${a.best}%"></div></div><div class="final40-area-row"><span>${a.items.length} registro${a.items.length===1?'':'s'}</span><span>último: ${esc(dateBR(a.latest.record_date))}</span></div><div class="final40-area-note">${esc(a.latest.observation||'Sem observação.')}</div>${a.latest.next_goal?`<div class="final40-area-goal"><b>Próxima meta:</b> ${esc(a.latest.next_goal)}</div>`:''}</article>`).join('')}</div>`:'<div class="final40-empty">Ainda não há registros de progresso. Comece pelo primeiro avanço observado.</div>'}</section><section class="v3-panel"><div class="v3-panel-head"><div><h3>Linha do tempo</h3><p>Uma visão cronológica das mudanças observadas.</p></div></div>${rows.length?`<div class="final40-timeline">${rows.slice(0,12).map(x=>`<article class="final40-timeline-item"><span class="final40-timeline-dot"></span><div class="final40-timeline-date">${esc(dateBR(x.record_date))} · ${esc(x.domain||'Área')}</div><div class="final40-timeline-title">${esc(x.level||'Registro')}</div><div class="final40-timeline-text">${esc(x.observation||'')}</div>${x.next_goal?`<div class="final40-area-goal"><b>Próximo passo:</b> ${esc(x.next_goal)}</div>`:''}</article>`).join('')}</div>`:'<div class="final40-empty">A linha do tempo aparecerá conforme você registrar novos avanços.</div>'}</section>${latest?`<section class="v3-panel"><div class="v3-panel-head"><div><h3>O que olhar agora</h3><p>Leitura rápida do registro mais recente.</p></div></div><div class="final40-progress-grid"><article class="final40-area-card"><div class="final40-area-title">Último avanço</div><div class="final40-area-note">${esc(latest.observation||'')}</div></article><article class="final40-area-card"><div class="final40-area-title">Próxima meta</div><div class="final40-area-note">${esc(latest.next_goal||'Defina a próxima habilidade a acompanhar.')}</div></article></div></section>`:''}</div>`;W.refreshIcons?.();
-      $('#final40ProgressForm',body)?.addEventListener('submit',async ev=>{ev.preventDefault();const fd=new FormData(ev.currentTarget),btn=ev.currentTarget.querySelector('button[type=submit]');try{btn&&(btn.disabled=true);const res=await c.from('student_progress').insert({user_id:me,student_id:id,record_date:fd.get('record_date'),domain:fd.get('domain'),level:fd.get('level'),observation:String(fd.get('observation')||'').trim(),next_goal:String(fd.get('next_goal')||'').trim()||null}).select().single();if(res.error)throw res.error;W.showSuccess?.('Avanço registrado no perfil do aluno.');await renderProgressVisual()}catch(e){W.showError?.('Não foi possível registrar o avanço: '+(e.message||e))}finally{btn&&(btn.disabled=false)}});
-    }catch(e){body.innerHTML=`<div class="final40-empty">Não foi possível carregar a evolução visual.<br>${esc(e.message||e)}</div>`;W.refreshIcons?.()}})();
+  function modal45(title,subtitle,body){
+    $('#final45SimpleModal')?.remove();const root=D.createElement('div');root.id='final45SimpleModal';root.className='final45-popup-backdrop';root.innerHTML=`<section class="final45-popup" role="dialog" aria-modal="true"><div class="final45-popup-head"><div><div class="final45-kicker">${esc(subtitle||'REGISTRO')}</div><h2 style="margin:5px 0 0;font-size:20px;color:#26352f">${esc(title)}</h2></div><button class="icon-button" type="button" id="final45SimpleClose"><i data-lucide="x"></i></button></div><div class="final45-popup-body" id="final45SimpleBody">${body}</div></section>`;D.body.appendChild(root);const close=()=>root.remove();$('#final45SimpleClose',root).onclick=close;root.onclick=e=>{if(e.target===root)close()};refresh();return {root,body:$('#final45SimpleBody',root),close};
   }
-  const oldFast=W.v3RenderStudentProfileFast;
-  if(typeof oldFast==='function'&&!oldFast.__final40){const fn=async function(){const r=await oldFast.apply(this,arguments);if(W.V3?.studentSection==='progress')await renderProgressVisual();return r};fn.__final40=true;W.v3RenderStudentProfileFast=fn}
+  function openSimple45(title,subtitle,body,onPrimary){const m=modal45(title,subtitle,body);const primary=$('#final45ModelApply',m.root);if(primary){primary.onclick=()=>{m.close();onPrimary?.()}}return m}
 
-  function killConversationUI(){$$('#final32ChatLauncher,#final32ChatWidget,#final36ChatWidget,#final38ChatWidget').forEach(x=>x.remove());}
-  function compactWaitlist(){const c=$('#waitlistContent');if(!c)return;$$('.v3-wait-card',c).forEach(card=>{card.classList.add('final40-wait-card')})}
-  function polishBirthdayButtons(){$$('.final33-birthday-whatsapp').forEach(btn=>{btn.style.display='flex';btn.style.alignItems='center';btn.style.justifyContent='center';btn.style.padding='0';btn.style.lineHeight='0';const svg=btn.querySelector('svg');if(svg){svg.style.width='18px';svg.style.height='18px';svg.style.margin='0'}})}
-  function afterView(){bindConfirmCancel();dedupePermissionBanner();bindFinancePdf();compactWaitlist();polishBirthdayButtons();killConversationUI()}
-  if(D.readyState==='loading') D.addEventListener('DOMContentLoaded',afterView,{once:true});
-  else setTimeout(afterView,80);
-  window.addEventListener('load',afterView,{once:true});
-
-  // Apenas ações realmente necessárias usam delegação; não varre o DOM inteiro a cada clique.
-  D.addEventListener('click',e=>{
-    if(e.target?.closest?.('#confirmCancelButton')) bindConfirmCancel();
-    if(e.target?.closest?.('#financeiroContent .final31-finance-pdf')) bindFinancePdf();
-  },true);
-})();
-</script>
-
-</body>
-
-<style id="legado-clean-final-v2-css">
-/* ===== CLEAN UI PASS V2: uma única camada visual, sem duplicações ===== */
-.final-clean-subnav{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 16px;padding:5px;border:1px solid #e0e8e3;border-radius:14px;background:#f7faf8;width:max-content;max-width:100%}
-.final-clean-subnav button{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:10px;padding:9px 13px;background:transparent;color:#718078;font:700 11px Inter,Arial,sans-serif;cursor:pointer}
-.final-clean-subnav button.active{background:#fff;color:#426653;box-shadow:0 2px 8px rgba(35,55,46,.08)}
-.final-clean-hidden{display:none!important}
-.final-clean-img{display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:12px;align-items:center;grid-column:1/-1;padding:13px;border:1px solid #dfe8e3;border-radius:14px;background:#fbfdfc}
-.final-clean-img-main{min-width:0}.final-clean-img-main>label{display:block;margin:0 0 4px;color:#5b6d64;font-size:11px;font-weight:800}.final-clean-img-main small{display:block;margin:0 0 8px;color:#87938d;font-size:9px;line-height:1.45}
-.final-clean-img-main input[type=file]{width:100%;min-height:38px;padding:7px;border:1px dashed #c9d7cf;border-radius:10px;background:#fff;color:#66756e;font-size:10px;box-sizing:border-box}
-.final-clean-img-preview{width:92px;height:92px;display:grid;place-items:center;overflow:hidden;border:1px solid #dde7e1;border-radius:14px;background:#eef5f1;color:#658274}
-.final-clean-img-preview img{width:100%;height:100%;object-fit:cover}.final-clean-img-status{margin-top:7px;color:#6b8075;font-size:9px;min-height:13px}
-.final-clean-fin-toolbar,.final-clean-eval-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-.final-clean-history .l14-history-item{grid-template-columns:96px minmax(0,1fr) auto;min-width:0;overflow:hidden}.final-clean-history .l14-history-main{min-width:0}.final-clean-history .l14-history-title,.final-clean-history .l14-history-observation{overflow-wrap:anywhere}.final-clean-history .l14-history-student{max-width:100%;overflow:hidden}.final-clean-history .l14-history-actions{min-width:0;justify-content:flex-end}.final-clean-history .l14-history-actions .btn{max-width:100%;white-space:nowrap}
-.final-clean-bdays{display:grid;gap:9px}.final-clean-bdays .final33-birthday-row{grid-template-columns:46px minmax(0,1fr) 38px;gap:10px;min-width:0;padding:10px 11px;background:#fff;border:1px solid #e2e9e5;border-radius:14px}.final-clean-bdays .final33-bday-day{width:46px;height:46px;border-radius:13px;display:grid;place-items:center}.final-clean-bdays .final33-bday-day svg{width:18px;height:18px}.final-clean-bdays .final33-bday-main{min-width:0}.final-clean-bdays .final33-bday-main strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.final-clean-bdays .final33-bday-main span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.final-clean-bdays .final33-birthday-whatsapp{width:36px;height:36px;display:grid;place-items:center;justify-self:end;align-self:center;padding:0;border-radius:11px}.final-clean-bdays .final33-birthday-whatsapp svg{width:18px;height:18px;display:block}
-/* dark mode consistente */
-body.final27-dark .final-clean-subnav{background:#131b18;border-color:#2d3b35}body.final27-dark .final-clean-subnav button{color:#9aa9a2}body.final27-dark .final-clean-subnav button.active{background:#1c2823;color:#c7ead8}
-body.final27-dark .final-clean-img,body.final27-dark .final-clean-img-preview{background:#141c19;border-color:#33423b;color:#a6b8b0}body.final27-dark .final-clean-img-main>label{color:#dce9e3}body.final27-dark .final-clean-img-main small,body.final27-dark .final-clean-img-status{color:#97a9a1}
-body.final27-dark .final-clean-img-main input[type=file]{background:#101714;border-color:#42544b;color:#d4e1db}
-body.final27-dark .final-clean-bdays .final33-birthday-row{background:#141c1a!important;border-color:#2e3d37!important}.final-clean-bdays .final33-bday-main strong{color:inherit!important}.final-clean-bdays .final33-bday-main span{color:#86958e!important}
-body.final27-dark .l14-history-item,body.final27-dark .v3-panel,body.final27-dark .v4-model,body.final27-dark .v4-model-list>article,body.final27-dark .v3-stat{background:#131a18!important;border-color:#2c3a35!important;color:#e7f0ec!important}
-body.final27-dark input,body.final27-dark select,body.final27-dark textarea{background:#0f1513!important;color:#e5efea!important;border-color:#34443c!important}body.final27-dark input::placeholder,body.final27-dark textarea::placeholder{color:#73827b!important}
-@media(max-width:700px){.final-clean-img{grid-template-columns:1fr}.final-clean-img-preview{width:74px;height:74px}.final-clean-history .l14-history-item{grid-template-columns:1fr}.final-clean-history .l14-history-actions{justify-content:flex-start}.final-clean-subnav{width:100%}.final-clean-subnav button{flex:1}}
-</style>
-<script id="legado-clean-final-v2">
-(function(){
-  'use strict';
-  const W=window,D=document;
-  const $=(s,r=D)=>r.querySelector(s);
-  const $$=(s,r=D)=>Array.from(r.querySelectorAll(s));
-  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(String(v??'')):String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-  const refresh=()=>W.refreshIcons?.();
-  const uid=()=>W.state?.user?.id||W.state?.session?.user?.id||null;
-  const TABLE=(name)=>W.TABLE?.[name]||W.V3Core?.TABLE?.[name]||W.SUPABASE_SCHEMA?.[name]||name;
-
-  /* ============================================================
-     IMG BBB — todas as fotos agora seguem um único fluxo de upload
-     ============================================================ */
-  const IMGBB_KEY='97bd43c4b46e30a5a876cccaecafec33';
-  async function uploadImgBB(file){
-    if(!file) return '';
-    if(!/^image\//i.test(file.type||'')) throw new Error('Selecione um arquivo de imagem válido.');
-    if(file.size>10*1024*1024) throw new Error('A imagem precisa ter no máximo 10 MB.');
-    const body=new FormData();body.append('image',file);
-    const res=await fetch('https://api.imgbb.com/1/upload?key='+encodeURIComponent(IMGBB_KEY),{method:'POST',body});
-    let data={};try{data=await res.json()}catch(_){ }
-    if(!res.ok||!data?.success||!data?.data?.url) throw new Error(data?.error?.message||'Não foi possível enviar a imagem para o ImgBB.');
-    return data.data.url;
+  async function registerContact45(student){
+    const body=`<form id="final45ContactForm"><div class="final45-detail-grid"><div class="final45-doc-field"><label>Data *</label><input type="date" name="contact_date" value="${esc(today())}" required></div><div class="final45-doc-field"><label>Tipo de contato *</label><select name="contact_type"><option>Reunião com família</option><option>Ligação</option><option>WhatsApp</option><option>Reunião com escola</option><option>Devolutiva</option><option>E-mail</option><option>Outro</option></select></div><div class="final45-doc-field full"><label>Com quem / instituição *</label><input name="with_whom" placeholder="Nome do responsável, professor, coordenação, escola..." required></div><div class="final45-doc-field full"><label>Assunto *</label><input name="subject" placeholder="Ex.: alinhamento sobre rotina de estudos" required></div><div class="final45-doc-field full"><label>Resumo completo *</label><textarea name="content" rows="7" placeholder="Registre o que foi conversado, informações importantes e evidências trazidas pela família ou escola." required></textarea></div><div class="final45-doc-field full"><label>Combinados / encaminhamentos</label><textarea name="next_step" rows="5" placeholder="O que ficou combinado? Quem fará o quê? Qual é o próximo contato ou ação?"></textarea></div></div><div class="final45-actions" style="justify-content:flex-end;margin-top:15px"><button type="button" class="btn btn-outline" id="final45ContactCancel">Cancelar</button><button type="submit" class="btn btn-primary"><i data-lucide="save"></i>Registrar contato</button></div></form>`;
+    const m=modal45(`Registrar contato · ${studentName(student)}`,'FAMÍLIA / ESCOLA',body);$('#final45ContactCancel',m.root).onclick=m.close;$('#final45ContactForm',m.root).onsubmit=async ev=>{ev.preventDefault();const fd=new FormData(ev.currentTarget),btn=ev.currentTarget.querySelector('[type=submit]');try{btn.disabled=true;const r=await db().from('student_contacts').insert({user_id:uid(),student_id:student.id,contact_date:fd.get('contact_date'),contact_type:fd.get('contact_type'),with_whom:String(fd.get('with_whom')||'').trim(),subject:String(fd.get('subject')||'').trim(),content:String(fd.get('content')||'').trim(),next_step:String(fd.get('next_step')||'').trim()||null});if(r.error)throw r.error;m.close();W.showSuccess?.('Contato com família/escola registrado.');await renderStudentProfile45()}catch(e){W.showError?.('Não foi possível registrar o contato: '+(e.message||e))}finally{btn.disabled=false}};
   }
-  W.legadoUploadImgBB=uploadImgBB;
+  async function registerAttendance45(student){
+    const body=`<form id="final45AttendanceForm"><div class="final45-doc-meta"><div class="final45-doc-field"><label>Data *</label><input type="date" name="record_date" value="${esc(today())}" required></div><div class="final45-doc-field"><label>Título do atendimento *</label><input name="title" placeholder="Ex.: Leitura e compreensão de texto" required></div><div class="final45-doc-field"><label>Duração</label><input name="duration" placeholder="Ex.: 50 min"></div><div class="final45-doc-field"><label>Estado observado</label><select name="mood"><option value="">Selecionar</option><option>Tranquilo e disponível</option><option>Colaborativo</option><option>Oscilante</option><option>Cansado</option><option>Resistente</option><option>Ansioso</option><option>Motivado</option><option>Outro</option></select></div><div class="final45-doc-field full"><label>Objetivo da sessão *</label><textarea name="objetivo" rows="4" required placeholder="O que foi planejado trabalhar? Qual habilidade, conteúdo ou comportamento de aprendizagem era foco?"></textarea></div><div class="final45-doc-field full"><label>Atividade / situação proposta *</label><textarea name="atividade" rows="5" required placeholder="Descreva a atividade, texto, jogo, problema, material, comando ou situação de aprendizagem aplicada."></textarea></div><div class="final45-doc-field full"><label>Resposta e participação do aluno *</label><textarea name="resposta" rows="5" required placeholder="Como iniciou, participou, respondeu, sustentou a tarefa e reagiu aos desafios?"></textarea></div><div class="final45-doc-field full"><label>Dificuldades observadas</label><textarea name="dificuldades" rows="4" placeholder="Em que ponto encontrou barreira? Que tipo de ajuda foi necessária?"></textarea></div><div class="final45-doc-field full"><label>Potencialidades e avanços observados</label><textarea name="avancos" rows="4" placeholder="O que fez melhor? O que ganhou em autonomia? Houve alguma mudança em relação a registros anteriores?"></textarea></div><div class="final45-doc-field full"><label>Intervenções e estratégias utilizadas</label><textarea name="intervencoes" rows="5" placeholder="Que perguntas, pistas, modelos, recursos, mediações ou estratégias foram usados? Como o aluno respondeu?"></textarea></div><div class="final45-doc-field full"><label>Orientações para família / escola</label><textarea name="orientacoes" rows="4" placeholder="O que deve ser continuado fora do atendimento? Que orientação foi dada à família ou escola?"></textarea></div><div class="final45-doc-field full"><label>Encaminhamento / próximo passo *</label><textarea name="next_step" rows="5" required placeholder="Defina o que será retomado, a próxima meta, o tipo de mediação previsto e qualquer encaminhamento necessário."></textarea></div><div class="final45-doc-field full"><label>Observações finais</label><textarea name="observacoes" rows="4" placeholder="Outras informações relevantes para o prontuário."></textarea></div></div><div class="final45-actions" style="justify-content:flex-end;margin-top:15px"><button type="button" class="btn btn-outline" id="final45AttCancel">Cancelar</button><button type="submit" class="btn btn-primary"><i data-lucide="save"></i>Salvar atendimento</button></div></form>`;
+    const m=modal45(`Registrar atendimento · ${studentName(student)}`,'ATENDIMENTO',`<div class="final45-doc-note"><strong>Registro profissional da sessão.</strong> Preencha o que foi planejado, o que aconteceu, como o aluno respondeu e o que deve acontecer a seguir. O histórico ficará vinculado ao prontuário.</div>${body}`);$('#final45AttCancel',m.root).onclick=m.close;$('#final45AttendanceForm',m.root).onsubmit=async ev=>{ev.preventDefault();const fd=new FormData(ev.currentTarget),btn=ev.currentTarget.querySelector('[type=submit]');try{btn.disabled=true;const sections=[['Objetivo da sessão',fd.get('objetivo')],['Atividade / situação proposta',fd.get('atividade')],['Resposta e participação do aluno',fd.get('resposta')],['Dificuldades observadas',fd.get('dificuldades')],['Potencialidades e avanços observados',fd.get('avancos')],['Intervenções e estratégias utilizadas',fd.get('intervencoes')],['Orientações para família / escola',fd.get('orientacoes')],['Observações finais',fd.get('observacoes')]].filter(x=>String(x[1]||'').trim()).map(x=>`${x[0]}:\n${String(x[1]).trim()}`).join('\n\n');const r=await db().from('student_records').insert({user_id:uid(),student_id:student.id,record_type:'atendimento',record_date:fd.get('record_date'),title:String(fd.get('title')||'Atendimento').trim(),content:sections,duration:String(fd.get('duration')||'').trim()||null,mood:String(fd.get('mood')||'').trim()||null,next_step:String(fd.get('next_step')||'').trim()});if(r.error)throw r.error;m.close();W.showSuccess?.('Atendimento detalhado registrado.');await renderStudentProfile45()}catch(e){W.showError?.('Não foi possível registrar o atendimento: '+(e.message||e))}finally{btn.disabled=false}};
+  }
+  function parseContent45(content){const str=String(content||'');const parts=str.split(/\n\n+/);const map={};parts.forEach(p=>{const m=p.match(/^([^\n:]+):\n([\s\S]*)$/);if(m)map[m[1]]=m[2]});return map}
+  function attendanceViewer45(r){if(!r)return;const parsed=parseContent45(r.content);const body=`<div class="final45-context"><div class="final45-context-card"><span>Data</span><strong>${esc(dateBR(r.record_date))}</strong></div><div class="final45-context-card"><span>Duração</span><strong>${esc(r.duration||'Não informado')}</strong></div><div class="final45-context-card"><span>Estado observado</span><strong>${esc(r.mood||'Não informado')}</strong></div></div><div class="final45-view-fields">${[['Objetivo da sessão',parsed['Objetivo da sessão']],['Atividade / situação proposta',parsed['Atividade / situação proposta']],['Resposta e participação do aluno',parsed['Resposta e participação do aluno']],['Dificuldades observadas',parsed['Dificuldades observadas']],['Potencialidades e avanços observados',parsed['Potencialidades e avanços observados']],['Intervenções e estratégias utilizadas',parsed['Intervenções e estratégias utilizadas']],['Orientações para família / escola',parsed['Orientações para família / escola']],['Encaminhamento / próximo passo',r.next_step],['Observações finais',parsed['Observações finais']]].filter(x=>String(x[1]||'').trim()).map(x=>`<div class="final45-view-field"><span>${esc(x[0])}</span><p>${esc(x[1])}</p></div>`).join('')}</div>`;modal45(r.title||'Atendimento detalhado','REGISTRO COMPLETO',body)}
 
-  function wireImageForm(form){
-    if(!form||form.dataset.cleanV2Img==='1')return;
-    const urlInput=form.querySelector('input[name="photo_url"]');
-    if(!urlInput)return;
-    form.dataset.cleanV2Img='1';
-    const current=String(urlInput.value||'');
-    const originalLabel=urlInput.closest('label');
-    const wrap=D.createElement('div');wrap.className='final-clean-img';
-    wrap.innerHTML=`<div class="final-clean-img-main"><label>Foto</label><small>Escolha uma imagem do computador. Ela será enviada automaticamente para o ImgBB.</small><input class="final-clean-img-file" type="file" accept="image/*"><div class="final-clean-img-status"></div></div><div class="final-clean-img-preview">${current?`<img src="${esc(current)}" alt="Foto atual">`:'<span>Sem foto</span>'}</div>`;
-    const hidden=D.createElement('input');hidden.type='hidden';hidden.name='photo_url';hidden.value=current;
-    if(originalLabel){originalLabel.replaceWith(wrap);wrap.appendChild(hidden);}else{form.prepend(wrap);wrap.appendChild(hidden)}
-    const file=wrap.querySelector('.final-clean-img-file'),preview=wrap.querySelector('.final-clean-img-preview'),status=wrap.querySelector('.final-clean-img-status');
-    file?.addEventListener('change',()=>{const f=file.files?.[0];if(!f)return;status.textContent=`${f.name} · ${(f.size/1024/1024).toFixed(1)} MB`;const reader=new FileReader();reader.onload=()=>{preview.innerHTML=`<img src="${esc(String(reader.result||''))}" alt="Pré-visualização">`};reader.readAsDataURL(f)});
-    if(form.dataset.cleanV2Submit!=='1'){
-      form.dataset.cleanV2Submit='1';
-      let bypass=false;
-      form.addEventListener('submit',async ev=>{
-        if(bypass)return;
-        const f=file?.files?.[0];if(!f)return;
-        ev.preventDefault();ev.stopImmediatePropagation();
-        try{
-          status.textContent='Enviando foto...';file.disabled=true;
-          const u=await uploadImgBB(f);hidden.value=u;status.textContent='Foto enviada com sucesso.';
-          bypass=true;form.requestSubmit();bypass=false;
-        }catch(err){W.showError?.(err.message||'Não foi possível enviar a foto.');status.textContent='Falha no envio da foto.';}
-        finally{file.disabled=false;}
-      },true);
+  function studentTabs45(){return [{id:'overview',label:'Visão geral',icon:'layout-dashboard'},{id:'appointments',label:'Atendimentos',icon:'notebook-pen'},{id:'history',label:'Histórico',icon:'history'},{id:'progress',label:'Evolução',icon:'trending-up'},{id:'evaluations',label:'Avaliações',icon:'clipboard-check'},{id:'contacts',label:'Família / Escola',icon:'users-round'},{id:'context',label:'Contexto',icon:'file-text'}]}
+  async function renderStudentBody45(data,stateSub){
+    const root=$('#final45StudentBody');if(!root)return;const s=data.student;const name=studentName(s);const completed=data.records.length;const ev=data.evaluations.length;const pg=data.progress.length;const ct=data.contacts.length;const paid=data.payments.filter(p=>String(p.status||'paid').toLowerCase()!=='pending').reduce((a,p)=>a+Number(p.amount||p.value||0),0);const pending=data.payments.filter(p=>String(p.status||'').toLowerCase()==='pending').reduce((a,p)=>a+Number(p.amount||p.value||0),0);
+    if(stateSub==='overview'){
+      const lastAtt=data.records[0],lastEv=data.evaluations[0],lastPg=data.progress[0],lastCt=data.contacts[0];
+      root.innerHTML=`<div class="final45-kpi-grid"><div class="final45-kpi"><div class="final45-kpi-top"><div class="final45-kpi-icon"><i data-lucide="notebook-pen"></i></div></div><span>Atendimentos registrados</span><strong>${completed}</strong><small>Histórico de sessões no prontuário.</small></div><div class="final45-kpi"><div class="final45-kpi-top"><div class="final45-kpi-icon"><i data-lucide="clipboard-check"></i></div></div><span>Avaliações aplicadas</span><strong>${ev}</strong><small>Aplicações vinculadas a este aluno.</small></div><div class="final45-kpi"><div class="final45-kpi-top"><div class="final45-kpi-icon"><i data-lucide="trending-up"></i></div></div><span>Avanços registrados</span><strong>${pg}</strong><small>Registros de evolução por área.</small></div><div class="final45-kpi"><div class="final45-kpi-top"><div class="final45-kpi-icon"><i data-lucide="message-square-more"></i></div></div><span>Família / escola</span><strong>${ct}</strong><small>Contatos e alinhamentos registrados.</small></div></div><div class="final45-grid-2"><section class="final45-panel"><div class="final45-panel-head"><div><h2>Leitura do prontuário</h2><p>Uma visão de conjunto do que já aconteceu, do que está sendo acompanhado e de onde vale olhar primeiro.</p></div></div><div class="final45-grid-3"><div class="final45-detail"><span>Último atendimento</span><strong>${lastAtt?`${esc(dateBR(lastAtt.record_date))} · ${esc(lastAtt.title||'Atendimento')}`:'Ainda não registrado'}</strong></div><div class="final45-detail"><span>Última avaliação</span><strong>${lastEv?`${esc(dateBR(lastEv.evaluation_date||lastEv.date))} · ${esc(lastEv.title||lastEv.type||'Avaliação')}`:'Ainda não registrada'}</strong></div><div class="final45-detail"><span>Último avanço</span><strong>${lastPg?`${esc(lastPg.domain||'Área')} · ${esc(lastPg.level||'')}`:'Ainda não registrado'}</strong></div></div><div class="final45-note" style="margin-top:12px"><strong>Próximo olhar:</strong> ${lastPg?.next_goal?esc(lastPg.next_goal):'Registre uma próxima meta na área Evolução para transformar o histórico em plano de acompanhamento.'}</div></section><section class="final45-panel"><div class="final45-panel-head"><div><h2>Resumo financeiro do aluno</h2><p>O histórico financeiro completo continua separado no módulo Financeiro.</p></div></div><div class="final45-detail-grid"><div class="final45-detail"><span>Recebido</span><strong>${money(paid)}</strong></div><div class="final45-detail"><span>Pendente</span><strong>${money(pending)}</strong></div><div class="final45-detail"><span>Registros</span><strong>${data.payments.length}</strong></div><div class="final45-detail"><span>Status</span><strong>${s.status==='inactive'?'Desativado':'Ativo'}</strong></div></div></section></div><section class="final45-panel"><div class="final45-panel-head"><div><h2>Informações cadastrais completas</h2><p>Dados usados ao longo dos atendimentos, documentos e comunicações.</p></div></div><div class="final45-detail-grid"><div class="final45-detail"><span>Nome completo</span><strong>${esc(name)}</strong></div><div class="final45-detail"><span>Responsável</span><strong>${esc(s.responsible_name||s.guardian_name||s.parent_name||'Não informado')}</strong></div><div class="final45-detail"><span>Telefone</span><strong>${esc(s.phone||'Não informado')}</strong></div><div class="final45-detail"><span>E-mail</span><strong>${esc(s.email||'Não informado')}</strong></div><div class="final45-detail"><span>Nascimento</span><strong>${esc(dateBR(s.birth_date||s.date_of_birth))}</strong></div><div class="final45-detail"><span>CPF</span><strong>${esc(s.cpf||'Não informado')}</strong></div></div><div class="final45-note" style="margin-top:12px"><strong>Observações cadastrais:</strong> ${esc(s.notes||s.observations||'Nenhuma observação registrada.')}</div></section><div class="final45-grid-2"><section class="final45-panel"><div class="final45-panel-head"><div><h2>Últimos acontecimentos</h2><p>Atendimentos, avaliações, avanços e contatos mais recentes.</p></div></div><div class="final45-list">${[[lastAtt,'notebook-pen','Atendimento',r=>r&&dateBR(r.record_date)],[lastEv,'clipboard-check','Avaliação',r=>r&&dateBR(r.evaluation_date||r.date)],[lastPg,'trending-up','Avanço',r=>r&&dateBR(r.record_date)],[lastCt,'users-round','Contato',r=>r&&dateBR(r.contact_date)]].filter(x=>x[0]).map(x=>`<div class="final45-list-item"><div class="final45-list-icon"><i data-lucide="${x[1]}"></i></div><div class="final45-list-main"><strong>${esc(x[0].title||x[0].subject||x[0].domain||x[0].type||x[2])}</strong><span>${esc(x[2])} · ${esc(x[3](x[0]))}</span></div></div>`).join('')||'<div class="final45-empty">Ainda não há registros no prontuário.</div>'}</div></section><section class="final45-panel"><div class="final45-panel-head"><div><h2>Contexto resumido</h2><p>O contexto psicopedagógico fica disponível na subpágina Contexto.</p></div></div><div class="final45-note"><strong>Queixa principal:</strong> ${esc(data.context.main_complaint||'Não informada')}<br><br><strong>Contexto escolar:</strong> ${esc(data.context.school_context||'Não informado')}<br><br><strong>Plano:</strong> ${esc(data.context.plan||'Ainda não registrado.')}</div></section></div>`;
+    }else if(stateSub==='appointments'){
+      root.innerHTML=`<section class="final45-panel"><div class="final45-panel-head"><div><div class="final45-kicker">ATENDIMENTO</div><h2>Registrar atendimento detalhado</h2><p>Abra o registro em uma janela completa para não perder contexto. Depois o conteúdo fica salvo no histórico do prontuário.</p></div><button class="btn btn-primary" id="final45RegisterAttendance"><i data-lucide="notebook-pen"></i>Registrar atendimento</button></div><div class="final45-grid-3"><div class="final45-detail"><span>O que registrar</span><strong>Objetivo, atividade, resposta, dificuldades e avanços.</strong></div><div class="final45-detail"><span>Intervenção</span><strong>Mediações, estratégias, recursos e resposta do aluno.</strong></div><div class="final45-detail"><span>Continuidade</span><strong>Orientações e próximo passo claramente definidos.</strong></div></div><div class="final45-note" style="margin-top:12px"><strong>Importante:</strong> esta subpágina mostra registros realizados. Os <em>próximos atendimentos</em> ficam somente no Dashboard e na Agenda.</div></section><section class="final45-panel"><div class="final45-panel-head"><div><h2>Últimos atendimentos registrados</h2><p>Abra o olho para visualizar o conteúdo completo do registro.</p></div></div><div class="final45-list">${data.records.slice(0,8).map(r=>`<div class="final45-list-item"><div class="final45-list-icon"><i data-lucide="notebook-pen"></i></div><div class="final45-list-main"><strong>${esc(r.title||'Atendimento')}</strong><span>${esc(dateBR(r.record_date))} · ${esc(r.duration||'Duração não informada')} · ${esc(r.mood||'Estado não informado')}</span></div><div class="final45-list-actions"><button type="button" class="btn btn-outline btn-sm" data-att-view45="${esc(r.id)}"><i data-lucide="eye"></i>Ver registro</button></div></div>`).join('')||'<div class="final45-empty"><strong>Nenhum atendimento detalhado ainda</strong><span>Registre a primeira sessão para começar o histórico.</span></div>'}</div></section>`;
+      $('#final45RegisterAttendance').onclick=()=>registerAttendance45(s);$$('[data-att-view45]',root).forEach(b=>b.onclick=()=>attendanceViewer45(data.records.find(r=>String(r.id)===String(b.dataset.attView45))));
+    }else if(stateSub==='history'){
+      root.innerHTML=`<section class="final45-panel"><div class="final45-panel-head"><div><div class="final45-kicker">HISTÓRICO</div><h2>Histórico completo de atendimentos</h2><p>Uma linha do tempo de sessões registradas, sem misturar com compromissos futuros.</p></div></div>${data.records.length?`<div class="final45-timeline">${data.records.map(r=>`<article class="final45-timeline-item"><div class="final45-timeline-date">${esc(dateBR(r.record_date))} · ${esc(r.duration||'')}</div><div class="final45-timeline-title">${esc(r.title||'Atendimento')}</div><div class="final45-timeline-text">${esc(String(r.content||'').slice(0,420))}${String(r.content||'').length>420?'…':''}</div><div style="margin-top:8px"><button type="button" class="btn btn-outline btn-sm" data-att-view45="${esc(r.id)}"><i data-lucide="eye"></i>Ver atendimento completo</button></div></article>`).join('')}</div>`:'<div class="final45-empty"><strong>Nenhum histórico registrado</strong><span>Os atendimentos aparecem aqui depois de serem registrados.</span></div>'}</section>`;$$('[data-att-view45]',root).forEach(b=>b.onclick=()=>attendanceViewer45(data.records.find(r=>String(r.id)===String(b.dataset.attView45))));
+    }else if(stateSub==='progress'){
+      const areas=new Map();data.progress.forEach(r=>{const k=r.domain||'Outra';if(!areas.has(k))areas.set(k,[]);areas.get(k).push(r)});const areaCards=[...areas.entries()].map(([area,items])=>{const last=items[0],best=Math.max(...items.map(x=>pct[x.level]||25));return `<article class="final45-progress-card"><div class="final45-progress-top"><strong>${esc(area)}</strong><span class="final45-progress-level">${esc(last.level||'Sem nível')}</span></div><div class="final45-progress-track"><span style="width:${best}%"></span></div><p>${esc(last.observation||'Sem observação registrada.')}</p>${last.next_goal?`<div class="final45-goal"><strong>Próxima meta:</strong> ${esc(last.next_goal)}</div>`:''}</article>`}).join('');
+      root.innerHTML=`<section class="final45-panel"><div class="final45-panel-head"><div><div class="final45-kicker">EVOLUÇÃO</div><h2>Mapa visual de avanços</h2><p>Veja por área o nível atual, o último registro e o próximo foco de trabalho.</p></div><span class="final45-status good">${data.progress.length} registro${data.progress.length===1?'':'s'}</span></div>${areaCards?`<div class="final45-progress-grid">${areaCards}</div>`:'<div class="final45-empty"><strong>Nenhum avanço registrado ainda</strong><span>Comece registrando uma conquista observável.</span></div>'}</section><section class="final45-panel"><div class="final45-panel-head"><div><h2>Registrar novo avanço</h2><p>Registre o comportamento observável, a habilidade, o nível de autonomia e a próxima meta.</p></div></div><form id="final45ProgressForm"><div class="final45-doc-meta"><div class="final45-doc-field"><label>Data *</label><input type="date" name="record_date" value="${esc(today())}" required></div><div class="final45-doc-field"><label>Área</label><select name="domain">${['Leitura','Escrita','Matemática','Funções executivas','Memória / atenção','Linguagem','Organização / autonomia','Socioemocional','Outra'].map(x=>`<option>${esc(x)}</option>`).join('')}</select></div><div class="final45-doc-field"><label>Nível</label><select name="level">${['Inicial','Em desenvolvimento','Consolidando','Consolidado'].map(x=>`<option>${esc(x)}</option>`).join('')}</select></div><div class="final45-doc-field full"><label>Próxima meta</label><input name="next_goal" placeholder="Ex.: iniciar atividade sem mediação"></div><div class="final45-doc-field full"><label>Avanço observado *</label><textarea name="observation" rows="6" required placeholder="Descreva o que o aluno passou a fazer, com qual autonomia e qual mediação ainda é necessária."></textarea></div></div><div class="final45-actions" style="justify-content:flex-end;margin-top:14px"><button class="btn btn-primary" type="submit"><i data-lucide="plus"></i>Registrar avanço</button></div></form></section><section class="final45-panel"><div class="final45-panel-head"><div><h2>Linha do tempo</h2><p>Uma leitura cronológica das mudanças observadas.</p></div></div>${data.progress.length?`<div class="final45-timeline">${data.progress.slice(0,12).map(r=>`<article class="final45-timeline-item"><div class="final45-timeline-date">${esc(dateBR(r.record_date))} · ${esc(r.domain||'Área')}</div><div class="final45-timeline-title">${esc(r.level||'Registro')}</div><div class="final45-timeline-text">${esc(r.observation||'')}</div>${r.next_goal?`<div class="final45-goal"><strong>Próxima meta:</strong> ${esc(r.next_goal)}</div>`:''}</article>`).join('')}</div>`:'<div class="final45-empty">A linha do tempo aparecerá conforme os avanços forem registrados.</div>'}</section>`;
+      $('#final45ProgressForm').onsubmit=async ev=>{ev.preventDefault();const fd=new FormData(ev.currentTarget),btn=ev.currentTarget.querySelector('[type=submit]');try{btn.disabled=true;const r=await db().from('student_progress').insert({user_id:uid(),student_id:s.id,record_date:fd.get('record_date'),domain:fd.get('domain'),level:fd.get('level'),observation:String(fd.get('observation')||'').trim(),next_goal:String(fd.get('next_goal')||'').trim()||null});if(r.error)throw r.error;W.showSuccess?.('Avanço registrado no prontuário.');await renderStudentProfile45()}catch(e){W.showError?.('Não foi possível registrar o avanço: '+(e.message||e))}finally{btn.disabled=false}};
+    }else if(stateSub==='evaluations'){
+      root.innerHTML=`<section class="final45-panel"><div class="final45-panel-head"><div><div class="final45-kicker">AVALIAÇÕES DO ALUNO</div><h2>Aplicações vinculadas ao prontuário</h2><p>Use o ícone de olho para visualizar a aplicação inteira no popup, no mesmo nível de detalhe do preenchimento.</p></div><button class="btn btn-primary btn-sm" id="final45NewStudentEval"><i data-lucide="clipboard-plus"></i>Nova avaliação</button></div><div class="final45-history">${data.evaluations.map(e=>`<article class="final45-history-card"><div class="final45-history-head"><div class="final45-date-box"><strong>${esc(dateOnly(e.evaluation_date||e.date).slice(8,10)||'—')}</strong><span>${esc(dateBR(e.evaluation_date||e.date))}</span></div><div class="final45-history-main"><h3>${esc(e.title||e.type||'Avaliação')}</h3><div class="final45-chip-line"><span class="final45-status ${String(e.status||'').toLowerCase()==='completed'?'good':'warn'}">${esc(statusLabel(e.status))}</span><span class="final45-status">${esc(e.type||'Avaliação')}</span></div><p>${esc(e.summary||'Aplicação registrada. Abra para ver todos os campos.')}</p></div><div class="final45-list-actions"><button type="button" class="btn btn-outline btn-sm" data-profile-eval-eye45="${esc(e.id)}" title="Visualizar avaliação completa"><i data-lucide="eye"></i></button><button type="button" class="btn btn-outline btn-sm" data-profile-eval-edit45="${esc(e.id)}" title="Editar"><i data-lucide="pencil"></i></button><button type="button" class="btn btn-danger btn-sm" data-profile-eval-del45="${esc(e.id)}" title="Excluir"><i data-lucide="trash-2"></i></button></div></div></article>`).join('')||'<div class="final45-empty"><strong>Nenhuma avaliação aplicada</strong><span>As avaliações que você aplicar em Avaliações também aparecem aqui.</span></div>'}</div></section><section class="final45-panel"><div class="final45-panel-head"><div><h2>Por que este histórico é útil?</h2><p>Ele permite comparar o que foi observado ao longo do tempo sem abrir mão do registro original.</p></div></div><div class="final45-detail-grid"><div class="final45-detail"><span>Consulta</span><strong>Abra uma aplicação pelo olho e veja respostas, objetivo, etapas e síntese.</strong></div><div class="final45-detail"><span>Continuidade</span><strong>Edite uma aplicação quando precisar corrigir ou complementar o registro.</strong></div><div class="final45-detail"><span>Prontuário</span><strong>Cada aplicação continua vinculada ao aluno.</strong></div><div class="final45-detail"><span>Histórico</span><strong>O histórico geral também permanece disponível em Avaliações → Histórico.</strong></div></div></section>`;
+      $('#final45NewStudentEval').onclick=()=>{W.state.currentStudentId=s.id;W.V3=W.V3||{};W.V3.assessmentType='Leitura e compreensão';W.navigate?.('avaliacoes');setTimeout(()=>W.v3OpenEvaluationEditor?.(),200)};$$('[data-profile-eval-eye45]',root).forEach(b=>b.onclick=async()=>{const e=data.evaluations.find(x=>String(x.id)===String(b.dataset.profileEvalEye45));if(e)openEvaluation45(e)});$$('[data-profile-eval-edit45]',root).forEach(b=>b.onclick=()=>W.v3EditEvaluation?.(b.dataset.profileEvalEdit45));$$('[data-profile-eval-del45]',root).forEach(b=>b.onclick=()=>W.v3DeleteEvaluation?.(b.dataset.profileEvalDel45));
+    }else if(stateSub==='contacts'){
+      root.innerHTML=`<section class="final45-panel"><div class="final45-panel-head"><div><div class="final45-kicker">FAMÍLIA / ESCOLA</div><h2>Comunicação e alinhamentos</h2><p>Registre reuniões, ligações, mensagens e devolutivas para não perder decisões importantes.</p></div><button class="btn btn-primary" id="final45RegisterContact"><i data-lucide="plus"></i>Registrar contato</button></div><div class="final45-list">${data.contacts.map(r=>`<div class="final45-list-item"><div class="final45-list-icon"><i data-lucide="users-round"></i></div><div class="final45-list-main"><strong>${esc(r.subject||'Contato')}</strong><span>${esc(dateBR(r.contact_date))} · ${esc(r.contact_type||'Contato')} · ${esc(r.with_whom||'')}</span></div><div class="final45-list-actions"><button type="button" class="btn btn-outline btn-sm" data-contact-view45="${esc(r.id)}"><i data-lucide="eye"></i>Ver</button></div></div>`).join('')||'<div class="final45-empty"><strong>Nenhum contato registrado</strong><span>Use Registrar contato para documentar o alinhamento com família ou escola.</span></div>'}</div></section>`;$('#final45RegisterContact').onclick=()=>registerContact45(s);$$('[data-contact-view45]',root).forEach(b=>b.onclick=()=>{const r=data.contacts.find(x=>String(x.id)===String(b.dataset.contactView45));if(r)modal45(r.subject||'Contato','FAMÍLIA / ESCOLA',`<div class="final45-view-fields"><div class="final45-view-field"><span>Data / tipo</span><p>${esc(dateBR(r.contact_date))} · ${esc(r.contact_type||'Contato')}</p></div><div class="final45-view-field"><span>Com quem / instituição</span><p>${esc(r.with_whom||'—')}</p></div><div class="final45-view-field"><span>Resumo</span><p>${esc(r.content||'')}</p></div>${r.next_step?`<div class="final45-view-field"><span>Combinados / encaminhamentos</span><p>${esc(r.next_step)}</p></div>`:''}</div>`)});
+    }else{
+      const x=data.context||{};root.innerHTML=`<section class="final45-panel"><div class="final45-panel-head"><div><div class="final45-kicker">CONTEXTO</div><h2>Cenário psicopedagógico</h2><p>Informações que ajudam a entender o aluno antes, durante e depois dos atendimentos.</p></div></div><div class="final45-detail-grid"><div class="final45-detail"><span>Queixa principal</span><strong>${esc(x.main_complaint||'Não informada')}</strong></div><div class="final45-detail"><span>Contexto familiar</span><strong>${esc(x.family_context||'Não informado')}</strong></div><div class="final45-detail"><span>Contexto escolar</span><strong>${esc(x.school_context||'Não informado')}</strong></div><div class="final45-detail"><span>Desenvolvimento</span><strong>${esc(x.development||'Não informado')}</strong></div><div class="final45-detail"><span>Rotina / hábitos</span><strong>${esc(x.routine||'Não informado')}</strong></div><div class="final45-detail"><span>Focos de investigação</span><strong>${esc(x.hypotheses||'Não informado')}</strong></div></div><div class="final45-note" style="margin-top:12px"><strong>Plano psicopedagógico:</strong> ${esc(x.plan||'Ainda não registrado.')}</div></section>`;
     }
     refresh();
   }
-  function wireImages(){
-    ['#v3StudentForm','#final15StudentEditForm','#final28StudentInlineForm','#v3ProfileForm'].forEach(sel=>wireImageForm($(sel)));
+  async function renderStudentProfile45(){
+    const c=$('#studentProfileContent');if(!c)return;const id=W.state?.currentStudentId;if(!id){c.innerHTML='<div class="final45-panel"><div class="final45-empty"><strong>Nenhum aluno selecionado</strong><span>Volte para Alunos e escolha um prontuário.</span></div></div>';return;}
+    c.innerHTML='<div class="final45-panel"><div class="final45-empty"><strong>Carregando prontuário completo...</strong><span>Organizando histórico, avaliações, evolução, contatos e dados do aluno.</span></div></div>';refresh();
+    try{const data=await loadStudent45(id);const s=data.student;if(!s){throw new Error('Aluno não encontrado.')};const name=studentName(s);const tabs=studentTabs45();const sub=W.state?.studentSub45||'overview';c.innerHTML=`<div class="final45-page"><div class="final45-panel" style="padding:18px;margin-bottom:14px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:15px;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:13px;min-width:0"><div class="v3-avatar large" style="flex:none">${s.photo_url?`<img src="${esc(s.photo_url)}" alt="Foto de ${esc(name)}">`:`<span>${esc(name.split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase())}</span>`}</div><div style="min-width:0"><div class="final45-kicker">PRONTUÁRIO PSICOPEDAGÓGICO</div><h1 style="margin:5px 0;font-size:26px;color:var(--f45-text)">${esc(name)}</h1><p style="margin:0;color:var(--f45-muted);font-size:11px">${esc(s.responsible_name||s.guardian_name||s.parent_name||'Responsável não informado')} · ${esc(s.phone||'Telefone não informado')}</p><div class="final45-chip-line"><span class="final45-status ${s.status==='inactive'?'bad':'good'}">${s.status==='inactive'?'Desativado':'Em acompanhamento'}</span><span class="final45-status">${data.evaluations.length} avaliações</span><span class="final45-status">${data.records.length} atendimentos</span><span class="final45-status">${data.progress.length} avanços</span></div></div></div><div class="final45-actions"><button class="btn btn-outline" id="final45BackStudents"><i data-lucide="arrow-left"></i>Voltar aos alunos</button><button class="btn btn-primary" id="final45EditStudent"><i data-lucide="pencil"></i>Editar cadastro</button></div></div></div><div class="final45-tabs" id="final45StudentTabs">${tabs.map(t=>`<button data-student-sub45="${t.id}" class="${sub===t.id?'active':''}"><i data-lucide="${t.icon}"></i>${t.label}</button>`).join('')}</div><div id="final45StudentBody"></div></div>`;$('#final45BackStudents').onclick=()=>W.navigate?.('alunos');$('#final45EditStudent').onclick=()=>W.lqEditStudent43?.(s.id);$$('[data-student-sub45]',c).forEach(b=>b.onclick=()=>{W.state.studentSub45=b.dataset.studentSub45;renderStudentBody45(data,b.dataset.studentSub45)});await renderStudentBody45(data,sub);refresh();}catch(e){c.innerHTML=`<div class="final45-panel"><div class="final45-empty"><strong>Não foi possível abrir o prontuário</strong><span>${esc(e.message||e)}</span></div></div>`;refresh();}
   }
-  function after(fn){return setTimeout(wireImages,0)}
-  ['v3ShowStudentEditor','final28EditStudentInline','renderProfile'].forEach(name=>{
-    const base=W[name];if(typeof base==='function'&&!base.__cleanV2){W[name]=function(){const r=base.apply(this,arguments);after();return r};W[name].__cleanV2=true;}
-  });
-  const baseOpenModal=W.openModal;
-  if(typeof baseOpenModal==='function'&&!baseOpenModal.__cleanV2){W.openModal=function(){const r=baseOpenModal.apply(this,arguments);after();return r};W.openModal.__cleanV2=true;}
-  const baseSaveProfile=W.v3SaveProfile;
-  if(typeof baseSaveProfile==='function'&&!baseSaveProfile.__cleanV2){W.v3SaveProfile=async function(){wireImages();const form=$('#v3ProfileForm');const file=form?.querySelector('.final-clean-img-file');const hidden=form?.querySelector('input[type="hidden"][name="photo_url"]');if(file?.files?.[0]&&hidden)hidden.value=await uploadImgBB(file.files[0]);return baseSaveProfile.apply(this,arguments)};W.v3SaveProfile.__cleanV2=true;}
+  W.renderStudentProfileView=renderStudentProfile45;W.v3RenderStudentProfileFast=renderStudentProfile45;
 
-  /* ============================================================
-     AVALIAÇÕES — histórico como subpágina, sem estourar cards
-     ============================================================ */
-  function applyEvalSubpage(){
-    const c=$('#avaliacoesContent');if(!c)return;
-    const page=c.querySelector('.v3-page');if(!page)return;
-    let bar=$('#cleanEvalSubnav',page);
-    if(!bar){bar=D.createElement('div');bar.id='cleanEvalSubnav';bar.className='final-clean-subnav';bar.innerHTML='<button type="button" data-eval-sub="modelos"><i data-lucide="layout-grid"></i>Instrumentos</button><button type="button" data-eval-sub="historico"><i data-lucide="history"></i>Histórico de aplicações</button>';const head=page.querySelector('.v3-head');head?.insertAdjacentElement('afterend',bar);if(!head)page.prepend(bar);bar.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{W.V3=W.V3||{};W.V3.cleanEvalSub=b.dataset.evalSub;applyEvalSubpage()}));}
-    const sub=W.V3?.cleanEvalSub||'modelos';
-    bar.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.evalSub===sub));
-    const sections=$$('section.v3-panel',page);
-    const modelSection=sections.find(x=>/Instrumentos prontos para aplicação|Avaliações disponíveis/i.test(x.querySelector('h2')?.textContent||''));
-    const histSection=sections.find(x=>/Histórico das aplicações|Histórico das aplica/i.test(x.querySelector('h2')?.textContent||''));
-    modelSection?.classList.toggle('final-clean-hidden',sub!=='modelos');
-    histSection?.classList.toggle('final-clean-hidden',sub!=='historico');
-    page.querySelector('.v3-stats')?.classList.toggle('final-clean-hidden',sub==='historico');
-    page.querySelector('#v3EvaluationEditor')?.classList.toggle('final-clean-hidden',sub==='historico');
-    if(histSection){histSection.classList.add('final-clean-history');}
+  /* ------------------------------------------------------------
+     FINANCEIRO — visão geral / contas e pagamentos como subpáginas,
+     tabela completa, exclusão, encaminhamento de recibo e PDF.
+     ------------------------------------------------------------ */
+  async function financeRows45(){
+    const c=db(),me=uid();
+    if(!c||!me) throw new Error('Sessão não encontrada.');
+    const [a,b]=await Promise.all([
+      c.from('financial_entries').select('*').eq('user_id',me).order('competence_date',{ascending:false}).limit(3000),
+      c.from('payments').select('*').eq('user_id',me).order('payment_date',{ascending:false}).limit(3000)
+    ]);
+    if(a.error && b.error) throw a.error;
+    const modern=(a.data||[]).map(e=>({
+      ...e,
+      kind:e.kind||e.type||'income',
+      competence_date:e.competence_date||e.entry_date||e.payment_date||today()
+    }));
+    const linked=new Set(modern.map(e=>String(e.legacy_payment_id||e.source_payment_id||'')));
+    const legacy=(b.data||[]).filter(p=>!linked.has(String(p.id))).map(p=>({
+      id:`legacy-${p.id}`,legacy:true,source_payment_id:p.id,kind:'income',
+      amount:Number(p.amount||p.value||0),status:String(p.status||'paid').toLowerCase(),
+      competence_date:dateOnly(p.payment_date||p.date),description:p.description||p.student_name||'Recebimento',
+      student_id:p.student_id||null,student_name:p.student_name||null,payment_method:p.payment_method||p.method||''
+    }));
+    return modern.concat(legacy);
+  }
+  function financeChart45(rows){
+    const now=new Date();const months=Array.from({length:6},(_,i)=>{const d=new Date(now.getFullYear(),now.getMonth()-5+i,1);return {key:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`,label:d.toLocaleDateString('pt-BR',{month:'short'}).replace('.','')};});const vals=months.map(m=>{const inc=rows.filter(r=>String(r.competence_date||'').slice(0,7)===m.key&&String(r.kind||'income')==='income'&&String(r.status||'paid').toLowerCase()!=='pending').reduce((s,r)=>s+Number(r.amount||0),0);const out=rows.filter(r=>String(r.competence_date||'').slice(0,7)===m.key&&String(r.kind||'')==='expense'&&String(r.status||'paid').toLowerCase()!=='pending').reduce((s,r)=>s+Number(r.amount||0),0);return {inc,out}});const w=760,h=250,p=36,bottom=43,ih=h-p-bottom,iw=w-p*2,max=Math.max(1,...vals.flatMap(v=>[v.inc,v.out]));const bw=iw/months.length*.30;const x=i=>p+(i+.5)*iw/months.length;const bars=vals.map((v,i)=>{const xi=x(i),hi=(v.inc/max)*ih,ho=(v.out/max)*ih;return `<rect x="${xi-bw-3}" y="${p+ih-hi}" width="${bw}" height="${hi}" rx="5" fill="currentColor" opacity=".8"></rect><rect x="${xi+3}" y="${p+ih-ho}" width="${bw}" height="${ho}" rx="5" fill="currentColor" opacity=".24"></rect><text x="${xi}" y="${h-16}" text-anchor="middle" font-size="10" fill="currentColor">${esc(months[i].label)}</text>`}).join('');return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Receitas e despesas dos últimos seis meses"><line x1="${p}" y1="${p+ih}" x2="${w-p}" y2="${p+ih}" stroke="currentColor" opacity=".18"></line>${bars}</svg><div class="final45-chart-legend"><span><i class="final45-legend-dot"></i>Recebido</span><span><i class="final45-legend-dot" style="opacity:.24"></i>Despesas</span></div>`}
+  function openReceiptFromFinance45(e){
+    if(typeof W.openFinalDocument==='function'){
+      if(W.state)W.state.currentView='documentos';
+      W.navigate?.('documentos');
+      setTimeout(()=>W.openFinalDocument('recibo',{student_id:e.student_id||'',nome:e.student_name||'',valor:e.amount,referente:e.description||'Atendimento psicopedagógico',data:e.competence_date,forma:e.payment_method||'',obs:e.student_name?`Aluno: ${e.student_name}`:''}),250);
+    }
+  }
+  async function deleteFinance45(e){
+    if(!confirm('Excluir este lançamento? Essa ação não poderá ser desfeita.'))return;const c=db();if(!c)throw new Error('Supabase não está conectado.');const q=e.legacy?c.from('payments').delete().eq('id',e.source_payment_id).eq('user_id',uid()):c.from('financial_entries').delete().eq('id',e.id).eq('user_id',uid());const r=await q;if(r.error)throw r.error;W.showSuccess?.('Lançamento excluído.');await renderFinance45();
+  }
+  async function financeTabBody45(c,rows,sub){
+    const now=new Date(),key=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`,monthRows=rows.filter(r=>String(r.competence_date||'').slice(0,7)===key);const received=monthRows.filter(r=>String(r.kind||'income')==='income'&&String(r.status||'paid').toLowerCase()!=='pending').reduce((s,r)=>s+Number(r.amount||0),0);const pending=monthRows.filter(r=>String(r.status||'').toLowerCase()==='pending').reduce((s,r)=>s+Number(r.amount||0),0);const expenses=monthRows.filter(r=>String(r.kind||'')==='expense'&&String(r.status||'paid').toLowerCase()!=='pending').reduce((s,r)=>s+Number(r.amount||0),0);const result=received-expenses;
+    if(sub==='overview'){
+      c.innerHTML=`<div class="final45-kpi-grid"><div class="final45-kpi"><div class="final45-kpi-top"><div class="final45-kpi-icon"><i data-lucide="circle-dollar-sign"></i></div></div><span>Recebido no mês</span><strong>${money(received)}</strong><small>Pagamentos confirmados na competência atual.</small></div><div class="final45-kpi"><div class="final45-kpi-top"><div class="final45-kpi-icon"><i data-lucide="clock-3"></i></div></div><span>A receber</span><strong>${money(pending)}</strong><small>Lançamentos pendentes neste mês.</small></div><div class="final45-kpi"><div class="final45-kpi-top"><div class="final45-kpi-icon"><i data-lucide="arrow-up-right"></i></div></div><span>Despesas</span><strong>${money(expenses)}</strong><small>Saídas confirmadas no mês.</small></div><div class="final45-kpi"><div class="final45-kpi-top"><div class="final45-kpi-icon"><i data-lucide="scale"></i></div></div><span>Resultado</span><strong>${money(result)}</strong><small>${result>=0?'Saldo positivo':'Saldo negativo'} na competência atual.</small></div></div><div class="final45-grid-2"><section class="final45-panel"><div class="final45-panel-head"><div><h2>Fluxo dos últimos seis meses</h2><p>Compare recebimentos e despesas em uma leitura rápida.</p></div></div><div class="final45-chart">${financeChart45(rows)}</div></section><section class="final45-panel"><div class="final45-panel-head"><div><h2>Leitura da competência</h2><p>Resumo do que exige atenção.</p></div></div><div class="final45-detail-grid"><div class="final45-detail"><span>Movimentações do mês</span><strong>${monthRows.length}</strong></div><div class="final45-detail"><span>Pagamentos pendentes</span><strong>${monthRows.filter(r=>String(r.status||'').toLowerCase()==='pending').length}</strong></div><div class="final45-detail"><span>Receita média por lançamento</span><strong>${money(monthRows.filter(r=>String(r.kind||'income')==='income').reduce((s,r)=>s+Number(r.amount||0),0)/Math.max(1,monthRows.filter(r=>String(r.kind||'income')==='income').length))}</strong></div><div class="final45-detail"><span>Registros financeiros</span><strong>${rows.length}</strong></div></div><div class="final45-note" style="margin-top:12px"><strong>Próxima ação:</strong> abra <em>Contas e pagamentos</em> para confirmar pendências, encaminhar recibos ou excluir lançamentos que não devem permanecer.</div></section></div><section class="final45-panel"><div class="final45-panel-head"><div><h2>Últimos lançamentos</h2><p>Uma visão rápida do que entrou e saiu recentemente.</p></div><button class="btn btn-outline btn-sm" id="final45GoAccounts"><i data-lucide="arrow-right"></i>Ver contas e pagamentos</button></div><div class="final45-list">${rows.slice(0,8).map(e=>`<div class="final45-list-item"><div class="final45-list-icon"><i data-lucide="receipt"></i></div><div class="final45-list-main"><strong>${esc(e.description||e.student_name||'Lançamento')}</strong><span>${esc(dateBR(e.competence_date))} · ${esc(e.student_name||'')}${e.student_name?' · ':''}${esc(money(e.amount))}</span></div><span class="final45-status ${String(e.status||'').toLowerCase()==='paid'?'good':String(e.status||'').toLowerCase()==='pending'?'warn':''}">${esc(statusLabel(e.status||'paid'))}</span></div>`).join('')||'<div class="final45-empty">Nenhum lançamento encontrado.</div>'}</div></section>`;$('#final45GoAccounts').onclick=()=>{W.state.financeSub45='accounts';renderFinance45()};
+    }else if(sub==='accounts'){
+      const rowsHtml=rows.map(e=>{const st=String(e.status||'paid').toLowerCase();return `<div class="final45-fin-row"><span>${esc(dateBR(e.competence_date))}</span><span class="final45-fin-desc"><strong>${esc(e.description||'Lançamento')}</strong><small>${esc(e.student_name||'Sem aluno')} · ${esc(e.kind==='expense'?'Despesa':'Receita')}</small></span><span>${esc(e.payment_method||e.method||'—')}</span><span>${money(e.amount)}</span><div class="final45-fin-actions">${e.kind!=='expense'?`<button type="button" class="btn btn-outline" data-fin-receipt45="${esc(e.id)}"><i data-lucide="send"></i>Encaminhar recibo</button>`:''}<button type="button" class="btn btn-danger" data-fin-delete45="${esc(e.id)}"><i data-lucide="trash-2"></i>Excluir</button></div></div>`}).join('');
+      c.innerHTML=`<section class="final45-panel"><div class="final45-panel-head"><div><div class="final45-kicker">CONTAS E PAGAMENTOS</div><h2>Lançamentos financeiros</h2><p>Confirme recebimentos, encaminhe recibos digitais e exclua registros que não devem permanecer.</p></div><div class="final45-actions"><button class="btn btn-primary btn-sm" id="final45NewFinance"><i data-lucide="plus"></i>Novo lançamento</button><button class="btn btn-outline btn-sm" id="final45FinancePdf"><i data-lucide="file-down"></i>Salvar relatório anual PDF</button></div></div><div class="final45-fin-table"><div class="final45-fin-row header"><span>Data</span><span>Descrição / aluno</span><span>Forma</span><span>Valor</span><span>Ações</span></div>${rowsHtml||'<div class="final45-empty">Nenhum lançamento financeiro registrado.</div>'}</div></section>`;
+      $('#final45NewFinance').onclick=()=>W.v3OpenFinanceEditor?.()||W.openPaymentModal?.();$('#final45FinancePdf').onclick=()=>saveFinancePdf45(rows,new Date().getFullYear());$$('[data-fin-receipt45]',c).forEach(b=>b.onclick=()=>{const e=rows.find(x=>String(x.id)===String(b.dataset.finReceipt45));if(e)openReceiptFromFinance45(e)});$$('[data-fin-delete45]',c).forEach(b=>b.onclick=async()=>{const e=rows.find(x=>String(x.id)===String(b.dataset.finDelete45));if(!e)return;try{b.disabled=true;await deleteFinance45(e)}catch(err){W.showError?.(err.message||'Não foi possível excluir o lançamento.')}finally{b.disabled=false}});
+    }else{
+      const months=Array.from({length:12},(_,i)=>{const d=new Date(now.getFullYear(),i,1),key2=`${d.getFullYear()}-${String(i+1).padStart(2,'0')}`,rs=rows.filter(r=>String(r.competence_date||'').slice(0,7)===key2),inc=rs.filter(r=>String(r.kind||'income')==='income'&&String(r.status||'paid').toLowerCase()!=='pending').reduce((s,r)=>s+Number(r.amount||0),0),out=rs.filter(r=>String(r.kind||'')==='expense'&&String(r.status||'paid').toLowerCase()!=='pending').reduce((s,r)=>s+Number(r.amount||0),0);return {label:d.toLocaleDateString('pt-BR',{month:'long'}),inc,out,count:rs.length}});
+      c.innerHTML=`<div class="final45-grid-2"><section class="final45-panel"><div class="final45-panel-head"><div><h2>Análise anual</h2><p>Resumo por mês da movimentação financeira.</p></div></div><div class="final45-fin-table">${months.map(m=>`<div class="final45-fin-row" style="grid-template-columns:minmax(0,1fr) 110px 110px 70px"><span style="font-weight:800;color:var(--f45-text)">${esc(m.label)}</span><span>${money(m.inc)}</span><span>${money(m.out)}</span><span>${m.count}</span></div>`).join('')}</div></section><section class="final45-panel"><div class="final45-panel-head"><div><h2>Como interpretar</h2><p>A análise separa o que foi recebido do que foi gasto.</p></div></div><div class="final45-detail-grid"><div class="final45-detail"><span>Receita anual</span><strong>${money(months.reduce((s,m)=>s+m.inc,0))}</strong></div><div class="final45-detail"><span>Despesas anuais</span><strong>${money(months.reduce((s,m)=>s+m.out,0))}</strong></div><div class="final45-detail"><span>Resultado anual</span><strong>${money(months.reduce((s,m)=>s+m.inc-m.out,0))}</strong></div><div class="final45-detail"><span>Meses com movimentação</span><strong>${months.filter(m=>m.count).length}</strong></div></div></section></div>`;
+    }
     refresh();
   }
-  const baseEval=W.renderEvaluations;
-  if(typeof baseEval==='function'&&!baseEval.__cleanV2){W.renderEvaluations=async function(){const r=await baseEval.apply(this,arguments);setTimeout(applyEvalSubpage,0);return r};W.renderEvaluations.__cleanV2=true;}
-
-  /* ============================================================
-     FINANCEIRO — contas/pagamentos em subpágina sem trocar o motor
-     ============================================================ */
-  function applyFinanceSubpage(){
-    const c=$('#financeiroContent');if(!c)return;const page=c.querySelector('.v3-page');if(!page)return;
-    let bar=$('#cleanFinanceSubnav',page);
-    if(!bar){bar=D.createElement('div');bar.id='cleanFinanceSubnav';bar.className='final-clean-subnav';bar.innerHTML='<button type="button" data-fin-sub="visao"><i data-lucide="layout-dashboard"></i>Visão geral</button><button type="button" data-fin-sub="contas"><i data-lucide="receipt-text"></i>Contas e pagamentos</button>';const head=page.querySelector('.v3-head');head?.insertAdjacentElement('afterend',bar);if(!head)page.prepend(bar);bar.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{W.V3=W.V3||{};W.V3.cleanFinSub=b.dataset.finSub;applyFinanceSubpage()}));}
-    const sub=W.V3?.cleanFinSub||'visao';bar.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.finSub===sub));
-    const accountSection=$$('section.v3-panel,.v3-panel',page).find(x=>/Contas e pagamentos|Lançamentos do mês/i.test(x.querySelector('h2')?.textContent||''));
-    const overview=page.querySelector('.v3-two-col');
-    const stats=page.querySelector('.v3-stats');
-    accountSection?.classList.toggle('final-clean-hidden',sub!=='contas');
-    overview?.classList.toggle('final-clean-hidden',sub==='contas');
-    stats?.classList.toggle('final-clean-hidden',sub==='contas');
-    refresh();
+  async function saveFinancePdf45(rows,year){
+    const Js=W.jspdf?.jsPDF;if(!Js){W.showError?.('Biblioteca de PDF não disponível.');return;}try{const pdf=new Js({unit:'mm',format:'a4'}),yNum=Number(year)||new Date().getFullYear();pdf.setFont('helvetica','bold');pdf.setFontSize(18);pdf.text('RELATÓRIO FINANCEIRO',15,18);pdf.setFont('helvetica','normal');pdf.setFontSize(10);pdf.text(`Legado Que Ensina · ${yNum}`,15,25);pdf.text(`Responsável: ${W.state?.profile?.full_name||W.state?.profile?.name||W.state?.user?.email||'Professor'}`,15,31);let y=41;for(let m=0;m<12;m++){const d=new Date(yNum,m,1),key=`${yNum}-${String(m+1).padStart(2,'0')}`,rs=rows.filter(r=>String(r.competence_date||'').slice(0,7)===key),inc=rs.filter(r=>String(r.kind||'income')==='income'&&String(r.status||'paid').toLowerCase()!=='pending').reduce((s,r)=>s+Number(r.amount||0),0),out=rs.filter(r=>String(r.kind||'')==='expense'&&String(r.status||'paid').toLowerCase()!=='pending').reduce((s,r)=>s+Number(r.amount||0),0);if(y>274){pdf.addPage();y=24}pdf.setFont('helvetica','bold');pdf.setFontSize(10);pdf.text(d.toLocaleDateString('pt-BR',{month:'long'}),15,y);pdf.setFont('helvetica','normal');pdf.text(`Recebido: ${money(inc)}   Despesas: ${money(out)}   Resultado: ${money(inc-out)}   Lançamentos: ${rs.length}`,65,y);y+=8}pdf.setFontSize(8);pdf.setTextColor(120,130,125);pdf.text('Legado Que Ensina',15,287);pdf.save(`relatorio-financeiro-${yNum}.pdf`);W.showSuccess?.('Relatório financeiro em PDF gerado.')}catch(e){W.showError?.('Não foi possível gerar o PDF: '+(e.message||e))}
   }
-  const baseFin=W.renderFinance;
-  if(typeof baseFin==='function'&&!baseFin.__cleanV2){W.renderFinance=async function(){const r=await baseFin.apply(this,arguments);setTimeout(applyFinanceSubpage,0);return r};W.renderFinance.__cleanV2=true;}
-
-  /* ============================================================
-     ANIVERSARIANTES — deduplicar somente o conteúdo já renderizado
-     ============================================================ */
-  function cleanBirthdays(){
-    const box=$('#final33Birthdays');if(!box)return;
-    const seen=new Set();
-    $$('.final33-birthday-row',box).forEach(row=>{
-      const key=String(row.dataset.bdayId||row.querySelector('[data-bday-id]')?.dataset.bdayId||row.textContent||'').trim();
-      if(seen.has(key)){row.remove();return}seen.add(key);
-      const buttons=$$('.final33-birthday-whatsapp',row);buttons.slice(1).forEach(b=>b.remove());
-    });
-    box.classList.add('final-clean-bdays');
-    refresh();
+  async function renderFinance45(){
+    const c=$('#financeiroContent');if(!c)return;c.innerHTML='<div class="final45-panel"><div class="final45-empty"><strong>Carregando financeiro...</strong><span>Organizando contas, pagamentos, análises e recibos.</span></div></div>';refresh();
+    try{const rows=await financeRows45();const sub=W.state?.financeSub45||'overview';c.innerHTML=`<div class="final45-page"><div class="final45-head"><div class="final45-head-main"><div class="final45-kicker">GESTÃO FINANCEIRA</div><h1>Financeiro</h1><p>Uma visão completa das receitas, despesas, pagamentos, pendências e documentos financeiros, com as contas separadas da análise geral.</p></div><div class="final45-actions"><button class="btn btn-primary" id="final45QuickFinance"><i data-lucide="plus"></i>Novo lançamento</button></div></div><div class="final45-tabs"><button data-fin-sub45="overview" class="${sub==='overview'?'active':''}"><i data-lucide="layout-dashboard"></i>Visão geral</button><button data-fin-sub45="accounts" class="${sub==='accounts'?'active':''}"><i data-lucide="receipt-text"></i>Contas e pagamentos <b>${rows.length}</b></button><button data-fin-sub45="analysis" class="${sub==='analysis'?'active':''}"><i data-lucide="chart-no-axes-combined"></i>Análises</button></div><div id="final45FinanceBody"></div></div>`;$('#final45QuickFinance').onclick=()=>W.v3OpenFinanceEditor?.()||W.openPaymentModal?.();$$('[data-fin-sub45]',c).forEach(b=>b.onclick=()=>{W.state.financeSub45=b.dataset.finSub45;renderFinance45()});await financeTabBody45($('#final45FinanceBody'),rows,sub)}catch(e){c.innerHTML=`<div class="final45-panel"><div class="final45-empty"><strong>Não foi possível carregar o Financeiro</strong><span>${esc(e.message||e)}</span></div></div>`;refresh();}
   }
-  const baseDash=W.renderDashboard;
-  if(typeof baseDash==='function'&&!baseDash.__cleanV2){W.renderDashboard=async function(){const r=await baseDash.apply(this,arguments);setTimeout(cleanBirthdays,0);return r};W.renderDashboard.__cleanV2=true;}
+  W.renderFinance=renderFinance45;
 
-  /* FILA DE ESPERA — não exibir detalhes técnicos do banco. */
-  function cleanWaitlistCopy(){
-    $$('[id*=Waitlist] .v4-modal-header p, [id*=waitlist] .v4-modal-header p, .legado-v4-dialog .v4-modal-header p').forEach(p=>{
-      if(/prioridade visual é convertida para número/i.test(p.textContent||'')) p.textContent='Preencha os dados do interessado e mantenha o histórico organizado.';
-    });
+  /* ------------------------------------------------------------
+     DOCUMENTOS DIGITAIS — nome automático, texto integral, PDF,
+     impressão e WhatsApp com destinatário pré-preenchido.
+     ------------------------------------------------------------ */
+  const DOCS45={
+    recibo:{title:'Recibo digital',icon:'receipt-text',desc:'Recibo de pagamento profissional com dados do aluno e responsável.',text:'RECIBO DE PAGAMENTO\n\nRecebi de {NOME} a importância de {VALOR}, referente a {REFERENTE}.\n\nAluno: {ALUNO}\nForma de pagamento: {FORMA_PAGAMENTO}.\nData do pagamento: {DATA}.\n\n{OBSERVAÇÃO}\n\n{PROFESSOR}\nLegado Que Ensina'},
+    declaracao:{title:'Declaração digital',icon:'file-check-2',desc:'Declaração personalizável para comparecimento, acompanhamento ou outra finalidade.',text:'DECLARAÇÃO\n\nDeclaro, para os devidos fins, que {NOME} participou de {FINALIDADE}.\n\nDocumento: {DOCUMENTO}\nPeríodo / data: {DATA}\n\n{OBSERVAÇÃO}\n\n{PROFESSOR}\nLegado Que Ensina'},
+    encaminhamento:{title:'Encaminhamento digital',icon:'send',desc:'Encaminhamento profissional com objetivo, especialista, motivo e continuidade.',text:'ENCAMINHAMENTO\n\nEncaminho o(a) aluno(a) {NOME} para avaliação/atendimento na área de {ESPECIALISTA}.\n\nMotivo do encaminhamento:\n{MOTIVO}\n\nData: {DATA}\n\n{OBSERVAÇÃO}\n\n{PROFESSOR}\nLegado Que Ensina'}
+  };
+  let docStudents45=[];
+  async function ensureDocStudents45(){try{docStudents45=Array.isArray(W.studentsState?.data)&&W.studentsState.data.length?W.studentsState.data:await W.v3LoadStudents?.()||W.state?.students||[];return docStudents45}catch(_){return W.state?.students||[]}}
+  function tokenValues45(type,fd){const prof=W.state?.profile||{}, student=docStudents45.find(s=>String(s.id)===String(fd.student_id||''))||docStudents45.find(s=>String(s.id)===String(W.state?.currentStudentId||''));return {nome:fd.nome||'',aluno:student?studentName(student):fd.nome||'',valor:fd.valor||'',referente:fd.referente||'Atendimento psicopedagógico',forma:fd.forma||'',data:fd.data||today(),obs:fd.obs||'',finalidade:fd.finalidade||'acompanhamento psicopedagógico',documento:fd.documento||'',especialista:fd.especialista||'',motivo:fd.motivo||'',professor:prof.full_name||prof.name||W.state?.user?.email||'Professor'}}
+  function applyTokens45(text,v){const map={'{NOME}':v.nome||'_______________________________','{ALUNO}':v.aluno||'_______________________________','{VALOR}':v.valor||'R$ __________','{REFERENTE}':v.referente||'_______________________________','{FORMA_PAGAMENTO}':v.forma||'________________________','{DATA}':dateBR(v.data||today()),'{OBSERVAÇÃO}':v.obs||'','{FINALIDADE}':v.finalidade||'acompanhamento psicopedagógico','{DOCUMENTO}':v.documento||'não informado','{ESPECIALISTA}':v.especialista||'________________________','{MOTIVO}':v.motivo||'________________________________\n________________________________','{PROFESSOR}':v.professor||'Professor(a) / Psicopedagogo(a)'};return String(text||'').replace(/\{[A-ZÁÉÍÓÚÇ_]+\}/g,k=>map[k]??k)}
+  async function openFinalDocument45(type,prefill={}){
+    const d=DOCS45[type]||DOCS45.recibo;await ensureDocStudents45();$('#final45DocumentEditor')?.remove();const overlay=D.createElement('div');overlay.id='final45DocumentEditor';overlay.className='final45-popup-backdrop';const studentId=prefill.student_id||W.state?.currentStudentId||'';overlay.innerHTML=`<section class="final45-doc-modal" role="dialog" aria-modal="true"><div class="final45-doc-header"><div><div class="final45-kicker">DOCUMENTO DIGITAL</div><h2 style="margin:4px 0;font-size:20px;color:#26352f">${esc(d.title)}</h2><p style="margin:4px 0 0;color:#74827b;font-size:10px">Edite o documento inteiro, revise e gere o PDF ou abra o WhatsApp com a mensagem preparada.</p></div><button type="button" class="icon-button" id="final45DocClose"><i data-lucide="x"></i></button></div><div class="final45-doc-body"><div class="final45-doc-note"><strong>Preenchimento inteligente:</strong> selecione o aluno e o sistema coloca automaticamente o nome, responsável e telefone disponível. O texto completo continua editável.</div><div class="final45-doc-meta"><div class="final45-doc-field"><label>Aluno</label><select name="student_id" id="final45DocStudent"><option value="">Selecionar aluno</option>${docStudents45.map(s=>`<option value="${esc(s.id)}" ${String(s.id)===String(studentId)?'selected':''}>${esc(studentName(s))}</option>`).join('')}</select></div><div class="final45-doc-field"><label>Nome / pessoa</label><input name="nome" value="${esc(prefill.nome||'')}"></div><div class="final45-doc-field"><label>Telefone para WhatsApp</label><input name="recipient_phone" value="${esc(prefill.recipient_phone||'')}" placeholder="DDD + número"></div><div class="final45-doc-field"><label>Data</label><input name="data" type="date" value="${esc(prefill.data||today())}"></div>${type==='recibo'?`<div class="final45-doc-field"><label>Valor</label><input name="valor" value="${esc(prefill.valor||'')}" placeholder="0,00"></div><div class="final45-doc-field"><label>Referente a</label><input name="referente" value="${esc(prefill.referente||'Atendimento psicopedagógico')}"></div><div class="final45-doc-field"><label>Forma de pagamento</label><input name="forma" value="${esc(prefill.forma||'')}"></div>`:''}${type==='declaracao'?`<div class="final45-doc-field"><label>Documento</label><input name="documento" value="${esc(prefill.documento||'')}" placeholder="CPF, RG etc."></div><div class="final45-doc-field"><label>Finalidade</label><input name="finalidade" value="${esc(prefill.finalidade||'acompanhamento psicopedagógico')}"></div>`:''}${type==='encaminhamento'?`<div class="final45-doc-field"><label>Especialista / área</label><input name="especialista" value="${esc(prefill.especialista||'')}" placeholder="Fonoaudiologia, Psicologia..."></div><div class="final45-doc-field"><label>Motivo</label><input name="motivo" value="${esc(prefill.motivo||'')}" placeholder="Motivo do encaminhamento"></div>`:''}<div class="final45-doc-field full"><label>Observação adicional</label><input name="obs" value="${esc(prefill.obs||'')}"></div><div class="final45-doc-field full"><label>Texto completo do documento</label><textarea name="document_text" spellcheck="true">${esc(prefill.text||d.text)}</textarea></div></div><div class="final45-actions" style="justify-content:space-between"><div class="final45-actions"><button type="button" class="btn btn-outline btn-sm" data-doc-token45="{NOME}">Inserir nome</button><button type="button" class="btn btn-outline btn-sm" data-doc-token45="{ALUNO}">Inserir aluno</button><button type="button" class="btn btn-outline btn-sm" data-doc-token45="{DATA}">Inserir data</button></div><div class="final45-doc-primary-actions"><button type="button" class="btn btn-outline" id="final45DocPrint"><i data-lucide="printer"></i>Imprimir</button><button type="button" class="btn btn-outline" id="final45DocWhats"><i data-lucide="message-circle"></i>WhatsApp</button><button type="button" class="btn btn-primary" id="final45DocPdf"><i data-lucide="file-down"></i>Gerar PDF</button></div></div></div></section>`;D.body.appendChild(overlay);refresh();const close=()=>overlay.remove();$('#final45DocClose').onclick=close;overlay.onclick=e=>{if(e.target===overlay)close()};
+    const studentSelect=$('#final45DocStudent',overlay);function autoFill(){const s=docStudents45.find(x=>String(x.id)===String(studentSelect?.value));if(!s)return;const resp=s.responsible_name||s.guardian_name||s.parent_name||studentName(s);const phone=s.responsible_phone||s.guardian_phone||s.parent_phone||s.phone||'';const nameInput=$('[name="nome"]',overlay),phoneInput=$('[name="recipient_phone"]',overlay);if(type==='recibo'){if(nameInput&&!nameInput.value)nameInput.value=resp}else if(nameInput)nameInput.value=studentName(s);if(phoneInput&&!phoneInput.value)phoneInput.value=String(phone)}studentSelect?.addEventListener('change',autoFill);autoFill();
+    $$('[data-doc-token45]',overlay).forEach(b=>b.onclick=()=>{const ta=$('[name="document_text"]',overlay);const start=ta.selectionStart,end=ta.selectionEnd;ta.setRangeText(b.dataset.docToken45,start,end,'end');ta.focus()});
+    const collect=()=>{const vals={};$$('input,select,textarea',overlay).forEach(el=>{if(el.name)vals[el.name]=el.value});const raw=String(vals.document_text||'').trim();const withTokens=applyTokens(raw,tokenValues45(type,vals));const title=(withTokens.split('\n').find(x=>x.trim())||d.title).trim();return {title,text:withTokens,phone:String(vals.recipient_phone||'').replace(/\D/g,''),student:docStudents45.find(s=>String(s.id)===String(vals.student_id||''))}};
+    $('#final45DocPdf').onclick=()=>{const data=collect();saveDocument45(data)};
+    $('#final45DocPrint').onclick=()=>{const data=collect();printDocument45(data)};
+    $('#final45DocWhats').onclick=()=>{const data=collect();sendDocumentWhats45(data)};
   }
-  const baseWait=W.v4OpenWaitlistModal;
-  if(typeof baseWait==='function'&&!baseWait.__cleanV2){W.v4OpenWaitlistModal=async function(){const r=await baseWait.apply(this,arguments);setTimeout(cleanWaitlistCopy,0);return r};W.v4OpenWaitlistModal.__cleanV2=true;}
+  async function saveDocument45(data){const Js=W.jspdf?.jsPDF;if(!Js){W.showError?.('Biblioteca de PDF não disponível.');return;}try{const pdf=new Js({unit:'mm',format:'a4'}),m=20;let y=25;pdf.setTextColor(38,50,56);pdf.setFont('helvetica','bold');pdf.setFontSize(18);pdf.text(data.title,105,y,{align:'center'});y+=18;pdf.setFont('helvetica','normal');pdf.setFontSize(11);const lines=String(data.text||'').split('\n');for(const line of lines.slice(1)){const wrapped=pdf.splitTextToSize(line||' ',170);for(const ln of wrapped){if(y>273){pdf.addPage();y=24}pdf.text(ln,m,y);y+=7}y+=2}pdf.setFontSize(8);pdf.setTextColor(120,130,125);pdf.text('Legado Que Ensina',m,287);pdf.save(`${slug45(data.title)}-${today()}.pdf`);W.showSuccess?.('Documento PDF gerado com sucesso.');return true}catch(e){W.showError?.('Não foi possível gerar o PDF: '+(e.message||e));return false}}
+  function printDocument45(data){const w=W.open('','_blank');if(!w){W.showError?.('Permita pop-ups no navegador para imprimir.');return}const body=String(data.text||'').split('\n').slice(1).map(x=>`<p>${esc(x||'')}</p>`).join('');w.document.write(`<html lang="pt-BR"><head><meta charset="utf-8"><title>${esc(data.title)}</title><style>@page{size:A4;margin:18mm}body{font-family:Arial,sans-serif;color:#263238;font-size:12pt;line-height:1.65}h1{text-align:center;font-size:18pt;margin:0 0 26px}p{margin:0 0 8px;white-space:pre-wrap}</style></head><body><h1>${esc(data.title)}</h1>${body}</body></html>`);w.document.close();w.focus();setTimeout(()=>w.print(),250)}
+  function sendDocumentWhats45(data){let phone=data.phone;if(!phone&&data.student){phone=String(data.student.responsible_phone||data.student.guardian_phone||data.student.parent_phone||data.student.phone||'').replace(/\D/g,'')}if(!phone){W.showError?.('Informe ou cadastre um telefone para abrir o WhatsApp.');return}const target=phone.length>=10?phone:(phone?`55${phone}`:'');const name=data.student?studentName(data.student):(data.title||'documento');const msg=encodeURIComponent(`Olá! Estou encaminhando o ${data.title} referente a ${name}. O documento foi gerado pelo Legado Que Ensina.`);W.open?.(`https://wa.me/${target}?text=${msg}`,'_blank','noopener,noreferrer');W.showSuccess?.('WhatsApp aberto com a mensagem preparada. O PDF pode ser anexado na conversa.');}
+  function slug45(v){return String(v||'documento').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'-').replace(/^-+|-+$/g,'').toLowerCase()||'documento'}
+  async function renderDocuments45(){await ensureDocStudents45();const c=$('#documentosContent');if(!c)return;c.innerHTML=`<div class="final45-page"><div class="final45-head"><div class="final45-head-main"><div class="final45-kicker">DOCUMENTOS DIGITAIS</div><h1>Modelos e documentos</h1><p>Crie recibos, declarações e encaminhamentos online. O sistema preenche automaticamente os dados disponíveis do aluno, permite editar o documento inteiro e entrega PDF ou impressão pronta.</p></div></div><div class="final45-doc-grid">${Object.entries(DOCS45).map(([id,d])=>`<article class="final45-doc-card"><div class="final45-doc-icon"><i data-lucide="${d.icon}"></i></div><div class="final45-kicker">DOCUMENTO DIGITAL</div><h3>${esc(d.title)}</h3><p>${esc(d.desc)}</p><button type="button" class="btn btn-primary" data-doc-open45="${id}"><i data-lucide="pen-line"></i>Preencher documento</button></article>`).join('')}</div><section class="final45-panel"><div class="final45-panel-head"><div><h2>O que você consegue fazer aqui</h2><p>Um editor completo para substituir modelos soltos, textos em Word e preenchimentos repetitivos.</p></div></div><div class="final45-detail-grid"><div class="final45-detail"><span>Dados automáticos</span><strong>Nome do aluno, responsável, telefone e dados do profissional podem entrar automaticamente.</strong></div><div class="final45-detail"><span>Texto integral</span><strong>Você pode editar todo o conteúdo do documento, não apenas campos pequenos.</strong></div><div class="final45-detail"><span>PDF A4</span><strong>Gere o arquivo pronto para impressão em PDF.</strong></div><div class="final45-detail"><span>WhatsApp</span><strong>Abra a conversa com a mensagem do documento já preparada para envio.</strong></div></div></section></div>`;$$('[data-doc-open45]',c).forEach(b=>b.onclick=()=>openFinalDocument45(b.dataset.docOpen45));refresh()}
+  W.openFinalDocument=openFinalDocument45;W.docsView=renderDocuments45;W.renderFinalDocuments=renderDocuments45;W.ensureDocsView=W.ensureDocsView||(()=>{});
 
-  /* Executa uma vez caso a tela já esteja aberta. */
-  setTimeout(()=>{wireImages();applyEvalSubpage();applyFinanceSubpage();cleanBirthdays();cleanWaitlistCopy()},150);
+  /* ------------------------------------------------------------
+     Navegação final e proteções sem observer/loop.
+     ------------------------------------------------------------ */
+  const baseNavigate45=W.navigate;
+  if(typeof baseNavigate45==='function'&&!baseNavigate45.__final45){
+    const nav=function(view){
+      if(view==='recados')view='dashboard';
+      if(view==='documentos'){
+        try{W.state.currentView='documentos'}catch(_){ }
+        $$('.view').forEach(v=>v.classList.remove('active'));$('#view-documentos')?.classList.add('active');$$('#mainNav button[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view==='documentos'));const pt=$('#pageTitle');if(pt)pt.innerHTML='<i data-lucide="file-text"></i><span>Modelos e documentos</span>';renderDocuments45();return;
+      }
+      return baseNavigate45.apply(this,arguments);
+    };nav.__final45=true;W.navigate=nav;
+  }
+  function cleanRecados45(){$$('#view-recados,#recadosContent,#recadosBadge,#mainNav [data-view="recados"],[data-view="recados"],#final32ChatLauncher,#final32ChatWidget,#final36ChatWidget,#final38ChatWidget,#final29ChatLauncher,#final29ChatWidget').forEach(e=>e.remove())}
+  function cleanBirthday45(){const box=$('#final33Birthdays');if(!box)return;const rows=[...new Set($$('.final33-birthday-row, .final44-bday-row',box).map(el=>el.outerHTML))];if(!rows.length)return;const list=rows.map(x=>x);box.innerHTML=`<div class="final45-bdays">${list.slice(0,6).map(x=>x).join('')}</div>`;box.style.overflow='hidden';refresh();}
+  function cleanNextAppointments45(){const c=$('#studentProfileContent');if(!c)return;$$('h1,h2,h3,h4',c).forEach(h=>{if(/Próximos atendimentos/i.test(h.textContent||'')){h.closest('section,.v3-panel,.card')?.remove()}})}
+  const baseDashboard45=W.renderDashboard;if(typeof baseDashboard45==='function'&&!baseDashboard45.__final45){const fn=async function(){const r=await baseDashboard45.apply(this,arguments);setTimeout(()=>{cleanRecados45();cleanBirthday45()},0);return r};fn.__final45=true;W.renderDashboard=fn}
+  const baseLogout45=W.handleLogout;if(typeof baseLogout45==='function'&&!baseLogout45.__final45){baseLogout45.__final45=true}
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('#final45EvaluationViewer')?.remove();$('#final45SimpleModal')?.remove();$('#final45DocumentEditor')?.remove()}});
+  function boot45(){cleanRecados45();if(W.state?.currentView==='aluno-perfil')cleanNextAppointments45();if(W.state?.currentView==='documentos')renderDocuments45();refresh()}
+  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot45,{once:true});else setTimeout(boot45,0);
 })();
 </script>
+</body>
 
 <style id="legado-final43-clean-css">
 /* ============================================================
