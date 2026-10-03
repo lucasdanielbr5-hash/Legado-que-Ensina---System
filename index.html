@@ -2523,7 +2523,7 @@
      ============================================================ */
 
   const APP_CONFIG = {
-    whatsappNumber: '5543991466210',
+    whatsappNumber: '5543920036581',
     profileTable: 'profiles',
 
     /*
@@ -7911,7 +7911,7 @@ window.renderFinance = async function(){
   window.openMessageModal=window.v3OpenMessageEditor;window.v3ReadMessage=async id=>{try{await updateSafe(TABLE.messages,id,{read:true});renderMessages();}catch(err){showError(err.message);}};
 
   /* -------------------- PERFIL DO PROFESSOR -------------------- */
-  window.renderProfile=async function(){const c=byId('perfilContent');if(!c)return;const p=state.profile||{};const photo=val(p,'photo_url','avatar_url');c.innerHTML=pageShell('PROFISSIONAL','Meu perfil','Apresente seu trabalho e mantenha os dados de contato atualizados.',`<button class="btn btn-primary" onclick="v3SaveProfile()"><i data-lucide="save"></i>Salvar perfil</button>`)+`<div class="v3-panel v3-profile-editor"><div class="v3-profile-preview">${avatar(getUserDisplayName(),photo,'xlarge')}<div><h2>${esc(getUserDisplayName())}</h2><p>${esc(state.user?.email||'')}</p><span class="v3-tag">Professor / Psicopedagogo</span></div></div><form id="v3ProfileForm" class="v3-form"><div class="v3-form-grid"><label><span>Nome profissional *</span><input name="full_name" value="${esc(val(p,'full_name','name')||getUserDisplayName())}" required></label><label><span>Telefone</span><input name="phone" value="${esc(p.phone||'')}"></label><label><span>O que você atende</span><input name="specialty" value="${esc(p.specialty||'')}" placeholder="Ex.: dificuldades de aprendizagem, alfabetização..."></label><label><span>Foto</span><input name="photo_url" value="${esc(photo)}" placeholder="https://..."></label><label class="full"><span>Apresentação</span><textarea name="bio" rows="6" placeholder="Escreva uma apresentação curta para seu perfil.">${esc(p.bio||'')}</textarea></label><label class="full"><span>Serviços / áreas de atendimento</span><textarea name="services" rows="5" placeholder="Liste os atendimentos que oferece.">${esc(p.services||'')}</textarea></label></div></form></div>`;refreshIcons();};
+  window.renderProfile=async function(){const c=byId('perfilContent');if(!c)return;const p=state.profile||{};const photo=val(p,'photo_url','avatar_url');c.innerHTML=pageShell('PROFISSIONAL','Meu perfil','Apresente seu trabalho e mantenha os dados de contato atualizados.',`<button class="btn btn-primary" onclick="v3SaveProfile()"><i data-lucide="save"></i>Salvar perfil</button>`)+`<div class="v3-panel v3-profile-editor"><div class="v3-profile-preview">${avatar(getUserDisplayName(),photo,'xlarge')}<div><h2>${esc(getUserDisplayName())}</h2><p>${esc(state.user?.email||'')}</p><span class="v3-tag">Professor / Psicopedagogo</span></div></div><form id="v3ProfileForm" class="v3-form"><div class="v3-form-grid"><label><span>Nome profissional *</span><input name="full_name" value="${esc(val(p,'full_name','name')||getUserDisplayName())}" required></label><label><span>Telefone</span><input name="phone" value="${esc(p.phone||'')}"></label><label><span>O que você atende</span><input name="specialty" value="${esc(p.specialty||'')}" placeholder="Ex.: dificuldades de aprendizagem, alfabetização..."></label><input type="hidden" name="photo_url" value="${esc(photo)}"><label class="full"><span>Apresentação</span><textarea name="bio" rows="6" placeholder="Escreva uma apresentação curta para seu perfil.">${esc(p.bio||'')}</textarea></label><label class="full"><span>Serviços / áreas de atendimento</span><textarea name="services" rows="5" placeholder="Liste os atendimentos que oferece.">${esc(p.services||'')}</textarea></label></div></form></div>`;refreshIcons();};
   window.v3SaveProfile=async function(){try{const fd=new FormData(byId('v3ProfileForm'));let photo=String(fd.get('photo_url')||'').trim()||null;const payload={full_name:String(fd.get('full_name')||'').trim(),phone:String(fd.get('phone')||'').trim()||null,specialty:String(fd.get('specialty')||'').trim()||null,photo_url:photo,bio:String(fd.get('bio')||'').trim()||null,services:String(fd.get('services')||'').trim()||null};await updateSafe(TABLE.profiles,state.user.id,payload);state.profile={...(state.profile||{}),...payload};showSuccess('Perfil atualizado.');renderProfile();}catch(err){showError(err.message||'Não foi possível salvar o perfil.');}};
 
   /* -------------------- PRESERVAÇÃO DE FORMULÁRIOS INLINE -------------------- */
@@ -11513,7 +11513,7 @@ body.legado-v4-modal-open{overflow:hidden}
   /* ============================================================
      1) LINKS DE WHATSAPP E RECUPERAÇÃO DE SENHA
      ============================================================ */
-  const SUPPORT='5543991466210';
+  const SUPPORT='5543920036581';
   const waUrl=text=>`https://wa.me/${SUPPORT}?text=${encodeURIComponent(text||'Olá! Gostaria de solicitar acesso ao Legado Que Ensina.')}`;
 
   function wireLoginActions(){
@@ -11526,8 +11526,7 @@ body.legado-v4-modal-open{overflow:hidden}
         ev.preventDefault();
         const input=document.getElementById('loginEmail');
         let email=String(input?.value||'').trim().toLowerCase();
-        if(!email) email=String(window.prompt('Digite o e-mail da sua conta para receber o link de recuperação:')||'').trim().toLowerCase();
-        if(!email){ msg('Informe seu e-mail para recuperar a senha.'); input?.focus(); return; }
+        if(!email){ msg('Informe seu e-mail no campo acima para recuperar a senha.'); input?.focus(); return; }
         try{
           const redirectTo=`${location.origin}${location.pathname}`;
           const {error}=await W.supabaseClient.auth.resetPasswordForEmail(email,{redirectTo});
@@ -13070,6 +13069,346 @@ label{color:#52645f!important;font-weight:700!important}
 })();
 </script>
 
+
+
+<!-- FINAL55 — IDENTIDADE, TEMA, PRESENÇA MASTER E MANUTENÇÃO -->
+<style id="legado-final55-overrides">
+  /* =============================================================
+     LOGOMARCA — menu e login
+     Claro: colorida | Escuro: branca
+     ============================================================= */
+  .sidebar .brand{
+    width:100%!important;
+    height:118px!important;
+    min-height:118px!important;
+    padding:10px 8px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:0!important;
+    overflow:visible!important;
+    background:transparent!important;
+    border:0!important;
+    box-shadow:none!important;
+  }
+  .sidebar .brand-mark{
+    width:180px!important;
+    height:96px!important;
+    flex:0 0 180px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    overflow:visible!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+  .sidebar .brand-mark img{
+    width:180px!important;
+    height:96px!important;
+    max-width:180px!important;
+    max-height:96px!important;
+    object-fit:contain!important;
+    object-position:center!important;
+    background:transparent!important;
+    border:0!important;
+    border-radius:0!important;
+    filter:none!important;
+    opacity:1!important;
+  }
+  .sidebar .brand-text{display:none!important}
+
+  .login-visual .lv-top img,
+  .lb-logo-mobile img{
+    object-fit:contain!important;
+    background:transparent!important;
+    border:0!important;
+  }
+  .login-visual .lv-top img{width:58px!important;height:58px!important;padding:4px!important}
+  .lb-logo-mobile img{width:46px!important;height:46px!important}
+
+  /* =============================================================
+     TAGS DE ALUNOS — cores fixas, não mudam no modo escuro
+     ============================================================= */
+  #alunosContent .v3-tag,
+  #studentProfileContent .v3-tag{
+    border:1px solid transparent!important;
+    box-shadow:none!important;
+    font-weight:800!important;
+  }
+  #alunosContent .v3-tag.lq-tag-green,
+  #studentProfileContent .v3-tag.lq-tag-green{
+    background:#e7f6ec!important;color:#28704a!important;border-color:#bfe4cb!important;
+  }
+  #alunosContent .v3-tag.lq-tag-red,
+  #studentProfileContent .v3-tag.lq-tag-red{
+    background:#fdeaea!important;color:#a33f4a!important;border-color:#f1c4c8!important;
+  }
+  #alunosContent .v3-tag.lq-tag-orange,
+  #studentProfileContent .v3-tag.lq-tag-orange{
+    background:#fff1dc!important;color:#9b641e!important;border-color:#f0d3a8!important;
+  }
+  #alunosContent .v3-tag.lq-tag-blue,
+  #studentProfileContent .v3-tag.lq-tag-blue{
+    background:#e9f2fb!important;color:#36688f!important;border-color:#c6dced!important;
+  }
+  #alunosContent .v3-tag.lq-tag-purple,
+  #studentProfileContent .v3-tag.lq-tag-purple{
+    background:#f1eafd!important;color:#7651a2!important;border-color:#d8c8f2!important;
+  }
+  #alunosContent .v3-tag.lq-tag-slate,
+  #studentProfileContent .v3-tag.lq-tag-slate{
+    background:#edf1f7!important;color:#52627b!important;border-color:#d4dce8!important;
+  }
+  body.final27-dark #alunosContent .v3-tag,
+  body.final27-dark #studentProfileContent .v3-tag{box-shadow:none!important}
+
+  /* =============================================================
+     PRESENÇA MASTER — acima de todo o conteúdo
+     ============================================================= */
+  .topbar{
+    z-index:10000!important;
+    overflow:visible!important;
+  }
+  #final27TopTools{
+    position:relative!important;
+    z-index:10010!important;
+    overflow:visible!important;
+  }
+  #final25OnlineWrap{
+    display:flex!important;
+    position:relative!important;
+    z-index:10020!important;
+    overflow:visible!important;
+  }
+  #final25OnlineWrap .final25-online-pop{
+    z-index:10040!important;
+    position:absolute!important;
+    top:38px!important;
+    right:0!important;
+    pointer-events:auto!important;
+  }
+  #final25OnlineWrap .final25-online-pop.open{display:block!important}
+  body.final27-dark #final25OnlineWrap .final25-online-pop{
+    background:#171b19!important;
+    color:#eef3f0!important;
+    border-color:#39443e!important;
+    box-shadow:0 20px 60px rgba(0,0,0,.42)!important;
+  }
+  body.final27-dark #final25OnlineWrap .final25-online-head strong{color:#eff5f1!important}
+  body.final27-dark #final25OnlineWrap .final25-online-head span{color:#899991!important}
+  body.final27-dark #final25OnlineWrap .final25-online-row{background:#202622!important}
+  body.final27-dark #final25OnlineWrap .final25-online-name{color:#dbe6e0!important}
+  body.final27-dark #final25OnlineWrap .final25-online-time{color:#8b9992!important}
+
+  /* =============================================================
+     SERVIDOR E MANUTENÇÃO — recolhível
+     ============================================================= */
+  #masterContent .final26-master-server-card{
+    overflow:hidden!important;
+    transition:box-shadow .2s ease,border-color .2s ease!important;
+  }
+  #masterContent .final26-master-server-card > .final55-server-toggle{
+    width:100%!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:14px!important;
+    padding:0!important;
+    margin:0!important;
+    border:0!important;
+    background:transparent!important;
+    color:inherit!important;
+    text-align:left!important;
+    cursor:pointer!important;
+  }
+  #masterContent .final26-master-server-card > .final55-server-toggle .final26-master-server-head{
+    flex:1 1 auto!important;
+    margin:0!important;
+    padding:0!important;
+  }
+  #masterContent .final26-master-server-card > .final55-server-toggle .final55-chevron{
+    width:34px!important;
+    height:34px!important;
+    flex:0 0 34px!important;
+    display:grid!important;
+    place-items:center!important;
+    border:1px solid #dce7e2!important;
+    border-radius:10px!important;
+    background:#f6faf8!important;
+    color:#557267!important;
+    transition:transform .2s ease,background .2s ease!important;
+  }
+  #masterContent .final26-master-server-card.final55-open > .final55-server-toggle .final55-chevron{
+    transform:rotate(180deg)!important;
+    background:#edf6f1!important;
+  }
+  #masterContent .final26-master-server-card > .final55-server-body{
+    display:none!important;
+    padding-top:14px!important;
+  }
+  #masterContent .final26-master-server-card.final55-open > .final55-server-body{
+    display:block!important;
+  }
+  body.final27-dark #masterContent .final26-master-server-card > .final55-server-toggle .final55-chevron{
+    background:#1d2521!important;border-color:#35413a!important;color:#c4d4cc!important;
+  }
+  body.final27-dark #masterContent .final26-master-server-card.final55-open > .final55-server-toggle .final55-chevron{background:#24332b!important}
+
+  /* Recuperação de senha: não usar prompt/caixa nativa do navegador. */
+  .final55-login-note{
+    margin-top:8px!important;
+    color:#9a6b2f!important;
+    font-size:11px!important;
+    line-height:1.45!important;
+  }
+
+  @media(max-width:760px){
+    .sidebar .brand{height:96px!important;min-height:96px!important;padding:8px 2px!important}
+    .sidebar .brand-mark{width:58px!important;height:58px!important;flex-basis:58px!important}
+    .sidebar .brand-mark img{width:58px!important;height:58px!important;max-width:58px!important;max-height:58px!important}
+    #final25OnlineWrap .final25-online-pop{right:-8px!important;width:min(300px,calc(100vw - 24px))!important}
+  }
+</style>
+<script id="legado-final55-runtime">
+(function(){
+  'use strict';
+  const D=document,W=window;
+  const LOGO_COLOR='https://i.imgur.com/e6bn3Tg.png';
+  const LOGO_WHITE='https://i.imgur.com/Nnd3ori.png';
+  const FIRST_ACCESS='5543920036581';
+  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v??''):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+
+  function isDark(){return D.body?.classList.contains('final27-dark');}
+  function setLogoVariant(img,kind){
+    if(!img)return;
+    img.src=isDark()?LOGO_WHITE:LOGO_COLOR;
+    img.alt='Legado Que Ensina';
+    img.dataset.logoTheme=isDark()?'white':'color';
+    img.style.background='transparent';
+    img.style.filter='none';
+    img.style.opacity='1';
+  }
+  function syncLogos(){
+    D.querySelectorAll('.sidebar .brand-mark img,.login-visual .lv-top img,.lb-logo-mobile img').forEach(img=>setLogoVariant(img));
+  }
+
+  function syncStudentTagColors(){
+    D.querySelectorAll('#alunosContent .v3-tag,#studentProfileContent .v3-tag').forEach(tag=>{
+      const t=(tag.textContent||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+      tag.classList.remove('lq-tag-green','lq-tag-red','lq-tag-orange','lq-tag-blue','lq-tag-purple','lq-tag-slate');
+      let cls='lq-tag-slate';
+      if(/\binativo\b|cancelad/.test(t)) cls='lq-tag-red';
+      else if(/\bpendente\b|em atraso|em desenvolvimento/.test(t)) cls='lq-tag-orange';
+      else if(/\bativo\b|em acompanhamento|consolidado/.test(t)) cls='lq-tag-green';
+      else if(/avaliac/.test(t)) cls='lq-tag-purple';
+      else if(/atendimento|registro/.test(t)) cls='lq-tag-blue';
+      tag.classList.add(cls);
+    });
+  }
+
+  function master(){
+    const u=W.state?.user||{},p=W.state?.profile||{};
+    return String(u.email||'').toLowerCase()==='contato@legadoqueensina.com.br' || p.is_master===true || ['master','admin'].includes(String(p.role||'').toLowerCase());
+  }
+
+  function ensureOnlineWidget(){
+    if(!master())return;
+    let wrap=D.getElementById('final25OnlineWrap');
+    const topbar=D.querySelector('.topbar');
+    if(!topbar)return;
+    const tools=D.getElementById('final27TopTools')||topbar;
+    if(!wrap){
+      wrap=D.createElement('div');
+      wrap.id='final25OnlineWrap';
+      wrap.className='final25-online-wrap show';
+      wrap.innerHTML='<button type="button" id="final25OnlineBtn" class="final25-online-btn" aria-expanded="false" aria-controls="final25OnlinePop" title="Professores online"><span class="final25-online-dot"></span><strong id="final25OnlineCount" class="final25-online-count">0</strong><span>online</span></button><div id="final25OnlinePop" class="final25-online-pop" role="dialog" aria-label="Professores online"><div class="final25-online-head"><strong>Quem está online</strong><span id="final25OnlineRefresh">Verificando…</span></div><div id="final25OnlineList" class="final25-online-list"><div class="final25-online-empty">Verificando presença…</div></div></div>';
+      tools.appendChild(wrap);
+      const btn=wrap.querySelector('#final25OnlineBtn'),pop=wrap.querySelector('#final25OnlinePop');
+      btn?.addEventListener('click',function(ev){ev.stopPropagation();const open=!pop.classList.contains('open');pop.classList.toggle('open',open);btn.setAttribute('aria-expanded',String(open));});
+      D.addEventListener('click',function(ev){if(!wrap.contains(ev.target)){pop.classList.remove('open');btn.setAttribute('aria-expanded','false');}},{passive:true});
+    }else{
+      if(wrap.parentElement!==tools)tools.appendChild(wrap);
+      wrap.classList.add('show');
+    }
+    wrap.style.display='flex';
+    wrap.style.zIndex='10020';
+    wrap.querySelector('.final25-online-pop')?.style.setProperty('z-index','10040');
+  }
+
+  function collapseServerCard(){
+    if(!master())return;
+    const card=D.querySelector('#masterContent .final26-master-server-card');
+    if(!card)return;
+    if(card.querySelector('.final55-server-toggle'))return;
+    const head=card.querySelector('.final26-master-server-head');
+    const actions=card.querySelector('.final26-master-server-actions');
+    if(!head||!actions)return;
+    const paragraph=head.querySelector('p');
+    const body=D.createElement('div');body.className='final55-server-body';
+    if(paragraph)body.appendChild(paragraph);
+    body.appendChild(actions);
+    const toggle=D.createElement('button');toggle.type='button';toggle.className='final55-server-toggle';toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-controls','final55-server-body');
+    head.id='final55ServerHead';
+    toggle.appendChild(head);
+    const chev=D.createElement('span');chev.className='final55-chevron';chev.innerHTML='<i data-lucide="chevron-down"></i>';toggle.appendChild(chev);
+    body.id='final55-server-body';
+    card.insertBefore(toggle,card.firstChild);
+    card.appendChild(body);
+    const open=localStorage.getItem('legado_server_maintenance_open')==='1';
+    const setOpen=v=>{card.classList.toggle('final55-open',v);toggle.setAttribute('aria-expanded',String(v));localStorage.setItem('legado_server_maintenance_open',v?'1':'0');W.refreshIcons?.();};
+    toggle.addEventListener('click',()=>setOpen(!card.classList.contains('final55-open')));
+    setOpen(open);
+  }
+
+  function installNoPromptRecovery(){
+    const link=D.getElementById('forgotPasswordLink');
+    if(!link||link.dataset.final55NoPrompt)return;
+    const clone=link.cloneNode(true);link.replaceWith(clone);clone.dataset.final55NoPrompt='1';
+    clone.addEventListener('click',async function(ev){
+      ev.preventDefault();
+      const input=D.getElementById('loginEmail');
+      const email=String(input?.value||'').trim().toLowerCase();
+      if(!email){
+        let note=D.getElementById('final55LoginNote');
+        if(!note){note=D.createElement('div');note.id='final55LoginNote';note.className='final55-login-note';input?.parentElement?.appendChild(note)}
+        note.textContent='Digite seu e-mail no campo acima para receber o link de recuperação.';
+        input?.focus();
+        return;
+      }
+      try{
+        const redirectTo=`${location.origin}${location.pathname}`;
+        const result=await W.supabaseClient?.auth?.resetPasswordForEmail(email,{redirectTo});
+        if(result?.error)throw result.error;
+        D.getElementById('final55LoginNote')?.remove();
+        W.showSuccess?.('Enviamos o link de recuperação para o seu e-mail.');
+      }catch(e){W.showError?.(e?.message||'Não foi possível enviar o e-mail de recuperação.');}
+    });
+  }
+
+  function sync(){
+    syncLogos();
+    syncStudentTagColors();
+    ensureOnlineWidget();
+    collapseServerCard();
+    installNoPromptRecovery();
+  }
+
+  let timer=null;
+  function boot(){
+    sync();
+    clearInterval(timer);
+    timer=setInterval(sync,1200);
+    const observer=new MutationObserver(()=>sync());
+    observer.observe(D.body,{subtree:true,childList:true});
+    D.addEventListener('click',ev=>{if(ev.target?.closest?.('#final27ThemeBtn')) setTimeout(syncLogos,0)},{passive:true});
+  }
+  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+  W.addEventListener('load',sync,{once:true});
+})();
+</script>
+
 </html>`);w.document.close();w.focus();setTimeout(()=>w.print(),250);
   }
 
@@ -13732,7 +14071,7 @@ body.final27-dark .final33-value{fill:#cfe0d7!important}.final33-label{fill:#91a
      2) ALERTA DE MENSALIDADE — X E SEM DUPLICAÇÃO
      ============================================================ */
   const RENEW_DISMISS='legado:final33:renew-dismissed';
-  const supportPhone='5543991466210';
+  const supportPhone='5543920036581';
   function renewalUrl(){
     const name=String(W.state?.profile?.full_name||W.state?.profile?.name||'Professor').split('@')[0];
     const msg=`Olá! Sou ${name}. Vi o aviso de vencimento da minha mensalidade no Legado Que Ensina e gostaria de regularizar meu acesso.`;
@@ -15371,7 +15710,7 @@ body.final27-dark .final32-newbox>textarea{background:#0c1213!important;color:#f
   'use strict';
   const W=window;
   const MASTER_EMAIL='contato@legadoqueensina.com.br';
-  const SUPPORT_PHONE='5543991466210';
+  const SUPPORT_PHONE='5543920036581';
   const ACCESS_CHECK_MS=30000;
   let accessTimer=null;
   let accessTimeout=null;
@@ -19712,7 +20051,7 @@ body.final27-dark .final36-post-payment{background:#121b17!important;border-colo
   const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(String(v??'')):String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
   const day=v=>String(v||'').slice(0,10);
   const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
-  const support='5543991466210';
+  const support='5543920036581';
 
   /* ------------------------------------------------------------
      1) ALERTA DE MENSALIDADE — UMA ÚNICA INSTÂNCIA, NO TOPO
@@ -23180,6 +23519,346 @@ img,svg,video,canvas{max-width:100%!important}
   window.addEventListener('load',fixMenuLogo,{once:true});
   setTimeout(fixMenuLogo,250);
   setTimeout(fixMenuLogo,1000);
+})();
+</script>
+
+
+
+<!-- FINAL55 — IDENTIDADE, TEMA, PRESENÇA MASTER E MANUTENÇÃO -->
+<style id="legado-final55-overrides">
+  /* =============================================================
+     LOGOMARCA — menu e login
+     Claro: colorida | Escuro: branca
+     ============================================================= */
+  .sidebar .brand{
+    width:100%!important;
+    height:118px!important;
+    min-height:118px!important;
+    padding:10px 8px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:0!important;
+    overflow:visible!important;
+    background:transparent!important;
+    border:0!important;
+    box-shadow:none!important;
+  }
+  .sidebar .brand-mark{
+    width:180px!important;
+    height:96px!important;
+    flex:0 0 180px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    overflow:visible!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+  .sidebar .brand-mark img{
+    width:180px!important;
+    height:96px!important;
+    max-width:180px!important;
+    max-height:96px!important;
+    object-fit:contain!important;
+    object-position:center!important;
+    background:transparent!important;
+    border:0!important;
+    border-radius:0!important;
+    filter:none!important;
+    opacity:1!important;
+  }
+  .sidebar .brand-text{display:none!important}
+
+  .login-visual .lv-top img,
+  .lb-logo-mobile img{
+    object-fit:contain!important;
+    background:transparent!important;
+    border:0!important;
+  }
+  .login-visual .lv-top img{width:58px!important;height:58px!important;padding:4px!important}
+  .lb-logo-mobile img{width:46px!important;height:46px!important}
+
+  /* =============================================================
+     TAGS DE ALUNOS — cores fixas, não mudam no modo escuro
+     ============================================================= */
+  #alunosContent .v3-tag,
+  #studentProfileContent .v3-tag{
+    border:1px solid transparent!important;
+    box-shadow:none!important;
+    font-weight:800!important;
+  }
+  #alunosContent .v3-tag.lq-tag-green,
+  #studentProfileContent .v3-tag.lq-tag-green{
+    background:#e7f6ec!important;color:#28704a!important;border-color:#bfe4cb!important;
+  }
+  #alunosContent .v3-tag.lq-tag-red,
+  #studentProfileContent .v3-tag.lq-tag-red{
+    background:#fdeaea!important;color:#a33f4a!important;border-color:#f1c4c8!important;
+  }
+  #alunosContent .v3-tag.lq-tag-orange,
+  #studentProfileContent .v3-tag.lq-tag-orange{
+    background:#fff1dc!important;color:#9b641e!important;border-color:#f0d3a8!important;
+  }
+  #alunosContent .v3-tag.lq-tag-blue,
+  #studentProfileContent .v3-tag.lq-tag-blue{
+    background:#e9f2fb!important;color:#36688f!important;border-color:#c6dced!important;
+  }
+  #alunosContent .v3-tag.lq-tag-purple,
+  #studentProfileContent .v3-tag.lq-tag-purple{
+    background:#f1eafd!important;color:#7651a2!important;border-color:#d8c8f2!important;
+  }
+  #alunosContent .v3-tag.lq-tag-slate,
+  #studentProfileContent .v3-tag.lq-tag-slate{
+    background:#edf1f7!important;color:#52627b!important;border-color:#d4dce8!important;
+  }
+  body.final27-dark #alunosContent .v3-tag,
+  body.final27-dark #studentProfileContent .v3-tag{box-shadow:none!important}
+
+  /* =============================================================
+     PRESENÇA MASTER — acima de todo o conteúdo
+     ============================================================= */
+  .topbar{
+    z-index:10000!important;
+    overflow:visible!important;
+  }
+  #final27TopTools{
+    position:relative!important;
+    z-index:10010!important;
+    overflow:visible!important;
+  }
+  #final25OnlineWrap{
+    display:flex!important;
+    position:relative!important;
+    z-index:10020!important;
+    overflow:visible!important;
+  }
+  #final25OnlineWrap .final25-online-pop{
+    z-index:10040!important;
+    position:absolute!important;
+    top:38px!important;
+    right:0!important;
+    pointer-events:auto!important;
+  }
+  #final25OnlineWrap .final25-online-pop.open{display:block!important}
+  body.final27-dark #final25OnlineWrap .final25-online-pop{
+    background:#171b19!important;
+    color:#eef3f0!important;
+    border-color:#39443e!important;
+    box-shadow:0 20px 60px rgba(0,0,0,.42)!important;
+  }
+  body.final27-dark #final25OnlineWrap .final25-online-head strong{color:#eff5f1!important}
+  body.final27-dark #final25OnlineWrap .final25-online-head span{color:#899991!important}
+  body.final27-dark #final25OnlineWrap .final25-online-row{background:#202622!important}
+  body.final27-dark #final25OnlineWrap .final25-online-name{color:#dbe6e0!important}
+  body.final27-dark #final25OnlineWrap .final25-online-time{color:#8b9992!important}
+
+  /* =============================================================
+     SERVIDOR E MANUTENÇÃO — recolhível
+     ============================================================= */
+  #masterContent .final26-master-server-card{
+    overflow:hidden!important;
+    transition:box-shadow .2s ease,border-color .2s ease!important;
+  }
+  #masterContent .final26-master-server-card > .final55-server-toggle{
+    width:100%!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:14px!important;
+    padding:0!important;
+    margin:0!important;
+    border:0!important;
+    background:transparent!important;
+    color:inherit!important;
+    text-align:left!important;
+    cursor:pointer!important;
+  }
+  #masterContent .final26-master-server-card > .final55-server-toggle .final26-master-server-head{
+    flex:1 1 auto!important;
+    margin:0!important;
+    padding:0!important;
+  }
+  #masterContent .final26-master-server-card > .final55-server-toggle .final55-chevron{
+    width:34px!important;
+    height:34px!important;
+    flex:0 0 34px!important;
+    display:grid!important;
+    place-items:center!important;
+    border:1px solid #dce7e2!important;
+    border-radius:10px!important;
+    background:#f6faf8!important;
+    color:#557267!important;
+    transition:transform .2s ease,background .2s ease!important;
+  }
+  #masterContent .final26-master-server-card.final55-open > .final55-server-toggle .final55-chevron{
+    transform:rotate(180deg)!important;
+    background:#edf6f1!important;
+  }
+  #masterContent .final26-master-server-card > .final55-server-body{
+    display:none!important;
+    padding-top:14px!important;
+  }
+  #masterContent .final26-master-server-card.final55-open > .final55-server-body{
+    display:block!important;
+  }
+  body.final27-dark #masterContent .final26-master-server-card > .final55-server-toggle .final55-chevron{
+    background:#1d2521!important;border-color:#35413a!important;color:#c4d4cc!important;
+  }
+  body.final27-dark #masterContent .final26-master-server-card.final55-open > .final55-server-toggle .final55-chevron{background:#24332b!important}
+
+  /* Recuperação de senha: não usar prompt/caixa nativa do navegador. */
+  .final55-login-note{
+    margin-top:8px!important;
+    color:#9a6b2f!important;
+    font-size:11px!important;
+    line-height:1.45!important;
+  }
+
+  @media(max-width:760px){
+    .sidebar .brand{height:96px!important;min-height:96px!important;padding:8px 2px!important}
+    .sidebar .brand-mark{width:58px!important;height:58px!important;flex-basis:58px!important}
+    .sidebar .brand-mark img{width:58px!important;height:58px!important;max-width:58px!important;max-height:58px!important}
+    #final25OnlineWrap .final25-online-pop{right:-8px!important;width:min(300px,calc(100vw - 24px))!important}
+  }
+</style>
+<script id="legado-final55-runtime">
+(function(){
+  'use strict';
+  const D=document,W=window;
+  const LOGO_COLOR='https://i.imgur.com/e6bn3Tg.png';
+  const LOGO_WHITE='https://i.imgur.com/Nnd3ori.png';
+  const FIRST_ACCESS='5543920036581';
+  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v??''):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+
+  function isDark(){return D.body?.classList.contains('final27-dark');}
+  function setLogoVariant(img,kind){
+    if(!img)return;
+    img.src=isDark()?LOGO_WHITE:LOGO_COLOR;
+    img.alt='Legado Que Ensina';
+    img.dataset.logoTheme=isDark()?'white':'color';
+    img.style.background='transparent';
+    img.style.filter='none';
+    img.style.opacity='1';
+  }
+  function syncLogos(){
+    D.querySelectorAll('.sidebar .brand-mark img,.login-visual .lv-top img,.lb-logo-mobile img').forEach(img=>setLogoVariant(img));
+  }
+
+  function syncStudentTagColors(){
+    D.querySelectorAll('#alunosContent .v3-tag,#studentProfileContent .v3-tag').forEach(tag=>{
+      const t=(tag.textContent||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+      tag.classList.remove('lq-tag-green','lq-tag-red','lq-tag-orange','lq-tag-blue','lq-tag-purple','lq-tag-slate');
+      let cls='lq-tag-slate';
+      if(/\binativo\b|cancelad/.test(t)) cls='lq-tag-red';
+      else if(/\bpendente\b|em atraso|em desenvolvimento/.test(t)) cls='lq-tag-orange';
+      else if(/\bativo\b|em acompanhamento|consolidado/.test(t)) cls='lq-tag-green';
+      else if(/avaliac/.test(t)) cls='lq-tag-purple';
+      else if(/atendimento|registro/.test(t)) cls='lq-tag-blue';
+      tag.classList.add(cls);
+    });
+  }
+
+  function master(){
+    const u=W.state?.user||{},p=W.state?.profile||{};
+    return String(u.email||'').toLowerCase()==='contato@legadoqueensina.com.br' || p.is_master===true || ['master','admin'].includes(String(p.role||'').toLowerCase());
+  }
+
+  function ensureOnlineWidget(){
+    if(!master())return;
+    let wrap=D.getElementById('final25OnlineWrap');
+    const topbar=D.querySelector('.topbar');
+    if(!topbar)return;
+    const tools=D.getElementById('final27TopTools')||topbar;
+    if(!wrap){
+      wrap=D.createElement('div');
+      wrap.id='final25OnlineWrap';
+      wrap.className='final25-online-wrap show';
+      wrap.innerHTML='<button type="button" id="final25OnlineBtn" class="final25-online-btn" aria-expanded="false" aria-controls="final25OnlinePop" title="Professores online"><span class="final25-online-dot"></span><strong id="final25OnlineCount" class="final25-online-count">0</strong><span>online</span></button><div id="final25OnlinePop" class="final25-online-pop" role="dialog" aria-label="Professores online"><div class="final25-online-head"><strong>Quem está online</strong><span id="final25OnlineRefresh">Verificando…</span></div><div id="final25OnlineList" class="final25-online-list"><div class="final25-online-empty">Verificando presença…</div></div></div>';
+      tools.appendChild(wrap);
+      const btn=wrap.querySelector('#final25OnlineBtn'),pop=wrap.querySelector('#final25OnlinePop');
+      btn?.addEventListener('click',function(ev){ev.stopPropagation();const open=!pop.classList.contains('open');pop.classList.toggle('open',open);btn.setAttribute('aria-expanded',String(open));});
+      D.addEventListener('click',function(ev){if(!wrap.contains(ev.target)){pop.classList.remove('open');btn.setAttribute('aria-expanded','false');}},{passive:true});
+    }else{
+      if(wrap.parentElement!==tools)tools.appendChild(wrap);
+      wrap.classList.add('show');
+    }
+    wrap.style.display='flex';
+    wrap.style.zIndex='10020';
+    wrap.querySelector('.final25-online-pop')?.style.setProperty('z-index','10040');
+  }
+
+  function collapseServerCard(){
+    if(!master())return;
+    const card=D.querySelector('#masterContent .final26-master-server-card');
+    if(!card)return;
+    if(card.querySelector('.final55-server-toggle'))return;
+    const head=card.querySelector('.final26-master-server-head');
+    const actions=card.querySelector('.final26-master-server-actions');
+    if(!head||!actions)return;
+    const paragraph=head.querySelector('p');
+    const body=D.createElement('div');body.className='final55-server-body';
+    if(paragraph)body.appendChild(paragraph);
+    body.appendChild(actions);
+    const toggle=D.createElement('button');toggle.type='button';toggle.className='final55-server-toggle';toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-controls','final55-server-body');
+    head.id='final55ServerHead';
+    toggle.appendChild(head);
+    const chev=D.createElement('span');chev.className='final55-chevron';chev.innerHTML='<i data-lucide="chevron-down"></i>';toggle.appendChild(chev);
+    body.id='final55-server-body';
+    card.insertBefore(toggle,card.firstChild);
+    card.appendChild(body);
+    const open=localStorage.getItem('legado_server_maintenance_open')==='1';
+    const setOpen=v=>{card.classList.toggle('final55-open',v);toggle.setAttribute('aria-expanded',String(v));localStorage.setItem('legado_server_maintenance_open',v?'1':'0');W.refreshIcons?.();};
+    toggle.addEventListener('click',()=>setOpen(!card.classList.contains('final55-open')));
+    setOpen(open);
+  }
+
+  function installNoPromptRecovery(){
+    const link=D.getElementById('forgotPasswordLink');
+    if(!link||link.dataset.final55NoPrompt)return;
+    const clone=link.cloneNode(true);link.replaceWith(clone);clone.dataset.final55NoPrompt='1';
+    clone.addEventListener('click',async function(ev){
+      ev.preventDefault();
+      const input=D.getElementById('loginEmail');
+      const email=String(input?.value||'').trim().toLowerCase();
+      if(!email){
+        let note=D.getElementById('final55LoginNote');
+        if(!note){note=D.createElement('div');note.id='final55LoginNote';note.className='final55-login-note';input?.parentElement?.appendChild(note)}
+        note.textContent='Digite seu e-mail no campo acima para receber o link de recuperação.';
+        input?.focus();
+        return;
+      }
+      try{
+        const redirectTo=`${location.origin}${location.pathname}`;
+        const result=await W.supabaseClient?.auth?.resetPasswordForEmail(email,{redirectTo});
+        if(result?.error)throw result.error;
+        D.getElementById('final55LoginNote')?.remove();
+        W.showSuccess?.('Enviamos o link de recuperação para o seu e-mail.');
+      }catch(e){W.showError?.(e?.message||'Não foi possível enviar o e-mail de recuperação.');}
+    });
+  }
+
+  function sync(){
+    syncLogos();
+    syncStudentTagColors();
+    ensureOnlineWidget();
+    collapseServerCard();
+    installNoPromptRecovery();
+  }
+
+  let timer=null;
+  function boot(){
+    sync();
+    clearInterval(timer);
+    timer=setInterval(sync,1200);
+    const observer=new MutationObserver(()=>sync());
+    observer.observe(D.body,{subtree:true,childList:true});
+    D.addEventListener('click',ev=>{if(ev.target?.closest?.('#final27ThemeBtn')) setTimeout(syncLogos,0)},{passive:true});
+  }
+  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+  W.addEventListener('load',sync,{once:true});
 })();
 </script>
 
