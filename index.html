@@ -1065,6 +1065,17 @@
     }
   </style>
 <meta name="legado-build" content="2026-10-03-final40">
+
+<style id="legado-stability-no-loop">
+  /* Elementos legados ficam ocultos por CSS; não é necessário MutationObserver para removê-los. */
+  .final29-notification-banner,.final31-notification-banner,.final32-permission-banner,
+  .final33-notification-banner,#final33PermissionBanner,#final34PermissionBanner,#final36PermissionBanner{display:none!important}
+  #final32ChatLauncher,#final32ChatWidget,#final27ChatLauncher,#final27ChatWidget,#final33ChatLauncher,#final40ChatWidget,
+  .final27-chat-shell,.final28-conversation-hub,.final29-conversation-shell,.final29-chat-widget,.final29-chat-overlay,
+  [data-chat-widget],[data-conversation-widget],[id*="ChatWidget"],[id*="ChatLauncher"],[id*="ConversationWidget"]{
+    display:none!important;visibility:hidden!important;pointer-events:none!important;width:0!important;height:0!important;
+  }
+</style>
 </head>
 <body>
 
@@ -19546,7 +19557,7 @@ body.final27-dark .final36-post-payment{background:#121b17!important;border-colo
   };
 })();
 </script>
-\n<script id="legado-no-recados-final">
+<script id="legado-no-recados-final">
 (function(){
   'use strict';
   function removeRecadosUI(){
@@ -19573,8 +19584,8 @@ body.final27-dark .final36-post-payment{background:#121b17!important;border-colo
     window.navigate=nav;
   }
   removeRecadosUI();
-  const obs=new MutationObserver(()=>removeRecadosUI());
-  if(document.body) obs.observe(document.body,{childList:true,subtree:true});
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',removeRecadosUI,{once:true});
+  else setTimeout(removeRecadosUI,0);
   window.addEventListener('load',removeRecadosUI,{once:true});
 })();
 </script>
@@ -19650,10 +19661,9 @@ body.final27-dark .final36-post-payment{background:#121b17!important;border-colo
     }
   }
   remove(); wrapNav();
-  const obs=new MutationObserver(()=>{remove();wrapNav()});
-  const start=()=>document.body&&obs.observe(document.body,{childList:true,subtree:true});
-  if(document.body) start(); else document.addEventListener('DOMContentLoaded',start,{once:true});
-  window.addEventListener('load',()=>{remove();wrapNav()}, {once:false});
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>{remove();wrapNav();},{once:true});
+  else setTimeout(()=>{remove();wrapNav();},0);
+  window.addEventListener('load',()=>{remove();wrapNav();},{once:true});
 })();
 </script>
 
@@ -19931,13 +19941,15 @@ body.final27-dark .final36-post-payment{background:#121b17!important;border-colo
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,50),{once:true});else setTimeout(init,50);
 
-  const obs=new MutationObserver(()=>{
+  function safeFinal42Cleanup(){
     hideCommunicationArtifacts();
     const d=byId('dashboardContent');
     if(d && W.state?.currentView==='dashboard') cleanAllNotificationDuplicates();
-    if(byId('view-documentos') && !byId('documentosContent'))ensureDocumentsNav();
-  });
-  if(document.body)obs.observe(document.body,{childList:true,subtree:true});
+    if(byId('view-documentos') && !byId('documentosContent')) ensureDocumentsNav();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',safeFinal42Cleanup,{once:true});
+  else setTimeout(safeFinal42Cleanup,80);
+  window.addEventListener('load',safeFinal42Cleanup,{once:true});
 })();
 </script>
 
@@ -20063,10 +20075,15 @@ body.final27-dark .final36-post-payment{background:#121b17!important;border-colo
   function compactWaitlist(){const c=$('#waitlistContent');if(!c)return;$$('.v3-wait-card',c).forEach(card=>{card.classList.add('final40-wait-card')})}
   function polishBirthdayButtons(){$$('.final33-birthday-whatsapp').forEach(btn=>{btn.style.display='flex';btn.style.alignItems='center';btn.style.justifyContent='center';btn.style.padding='0';btn.style.lineHeight='0';const svg=btn.querySelector('svg');if(svg){svg.style.width='18px';svg.style.height='18px';svg.style.margin='0'}})}
   function afterView(){bindConfirmCancel();dedupePermissionBanner();bindFinancePdf();compactWaitlist();polishBirthdayButtons();killConversationUI()}
-  const obs=new MutationObserver(afterView);if(D.body)obs.observe(D.body,{childList:true,subtree:true});
-  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',afterView,{once:true});else setTimeout(afterView,80);
-  setInterval(afterView,1500);
-  D.addEventListener('click',()=>setTimeout(afterView,50),true);
+  if(D.readyState==='loading') D.addEventListener('DOMContentLoaded',afterView,{once:true});
+  else setTimeout(afterView,80);
+  window.addEventListener('load',afterView,{once:true});
+
+  // Apenas ações realmente necessárias usam delegação; não varre o DOM inteiro a cada clique.
+  D.addEventListener('click',e=>{
+    if(e.target?.closest?.('#confirmCancelButton')) bindConfirmCancel();
+    if(e.target?.closest?.('#financeiroContent .final31-finance-pdf')) bindFinancePdf();
+  },true);
 })();
 </script>
 
