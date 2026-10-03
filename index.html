@@ -22169,4 +22169,264 @@ html{scroll-behavior:smooth}body{letter-spacing:-.008em;-webkit-font-smoothing:a
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 
+<style id="legado-final47-ui">
+/* FINAL 47 — navegação, alunos, tags, prontuário e documentos */
+.sidebar .brand-mark{background:#2f735a!important;display:grid!important;place-items:center!important}.sidebar .brand-mark img{filter:grayscale(1) brightness(0) invert(1)!important;opacity:1!important}
+.sidebar .brand-text .main{color:#ffffff!important;font-weight:900!important;letter-spacing:-.02em!important}
+.sidebar .brand-text .sub{color:rgba(255,255,255,.78)!important}
+
+/* Aluno e fila de espera com a mesma proporção visual */
+.v3-student-grid,.v3-wait-grid{align-items:stretch!important}
+.v3-student-card,.v3-wait-card{min-height:236px!important;height:236px!important;display:flex!important;flex-direction:column!important;box-sizing:border-box!important}
+.v3-student-card .v3-student-foot,.v3-wait-card .v3-form-actions{margin-top:auto!important}
+.v3-student-card .v3-student-top,.v3-wait-card .v3-student-top{min-height:48px!important}
+
+/* Desativar aluno = ação neutra, não destrutiva */
+[data-disable43]{background:#ecefed!important;color:#65716c!important;border-color:#d2d9d5!important;box-shadow:none!important}
+[data-disable43]:hover{background:#e1e6e3!important;color:#4f5c56!important;border-color:#c3ccc7!important}
+
+/* Tags dos alunos */
+.final47-tag-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px;min-height:22px}
+.final47-tag{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:999px;font-size:9px;font-weight:850;line-height:1;border:1px solid transparent;white-space:nowrap}
+.final47-tag-c1{background:#eaf3ee;color:#356a53;border-color:#cae0d4}.final47-tag-c2{background:#eef1fb;color:#5665a4;border-color:#d7dcf1}
+.final47-tag-c3{background:#fbf1e7;color:#986628;border-color:#eedbbf}.final47-tag-c4{background:#f7ebf0;color:#8f4e68;border-color:#e8ced9}
+.final47-tag-c5{background:#edf3f7;color:#4f7088;border-color:#d3e1ea}.final47-tag-c6{background:#f1edf9;color:#6c5795;border-color:#ddd2ef}
+.final47-tag-editor{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap}.final47-tag-editor input{flex:1 1 280px}
+.final47-quick-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.final47-quick-tags button{border:1px solid #dfe8e3;background:#f7faf8;color:#607269;border-radius:999px;padding:6px 9px;font-size:9px;font-weight:800;cursor:pointer}
+.final47-quick-tags button:hover{background:#eaf3ee;color:#356a53;border-color:#cfe1d7}
+.final47-tag-filter{min-width:170px}
+
+/* Subpágina de cadastro dentro de Alunos */
+#lqStudentsSubnav43 .final47-create-student{margin-left:auto;background:var(--v10-green,#2f735a)!important;color:#fff!important;border-color:var(--v10-green,#2f735a)!important}
+#alunosContent.final47-register-mode #lqStudentGrid43,
+#alunosContent.final47-register-mode .v3-stats,
+#alunosContent.final47-register-mode .v3-panel:not(#lqStudentEditor43){display:none!important}
+#alunosContent.final47-register-mode #lqStudentEditor43{display:block!important}
+
+/* Visão de acompanhamento sem percentual arbitrário */
+#final44StudentBody.final47-overview .final44-indicator-bar{display:none!important}
+#final44StudentBody.final47-overview .final44-indicator{min-height:132px!important}
+#final44StudentBody.final47-overview .final44-indicator-value{font-size:30px!important}
+#final44StudentBody.final47-overview .final44-subcopy{font-size:9px!important}
+.final47-history-link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid #dfe8e3;border-radius:13px;background:#f8fbf9;margin-top:12px}
+.final47-history-link strong{font-size:11px;color:#405249}.final47-history-link span{font-size:9px;color:#7d8c84}
+body.final27-dark .final47-history-link{background:#151e1a;border-color:#304039}.final47-history-link strong{color:#e7efeb}
+
+/* Documentos: seleção de aluno */
+.final47-doc-student{grid-column:1/-1!important}
+.final47-doc-student select{width:100%!important}
+.final47-doc-sync-note{display:block;margin-top:5px;font-size:9px;color:#82918a;line-height:1.45}
+body.final27-dark .final47-doc-sync-note{color:#96a59e}
+
+/* Remover duplicação de subnavegação do dashboard */
+.nav-subgroup.dashboard-sub{display:none!important}
+
+@media(max-width:1180px){.v3-student-card,.v3-wait-card{height:236px!important;min-height:236px!important}}
+@media(max-width:900px){.v3-student-card,.v3-wait-card{height:auto!important;min-height:236px!important}.final47-tag-filter{min-width:0;flex:1 1 170px}}
+</style>
+
+<script id="legado-final47-fixes">
+(function(){
+'use strict';
+const W=window,D=document,$=(s,r=D)=>r.querySelector(s),$$=(s,r=D)=>Array.from(r.querySelectorAll(s));
+const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v==null?'':String(v)):String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+const uid=()=>W.state?.user?.id||W.state?.session?.user?.id||'anon';
+const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+const TAG_KEY=()=>`legado:student-tags:${uid()}`;
+const readTagStore=()=>{try{return JSON.parse(localStorage.getItem(TAG_KEY())||'{}')||{}}catch(_){return {}}};
+const writeTagStore=o=>{try{localStorage.setItem(TAG_KEY(),JSON.stringify(o))}catch(_){}};
+function tagsOf(s){
+  let raw=s?.tags;
+  if(Array.isArray(raw))return raw.map(String).map(x=>x.trim()).filter(Boolean).slice(0,12);
+  if(typeof raw==='string'&&raw.trim()){
+    try{const a=JSON.parse(raw);if(Array.isArray(a))return a.map(String).map(x=>x.trim()).filter(Boolean).slice(0,12)}catch(_){}
+    return raw.split(',').map(x=>x.trim()).filter(Boolean).slice(0,12);
+  }
+  const local=readTagStore()[String(s?.id||'')];return Array.isArray(local)?local:[];
+}
+function tagClass(tag){let n=0;for(const ch of String(tag||''))n=(n+ch.charCodeAt(0))%6;return `final47-tag-c${n+1}`}
+function tagsHtml(tags){return tags.length?`<div class="final47-tag-row">${tags.map(t=>`<span class="final47-tag ${tagClass(t)}">${esc(t)}</span>`).join('')}</div>`:''}
+function parseTags(v){return Array.from(new Set(String(v||'').split(',').map(x=>x.trim()).filter(Boolean))).slice(0,12)}
+
+/* ---------- Alunos: tags + cadastro como subpágina ---------- */
+function patchStudentCard43(){
+  const root=$('#alunosContent');if(!root)return;
+  $$('.v3-student-card[data-student43]',root).forEach(card=>{
+    const id=card.dataset.student43;
+    const s=(W.state?.students||W.studentsState?.data||[]).find(x=>String(x.id)===String(id));
+    if(!s)return;
+    const ident=$('.v3-student-ident',card);if(ident&&!ident.querySelector('.final47-tag-row'))ident.insertAdjacentHTML('beforeend',tagsHtml(tagsOf(s)));
+    card.querySelectorAll('[data-disable43]').forEach(b=>b.classList.remove('btn-danger'));
+  });
+}
+function decorateStudentRegisterTab(){
+  const c=$('#alunosContent'),bar=$('#lqStudentsSubnav43',c);if(!c||!bar)return;
+  if(!bar.querySelector('[data-student-sub="cadastrar"]')){
+    const b=D.createElement('button');b.type='button';b.dataset.studentSub='cadastrar';b.className='final47-create-student';b.innerHTML='<i data-lucide="user-plus"></i>Cadastrar aluno';
+    b.onclick=()=>{
+      c.classList.add('final47-register-mode');
+      $$('.final47-create-student,[data-student-sub="ativos"],[data-student-sub="desativados"]',bar).forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      $('#lqNewStudent43',c)?.click();
+      if(!$('#lqStudentEditor43',c)?.querySelector('form')) W.v3ShowStudentEditor?.();
+      setTimeout(()=>W.refreshIcons?.(),30);
+    };
+    bar.appendChild(b);
+  }
+  bar.querySelectorAll('[data-student-sub="ativos"],[data-student-sub="desativados"]').forEach(b=>{
+    const old=b.onclick;
+    b.onclick=(...args)=>{c.classList.remove('final47-register-mode');bar.querySelector('.final47-create-student')?.classList.remove('active');return old?.apply(b,args)};
+  });
+  patchStudentCard43();W.refreshIcons?.();
+}
+function addTagFilter(){
+  const c=$('#alunosContent'),toolbar=$('.v3-toolbar',c),search=$('#lqStudentSearch43',c);if(!c||!toolbar||!search||$('#final47StudentTagFilter',c))return;
+  const students=W.state?.students||W.studentsState?.data||[];const tags=Array.from(new Set(students.flatMap(tagsOf))).sort((a,b)=>norm(a).localeCompare(norm(b),'pt-BR'));
+  const wrap=D.createElement('div');wrap.className='v3-search final47-tag-filter';wrap.innerHTML=`<i data-lucide="tag"></i><select id="final47StudentTagFilter"><option value="">Todas as tags</option>${tags.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('')}</select>`;
+  toolbar.insertBefore(wrap,toolbar.querySelector('.v3-view-note'));
+  const rerender=()=>{
+    const q=norm(search.value),tag=norm($('#final47StudentTagFilter',c)?.value||'');
+    const list=students.filter(s=>{const text=norm([s.name,s.full_name,s.responsible_name,s.guardian_name,s.phone].join(' '));const ts=tagsOf(s).map(norm);return(!q||text.includes(q))&&(!tag||ts.includes(tag))});
+    const grid=$('#lqStudentGrid43',c);if(!grid)return;
+    if(!list.length){grid.innerHTML=W.empty?W.empty('Nenhum resultado.','Tente outro nome, telefone ou tag.'):'<div class="v3-empty">Nenhum resultado.</div>'}
+    else{
+      /* Reaproveita o renderer oficial de cards através do próprio DOM quando disponível. */
+      const cards=$$('.v3-student-card',grid);const byId=new Map(cards.map(x=>[String(x.dataset.student43),x]));
+      cards.forEach(x=>{x.style.display=list.some(s=>String(s.id)===String(x.dataset.student43))?'':'none'});
+      list.forEach(s=>{const card=byId.get(String(s.id));if(card)card.style.display=''})
+    }
+    patchStudentCard43();W.refreshIcons?.();
+  };
+  search.addEventListener('input',rerender);$('#final47StudentTagFilter',c).addEventListener('change',rerender);W.refreshIcons?.();
+}
+function enhanceStudentEditor(){
+  const f=$('#lqStudentForm43');if(!f||$('#final47TagsWrap',f))return;
+  const notes=f.querySelector('input[name="notes"]')?.closest('label');if(!notes)return;
+  const box=D.createElement('div');box.className='full';box.id='final47TagsWrap';
+  const current=(W.state?.students||[]).find(s=>String(s.id)===String(f.closest('#lqStudentEditor43')?.dataset?.studentId||''));
+  const editingName=f.querySelector('[name="name"]')?.value||'';const currentStudent=(W.state?.students||[]).find(s=>norm(s.name||s.full_name)===norm(editingName));
+  const existing=tagsOf(current||currentStudent||{});
+  box.innerHTML=`<label><span>Tags do aluno</span><div class="final47-tag-editor"><input id="final47TagInput" name="tags" value="${esc(existing.join(', '))}" placeholder="Ex.: TEA, TDAH, Leitura, Atenção"></div><div class="final47-quick-tags"><button type="button" data-qtag="TEA">TEA</button><button type="button" data-qtag="TDAH">TDAH</button><button type="button" data-qtag="Dislexia">Dislexia</button><button type="button" data-qtag="Leitura">Leitura</button><button type="button" data-qtag="Matemática">Matemática</button><button type="button" data-qtag="Atenção">Atenção</button></div></label>`;
+  notes.insertAdjacentElement('afterend',box);
+  $$('[data-qtag]',box).forEach(b=>b.onclick=()=>{const input=$('#final47TagInput',box);const next=parseTags(input.value);if(!next.some(x=>norm(x)===norm(b.dataset.qtag)))next.push(b.dataset.qtag);input.value=next.join(', ')});
+  /* Marca o aluno em dataset para o salvamento */
+  const cardStudent=(W.state?.students||[]).find(s=>norm(s.name||s.full_name)===norm(editingName));
+  if(cardStudent)$('#lqStudentEditor43')?.setAttribute('data-student-id',cardStudent.id);
+}
+async function persistTags(studentId,tags){
+  const store=readTagStore();store[String(studentId)]=tags;writeTagStore(store);
+  const c=W.supabaseClient;if(!c)return;
+  try{
+    const existing=(W.state?.students||[]).find(s=>String(s.id)===String(studentId));
+    if(existing&&Object.prototype.hasOwnProperty.call(existing,'tags')){
+      const r=await c.from('students').update({tags}).eq('id',studentId).eq('user_id',uid());if(r.error)console.warn('[FINAL47] tags não persistidas no Supabase:',r.error.message);
+    }
+  }catch(_){ }
+}
+function observeStudentEditor(){
+  const root=$('#alunosContent');if(!root)return;
+  const mo=new MutationObserver(()=>{if($('#lqStudentForm43',root))enhanceStudentEditor();patchStudentCard43();});mo.observe(root,{childList:true,subtree:true});
+}
+
+/* Intercepta o cadastro/edição existente para capturar a tag sem quebrar o fluxo. */
+function wireTagCapture(){
+  D.addEventListener('submit',async ev=>{
+    const form=ev.target?.closest?.('#lqStudentForm43');if(!form)return;
+    const tags=parseTags(form.querySelector('[name="tags"]')?.value||'');
+    const editing=String(form.querySelector('[name="name"]')?.value||'').trim();
+    setTimeout(async()=>{
+      try{
+        const students=Array.isArray(W.state?.students)?W.state.students:[];
+        const editorId=form.closest('#lqStudentEditor43')?.dataset?.studentId;
+        const s=(editorId&&students.find(x=>String(x.id)===String(editorId)))||students.find(x=>norm(x.name||x.full_name)===norm(editing));
+        if(s)await persistTags(s.id,tags);
+        patchStudentCard43();addTagFilter();
+      }catch(_){ }
+    },500);
+  },true);
+}
+
+/* ---------- Prontuário: overview sem barra percentual e sem frase de histórico ---------- */
+function cleanStudentOverview47(){
+  const body=$('#final44StudentBody'),c=$('#studentProfileContent');if(!body||!c)return;
+  const active=$('#final44StudentTabs .active',c)?.dataset?.student44||'overview';body.classList.toggle('final47-overview',active==='overview');
+  if(active!=='overview')return;
+  $$('p',body).forEach(p=>{if(/histórico completo está separado nas subp[aá]ginas/i.test(p.textContent||''))p.textContent='Os registros detalhados ficam organizados nas abas do prontuário.'});
+  $$('h2',body).forEach(h=>{
+    if(/últimos registros/i.test(h.textContent||'')){
+      const section=h.closest('section.v3-panel');if(section)section.remove();
+    }
+    if(/visão de acompanhamento/i.test(h.textContent||''))h.textContent='Acompanhamento do prontuário';
+  });
+}
+function setOverviewObserver47(){
+  const c=$('#studentProfileContent');if(!c||c.__final47Obs)return;c.__final47Obs=true;
+  const mo=new MutationObserver(()=>setTimeout(cleanStudentOverview47,0));mo.observe(c,{childList:true,subtree:true});
+  setTimeout(cleanStudentOverview47,20);
+}
+
+/* ---------- Depois de registrar atendimento: abrir Histórico automaticamente ---------- */
+function wireAttendanceHistory47(){
+  D.addEventListener('submit',ev=>{
+    if(!ev.target?.matches?.('#final44AttendanceForm'))return;
+    setTimeout(()=>{
+      const modal=$('#legadoFinal44Modal');
+      if(!modal){
+        const tab=$('#final44StudentTabs [data-student44="history"]');
+        if(tab){tab.click();setTimeout(()=>{
+          const body=$('#final44StudentBody');if(!body||$('#final47AttendanceSaved',body))return;
+          const box=D.createElement('div');box.id='final47AttendanceSaved';box.className='final47-history-link';box.innerHTML='<div><strong>Atendimento registrado com sucesso.</strong><span>O registro foi salvo e o histórico de atendimentos está aberto abaixo.</span></div><i data-lucide="history"></i>';body.prepend(box);W.refreshIcons?.();
+        },80)}
+      }
+    },700);
+  },true);
+}
+
+/* ---------- Documentos: preencher aluno e substituir placeholders automaticamente ---------- */
+function enhanceDocumentEditor47(type){
+  const overlay=$('#final42DocEditor');if(!overlay||overlay.__final47)return;overlay.__final47=true;
+  const body=$('.final42-editor-body',overlay),ta=$('[name="document_text"]',overlay);if(!body||!ta)return;
+  const meta=$('.final42-meta',body);if(!meta)return;
+  const node=D.createElement('div');node.className='final42-field final47-doc-student';node.innerHTML='<label>Aluno <select id="final47DocStudent"><option value="">Selecione o aluno</option></select><span class="final47-doc-sync-note">Ao selecionar um aluno, o nome será colocado no documento automaticamente. Os demais campos também atualizam o modelo.</span></label>';
+  meta.insertBefore(node,meta.firstChild);
+  const students=Array.isArray(W.state?.students)?W.state.students:(W.studentsState?.data||[]);
+  const sel=$('#final47DocStudent',overlay);students.slice().sort((a,b)=>norm(a.name||a.full_name).localeCompare(norm(b.name||b.full_name),'pt-BR')).forEach(s=>{const o=D.createElement('option');o.value=s.id;o.textContent=s.name||s.full_name||'Aluno';sel.appendChild(o)});
+  const activeId=W.state?.currentStudentId; if(activeId&&!students.some(s=>String(s.id)===String(activeId))){ /* já pode estar carregando; continua sem selecionar */ }
+  const nome=$('[name="nome"]',overlay),baseTemplate=ta.value;let dirty=false;
+  ta.addEventListener('input',()=>dirty=true);
+  function selectedStudent(){return students.find(s=>String(s.id)===String(sel.value))||null}
+  function sync(){
+    if(dirty)return;
+    const s=selectedStudent();if(!s)return;
+    if(nome)nome.value=s.name||s.full_name||'';
+    const values={nome:nome?.value||'',data:$('[name="data"]',overlay)?.value||'',valor:$('[name="valor"]',overlay)?.value||'',referente:$('[name="referente"]',overlay)?.value||'',forma:$('[name="forma"]',overlay)?.value||'',obs:$('[name="obs"]',overlay)?.value||'',finalidade:$('[name="finalidade"]',overlay)?.value||'',documento:$('[name="documento"]',overlay)?.value||'',especialista:$('[name="especialista"]',overlay)?.value||'',motivo:$('[name="motivo"]',overlay)?.value||''};
+    const fn=W.__legadoApplyDocumentTokens47;if(typeof fn==='function')ta.value=fn(baseTemplate,values);else ta.value=baseTemplate.replaceAll('{NOME}',values.nome).replaceAll('{DATA}',values.data);
+  }
+  sel.addEventListener('change',sync);
+  [nome,$('[name="data"]',overlay),$('[name="valor"]',overlay),$('[name="referente"]',overlay),$('[name="forma"]',overlay),$('[name="obs"]',overlay),$('[name="finalidade"]',overlay),$('[name="documento"]',overlay),$('[name="especialista"]',overlay),$('[name="motivo"]',overlay)].filter(Boolean).forEach(i=>{i.addEventListener('change',()=>{if(!dirty)sync()});i.addEventListener('input',()=>{if(!dirty)sync()})});
+  const preselected=students.find(s=>String(s.id)===String(activeId));if(preselected){sel.value=preselected.id;sync()}
+  W.refreshIcons?.();
+}
+function patchOpenDocument47(){
+  const base=W.openFinalDocument;if(typeof base!=='function'||base.__final47)return;
+  function apply(text,vals){
+    const map={'{NOME}':vals.nome||'', '{VALOR}':vals.valor||'R$ __________', '{REFERENTE}':vals.referente||'________________', '{FORMA_PAGAMENTO}':vals.forma||'________________', '{DATA}':vals.data?new Date(vals.data+'T12:00:00').toLocaleDateString('pt-BR'):new Date().toLocaleDateString('pt-BR'), '{OBSERVAÇÃO}':vals.obs||'', '{FINALIDADE}':vals.finalidade||'acompanhamento psicopedagógico', '{DOCUMENTO}':vals.documento||'não informado', '{ESPECIALISTA}':vals.especialista||'________________', '{MOTIVO}':vals.motivo||'________________'};
+    return String(text||'').replace(/\{[A-ZÁÉÍÓÚÇ_]+\}/g,k=>map[k]??k);
+  }
+  W.__legadoApplyDocumentTokens47=apply;
+  const fn=function(type){const r=base.apply(this,arguments);setTimeout(()=>enhanceDocumentEditor47(type),40);return r};fn.__final47=true;W.openFinalDocument=fn;
+}
+
+/* ---------- Logo / dashboard duplication ---------- */
+function cleanDashboardSubnav47(){
+  $$('.nav-subgroup.dashboard-sub').forEach(x=>x.remove());
+}
+function boot47(){
+  cleanDashboardSubnav47();decorateStudentRegisterTab();addTagFilter();patchStudentCard43();observeStudentEditor();wireTagCapture();setOverviewObserver47();wireAttendanceHistory47();patchOpenDocument47();W.refreshIcons?.();
+}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot47,{once:true});else setTimeout(boot47,80);
+const oldNav=W.navigate;if(typeof oldNav==='function'&&!oldNav.__final47){const nav=function(){const r=oldNav.apply(this,arguments);setTimeout(()=>{cleanDashboardSubnav47();if(W.state?.currentView==='alunos'){decorateStudentRegisterTab();addTagFilter();patchStudentCard43();observeStudentEditor()}if(W.state?.currentView==='aluno-perfil')setOverviewObserver47();W.refreshIcons?.()},220);return r};nav.__final47=true;W.navigate=nav;}
+})();
+</script>
+
 </html>
