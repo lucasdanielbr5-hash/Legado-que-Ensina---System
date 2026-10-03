@@ -20658,4 +20658,341 @@ body.final27-dark #uxModalCard{background:#111a16!important;color:#e9f2ed!import
 })();
 </script>
 
+
+<style id="legado-final44-clean-ui">
+/* FINAL 44 — ajustes pontuais, sem reabrir Recados/Conversas */
+.final44-modal-backdrop{position:fixed;inset:0;z-index:12000;background:rgba(10,18,15,.68);display:flex;align-items:center;justify-content:center;padding:20px}
+.final44-modal{width:min(820px,96vw);max-height:92vh;overflow:auto;border:1px solid #d9e4de;border-radius:22px;background:#fff;box-shadow:0 24px 80px rgba(0,0,0,.22)}
+.final44-modal-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;padding:22px 24px;border-bottom:1px solid #e7eeea}
+.final44-modal-head h2{margin:4px 0 0;font-size:20px;color:#26372f}
+.final44-modal-head p{margin:5px 0 0;color:#7b8982;font-size:11px;line-height:1.5}
+.final44-modal-body{padding:20px 24px}
+.final44-close{width:38px;height:38px;border:1px solid #d7e2dc;border-radius:11px;background:#fff;color:#65756d;display:grid;place-items:center;cursor:pointer;flex:none}
+.final44-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.final44-field{display:flex;flex-direction:column;gap:6px}
+.final44-field.full{grid-column:1/-1}
+.final44-field>span{font-size:11px;font-weight:800;color:#5f7068}
+.final44-field input,.final44-field select,.final44-field textarea{width:100%;border:1px solid #dfe8e3;border-radius:11px;background:#fbfcfc;color:#2a3932;padding:11px;font:inherit;font-size:12px;outline:none}
+.final44-field textarea{min-height:90px;resize:vertical;line-height:1.55}
+.final44-field input:focus,.final44-field select:focus,.final44-field textarea:focus{border-color:#8fb5a5;box-shadow:0 0 0 3px rgba(95,143,122,.09)}
+.final44-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;padding-top:16px;border-top:1px solid #e6ede9;flex-wrap:wrap}
+.final44-section-note{margin:0 0 14px;padding:11px 13px;border:1px solid #dce9e1;border-radius:12px;background:#f5faf7;color:#6e7f76;font-size:10px;line-height:1.55}
+.final44-eval-detail{display:grid;gap:10px}
+.final44-eval-block{padding:12px 14px;border:1px solid #e3ebe7;border-radius:13px;background:#fbfdfc}
+.final44-eval-block span{display:block;margin-bottom:5px;font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#809089}
+.final44-eval-block p{margin:0;color:#405149;font-size:11px;line-height:1.65;white-space:pre-wrap}
+.final44-actions .btn-sm{min-height:32px}
+.final44-history-list{display:grid;gap:8px}
+.final44-history-item{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 13px;border:1px solid #e2ebe6;border-radius:13px;background:#fff}
+.final44-history-main{min-width:0}
+.final44-history-main strong{display:block;font-size:12px;color:#33443c}
+.final44-history-main span{display:block;margin-top:3px;color:#89958f;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.final44-history-date{font-size:10px;font-weight:800;color:#718079}
+.final44-history-actions{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.final44-history-actions .btn{white-space:nowrap}
+.final44-attendance-intro{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border:1px solid #dfe9e4;border-radius:15px;background:#f8fbf9;margin-bottom:14px}
+.final44-attendance-intro strong{font-size:12px;color:#34463d}
+.final44-attendance-intro span{display:block;margin-top:4px;color:#7f8d86;font-size:9px}
+.final44-indicator-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.final44-indicator{padding:14px;border:1px solid #dfe8e3;border-radius:15px;background:#fff}
+.final44-indicator-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.final44-indicator-icon{width:34px;height:34px;border-radius:10px;background:#edf6f1;color:#5b8e77;display:grid;place-items:center}
+.final44-indicator-icon svg{width:16px;height:16px}
+.final44-indicator-kicker{font-size:9px;font-weight:800;color:#82918a;text-transform:uppercase;letter-spacing:.05em}
+.final44-indicator-value{margin-top:8px;font-size:22px;font-weight:900;color:#2e4037}
+.final44-indicator-label{margin-top:2px;font-size:10px;color:#74827b}
+.final44-indicator-bar{margin-top:9px;height:6px;border-radius:99px;background:#edf1ef;overflow:hidden}
+.final44-indicator-bar span{display:block;height:100%;border-radius:99px;background:#6aa287}
+.final44-subcopy{margin-top:5px;color:#8a9791;font-size:9px;line-height:1.4}
+.final44-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}
+.final44-tabs button{display:inline-flex;align-items:center;gap:7px;border:1px solid #dfe8e3;background:#fff;color:#64736c;border-radius:999px;padding:9px 12px;font-size:10px;font-weight:800;cursor:pointer}
+.final44-tabs button.active{background:#eaf4ee;color:#4d7b67;border-color:#cfe1d7}
+.final44-fin-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.final44-fin-actions .btn{font-size:10px;padding:7px 9px}
+.final44-delete{background:#fff0f0!important;color:#ae5656!important;border-color:#f0d4d4!important}
+.final44-bday-wrap{display:grid;gap:9px}
+.final44-bday-row{display:grid;grid-template-columns:52px minmax(0,1fr) 38px;gap:10px;align-items:center;padding:10px 12px;border:1px solid #e1e9e5;border-radius:14px;background:#fff}
+.final44-bday-date{width:52px;height:52px;border-radius:13px;background:#eff6f2;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#4f7f68}
+.final44-bday-date strong{font-size:18px;line-height:1}
+.final44-bday-date span{margin-top:4px;font-size:8px;font-weight:800;text-transform:uppercase}
+.final44-bday-main{min-width:0}.final44-bday-main strong{display:block;font-size:11px;color:#314139}.final44-bday-main span{display:block;margin-top:3px;color:#7d8b84;font-size:9px}
+.final44-bday-wa{width:36px;height:36px;border-radius:10px;border:1px solid #d6e4db;background:#eff8f3;color:#4e8a6b;display:grid;place-items:center;cursor:pointer}
+.final44-bday-wa svg{width:17px;height:17px}
+.final44-bday-empty{padding:20px;text-align:center;color:#89958f;font-size:10px}
+.final44-compact-note{margin-top:10px;padding:10px 12px;border:1px solid #e0e8e4;border-radius:11px;background:#f8fbf9;color:#75837c;font-size:9px}
+
+/* Modo noturno sem linhas brancas */
+body.final27-dark .final44-modal{background:#121a17;border-color:#2d3a35;color:#eef5f1}
+body.final27-dark .final44-modal-head{border-bottom-color:#2d3a35}
+body.final27-dark .final44-modal-head h2{color:#eef5f1}
+body.final27-dark .final44-modal-head p{color:#9eaaa4}
+body.final27-dark .final44-close{background:#171f1c;border-color:#35443e;color:#dfe9e4}
+body.final27-dark .final44-field>span{color:#aab7b1}
+body.final27-dark .final44-field input,body.final27-dark .final44-field select,body.final27-dark .final44-field textarea{background:#0e1513;border-color:#34443d;color:#eef5f1}
+body.final27-dark .final44-field input:focus,body.final27-dark .final44-field select:focus,body.final27-dark .final44-field textarea:focus{border-color:#5d9a7b}
+body.final27-dark .final44-section-note{background:#14221c;border-color:#2f473c;color:#a8b7af}
+body.final27-dark .final44-eval-block,body.final27-dark .final44-history-item,body.final27-dark .final44-indicator,body.final27-dark .final44-bday-row{background:#141b18!important;border-color:#2d3b35!important}
+body.final27-dark .final44-eval-block span,body.final27-dark .final44-history-date,body.final27-dark .final44-subcopy{color:#8f9d96}
+body.final27-dark .final44-eval-block p,body.final27-dark .final44-history-main strong,body.final27-dark .final44-bday-main strong{color:#e7efeb}
+body.final27-dark .final44-history-main span,body.final27-dark .final44-bday-main span{color:#9ba9a2}
+body.final27-dark .final44-tabs button{background:#141b18;border-color:#34433c;color:#aebbb5}
+body.final27-dark .final44-tabs button.active{background:#183126;border-color:#3a5e4d;color:#c3e2d2}
+body.final27-dark .final44-indicator-icon,body.final27-dark .final44-bday-date{background:#183126;color:#9bc5af}
+body.final27-dark .final44-indicator-value{color:#eef5f1}
+body.final27-dark .final44-indicator-label{color:#a0ada6}
+body.final27-dark .final44-indicator-bar{background:#26332e}
+body.final27-dark .final44-compact-note{background:#151e1a;border-color:#304039;color:#9eaba5}
+body.final27-dark .final44-bday-wa{background:#193126;border-color:#365948;color:#a9d7be}
+body.final27-dark .final44-delete{background:#2b1919!important;border-color:#593535!important;color:#f0b5b5!important}
+body.final27-dark .final44-attendance-intro{background:#141e1a;border-color:#304039}
+body.final27-dark .final44-attendance-intro strong{color:#e6efeb}
+body.final27-dark .final44-attendance-intro span{color:#9ca9a2}
+
+@media(max-width:900px){.final44-indicator-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.final44-grid{grid-template-columns:1fr}.final44-history-item{grid-template-columns:1fr}.final44-history-actions{justify-content:flex-start}}
+@media(max-width:560px){.final44-indicator-grid{grid-template-columns:1fr}.final44-bday-row{grid-template-columns:48px minmax(0,1fr) 36px}.final44-bday-date{width:48px;height:48px}}
+
+/* Remove definitivamente a área antiga de próximos atendimentos do prontuário */
+#studentProfileContent .final43-profile-stats .v3-stat:has(span:first-child){ }
+</style>
+<script id="legado-final44-clean">
+(function(){
+  'use strict';
+  const W=window,D=document;
+  const $=(s,r=D)=>r.querySelector(s);
+  const $$=(s,r=D)=>Array.from(r.querySelectorAll(s));
+  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v==null?'':String(v)):String(v==null?'':v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
+  const uid=()=>W.state?.user?.id||W.state?.session?.user?.id||null;
+  const db=()=>W.supabaseClient||null;
+  const today=()=>typeof W.todayInputDate==='function'?W.todayInputDate():new Date().toISOString().slice(0,10);
+  const dateOnly=v=>String(v||'').slice(0,10);
+  const money=v=>{try{return new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(v||0)||0)}catch(_){return `R$ ${(Number(v||0)||0).toFixed(2).replace('.',',')}`}};
+
+  function closeModal44(){D.getElementById('legadoFinal44Modal')?.remove();}
+  function showModal44(title,subtitle,body){
+    closeModal44();
+    const root=D.createElement('div');root.id='legadoFinal44Modal';root.className='final44-modal-backdrop';
+    root.innerHTML=`<section class="final44-modal" role="dialog" aria-modal="true"><div class="final44-modal-head"><div><div class="v3-kicker">${esc(subtitle||'REGISTRO')}</div><h2>${esc(title)}</h2></div><button type="button" class="final44-close" id="final44Close"><i data-lucide="x"></i></button></div><div class="final44-modal-body">${body}</div></section>`;
+    root.addEventListener('click',e=>{if(e.target===root)closeModal44();});
+    D.body.appendChild(root);$('#final44Close').onclick=closeModal44;W.refreshIcons?.();return root.querySelector('.final44-modal-body');
+  }
+  D.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal44();});
+
+  /* ---------------------------------------------------------
+     1. AVALIAÇÕES — manter TODOS os instrumentos existentes.
+     --------------------------------------------------------- */
+  function evaluationDefs44(){
+    const out={};
+    const modern=W.PEDAGOGICAL_ASSESSMENTS||{};
+    Object.entries(modern).forEach(([name,def])=>{out[name]={source:def?.source||'',fields:Array.isArray(def?.fields)?def.fields:[]};});
+    try{
+      if(typeof ASSESSMENTS!=='undefined'){
+        Object.entries(ASSESSMENTS).forEach(([name,raw])=>{
+          if(out[name])return;
+          const fields=Array.isArray(raw)?raw.map(x=>({k:x[0],l:x[1],t:x[2]||'text'})):[];
+          out[name]={source:'Instrumento pedagógico',fields};
+        });
+      }
+    }catch(_){ }
+    return out;
+  }
+  function evalFieldPreview44(def,data){
+    const value=data?.[def.k];
+    if(Array.isArray(value))return value.join(', ');
+    return String(value??'').trim();
+  }
+  async function loadAllEvaluations44(){
+    const c=db(),me=uid();if(!c||!me)return [];
+    const r=await c.from('evaluations').select('*').eq('user_id',me).order('evaluation_date',{ascending:false}).limit(1000);if(r.error)throw r.error;return r.data||[];
+  }
+  function openEvaluation44(e){
+    const defs=evaluationDefs44(),def=defs[e.type]||{fields:[]};
+    const data=e.assessment_data||{};
+    const blocks=(def.fields||[]).map(f=>{const v=evalFieldPreview44(f,data);return v?`<div class="final44-eval-block"><span>${esc(f.l||f.label||f.k)}</span><p>${esc(v)}</p></div>`:''}).filter(Boolean).join('');
+    const body=`<div class="final44-section-note">${esc(e.student_name||'Aluno')} · ${esc(e.type||'Avaliação')} · ${esc(dateOnly(e.evaluation_date||e.date))}</div><div class="final44-eval-detail">${blocks||'<div class="final44-eval-block"><p>Nenhum campo detalhado foi registrado.</p></div>'}${e.summary?`<div class="final44-eval-block"><span>Síntese pedagógica</span><p>${esc(e.summary)}</p></div>`:''}${data.feedback||e.feedback?`<div class="final44-eval-block"><span>Feedback / próximo passo</span><p>${esc(data.feedback||e.feedback)}</p></div>`:''}${e.notes?`<div class="final44-eval-block"><span>Observações</span><p>${esc(e.notes)}</p></div>`:''}</div>`;
+    const b=showModal44(e.title||e.type||'Avaliação','VISUALIZAÇÃO DA AVALIAÇÃO',body);
+    b.insertAdjacentHTML('beforeend',`<div class="final44-actions"><button type="button" class="btn btn-outline" id="final44EvalClose">Fechar</button><button type="button" class="btn btn-outline" id="final44EvalEdit"><i data-lucide="pencil"></i>Editar</button></div>`);
+    $('#final44EvalClose',b).onclick=closeModal44;$('#final44EvalEdit',b).onclick=()=>{closeModal44();W.v3EditEvaluation?.(e.id);};W.refreshIcons?.();
+  }
+  function renderEvaluationHistory44(list,students){
+    return list.length?`<div class="final44-history-list">${list.map(e=>`<article class="final44-history-item"><div class="final44-history-date">${esc(dateOnly(e.evaluation_date||e.date))}</div><div class="final44-history-main"><strong>${esc(e.title||e.type||'Avaliação')}</strong><span>${esc(e.student_name||students.find(s=>String(s.id)===String(e.student_id))?.name||'Aluno não informado')} · ${esc(e.type||'Avaliação')} · ${esc(String(e.status||'draft'))}</span></div><div class="final44-history-actions"><button type="button" class="btn btn-outline btn-sm" data-eval-eye44="${esc(e.id)}"><i data-lucide="eye"></i>Ver</button><button type="button" class="btn btn-outline btn-sm" data-eval-edit44="${esc(e.id)}"><i data-lucide="pencil"></i>Editar</button><button type="button" class="btn btn-danger btn-sm" data-eval-delete44="${esc(e.id)}"><i data-lucide="trash-2"></i>Excluir</button></div></article>`).join('')}</div>`:'<div class="v3-empty">Nenhuma aplicação registrada.</div>';
+  }
+  async function renderEvaluations44(){
+    const c=$('#avaliacoesContent');if(!c)return;
+    c.innerHTML='<div class="v3-loading"><i data-lucide="loader-circle"></i>Carregando avaliações...</div>';W.refreshIcons?.();
+    try{
+      const [list,students]=await Promise.all([loadAllEvaluations44(),(W.v3LoadStudents?W.v3LoadStudents():Promise.resolve(W.state?.students||[]))]);
+      const defs=evaluationDefs44(),names=Object.keys(defs);
+      const sub=W.state?.evaluationSub44||'instrumentos';
+      c.innerHTML=`<div class="v3-page"><div class="v3-head"><div><div class="v3-kicker">INVESTIGAÇÃO PEDAGÓGICA</div><h1>Avaliações</h1><p>Instrumentos completos para aplicar e histórico separado para consultar as aplicações.</p></div><div class="v3-head-actions"><button class="btn btn-primary" id="final44NewEval"><i data-lucide="clipboard-plus"></i>Nova avaliação</button></div></div><div class="final44-tabs" id="final44EvalTabs"><button data-sub="instrumentos" class="${sub==='instrumentos'?'active':''}"><i data-lucide="layout-grid"></i>Instrumentos</button><button data-sub="historico" class="${sub==='historico'?'active':''}"><i data-lucide="history"></i>Histórico de aplicações <b>${list.length}</b></button></div><div class="v3-stats" style="margin-bottom:14px"><div class="v3-stat"><div class="v3-icon"><i data-lucide="clipboard-check"></i></div><div><span>Aplicações</span><strong>${list.length}</strong><small>Registros salvos</small></div></div><div class="v3-stat"><div class="v3-icon"><i data-lucide="file-check-2"></i></div><div><span>Instrumentos</span><strong>${names.length}</strong><small>Disponíveis para aplicação</small></div></div><div class="v3-stat"><div class="v3-icon"><i data-lucide="user-round-check"></i></div><div><span>Alunos avaliados</span><strong>${new Set(list.map(e=>e.student_id).filter(Boolean)).size}</strong><small>Com histórico</small></div></div><div class="v3-stat"><div class="v3-icon"><i data-lucide="circle-check"></i></div><div><span>Concluídas</span><strong>${list.filter(e=>e.status==='completed').length}</strong><small>Aplicações finalizadas</small></div></div></div><div id="final44EvalBody"></div><div class="v3-panel v3-inline-editor" id="v3EvaluationEditor" hidden></div></div>`;
+      const body=$('#final44EvalBody');
+      if(sub==='instrumentos'){
+        body.innerHTML=`<section class="v3-panel"><div class="v3-panel-head"><div><h2>Instrumentos disponíveis</h2><p>Os instrumentos pedagógicos que já existiam no sistema continuam disponíveis.</p></div></div><div class="final44-history-list">${names.map(name=>{const def=defs[name]||{};return `<article class="final44-history-item"><div class="final44-history-date"><div class="final44-indicator-icon"><i data-lucide="clipboard-check"></i></div></div><div class="final44-history-main"><strong>${esc(name)}</strong><span>${esc(def.source||'Instrumento pedagógico')} · ${(def.fields||[]).length} campos</span></div><div class="final44-history-actions"><button type="button" class="btn btn-primary btn-sm" data-eval-apply44="${esc(name)}"><i data-lucide="play"></i>Aplicar</button></div></article>`}).join('')}</div></section>`;
+      }else{
+        body.innerHTML=`<section class="v3-panel"><div class="v3-panel-head"><div><h2>Histórico de aplicações</h2><p>As aplicações ficam separadas dos instrumentos e podem ser visualizadas, editadas ou excluídas.</p></div></div>${renderEvaluationHistory44(list,students)}</section>`;
+      }
+      $('#final44NewEval').onclick=()=>{W.V3=W.V3||{};W.V3.assessmentType=names[0]||'Avaliação personalizada';W.v3OpenEvaluationEditor?.();};
+      $$('#final44EvalTabs button').forEach(b=>b.onclick=()=>{W.state.evaluationSub44=b.dataset.sub;renderEvaluations44();});
+      $$('[data-eval-apply44]',body).forEach(b=>b.onclick=()=>{W.V3=W.V3||{};W.V3.assessmentType=b.dataset.evalApply44;W.v3OpenEvaluationEditor?.();});
+      $$('[data-eval-eye44]',body).forEach(b=>b.onclick=()=>{const e=list.find(x=>String(x.id)===String(b.dataset.evalEye44));if(e)openEvaluation44(e);});
+      $$('[data-eval-edit44]',body).forEach(b=>b.onclick=()=>W.v3EditEvaluation?.(b.dataset.evalEdit44));
+      $$('[data-eval-delete44]',body).forEach(b=>b.onclick=()=>W.v3DeleteEvaluation?.(b.dataset.evalDelete44));
+      W.refreshIcons?.();
+    }catch(e){c.innerHTML=`<div class="v4-empty"><i data-lucide="circle-alert"></i><strong>Não foi possível carregar as avaliações.</strong><span>${esc(e.message||e)}</span></div>`;W.refreshIcons?.();}
+  }
+  W.renderEvaluations=renderEvaluations44;
+
+  /* ---------------------------------------------------------
+     2. PRONTUÁRIO DO ALUNO — subpáginas limpas.
+     --------------------------------------------------------- */
+  let studentSub44='overview';
+  async function loadStudentData44(id){
+    const c=db(),me=uid();if(!c||!me)throw new Error('Sessão não encontrada.');
+    const [s,a,e,r,p,ct,ctx]=await Promise.all([
+      c.from('students').select('*').eq('id',id).eq('user_id',me).maybeSingle(),
+      c.from('appointments').select('*').eq('student_id',id).eq('user_id',me).order('appointment_date',{ascending:true}).limit(500),
+      c.from('evaluations').select('*').eq('student_id',id).eq('user_id',me).order('evaluation_date',{ascending:false}).limit(500),
+      c.from('student_records').select('*').eq('student_id',id).eq('user_id',me).order('record_date',{ascending:false}).limit(500),
+      c.from('student_progress').select('*').eq('student_id',id).eq('user_id',me).order('record_date',{ascending:false}).limit(500),
+      c.from('student_contacts').select('*').eq('student_id',id).eq('user_id',me).order('contact_date',{ascending:false}).limit(300),
+      c.from('student_context').select('*').eq('student_id',id).eq('user_id',me).order('updated_at',{ascending:false}).limit(1)
+    ]);
+    for(const x of [s,a,e,r,p,ct,ctx])if(x.error)throw x.error;
+    return {student:s.data||{},appointments:a.data||[],evaluations:e.data||[],records:r.data||[],progress:p.data||[],contacts:ct.data||[],context:ctx.data?.[0]||{}};
+  }
+  function indicator44(icon,label,value,max,sub){const pct=Math.max(6,Math.min(100,max?Math.round(value/max*100):0));return `<article class="final44-indicator"><div class="final44-indicator-top"><div class="final44-indicator-icon"><i data-lucide="${icon}"></i></div><div class="final44-indicator-kicker">PRONTUÁRIO</div></div><div class="final44-indicator-value">${value}</div><div class="final44-indicator-label">${esc(label)}</div><div class="final44-indicator-bar"><span style="width:${pct}%"></span></div><div class="final44-subcopy">${esc(sub)}</div></article>`;}
+  function studentTabs44(c){
+    let bar=$('#final44StudentTabs',c);if(!bar){bar=D.createElement('div');bar.id='final44StudentTabs';bar.className='final44-tabs';c.querySelector('.v3-student-hero')?.insertAdjacentElement('afterend',bar);}
+    const tabs=[['overview','Visão geral','layout-dashboard'],['appointments','Atendimentos','calendar-check-2'],['history','Histórico de atendimentos','history'],['progress','Progresso','trending-up'],['evaluations','Avaliações','clipboard-check'],['contacts','Família / Escola','users'],['context','Cenário psicopedagógico','file-text']];
+    bar.innerHTML=tabs.map(([id,l,i])=>`<button type="button" data-student44="${id}" class="${studentSub44===id?'active':''}"><i data-lucide="${i}"></i>${l}</button>`).join('');
+    bar.querySelectorAll('button').forEach(b=>b.onclick=()=>{studentSub44=b.dataset.student44;renderStudentBody44();});W.refreshIcons?.();
+  }
+  function activeStudent44(){return W.state?.currentStudentId||null;}
+  async function renderStudentBody44(){
+    const c=$('#studentProfileContent');if(!c)return;const id=activeStudent44();if(!id)return;
+    const data=await loadStudentData44(id),s=data.student,name=s.name||s.full_name||'Aluno';const body=$('#final44StudentBody');if(!body)return;
+    const completedAtt=data.records.filter(r=>String(r.record_type||'').toLowerCase()==='atendimento');
+    if(studentSub44==='overview'){
+      const av=data.evaluations.length,pg=data.progress.length,ct=data.contacts.length,at=completedAtt.length,max=Math.max(1,av,pg,ct,at);
+      body.innerHTML=`<section class="v3-panel"><div class="v3-panel-head"><div><div class="v3-kicker">INDICADORES DO PRONTUÁRIO</div><h2>Visão de acompanhamento</h2><p>Indicadores simples para entender, de forma rápida, o que já foi registrado no prontuário.</p></div></div><div class="final44-indicator-grid">${indicator44('calendar-check-2','Atendimentos',at,max,'Registros de sessões concluídas')}${indicator44('clipboard-check','Avaliações',av,max,'Aplicações vinculadas ao aluno')}${indicator44('trending-up','Avanços',pg,max,'Registros de evolução por área')}${indicator44('users','Família / Escola',ct,max,'Contatos e alinhamentos registrados')}</div></section><section class="v3-two-col"><section class="v3-panel"><div class="v3-panel-head"><div><h2>Resumo do aluno</h2><p>Informações essenciais do prontuário.</p></div></div><div class="v3-detail-grid"><div><span>Responsável</span><strong>${esc(s.responsible_name||s.guardian_name||s.parent_name||'—')}</strong></div><div><span>Telefone</span><strong>${esc(s.phone||'—')}</strong></div><div><span>Data de nascimento</span><strong>${esc(dateBRSafe(s.birth_date||s.date_of_birth))}</strong></div><div><span>Status</span><strong>${s.status==='inactive'?'Desativado':'Ativo'}</strong></div></div><div class="v3-note-block"><span>Observações cadastrais</span><p>${esc(s.notes||s.observations||'—')}</p></div></section><section class="v3-panel"><div class="v3-panel-head"><div><h2>Últimos registros</h2><p>O histórico completo está separado nas subpáginas.</p></div></div>${completedAtt.slice(0,3).map(r=>`<div class="final44-compact-note"><strong>${esc(r.title||'Atendimento')}</strong><br>${esc(dateOnly(r.record_date))} · ${esc(r.duration||'')}<br>${esc(String(r.content||'').slice(0,180))}</div>`).join('')||'<div class="v3-empty">Nenhum atendimento detalhado ainda.</div>'}</section></section>`;
+    }else if(studentSub44==='appointments'){
+      body.innerHTML=`<section class="v3-panel"><div class="v3-panel-head"><div><div class="v3-kicker">ATENDIMENTO</div><h2>Registrar atendimento</h2><p>Abra o formulário detalhado em uma janela para registrar a sessão sem deixar a página carregada de campos.</p></div><button type="button" class="btn btn-primary" id="final44OpenAttendance"><i data-lucide="clipboard-plus"></i>Registrar atendimento detalhado</button></div><div class="final44-attendance-intro"><div><strong>Registro completo da sessão</strong><span>Objetivo, atividade, resposta do aluno, dificuldades, avanços, intervenção, orientação e próximos passos.</span></div><i data-lucide="notebook-pen"></i></div><div class="v3-empty">Use o botão acima para abrir o formulário de atendimento.</div></section>`;
+      $('#final44OpenAttendance')?.addEventListener('click',()=>openAttendance44(s));
+    }else if(studentSub44==='history'){
+      body.innerHTML=`<section class="v3-panel"><div class="v3-panel-head"><div><h2>Histórico de atendimentos</h2><p>Registros detalhados organizados por data.</p></div></div>${completedAtt.length?`<div class="final44-history-list">${completedAtt.map(r=>`<article class="final44-history-item"><div class="final44-history-date">${esc(dateOnly(r.record_date))}</div><div class="final44-history-main"><strong>${esc(r.title||'Atendimento')}</strong><span>${esc(r.duration||'')} · ${esc(r.mood||'')}</span></div><div class="final44-history-actions"><button type="button" class="btn btn-outline btn-sm" data-att-eye44="${esc(r.id)}"><i data-lucide="eye"></i>Ver registro</button></div></article>`).join('')}</div>`:'<div class="v3-empty">Nenhum histórico de atendimento registrado.</div>'}</section>`;
+      $$('[data-att-eye44]',body).forEach(b=>b.onclick=()=>openHistory44(completedAtt.find(r=>String(r.id)===String(b.dataset.attEye44))));
+    }else if(studentSub44==='progress'){
+      const rows=data.progress,areas=new Map();rows.forEach(r=>{const key=r.domain||'Outra';if(!areas.has(key))areas.set(key,[]);areas.get(key).push(r);});
+      body.innerHTML=`<section class="v3-panel"><div class="v3-panel-head"><div><div class="v3-kicker">MAPA DE EVOLUÇÃO</div><h2>Avanços por área</h2><p>Uma leitura visual para acompanhar conquistas, desenvolvimento e próximas metas.</p></div><span class="v3-tag">${rows.length} registro${rows.length===1?'':'s'}</span></div>${areas.size?`<div class="final44-indicator-grid">${Array.from(areas.entries()).map(([area,items])=>{const last=items[0],pct={Inicial:25,'Em desenvolvimento':50,Consolidando:75,Consolidado:100}[last.level]||25;return `<article class="final44-indicator"><div class="final44-indicator-top"><div class="final44-indicator-icon"><i data-lucide="trending-up"></i></div><div class="final44-indicator-kicker">${esc(dateOnly(last.record_date))}</div></div><div class="final44-indicator-value" style="font-size:15px">${esc(area)}</div><div class="final44-indicator-label">${esc(last.level||'Sem nível')}</div><div class="final44-indicator-bar"><span style="width:${pct}%"></span></div><div class="final44-subcopy">${esc(last.observation||'Sem observação registrada.')}</div>${last.next_goal?`<div class="final44-compact-note"><strong>Próxima meta:</strong> ${esc(last.next_goal)}</div>`:''}</article>`}).join('')}</div>`:'<div class="v3-empty">Nenhum avanço registrado ainda.</div>'}</section><section class="v3-panel"><div class="v3-panel-head"><div><h2>Registrar novo avanço</h2><p>Registre uma conquista observável e qual habilidade vem a seguir.</p></div></div><form id="final44ProgressForm" class="v3-form"><div class="v3-form-grid"><label><span>Data *</span><input type="date" name="record_date" value="${esc(today())}" required></label><label><span>Área</span><select name="domain">${['Leitura','Escrita','Matemática','Funções executivas','Memória / atenção','Linguagem','Organização / autonomia','Socioemocional','Outra'].map(x=>`<option>${esc(x)}</option>`).join('')}</select></label><label><span>Nível</span><select name="level">${['Inicial','Em desenvolvimento','Consolidando','Consolidado'].map(x=>`<option>${esc(x)}</option>`).join('')}</select></label><label><span>Próxima meta</span><input name="next_goal" placeholder="Ex.: iniciar atividade sem mediação"></label><label class="full"><span>Avanço observado *</span><textarea name="observation" rows="6" required placeholder="Descreva o que o aluno passou a fazer, com qual autonomia e que tipo de mediação ainda foi necessária."></textarea></label></div><div class="v3-form-actions"><button class="btn btn-primary" type="submit"><i data-lucide="plus"></i>Registrar avanço</button></div></form></section>`;
+      $('#final44ProgressForm')?.addEventListener('submit',async e=>{e.preventDefault();const fd=new FormData(e.currentTarget);try{const r=await db().from('student_progress').insert({user_id:uid(),student_id:s.id,record_date:fd.get('record_date'),domain:fd.get('domain'),level:fd.get('level'),observation:String(fd.get('observation')||'').trim(),next_goal:String(fd.get('next_goal')||'').trim()||null});if(r.error)throw r.error;W.showSuccess?.('Avanço registrado.');await renderStudentBody44();}catch(err){W.showError?.(err.message||'Não foi possível registrar o avanço.')}});
+    }else if(studentSub44==='evaluations'){
+      body.innerHTML=`<section class="v3-panel"><div class="v3-panel-head"><div><h2>Avaliações do aluno</h2><p>As aplicações ficam vinculadas ao prontuário e podem ser visualizadas em popup.</p></div><button class="btn btn-primary btn-sm" id="final44NewStudentEval"><i data-lucide="clipboard-plus"></i>Nova avaliação</button></div>${data.evaluations.length?`<div class="final44-history-list">${data.evaluations.map(e=>`<article class="final44-history-item"><div class="final44-history-date">${esc(dateOnly(e.evaluation_date||e.date))}</div><div class="final44-history-main"><strong>${esc(e.title||e.type||'Avaliação')}</strong><span>${esc(e.type||'Avaliação')} · ${esc(e.status==='completed'?'Concluída':'Rascunho')}</span></div><div class="final44-history-actions"><button type="button" class="btn btn-outline btn-sm" data-st-eval-eye44="${esc(e.id)}" title="Visualizar avaliação"><i data-lucide="eye"></i></button><button type="button" class="btn btn-outline btn-sm" data-st-eval-edit44="${esc(e.id)}"><i data-lucide="pencil"></i></button><button type="button" class="btn btn-danger btn-sm" data-st-eval-delete44="${esc(e.id)}"><i data-lucide="trash-2"></i></button></div></article>`).join('')}</div>`:'<div class="v3-empty">Nenhuma avaliação vinculada a este aluno.</div>'}</section>`;
+      $('#final44NewStudentEval')?.addEventListener('click',()=>{W.V3=W.V3||{};W.V3.assessmentType='Leitura e compreensão';W.navigate?.('avaliacoes');setTimeout(()=>W.v3OpenEvaluationEditor?.(),180);});
+      $$('[data-st-eval-eye44]',body).forEach(b=>b.onclick=()=>{const e=data.evaluations.find(x=>String(x.id)===String(b.dataset.stEvalEye44));if(e)openEvaluation44(e);});
+      $$('[data-st-eval-edit44]',body).forEach(b=>b.onclick=()=>W.v3EditEvaluation?.(b.dataset.stEvalEdit44));
+      $$('[data-st-eval-delete44]',body).forEach(b=>b.onclick=()=>W.v3DeleteEvaluation?.(b.dataset.stEvalDelete44));
+    }else if(studentSub44==='contacts'){
+      body.innerHTML=`<section class="v3-panel"><div class="v3-panel-head"><div><h2>Família / Escola</h2><p>Registre reuniões, ligações, devolutivas e alinhamentos com a rede de apoio.</p></div><button type="button" class="btn btn-primary btn-sm" id="final44OpenContact"><i data-lucide="plus"></i>Registrar contato</button></div>${data.contacts.length?`<div class="final44-history-list">${data.contacts.map(r=>`<article class="final44-history-item"><div class="final44-history-date">${esc(dateOnly(r.contact_date))}</div><div class="final44-history-main"><strong>${esc(r.subject||'Contato')}</strong><span>${esc(r.contact_type||'Contato')} · ${esc(r.with_whom||'')}</span></div><div class="final44-history-actions"><button type="button" class="btn btn-outline btn-sm" data-contact-eye44="${esc(r.id)}"><i data-lucide="eye"></i>Ver</button></div></article>`).join('')}</div>`:'<div class="v3-empty">Nenhum contato registrado ainda.</div>'}</section>`;
+      $('#final44OpenContact')?.addEventListener('click',()=>openContact44(s));
+      $$('[data-contact-eye44]',body).forEach(b=>b.onclick=()=>openContactView44(data.contacts.find(x=>String(x.id)===String(b.dataset.contactEye44))));
+    }else{
+      const x=data.context||{};
+      body.innerHTML=`<section class="v3-panel"><div class="v3-panel-head"><div><h2>Cenário psicopedagógico</h2><p>Contexto, hipóteses e plano de acompanhamento.</p></div></div><div class="v3-detail-grid"><div><span>Queixa principal</span><strong>${esc(x.main_complaint||'—')}</strong></div><div><span>Contexto familiar</span><strong>${esc(x.family_context||'—')}</strong></div><div><span>Contexto escolar</span><strong>${esc(x.school_context||'—')}</strong></div><div><span>Desenvolvimento</span><strong>${esc(x.development||'—')}</strong></div><div><span>Rotina / hábitos</span><strong>${esc(x.routine||'—')}</strong></div><div><span>Focos de investigação</span><strong>${esc(x.hypotheses||'—')}</strong></div></div><div class="v3-note-block"><span>Plano psicopedagógico</span><p>${esc(x.plan||'—')}</p></div></section>`;
+    }
+    W.refreshIcons?.();
+  }
+  function dateBRSafe(v){if(!v)return '—';const d=new Date(`${dateOnly(v)}T12:00:00`);return Number.isNaN(d.getTime())?'—':d.toLocaleDateString('pt-BR');}
+  function openHistory44(r){if(!r)return;const b=showModal44(r.title||'Atendimento','HISTÓRICO DE ATENDIMENTO',`<div class="final44-eval-detail"><div class="final44-eval-block"><span>Data</span><p>${esc(dateBRSafe(r.record_date))} · ${esc(r.duration||'')}</p></div>${r.mood?`<div class="final44-eval-block"><span>Estado observado</span><p>${esc(r.mood)}</p></div>`:''}<div class="final44-eval-block"><span>Registro detalhado</span><p>${esc(r.content||'')}</p></div>${r.next_step?`<div class="final44-eval-block"><span>Encaminhamento / próximo passo</span><p>${esc(r.next_step)}</p></div>`:''}</div>`);b.insertAdjacentHTML('beforeend','<div class="final44-actions"><button type="button" class="btn btn-outline" id="final44HistClose">Fechar</button></div>');$('#final44HistClose',b).onclick=closeModal44;}
+  function openAttendance44(s){
+    const body=showModal44('Registrar atendimento detalhado','ATENDIMENTO',`<div class="final44-section-note">Preencha o que realmente foi observado na sessão. Os campos ficam organizados para registrar evidências, intervenção, resposta do aluno e encaminhamentos.</div><form id="final44AttendanceForm"><div class="final44-grid"><label class="final44-field"><span>Data *</span><input type="date" name="record_date" value="${esc(today())}" required></label><label class="final44-field"><span>Título da sessão</span><input name="title" placeholder="Ex.: Leitura e compreensão de texto"></label><label class="final44-field"><span>Duração</span><input name="duration" placeholder="Ex.: 50 min"></label><label class="final44-field"><span>Estado observado</span><select name="mood"><option value="">Selecione</option><option>Tranquilo e disponível</option><option>Colaborativo</option><option>Oscilante</option><option>Cansado</option><option>Resistente</option><option>Ansioso</option><option>Outro</option></select></label><label class="final44-field full"><span>Objetivo da sessão *</span><textarea name="objetivo" required placeholder="O que foi planejado trabalhar nesta sessão?"></textarea></label><label class="final44-field full"><span>Atividade / situação proposta *</span><textarea name="atividade" required placeholder="Descreva a proposta, material, jogo, texto, problema ou situação de aprendizagem."></textarea></label><label class="final44-field full"><span>Resposta e participação do aluno *</span><textarea name="resposta" required placeholder="Como o aluno iniciou, participou, respondeu e sustentou a tarefa?"></textarea></label><label class="final44-field full"><span>Dificuldades observadas</span><textarea name="dificuldades" placeholder="Quais barreiras apareceram? Em que ponto precisou de ajuda?"></textarea></label><label class="final44-field full"><span>Potencialidades / avanços observados</span><textarea name="avancos" placeholder="O que conseguiu fazer melhor, com mais autonomia ou com menos mediação?"></textarea></label><label class="final44-field full"><span>Intervenções e estratégias utilizadas</span><textarea name="intervencoes" placeholder="Que mediação, recurso, pergunta, modelo ou estratégia foi utilizada?"></textarea></label><label class="final44-field full"><span>Orientações para família / escola</span><textarea name="orientacoes" placeholder="O que foi combinado ou orientado para continuidade fora da sessão?"></textarea></label><label class="final44-field full"><span>Encaminhamento / próximo passo *</span><textarea name="next_step" required placeholder="O que será retomado ou trabalhado a seguir? Registre encaminhamentos, metas e ações combinadas."></textarea></label><label class="final44-field full"><span>Observações finais</span><textarea name="observacoes" placeholder="Outras informações relevantes para o prontuário."></textarea></label></div><div class="final44-actions"><button type="button" class="btn btn-outline" id="final44AttCancel">Cancelar</button><button type="submit" class="btn btn-primary"><i data-lucide="save"></i>Salvar atendimento</button></div></form>`);
+    $('#final44AttCancel',body).onclick=closeModal44;
+    $('#final44AttendanceForm',body).onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.currentTarget),btn=e.currentTarget.querySelector('[type=submit]');try{btn.disabled=true;const sections=[['Objetivo da sessão',fd.get('objetivo')],['Atividade / situação proposta',fd.get('atividade')],['Resposta e participação do aluno',fd.get('resposta')],['Dificuldades observadas',fd.get('dificuldades')],['Potencialidades / avanços observados',fd.get('avancos')],['Intervenções e estratégias utilizadas',fd.get('intervencoes')],['Orientações para família / escola',fd.get('orientacoes')],['Observações finais',fd.get('observacoes')]].filter(x=>String(x[1]||'').trim()).map(x=>`${x[0]}:\n${String(x[1]).trim()}`).join('\n\n');const r=await db().from('student_records').insert({user_id:uid(),student_id:s.id,record_type:'atendimento',record_date:fd.get('record_date'),title:String(fd.get('title')||'Atendimento').trim()||'Atendimento',content:sections,duration:String(fd.get('duration')||'').trim()||null,mood:String(fd.get('mood')||'').trim()||null,next_step:String(fd.get('next_step')||'').trim()});if(r.error)throw r.error;closeModal44();W.showSuccess?.('Atendimento detalhado registrado.');await renderStudentBody44();}catch(err){W.showError?.('Não foi possível registrar o atendimento: '+(err.message||err));}finally{btn.disabled=false}};
+  }
+  function openContact44(s){
+    const body=showModal44('Registrar contato com família / escola','FAMÍLIA / ESCOLA',`<form id="final44ContactForm"><div class="final44-grid"><label class="final44-field"><span>Data *</span><input type="date" name="contact_date" value="${esc(today())}" required></label><label class="final44-field"><span>Tipo de contato *</span><select name="contact_type" required><option>Responsável</option><option>Escola</option><option>Professor</option><option>Outro profissional</option></select></label><label class="final44-field"><span>Nome / instituição</span><input name="with_whom" placeholder="Nome da pessoa ou instituição"></label><label class="final44-field"><span>Assunto</span><input name="subject" placeholder="Ex.: reunião, ligação, devolutiva"></label><label class="final44-field full"><span>Resumo da conversa *</span><textarea name="content" rows="7" required placeholder="O que foi conversado, relatado, orientado ou combinado?"></textarea></label><label class="final44-field full"><span>Combinados / encaminhamentos</span><textarea name="next_step" rows="5" placeholder="Registre responsabilidades, prazos e próximos contatos."></textarea></label></div><div class="final44-actions"><button type="button" class="btn btn-outline" id="final44ContactCancel">Cancelar</button><button type="submit" class="btn btn-primary"><i data-lucide="save"></i>Registrar contato</button></div></form>`);
+    $('#final44ContactCancel',body).onclick=closeModal44;
+    $('#final44ContactForm',body).onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.currentTarget),btn=e.currentTarget.querySelector('[type=submit]');try{btn.disabled=true;const r=await db().from('student_contacts').insert({user_id:uid(),student_id:s.id,contact_date:fd.get('contact_date'),contact_type:fd.get('contact_type'),with_whom:String(fd.get('with_whom')||'').trim()||null,subject:String(fd.get('subject')||'').trim()||null,content:String(fd.get('content')||'').trim(),next_step:String(fd.get('next_step')||'').trim()||null});if(r.error)throw r.error;closeModal44();W.showSuccess?.('Contato registrado.');await renderStudentBody44();}catch(err){W.showError?.('Não foi possível registrar o contato: '+(err.message||err));}finally{btn.disabled=false}};
+  }
+  function openContactView44(r){if(!r)return;const body=showModal44(r.subject||'Contato','FAMÍLIA / ESCOLA',`<div class="final44-eval-detail"><div class="final44-eval-block"><span>Data / tipo</span><p>${esc(dateBRSafe(r.contact_date))} · ${esc(r.contact_type||'Contato')}</p></div><div class="final44-eval-block"><span>Com quem</span><p>${esc(r.with_whom||'—')}</p></div><div class="final44-eval-block"><span>Resumo</span><p>${esc(r.content||'')}</p></div>${r.next_step?`<div class="final44-eval-block"><span>Combinados / encaminhamentos</span><p>${esc(r.next_step)}</p></div>`:''}</div>`);body.insertAdjacentHTML('beforeend','<div class="final44-actions"><button type="button" class="btn btn-outline" id="final44ContactViewClose">Fechar</button></div>');$('#final44ContactViewClose',body).onclick=closeModal44;}
+
+  async function renderStudentProfile44(){
+    const c=$('#studentProfileContent');if(!c)return;const id=activeStudent44();if(!id){c.innerHTML='<div class="v3-panel">Nenhum aluno selecionado.</div>';return;}
+    c.innerHTML='<div class="v3-loading"><i data-lucide="loader-circle"></i>Carregando prontuário...</div>';W.refreshIcons?.();
+    try{
+      const d=await loadStudentData44(id),s=d.student,name=s.name||s.full_name||'Aluno';const completed=d.records.filter(r=>String(r.record_type||'').toLowerCase()==='atendimento').length;
+      c.innerHTML=`<div class="v3-page"><div class="v3-student-hero"><div class="v3-hero-left"><div class="v3-avatar large">${s.photo_url?`<img src="${esc(s.photo_url)}" alt="Foto do aluno">`:`<span>${esc(name.split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase())}</span>`}</div><div><div class="v3-kicker">PRONTUÁRIO PSICOPEDAGÓGICO</div><h1>${esc(name)}</h1><p>${esc(s.responsible_name||s.guardian_name||s.parent_name||'Responsável não informado')} · ${esc(s.phone||'Telefone não informado')}</p><div class="v3-chip-row"><span class="v3-tag ${s.status==='inactive'?'muted':''}">${s.status==='inactive'?'Desativado':'Em acompanhamento'}</span><span class="v3-tag">${d.evaluations.length} avaliações</span><span class="v3-tag">${completed} atendimentos</span></div></div></div><div class="v3-hero-actions"><button class="btn btn-outline" type="button" id="final44BackStudents"><i data-lucide="arrow-left"></i>Voltar</button><button class="btn btn-primary" type="button" id="final44EditStudent"><i data-lucide="pencil"></i>Editar cadastro</button></div></div><div id="final44StudentBody"></div></div>`;
+      $('#final44BackStudents').onclick=()=>W.navigate?.('alunos');$('#final44EditStudent').onclick=()=>W.lqEditStudent43?.(s.id);studentTabs44(c);await renderStudentBody44();W.refreshIcons?.();
+    }catch(e){c.innerHTML=`<div class="v3-panel"><strong>Não foi possível abrir o prontuário.</strong><p>${esc(e.message||e)}</p></div>`;W.refreshIcons?.();}
+  }
+  W.renderStudentProfileView=renderStudentProfile44;W.v3RenderStudentProfileFast=renderStudentProfile44;
+
+  /* ---------------------------------------------------------
+     3. FINANCEIRO — excluir lançamento sem mudar o motor.
+     --------------------------------------------------------- */
+  async function loadFinance44(){
+    const c=db(),me=uid();if(!c||!me)throw new Error('Sessão não encontrada.');
+    const [a,b]=await Promise.all([c.from('financial_entries').select('*').eq('user_id',me).order('competence_date',{ascending:false}).limit(3000),c.from('payments').select('*').eq('user_id',me).order('payment_date',{ascending:false}).limit(3000)]);
+    if(a.error&&b.error)throw a.error;
+    const modern=a.error?[]:(a.data||[]),pays=b.error?[]:(b.data||[]),ids=new Set(modern.map(e=>String(e.legacy_payment_id||'')));
+    const legacy=pays.filter(p=>!ids.has(String(p.id))).map(p=>({id:`legacy-${p.id}`,legacy:true,source_payment_id:p.id,kind:'income',amount:Number(p.amount||p.value||0),status:String(p.status||'paid').toLowerCase(),competence_date:dateOnly(p.payment_date||p.date),description:p.description||p.student_name||'Recebimento',student_name:p.student_name||null,payment_method:p.payment_method||p.method||''}));
+    return modern.map(e=>({...e,kind:e.kind||e.type||'income',competence_date:e.competence_date||e.entry_date||e.payment_date||today()})).concat(legacy);
+  }
+  async function decorateFinanceDelete44(){
+    const c=$('#financeiroContent');if(!c)return;
+    const rows=$$('.final43-fin-row:not(.header)',c);if(!rows.length)return;
+    try{
+      const entries=(await loadFinance44()).slice().sort((a,b)=>String(b.competence_date||b.payment_date).localeCompare(String(a.competence_date||a.payment_date))).slice(0,100);
+      rows.forEach((row,i)=>{
+        if(row.querySelector('[data-fin-delete44]'))return;const e=entries[i];if(!e)return;
+        const actions=$('.final43-fin-actions',row);if(!actions)return;
+        actions.insertAdjacentHTML('beforeend',`<button type="button" class="btn final44-delete" data-fin-delete44="${esc(e.id)}" title="Excluir lançamento"><i data-lucide="trash-2"></i>Excluir</button>`);
+      });
+      $$('[data-fin-delete44]',c).forEach(b=>b.onclick=async()=>{const id=b.dataset.finDelete44;const e=(await loadFinance44()).find(x=>String(x.id)===String(id));if(!e)return; if(!confirm('Excluir este lançamento? Essa ação não poderá ser desfeita.'))return;try{b.disabled=true;const q=e.legacy?db().from('payments').delete().eq('id',e.source_payment_id).eq('user_id',uid()):db().from('financial_entries').delete().eq('id',e.id).eq('user_id',uid());const r=await q;if(r.error)throw r.error;W.showSuccess?.('Lançamento excluído.');await W.renderFinance?.();}catch(err){W.showError?.('Não foi possível excluir: '+(err.message||err));}finally{b.disabled=false}});
+      W.refreshIcons?.();
+    }catch(_){ }
+  }
+  const oldFinance44=W.renderFinance;
+  if(typeof oldFinance44==='function'&&!oldFinance44.__final44){W.renderFinance=async function(){const r=await oldFinance44.apply(this,arguments);setTimeout(decorateFinanceDelete44,0);return r};W.renderFinance.__final44=true;}
+
+  /* ---------------------------------------------------------
+     4. ANIVERSARIANTES — uma única renderização limpa.
+     --------------------------------------------------------- */
+  async function cleanBirthdayCard44(){
+    const box=$('#final33Birthdays');if(!box)return;const c=db(),me=uid();if(!c||!me)return;
+    try{
+      const r=await c.from('students').select('*').eq('user_id',me).neq('status','inactive').limit(500);if(r.error)throw r.error;
+      const todayD=new Date();todayD.setHours(0,0,0,0);
+      const items=(r.data||[]).map(s=>{const raw=s.birth_date||s.date_of_birth;if(!raw)return null;const d=new Date(`${dateOnly(raw)}T12:00:00`);if(Number.isNaN(d.getTime()))return null;let next=new Date(todayD.getFullYear(),d.getMonth(),d.getDate());if(next<todayD)next.setFullYear(next.getFullYear()+1);const diff=Math.round((next-todayD)/86400000);return{s,d,diff,today:diff===0};}).filter(Boolean).sort((a,b)=>a.diff-b.diff).slice(0,6);
+      box.className='final44-bday-wrap';box.innerHTML=items.length?items.map(x=>`<div class="final44-bday-row"><div class="final44-bday-date"><strong>${String(x.d.getDate()).padStart(2,'0')}</strong><span>${x.d.toLocaleDateString('pt-BR',{month:'short'}).replace('.','')}</span></div><div class="final44-bday-main"><strong>${esc(x.s.name||x.s.full_name||'Aluno')}</strong><span>${x.today?'Hoje · aniversário 🎉':`Em ${x.diff} ${x.diff===1?'dia':'dias'}`}</span></div>${x.s.phone?`<button type="button" class="final44-bday-wa" data-bday44="${esc(x.s.id)}" title="Enviar parabéns pelo WhatsApp"><i data-lucide="message-circle"></i></button>`:'<span></span>'}</div>`).join(''):'<div class="final44-bday-empty">Nenhum aniversário informado.</div>';
+      $$('[data-bday44]',box).forEach(b=>b.onclick=()=>{const s=items.find(x=>String(x.s.id)===String(b.dataset.bday44))?.s;if(!s)return;const phone=String(s.phone||'').replace(/\D/g,'');if(!phone){W.showError?.('Aluno sem telefone cadastrado.');return;}const nm=s.name||s.full_name||'Aluno';const msg=encodeURIComponent(`Olá! Feliz aniversário, ${nm}! Desejamos um dia muito especial. 🎉`);W.open?.(`https://wa.me/${phone}?text=${msg}`,'_blank','noopener,noreferrer');});
+      W.refreshIcons?.();
+    }catch(_){ }
+  }
+  const oldDashboard44=W.renderDashboard;
+  if(typeof oldDashboard44==='function'&&!oldDashboard44.__final44){W.renderDashboard=async function(){const r=await oldDashboard44.apply(this,arguments);setTimeout(cleanBirthdayCard44,10);return r};W.renderDashboard.__final44=true;}
+
+  /* ---------------------------------------------------------
+     5. Remover “Próximos atendimentos” do prontuário apenas.
+     Continua existindo no Dashboard e na Agenda.
+     --------------------------------------------------------- */
+  function cleanStudentLegacy44(){
+    const c=$('#studentProfileContent');if(!c)return;
+    $$('h2',c).forEach(h=>{if(/Próximos atendimentos/i.test(h.textContent||'')){const p=h.closest('section,.v3-panel');if(p)p.remove();}});
+  }
+  const observerHooks44=()=>setTimeout(cleanStudentLegacy44,0);
+
+  /* ---------------------------------------------------------
+     6. Perfil/editar aluno já usa o upload do ImgBB da versão anterior.
+     Mantém isso sem reintroduzir URL na interface.
+     --------------------------------------------------------- */
+  if(typeof W.lqEditStudent43==='function'){W.lqEditStudent44=W.lqEditStudent43;}
+
+  function boot44(){
+    if(W.state?.currentView==='dashboard')setTimeout(cleanBirthdayCard44,50);
+    if(W.state?.currentView==='aluno-perfil')observerHooks44();
+    if(W.state?.currentView==='financeiro')setTimeout(decorateFinanceDelete44,50);
+  }
+  if(document.readyState==='loading')D.addEventListener('DOMContentLoaded',boot44,{once:true});else setTimeout(boot44,0);
+})();
+</script>
+
 </html>
