@@ -24159,4 +24159,163 @@ body.final27-dark .v3-tag.lq-tag-purple,body.final27-dark .v3-tag.lq-tag-slate{c
   D.addEventListener('click',e=>{if(e.target.closest?.('#final27ThemeBtn'))setTimeout(()=>{applyStoredTheme();syncLogoNow()},0)},{passive:true});
 })();
 </script>
+<!-- FINAL58 — LOGIN SEM VAZAMENTO + LOGO + AVATAR DARK -->
+<style id="legado-final58-login-fixes">
+  /* =============================================================
+     LOGIN — nunca deixar elementos da aplicação aparecerem por cima
+     ============================================================= */
+  #loginScreen{
+    z-index:2147483000!important;
+    isolation:isolate!important;
+  }
+  #expiredScreen{
+    z-index:2147482000!important;
+    isolation:isolate!important;
+  }
+
+  /* =============================================================
+     LOGIN — retirar o nome duplicado do sistema e dar protagonismo
+     à logomarca
+     ============================================================= */
+  #loginScreen .lv-top{
+    justify-content:center!important;
+    min-height:116px!important;
+    padding-top:4px!important;
+  }
+  #loginScreen .lv-top-text{
+    display:none!important;
+  }
+  #loginScreen .login-visual .lv-top img{
+    width:230px!important;
+    height:112px!important;
+    max-width:230px!important;
+    max-height:112px!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    object-fit:contain!important;
+    object-position:center!important;
+  }
+
+  /* Mobile: mantém somente a marca, sem título duplicado. */
+  #loginScreen .lb-logo-mobile{
+    justify-content:center!important;
+    margin-bottom:30px!important;
+  }
+  #loginScreen .lb-logo-mobile > div{
+    display:none!important;
+  }
+  #loginScreen .lb-logo-mobile img{
+    width:190px!important;
+    height:88px!important;
+    max-width:190px!important;
+    max-height:88px!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    object-fit:contain!important;
+  }
+
+  /* =============================================================
+     AVATAR DO PROFESSOR — contraste garantido no modo escuro
+     ============================================================= */
+  body.final27-dark #topbarAvatar,
+  body.final27-dark .topbar #topbarAvatar{
+    background:#1B332A!important;
+    border:1px solid #426254!important;
+    color:#D7EBDD!important;
+    box-shadow:none!important;
+  }
+  body.final27-dark #topbarAvatar span,
+  body.final27-dark .topbar #topbarAvatar span{
+    color:#D7EBDD!important;
+    opacity:1!important;
+    -webkit-text-fill-color:#D7EBDD!important;
+  }
+  body:not(.final27-dark) #topbarAvatar,
+  body:not(.final27-dark) .topbar #topbarAvatar{
+    background:#E4F1ED!important;
+    border:1px solid #C8DED6!important;
+    color:#245E55!important;
+  }
+  body:not(.final27-dark) #topbarAvatar span,
+  body:not(.final27-dark) .topbar #topbarAvatar span{
+    color:#245E55!important;
+    -webkit-text-fill-color:#245E55!important;
+  }
+
+  /* =============================================================
+     LOGIN — o texto principal continua, mas sem duplicação de marca.
+     ============================================================= */
+  #loginScreen .lv-title{
+    font-family:'Manrope',Inter,system-ui,sans-serif!important;
+    font-weight:800!important;
+    letter-spacing:-.045em!important;
+  }
+  #loginScreen .lb-title,
+  #loginScreen .lb-subtitle,
+  #loginScreen .lb-field label,
+  #loginScreen .lb-input,
+  #loginScreen .lb-row,
+  #loginScreen .lb-footer-note,
+  #loginScreen .lb-help{
+    font-family:'Manrope',Inter,system-ui,sans-serif!important;
+  }
+
+  @media(max-width:960px){
+    #loginScreen .login-form-panel{
+      min-height:100vh!important;
+    }
+  }
+  @media(max-width:680px){
+    #loginScreen .lb-logo-mobile img{
+      width:180px!important;
+      height:80px!important;
+    }
+  }
+</style>
+<script id="legado-final58-runtime">
+(function(){
+  'use strict';
+  const D=document,W=window;
+  const COLOR='https://i.imgur.com/e6bn3Tg.png';
+  const WHITE='https://i.imgur.com/Nnd3ori.png';
+
+  function dark(){return D.body?.classList.contains('final27-dark');}
+  function syncLoginLogo(){
+    const src=dark()?WHITE:COLOR;
+    D.querySelectorAll('#loginScreen .lv-top img,#loginScreen .lb-logo-mobile img').forEach(img=>{
+      if(img.getAttribute('src')!==src) img.setAttribute('src',src);
+      img.style.background='transparent';
+      img.style.border='0';
+      img.style.filter='none';
+      img.style.opacity='1';
+    });
+  }
+
+  function enforceLayering(){
+    const login=D.getElementById('loginScreen');
+    const app=D.getElementById('app');
+    if(login && getComputedStyle(login).display!=='none'){
+      login.style.zIndex='2147483000';
+      if(app) app.style.zIndex='1';
+    }
+  }
+
+  function boot(){
+    syncLoginLogo();
+    enforceLayering();
+  }
+  if(D.readyState==='loading') D.addEventListener('DOMContentLoaded',boot,{once:true});
+  else boot();
+  W.addEventListener('load',boot,{once:true});
+  D.addEventListener('click',e=>{
+    if(e.target.closest?.('#final27ThemeBtn')) setTimeout(syncLoginLogo,0);
+  },{passive:true});
+  D.addEventListener('transitionend',syncLoginLogo,{passive:true});
+  setInterval(()=>{syncLoginLogo();enforceLayering();},1000);
+})();
+</script>
 </html>
