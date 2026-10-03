@@ -22150,4 +22150,55 @@ refresh();
   if(window.__final46FinanceSummary) window.financeSummary43=window.__final46FinanceSummary;
 })();
 </script>
+
+<style id="legado-bncc-integration-style">
+  .lq-bncc-box{margin-top:18px;border:1px solid #dce8e4;background:#f7fbfa;border-radius:16px;padding:16px}
+  .lq-bncc-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:12px}
+  .lq-bncc-head h3{margin:2px 0 4px;font-size:16px;color:#20312f}
+  .lq-bncc-head p{margin:0;color:#6d7e79;font-size:12px;line-height:1.5}
+  .lq-bncc-grid{display:grid;grid-template-columns:140px minmax(0,1fr) auto;gap:9px;align-items:center}
+  .lq-bncc-results{display:grid;gap:9px;margin-top:12px;max-height:330px;overflow:auto;padding-right:3px}
+  .lq-bncc-result{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px;border:1px solid #dfe9e5;background:#fff;border-radius:12px}
+  .lq-bncc-code{display:inline-flex;align-items:center;width:max-content;padding:3px 7px;border-radius:7px;background:#eaf5f2;color:#2d6f67;font-size:11px;font-weight:850;letter-spacing:.02em}
+  .lq-bncc-result strong{display:block;margin:6px 0 3px;font-size:13px;line-height:1.45;color:#20312f}
+  .lq-bncc-result small{display:block;color:#718078;font-size:11px;line-height:1.4}
+  .lq-bncc-selected{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .lq-bncc-chip{display:inline-flex;align-items:center;gap:7px;padding:7px 9px;border-radius:10px;background:#eaf5f2;color:#21584f;border:1px solid #cfe3dd;font-size:11px;font-weight:750}
+  .lq-bncc-chip button{border:0;background:transparent;color:#55736c;padding:0;display:grid;place-items:center;cursor:pointer}
+  .lq-bncc-status{font-size:11px;color:#718078;min-height:17px;margin-top:8px}
+  .lq-bncc-empty{padding:14px;border:1px dashed #cfded8;border-radius:11px;background:#fff;color:#718078;font-size:12px;text-align:center}
+  .lq-bncc-source{margin-top:8px;font-size:10px;color:#7b8984}
+  @media(max-width:700px){.lq-bncc-grid{grid-template-columns:1fr}.lq-bncc-result{grid-template-columns:1fr}.lq-bncc-result .btn{width:100%}}
+</style>
+<script id="legado-bncc-integration-js">
+(function(){
+  'use strict';
+  const W=window,D=document;
+  const API='https://api.bncc.dev/v1';
+  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v==null?'':String(v)):String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+  const $=(s,r=D)=>r.querySelector(s);
+  const $$=(s,r=D)=>Array.from(r.querySelectorAll(s));
+  const refresh=()=>W.refreshIcons?.();
+  let selection=[];
+  let lastQuery='';
+  function normalizeResult(x){
+    const comp=typeof x?.componente==='object'?x.componente:{id:x?.componente||'',nome:x?.componente_nome||x?.componenteNome||''};
+    const anos=Array.isArray(x?.anos)?x.anos:(x?.ano!=null?[x.ano]:[]);
+    return {codigo:String(x?.codigo||''),texto:String(x?.texto||x?.descricao||''),etapa:String(x?.etapa||''),componente:comp.nome||comp.id||'',anos,fonte:x?.fonte||{}};
+  }
+  async function apiJson(path){const r=await fetch(API+path,{headers:{Accept:'application/json'}});if(!r.ok)throw new Error('BNCC retornou HTTP '+r.status+'.');return await r.json();}
+  function extractItems(data){if(Array.isArray(data))return data.map(normalizeResult).filter(x=>x.codigo);for(const c of [data?.resultados,data?.resultados?.itens,data?.itens,data?.items,data?.aprendizagens,data?.habilidades,data?.data])if(Array.isArray(c))return c.map(normalizeResult).filter(x=>x.codigo);if(data?.codigo)return[normalizeResult(data)];return[];}
+  function renderSelected(){const box=$('#lqBnccSelected');if(!box)return;box.innerHTML=selection.length?selection.map((x,i)=>`<span class="lq-bncc-chip"><span>${esc(x.codigo)}</span><button type="button" title="Remover" data-bncc-remove="${i}"><i data-lucide="x"></i></button></span>`).join(''):'<span class="lq-bncc-status">Nenhuma habilidade/objetivo selecionado.</span>';$$('[data-bncc-remove]',box).forEach(b=>b.onclick=()=>{selection.splice(Number(b.dataset.bnccRemove),1);renderSelected()});refresh()}
+  function addItem(raw){const x=normalizeResult(raw);if(!x.codigo)return;if(!selection.some(y=>y.codigo===x.codigo))selection.push(x);renderSelected();const s=$('#lqBnccStatus');if(s)s.textContent=x.codigo+' adicionado à aplicação.';}
+  function resultHtml(x){const selected=selection.some(y=>y.codigo===x.codigo),years=x.anos?.length?' · '+x.anos.join(', '):'';return `<article class="lq-bncc-result"><div><span class="lq-bncc-code">${esc(x.codigo)}</span><strong>${esc(x.texto)}</strong><small>${esc(x.componente||'Componente não informado')}${esc(years)}${x.etapa?' · Etapa '+esc(x.etapa):''}</small><div class="lq-bncc-source">Fonte: dataset BNCC; ${esc(x.fonte?.localizador_pdf||x.fonte?.localizador||'registro oficial')}</div></div><button type="button" class="btn ${selected?'btn-outline':'btn-primary'} btn-sm" data-bncc-add="${esc(x.codigo)}" ${selected?'disabled':''}>${selected?'Selecionada':'Adicionar'}</button></article>`;}
+  function renderResults(items,message){const box=$('#lqBnccResults');if(!box)return;if(!items.length){box.innerHTML=`<div class="lq-bncc-empty">${esc(message||'Nenhuma habilidade encontrada.')}</div>`;return;}box.innerHTML=items.slice(0,30).map(resultHtml).join('');$$('[data-bncc-add]',box).forEach(btn=>btn.onclick=async()=>{const code=btn.dataset.bnccAdd;btn.disabled=true;try{const data=await apiJson('/aprendizagens/'+encodeURIComponent(code));addItem(data)}catch(_){const found=items.find(x=>x.codigo===code);if(found)addItem(found)}renderResults(items,'')});refresh()}
+  async function searchBncc(){const input=$('#lqBnccSearch'),stage=$('#lqBnccStage'),status=$('#lqBnccStatus');if(!input)return;const q=input.value.trim();lastQuery=q;if(!q){renderResults([],'Digite um código ou tema para buscar na BNCC.');if(status)status.textContent='';return;}if(status)status.textContent='Consultando a BNCC…';try{const data=await apiJson('/busca?q='+encodeURIComponent(q)+(stage?.value?'&etapa='+encodeURIComponent(stage.value):''));const items=extractItems(data);renderResults(items,items.length?'':'Nenhum resultado para essa busca.');if(status)status.textContent=items.length+' resultado(s) encontrado(s).';}catch(e){if(status)status.textContent='Não foi possível consultar a BNCC agora.';renderResults([],'A consulta à BNCC não respondeu. Verifique a conexão e tente novamente.');}}
+  function mountPanel(form,existing){if(!form||$('#lqBnccBox',form))return;selection=Array.isArray(existing?.assessment_data?.bncc)?existing.assessment_data.bncc.map(normalizeResult):[];const panel=D.createElement('section');panel.className='lq-bncc-box';panel.id='lqBnccBox';panel.innerHTML=`<div class="lq-bncc-head"><div><div class="v3-kicker">REFERÊNCIA CURRICULAR</div><h3>BNCC</h3><p>Busque habilidades e objetivos diretamente na base BNCC. As referências selecionadas ficam salvas junto da avaliação.</p></div><a href="https://bncc.dev/" target="_blank" rel="noopener" class="btn btn-outline btn-sm">Abrir BNCC</a></div><div class="lq-bncc-grid"><select id="lqBnccStage" aria-label="Etapa"><option value="">Todas as etapas</option><option value="EI">Educação Infantil</option><option value="EF">Ensino Fundamental</option><option value="EM">Ensino Médio</option></select><input id="lqBnccSearch" type="search" placeholder="Ex.: EF67LP08, leitura, alfabetização…" autocomplete="off"><button type="button" class="btn btn-primary btn-sm" id="lqBnccSearchBtn"><i data-lucide="search"></i>Buscar</button></div><div id="lqBnccStatus" class="lq-bncc-status"></div><div id="lqBnccResults" class="lq-bncc-results"><div class="lq-bncc-empty">Digite um código ou tema para buscar na BNCC.</div></div><div class="lq-bncc-head" style="margin-top:14px;margin-bottom:0"><div><strong style="font-size:12px">Referências selecionadas</strong></div></div><div id="lqBnccSelected" class="lq-bncc-selected"></div>`;const actions=form.querySelector('.v4-actions');if(actions)form.insertBefore(panel,actions);else form.appendChild(panel);$('#lqBnccSearchBtn',panel).onclick=searchBncc;$('#lqBnccSearch',panel).addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchBncc()}});$('#lqBnccStage',panel).onchange=()=>{if(lastQuery)searchBncc()};renderSelected();refresh();}
+  const originalOpen=W.v4OpenEvaluationModal;
+  if(typeof originalOpen==='function'&&!originalOpen.__bnccWrapped){const wrapped=async function(existing=null){selection=[];lastQuery='';const result=await originalOpen.apply(this,arguments);setTimeout(()=>{const form=$('#v4EvaluationForm');if(form)mountPanel(form,existing)},0);return result;};wrapped.__bnccWrapped=true;W.v4OpenEvaluationModal=wrapped;}
+  const originalSave=W.saveEvalV4;
+  if(typeof originalSave==='function'&&!originalSave.__bnccWrapped){const wrappedSave=async function(payload,existingId){const copy={...payload,assessment_data:{...(payload?.assessment_data||{})}};if(selection.length)copy.assessment_data.bncc=selection.map(normalizeResult);else if(Object.prototype.hasOwnProperty.call(copy.assessment_data,'bncc'))delete copy.assessment_data.bncc;return originalSave.call(this,copy,existingId)};wrappedSave.__bnccWrapped=true;W.saveEvalV4=wrappedSave;}
+  W.LegadoBNCC={buscar:async(q,etapa)=>extractItems(await apiJson('/busca?q='+encodeURIComponent(q)+(etapa?'&etapa='+encodeURIComponent(etapa):''))),porCodigo:async codigo=>normalizeResult(await apiJson('/aprendizagens/'+encodeURIComponent(codigo))),selecionadas:()=>selection.map(normalizeResult),versao:'dados-2026.07.1'};
+})();
+</script>
 </html>
