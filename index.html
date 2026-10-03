@@ -12711,6 +12711,262 @@ body.legado-v4-modal-open{overflow:hidden}
      ============================================================ -->
 
 
+
+<style id="legado-clinical-redesign-v1">
+:root{
+  --c-primary:#2f6f67;
+  --c-primary-2:#3f8a80;
+  --c-primary-soft:#eaf5f2;
+  --c-blue:#416b87;
+  --c-blue-soft:#edf4f8;
+  --c-bg:#f3f7f6;
+  --c-surface:#ffffff;
+  --c-surface-2:#f8fbfa;
+  --c-text:#20312e;
+  --c-muted:#70807c;
+  --c-border:#dce8e4;
+  --c-danger:#b95d62;
+  --c-warning:#b47a36;
+  --c-shadow:0 10px 30px rgba(31,63,57,.07);
+  --c-shadow-lg:0 24px 65px rgba(24,52,47,.13);
+  --radius:16px;
+  --radius-sm:11px;
+}
+html,body{background:var(--c-bg)!important;color:var(--c-text)!important}
+body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}
+.sidebar{
+  width:252px!important;
+  background:linear-gradient(180deg,#173f3a 0%,#1f514a 55%,#245d55 100%)!important;
+  border:0!important;
+  box-shadow:12px 0 35px rgba(22,57,51,.10)!important;
+}
+.sidebar .brand{padding:22px 20px 18px!important}
+.sidebar .brand-mark{
+  width:45px!important;height:45px!important;border-radius:13px!important;
+  background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.14)!important;
+}
+.sidebar .brand-text .main{color:#fff!important;font-size:15px!important;font-weight:800!important}
+.sidebar .brand-text .sub{color:rgba(255,255,255,.62)!important}
+.sidebar .nav{padding:12px 12px!important;gap:5px!important}
+.sidebar .nav button{
+  border-radius:12px!important;color:rgba(255,255,255,.72)!important;
+  min-height:45px!important;padding:10px 12px!important;
+  border:1px solid transparent!important;transition:.18s ease!important;
+}
+.sidebar .nav button:hover{
+  background:rgba(255,255,255,.09)!important;color:#fff!important;transform:translateX(2px);
+}
+.sidebar .nav button.active{
+  background:rgba(255,255,255,.14)!important;color:#fff!important;
+  border-color:rgba(255,255,255,.12)!important;box-shadow:0 7px 18px rgba(0,0,0,.10)!important;
+}
+.sidebar .nav button i{width:18px!important;height:18px!important}
+.sidebar .nav-badge{background:#d9a85c!important;color:#fff!important}
+.side-bottom{padding:14px!important;border-top:1px solid rgba(255,255,255,.10)!important}
+.side-bottom .btn{color:rgba(255,255,255,.75)!important;border-color:rgba(255,255,255,.18)!important;background:transparent!important}
+.main{margin-left:252px!important;background:var(--c-bg)!important}
+.topbar{
+  height:76px!important;background:rgba(255,255,255,.94)!important;
+  border-bottom:1px solid var(--c-border)!important;padding:0 30px!important;
+  backdrop-filter:blur(14px)!important;position:sticky!important;top:0!important;z-index:30!important;
+}
+.page-title{font-size:16px!important;font-weight:800!important;color:var(--c-text)!important}
+.page-title i{color:var(--c-primary)!important}
+.content{padding:28px 30px 45px!important;max-width:1600px!important}
+.view{animation:clinicalFade .22s ease}
+@keyframes clinicalFade{from{opacity:.45;transform:translateY(5px)}to{opacity:1;transform:none}}
+/* painéis e cards */
+.v3-panel,.panel,.card,.stat-card,.metric-card,.dashboard-card{
+  border:1px solid var(--c-border)!important;
+  border-radius:var(--radius)!important;
+  box-shadow:var(--c-shadow)!important;
+  background:var(--c-surface)!important;
+}
+.v3-panel{overflow:hidden}
+.v3-stats,.stats,.metric-grid,.dashboard-grid{gap:14px!important}
+.v3-stat,.stat-card,.metric-card{
+  padding:18px!important;min-height:112px!important;
+  background:linear-gradient(145deg,#fff 0%,#f8fbfa 100%)!important;
+}
+.v3-stat .v3-icon{
+  width:42px!important;height:42px!important;border-radius:12px!important;
+  background:var(--c-primary-soft)!important;color:var(--c-primary)!important;
+}
+.v3-stat strong,.stat-card strong,.metric-card strong{color:var(--c-text)!important}
+.v3-stat small,.stat-card small,.metric-card small{color:var(--c-muted)!important}
+/* cabeçalhos internos */
+.v3-head,.page-heading,.panel-head{
+  margin-bottom:18px!important;
+}
+.v3-head h1,.page-heading h1,.panel-head h2{
+  color:var(--c-text)!important;font-weight:800!important;letter-spacing:-.02em!important;
+}
+.v3-head p,.page-heading p,.panel-head p{color:var(--c-muted)!important}
+/* botões */
+.btn{border-radius:10px!important;font-weight:700!important;letter-spacing:.01em!important;transition:.16s ease!important}
+.btn-primary{
+  background:linear-gradient(135deg,var(--c-primary),var(--c-primary-2))!important;
+  border-color:transparent!important;box-shadow:0 7px 17px rgba(47,111,103,.20)!important;
+}
+.btn-primary:hover{transform:translateY(-1px)!important;box-shadow:0 10px 22px rgba(47,111,103,.26)!important}
+.btn-outline{border-color:var(--c-border)!important;color:var(--c-primary)!important;background:#fff!important}
+/* tabelas */
+table{border-collapse:separate!important;border-spacing:0!important}
+thead th{
+  background:#f4f8f7!important;color:#62736f!important;
+  font-size:10px!important;text-transform:uppercase!important;letter-spacing:.08em!important;
+  border-bottom:1px solid var(--c-border)!important;
+}
+tbody td{border-bottom:1px solid #edf2f0!important;color:#30413e!important}
+tbody tr:hover td{background:#f8fbfa!important}
+/* agenda clínica */
+.legado-session-head,.legado-slot,.appointment-card,.agenda-card{
+  border:1px solid var(--c-border)!important;border-radius:14px!important;
+  background:#fff!important;box-shadow:var(--c-shadow)!important;
+}
+.legado-attendance-status{
+  border-radius:999px!important;font-weight:800!important;
+}
+.legado-slot-actions .btn{min-height:38px!important}
+/* formulário */
+input,select,textarea{
+  border:1px solid #d6e3df!important;border-radius:10px!important;
+  background:#fff!important;color:var(--c-text)!important;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:#6ca59b!important;box-shadow:0 0 0 3px rgba(108,165,155,.12)!important;outline:0!important;
+}
+label{color:#52645f!important;font-weight:700!important}
+/* modal */
+.modal,.ux-modal,.dialog,.modal-content{
+  border-radius:20px!important;box-shadow:var(--c-shadow-lg)!important;
+}
+.modal-backdrop,.ux-modal-backdrop{backdrop-filter:blur(5px)!important}
+/* avatar */
+.avatar{border:2px solid #dcece7!important;background:var(--c-primary-soft)!important;color:var(--c-primary)!important}
+/* barra de atendimento */
+[data-attendance-active="true"],.attendance-active,.legado-attendance-active{
+  border-color:#76a99f!important;background:#f1f9f6!important;
+}
+/* dashboard de operação */
+#dashboardContent .v3-head,
+#dashboardContent .page-heading{background:transparent!important}
+#dashboardContent .v3-panel{margin-top:16px!important}
+#dashboardContent .v3-stats{margin-top:18px!important}
+/* remove visual legado que cria sensação de sistema antigo */
+.legacy-banner,.old-dashboard,.final-old-ui{display:none!important}
+/* Responsivo */
+@media(max-width:1050px){
+  .sidebar{width:220px!important}.main{margin-left:220px!important}
+  .content{padding:22px 20px 36px!important}
+}
+@media(max-width:760px){
+  .sidebar{width:72px!important}.sidebar .brand-text,.sidebar .nav-label,.sidebar .side-bottom .nav-label{display:none!important}
+  .sidebar .brand{justify-content:center!important;padding:16px 8px!important}
+  .sidebar .nav button{justify-content:center!important;padding:11px!important}
+  .main{margin-left:72px!important}.topbar{padding:0 16px!important}.content{padding:18px 14px 30px!important}
+}
+/* exigências do projeto: recados/chat fora da experiência */
+[data-view="recados"],#view-recados,#recadosContent,#recadosBadge,
+[data-chat],.chat-icon,.chat-button,.conversation-icon,.conversation-button,
+[id*="chat" i][class*="float" i]{display:none!important}
+</style>
+
+
+<script id="legado-clinical-redesign-v1-js">
+(function(){
+  'use strict';
+  const $=(s,r=document)=>r.querySelector(s);
+  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+
+  function removeLegacyCommunicationUI(){
+    $$('[data-view="recados"],#view-recados,#recadosContent,#recadosBadge').forEach(e=>e.remove());
+    $$('[data-chat],.chat-icon,.chat-button,.conversation-icon,.conversation-button').forEach(e=>e.remove());
+    $$('button,a').filter(e=>/^\s*(recados|mensagens|conversa|chat)\s*$/i.test(e.textContent||'')).forEach(e=>e.remove());
+  }
+
+  function addDocumentsNav(){
+    const nav=$('#mainNav');
+    if(!nav || nav.querySelector('[data-view="documentos"]')) return;
+    const ref=nav.querySelector('[data-view="perfil"]');
+    const b=document.createElement('button');
+    b.type='button'; b.dataset.view='documentos';
+    b.innerHTML='<i data-lucide="file-text"></i><span class="nav-label">Documentos</span>';
+    b.onclick=()=>window.navigate?.('documentos');
+    if(ref) nav.insertBefore(b,ref); else nav.appendChild(b);
+    window.refreshIcons?.();
+  }
+
+  function addClinicalQuickBar(){
+    const c=$('#dashboardContent');
+    if(!c || c.querySelector('[data-clinical-quickbar]')) return;
+    const bar=document.createElement('div');
+    bar.dataset.clinicalQuickbar='1';
+    bar.style.cssText='display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px;';
+    bar.innerHTML=[
+      '<button class="btn btn-primary btn-sm" type="button" onclick="window.navigate?.(\'agenda\')"><i data-lucide="calendar-plus"></i> Abrir agenda</button>',
+      '<button class="btn btn-outline btn-sm" type="button" onclick="window.navigate?.(\'alunos\')"><i data-lucide="user-plus"></i> Novo aluno</button>',
+      '<button class="btn btn-outline btn-sm" type="button" onclick="window.navigate?.(\'avaliacoes\')"><i data-lucide="clipboard-plus"></i> Nova avaliação</button>',
+      '<button class="btn btn-outline btn-sm" type="button" onclick="window.navigate?.(\'financeiro\')"><i data-lucide="wallet-cards"></i> Financeiro</button>'
+    ].join('');
+    const first=c.firstElementChild;
+    if(first) c.insertBefore(bar,first); else c.appendChild(bar);
+    window.refreshIcons?.();
+  }
+
+  function enhanceActiveAttendance(){
+    const textNodes=$$('button').filter(b=>/encerrar atendimento/i.test(b.textContent||''));
+    textNodes.forEach(b=>{
+      b.classList.add('btn-primary');
+      b.style.minWidth='170px';
+      if(!b.querySelector('i')) b.insertAdjacentHTML('afterbegin','<i data-lucide="square"></i>');
+    });
+    window.refreshIcons?.();
+  }
+
+  function routeCleanup(){
+    removeLegacyCommunicationUI();
+    addDocumentsNav();
+    if(window.state?.currentView==='dashboard') addClinicalQuickBar();
+    enhanceActiveAttendance();
+  }
+
+  const oldNav=window.navigate;
+  if(typeof oldNav==='function' && !oldNav.__clinicalRebuild){
+    const nav=function(view){
+      if(view==='recados') view='dashboard';
+      const r=oldNav.call(this,view);
+      setTimeout(routeCleanup,60);
+      return r;
+    };
+    nav.__clinicalRebuild=true;
+    window.navigate=nav;
+  }
+
+  const oldDash=window.renderDashboard;
+  if(typeof oldDash==='function' && !oldDash.__clinicalRebuild){
+    const fn=async function(){
+      const r=await oldDash.apply(this,arguments);
+      setTimeout(routeCleanup,20);
+      return r;
+    };
+    fn.__clinicalRebuild=true;
+    window.renderDashboard=fn;
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',()=>setTimeout(routeCleanup,120),{once:true});
+  }else{
+    setTimeout(routeCleanup,120);
+  }
+
+  // Preserva o comportamento existente; apenas garante que a comunicação removida
+  // não volte por renderizações posteriores.
+  const observer=new MutationObserver(()=>removeLegacyCommunicationUI());
+  observer.observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
 </html>`);w.document.close();w.focus();setTimeout(()=>w.print(),250);
   }
 
