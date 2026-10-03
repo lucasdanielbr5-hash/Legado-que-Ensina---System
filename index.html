@@ -22761,4 +22761,156 @@ p,.muted,.help-text{font-size:11px!important;line-height:1.45!important}
 })();
 </script>
 
+
+
+<!-- FINAL 54 — RESPONSIVIDADE REAL / LAYOUT FLUIDO -->
+<style id="legado-final54-responsive">
+/* ===== Base de layout: um único sistema de dimensões ===== */
+html,body{width:100%;min-width:0;max-width:100%;height:100%;margin:0;overflow:hidden!important}
+body,.app{box-sizing:border-box!important}
+.app{width:100%!important;max-width:none!important;min-width:0!important;height:100dvh!important;display:flex!important;overflow:hidden!important}
+.sidebar{position:relative!important;left:auto!important;top:auto!important;flex:0 0 250px!important;width:250px!important;height:100dvh!important;min-width:250px!important;box-sizing:border-box!important;overflow-y:auto!important;overflow-x:hidden!important}
+.main{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;margin:0!important;width:auto!important;max-width:none!important;min-width:0!important;height:100dvh!important;flex:1 1 auto!important;display:flex!important;flex-direction:column!important;box-sizing:border-box!important;overflow:hidden!important}
+.topbar{position:relative!important;top:auto!important;left:auto!important;right:auto!important;width:100%!important;max-width:none!important;min-width:0!important;flex:0 0 74px!important;height:74px!important;box-sizing:border-box!important;overflow:hidden!important}
+.content{position:relative!important;width:100%!important;max-width:none!important;min-width:0!important;flex:1 1 auto!important;height:auto!important;max-height:none!important;margin:0!important;padding:26px clamp(14px,2.2vw,30px) 40px!important;box-sizing:border-box!important;overflow:auto!important;overflow-x:hidden!important;scrollbar-gutter:stable!important}
+.content>*{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+.view,.v3-page,#alunosContent,#listaEsperaContent,#dashboardContent,#agendaContent,#avaliacoesContent,#financeiroContent,#recadosContent,#perfilContent{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+
+/* ===== Cabeçalho ===== */
+.topbar #pageTitle,.topbar .page-title{min-width:0!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+.topbar .user-mini{min-width:0!important;flex:0 1 auto!important;overflow:hidden!important}
+.topbar .user-mini .nav-label{min-width:0!important;max-width:180px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+
+/* ===== Padrão único de cards ===== */
+.v3-student-grid,.v3-wait-grid{
+  width:100%!important;max-width:100%!important;min-width:0!important;
+  display:grid!important;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))!important;
+  gap:12px!important;align-items:stretch!important;
+}
+.v3-student-card,.v3-wait-card{
+  width:100%!important;min-width:0!important;height:auto!important;min-height:178px!important;max-height:none!important;
+  box-sizing:border-box!important;overflow:visible!important;padding:13px!important;
+  display:flex!important;flex-direction:column!important;align-self:stretch!important;
+}
+.v3-student-card .v3-student-top,.v3-wait-card .v3-student-top{min-width:0!important}
+.v3-student-card .v3-student-ident,.v3-wait-card .v3-student-ident{min-width:0!important;flex:1 1 auto!important}
+.v3-student-card .v3-student-foot,.v3-wait-card .v3-form-actions{margin-top:auto!important;min-width:0!important;flex-wrap:wrap!important;align-items:center!important}
+.v3-student-card .v3-student-foot>div{min-width:0!important;max-width:100%!important}
+.v3-student-card .v3-student-foot .btn,.v3-wait-card .v3-form-actions .btn{flex:0 1 auto!important;min-width:0!important;max-width:100%!important}
+.v3-wait-card .v3-wait-meta{min-width:0!important;overflow:visible!important}
+
+/* ===== Painéis e ferramentas não podem gerar largura extra ===== */
+.v3-panel,.card,.report-panel,.v3-assessment-card,.v3-history-item,.metric-card,.stat-card,.v3-stat{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+.v3-panel-head,.v3-head,.page-heading,.panel-head{min-width:0!important;max-width:100%!important}
+.v3-head>*,.v3-panel-head>*,.page-heading>*,.panel-head>*{min-width:0!important;max-width:100%!important}
+.v3-toolbar{min-width:0!important;max-width:100%!important;display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important}
+.v3-search{min-width:0!important;flex:1 1 300px!important;max-width:100%!important}
+.v3-search input{width:100%!important;max-width:100%!important}
+
+/* ===== Grades gerais ===== */
+.v3-stats,.stats,.metric-grid,.dashboard-grid,.rz-kpis{width:100%!important;max-width:100%!important;min-width:0!important;align-items:stretch!important}
+.v3-stats>*,.stats>*,.metric-grid>*,.dashboard-grid>*,.rz-kpis>*{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+
+/* ===== Desktop / notebook ===== */
+@media (max-width:1199px){
+  .sidebar{flex-basis:220px!important;width:220px!important;min-width:220px!important}
+  .content{padding-left:20px!important;padding-right:20px!important}
+  .v3-student-grid,.v3-wait-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .v3-student-card,.v3-wait-card{min-height:178px!important}
+  .v3-student-card .v3-student-foot,.v3-wait-card .v3-form-actions{gap:5px!important}
+}
+
+/* ===== Tablet ===== */
+@media (max-width:899px){
+  .sidebar{flex-basis:76px!important;width:76px!important;min-width:76px!important;padding-left:7px!important;padding-right:7px!important}
+  .sidebar .brand{justify-content:center!important;padding-left:5px!important;padding-right:5px!important}
+  .sidebar .brand-text{display:none!important}
+  .sidebar .nav button{justify-content:center!important;padding-left:8px!important;padding-right:8px!important}
+  .sidebar .nav-label,.sidebar .side-bottom .nav-label{display:none!important}
+  .sidebar .nav button .nav-badge{position:absolute!important;right:4px!important;top:5px!important}
+  .topbar{padding-left:18px!important;padding-right:18px!important}
+  .content{padding:20px 16px 34px!important}
+  .v3-head,.page-heading,.panel-head{gap:12px!important;align-items:flex-start!important}
+  .v3-student-grid,.v3-wait-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .v3-toolbar{align-items:stretch!important}
+}
+
+/* ===== Celular ===== */
+@media (max-width:600px){
+  .sidebar{flex-basis:68px!important;width:68px!important;min-width:68px!important;padding-left:5px!important;padding-right:5px!important}
+  .sidebar .brand{height:72px!important;min-height:72px!important;padding:0 3px!important}
+  .sidebar .brand-mark{width:42px!important;height:42px!important;border-radius:12px!important}
+  .sidebar .brand-mark img{width:35px!important;height:35px!important}
+  .sidebar .nav{padding-left:4px!important;padding-right:4px!important}
+  .sidebar .nav button{min-height:43px!important;border-radius:10px!important}
+  .sidebar .nav button i{width:18px!important;height:18px!important}
+  .side-bottom{padding-left:2px!important;padding-right:2px!important}
+  .side-bottom .btn{padding-left:0!important;padding-right:0!important}
+  .topbar{height:64px!important;flex-basis:64px!important;padding:0 12px!important}
+  .topbar .page-title,.topbar #pageTitle{font-size:16px!important;min-width:0!important}
+  .topbar .user-mini{margin-left:auto!important}
+  .topbar .user-mini .nav-label{display:none!important}
+  .content{padding:14px 10px 26px!important}
+  .v3-student-grid,.v3-wait-grid{grid-template-columns:1fr!important;gap:10px!important}
+  .v3-student-card,.v3-wait-card{min-height:170px!important;padding:12px!important}
+  .v3-panel,.card,.report-panel{padding:13px!important}
+  .v3-head h1,.page-heading h1{font-size:23px!important}
+  .v3-panel-head h2{font-size:15px!important}
+  .v3-toolbar{flex-direction:column!important}
+  .v3-search{width:100%!important;flex:1 1 auto!important}
+  .v3-view-note{width:100%!important}
+  .topbar #final27TopTools{max-width:52vw!important;overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important}
+}
+
+/* ===== Celular muito estreito ===== */
+@media (max-width:380px){
+  .sidebar{flex-basis:60px!important;width:60px!important;min-width:60px!important}
+  .content{padding-left:8px!important;padding-right:8px!important}
+  .topbar{padding-left:9px!important;padding-right:9px!important}
+  .v3-student-card,.v3-wait-card{min-height:165px!important}
+  .btn{font-size:11px!important}
+}
+
+/* ===== Acessibilidade: toque confortável e sem overflow horizontal ===== */
+button,input,select,textarea{max-width:100%!important;box-sizing:border-box!important}
+img,svg,video,canvas{max-width:100%!important}
+@media (pointer:coarse){
+  .sidebar .nav button{min-height:46px!important}
+  .btn{min-height:40px!important}
+}
+</style>
+<script id="legado-final54-responsive-runtime">
+(function(){
+  'use strict';
+  const d=document;
+  function syncNavTitles(){
+    d.querySelectorAll('.sidebar .nav button').forEach(btn=>{
+      const label=btn.querySelector('.nav-label')?.textContent?.trim();
+      if(label && !btn.getAttribute('title')) btn.setAttribute('title',label);
+      if(label && !btn.getAttribute('aria-label')) btn.setAttribute('aria-label',label);
+    });
+  }
+  function syncLayout(){
+    const main=d.querySelector('.main');
+    if(main){
+      main.style.marginLeft='0';
+      main.style.width='auto';
+      main.style.minWidth='0';
+      main.style.maxWidth='none';
+      main.style.flex='1 1 auto';
+    }
+    d.querySelectorAll('.v3-student-card,.v3-wait-card').forEach(card=>{
+      card.style.height='auto';
+      card.style.minHeight='';
+      card.style.maxHeight='none';
+      card.style.overflow='visible';
+      card.style.boxSizing='border-box';
+    });
+    syncNavTitles();
+  }
+  function boot(){syncLayout();setTimeout(syncLayout,250);setTimeout(syncLayout,900)}
+  if(d.readyState==='loading') d.addEventListener('DOMContentLoaded',boot,{once:true}); else boot();
+})();
+</script>
+
 </html>
