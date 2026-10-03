@@ -21870,4 +21870,284 @@ body.final27-dark .final44-actions{background:rgba(17,26,23,.97)!important}
   window.addEventListener('resize',()=>{if(!window.matchMedia('(max-width:760px)').matches)body.classList.remove('mobile-menu-open')},{passive:true});
 })();
 </script>
+
+
+<!-- FINAL45: ajustes solicitados pelo usuário -->
+<style id="legado-final45-ui-fixes">
+  /* Identidade do sistema: nunca esconder o nome ao lado da logo em desktop/notebook */
+  .sidebar .brand{display:flex!important;align-items:center!important;gap:10px!important;overflow:hidden!important}
+  .sidebar .brand-mark{flex:0 0 40px!important;display:grid!important;place-items:center!important}
+  .sidebar .brand-mark img{width:100%!important;height:100%!important;object-fit:contain!important;display:block!important}
+  .sidebar .brand-text{display:flex!important;min-width:0!important;flex-direction:column!important;justify-content:center!important;overflow:hidden!important}
+  .sidebar .brand-text .main{display:block!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;color:#f5faf7!important;font-size:13px!important;font-weight:850!important;line-height:1.15!important}
+  .sidebar .brand-text .sub{display:block!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;color:rgba(245,250,247,.64)!important;font-size:9px!important;line-height:1.2!important;margin-top:3px!important}
+  /* Cores consistentes */
+  .btn-primary{background:#2f735a!important;color:#fff!important;border-color:#2f735a!important}
+  .btn-primary:hover{background:#255b49!important;border-color:#255b49!important}
+  .btn-danger{background:#b45155!important;color:#fff!important;border-color:#b45155!important}
+  .btn-danger:hover{background:#943f43!important;border-color:#943f43!important}
+  .btn-danger:disabled,.btn-danger[disabled]{background:#c8ced0!important;color:#fff!important;border-color:#c8ced0!important;opacity:.85!important;cursor:not-allowed!important}
+  .l12-action,.final43-fin-actions .btn,.final45-fin-actions .btn{min-height:34px!important;border-radius:9px!important;font-weight:800!important}
+  .l12-action.danger,.final45-fin-actions .final45-delete{background:#fff1f1!important;color:#a64f52!important;border:1px solid #e7caca!important}
+  .l12-action.danger:hover,.final45-fin-actions .final45-delete:hover{background:#fae5e5!important}
+  /* Perfil: deixa explícito que a foto é por arquivo, não URL */
+  .final43-image-field{display:grid!important;grid-template-columns:minmax(0,1fr) 120px!important;gap:14px!important;align-items:start!important;padding:14px!important;border:1px solid #dbe4df!important;border-radius:13px!important;background:#f8fbf9!important}
+  .final43-image-field label{display:flex!important;flex-direction:column!important;gap:7px!important;font-weight:800!important}
+  .final43-image-field input[type=file]{display:block!important;width:100%!important;padding:10px!important;border:1px dashed #b9cbc2!important;background:#fff!important;border-radius:10px!important}
+  .final43-image-field small{display:block!important;margin-top:7px!important;color:#718078!important;line-height:1.45!important}
+  .final43-image-preview{width:120px!important;height:120px!important;border-radius:16px!important;border:1px solid #dbe4df!important;background:#edf4f0!important;display:grid!important;place-items:center!important;overflow:hidden!important;color:#6c7d75!important;font-size:11px!important;text-align:center!important}
+  .final43-image-preview img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}
+  @media(max-width:600px){.final43-image-field{grid-template-columns:1fr!important}.final43-image-preview{width:96px!important;height:96px!important}}
+
+  /* Financeiro */
+  .final45-fin-filter{display:flex!important;gap:8px!important;flex-wrap:wrap!important;align-items:center!important}
+  .final45-fin-filter input,.final45-fin-filter select{height:38px!important;border:1px solid #dbe4df!important;border-radius:10px!important;background:#fff!important;padding:0 11px!important;color:#24352e!important;min-width:145px!important;outline:none!important}
+  .final45-fin-filter input:focus,.final45-fin-filter select:focus{border-color:#8db8a5!important;box-shadow:0 0 0 3px rgba(47,115,90,.10)!important}
+  .final45-fin-table{width:100%!important;overflow-x:auto!important}
+  .final45-fin-row{display:grid!important;grid-template-columns:100px minmax(180px,1.4fr) 110px 120px minmax(190px,1fr)!important;gap:12px!important;align-items:center!important;padding:12px 14px!important;border-top:1px solid #e2e9e5!important;min-width:760px!important}
+  .final45-fin-row.header{border-top:0!important;background:#f4f8f6!important;border-radius:10px!important;color:#687870!important;font-size:10px!important;font-weight:850!important;text-transform:uppercase!important;letter-spacing:.06em!important}
+  .final45-fin-row .desc{display:flex!important;flex-direction:column!important;min-width:0!important}
+  .final45-fin-row .desc strong{overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+  .final45-fin-row .desc small{color:#7a8983!important;margin-top:2px!important}
+  .final45-fin-row.expense{background:#fffafa!important}
+  .final45-type{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:max-content!important;padding:5px 8px!important;border-radius:999px!important;font-size:10px!important;font-weight:850!important}
+  .final45-type.income{background:#e8f2ed!important;color:#255b49!important}
+  .final45-type.expense{background:#faecec!important;color:#a64f52!important}
+  .final45-status{display:inline-flex!important;width:max-content!important;padding:5px 8px!important;border-radius:999px!important;background:#f2f5f3!important;color:#5f7068!important;font-size:10px!important;font-weight:800!important}
+  .final45-fin-actions{display:flex!important;gap:6px!important;flex-wrap:wrap!important;align-items:center!important}
+  .final45-fin-actions .btn{padding:7px 9px!important;font-size:10px!important}
+  .final45-empty{padding:28px!important;text-align:center!important;color:#7a8983!important}
+  @media(max-width:900px){
+    .final45-fin-filter{width:100%!important}.final45-fin-filter input,.final45-fin-filter select{flex:1 1 160px!important;min-width:0!important}
+    .final45-fin-row{grid-template-columns:90px minmax(150px,1.2fr) 90px 105px minmax(175px,1fr)!important}
+  }
+
+  /* Cenário psicopedagógico */
+  .final45-context-actions{display:flex!important;gap:8px!important;flex-wrap:wrap!important}
+  .final45-context-editor{margin-top:14px!important}
+</style>
+<script id="legado-final45-fixes-js">
+(function(){
+  'use strict';
+  const W=window,D=document;
+  const $=(s,r=D)=>r.querySelector(s);
+  const $$=(s,r=D)=>Array.from(r.querySelectorAll(s));
+  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v==null?'':String(v)):String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+  const uid=()=>W.state?.user?.id||W.state?.session?.user?.id||null;
+  const db=()=>W.supabaseClient||null;
+  const today45=()=>typeof W.todayInputDate==='function'?W.todayInputDate():new Date().toISOString().slice(0,10);
+  const money45=v=>{try{return new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(v||0)||0)}catch(_){return 'R$ '+Number(v||0).toFixed(2).replace('.',',')}};
+  const dateOnly45=v=>String(v||'').slice(0,10);
+  const dateBR45=v=>{const d=new Date(dateOnly45(v)+'T12:00:00');return Number.isNaN(d.getTime())?'—':d.toLocaleDateString('pt-BR')};
+  const normalize45=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+  const notify45=(m,ok=true)=>(ok?W.showSuccess:W.showError)?.(m);
+  const refresh45=()=>W.refreshIcons?.();
+
+  /* Marca do sistema: corrige camadas antigas que escondiam o nome. */
+  function fixBrand45(){
+    $$('.sidebar .brand').forEach(b=>{
+      let text=b.querySelector('.brand-text');
+      if(!text){text=D.createElement('div');text.className='brand-text';b.appendChild(text)}
+      let main=text.querySelector('.main');
+      if(!main){main=D.createElement('span');main.className='main';text.prepend(main)}
+      let sub=text.querySelector('.sub');
+      if(!sub){sub=D.createElement('span');sub.className='sub';text.appendChild(sub)}
+      main.textContent='Legado Que Ensina';sub.textContent='Gestão psicopedagógica';
+    });
+  }
+
+  /* Cenário psicopedagógico: leitura + edição real. */
+  let context45Editing=false;
+  function renderContext45(body,data,s){
+    const x=data.context||{};
+    const field=(name,label,rows)=>`<label class="final45-context-field"><span>${esc(label)}</span><textarea name="${esc(name)}" rows="${rows||5}">${esc(x[name]||'')}</textarea></label>`;
+    if(!context45Editing){
+      body.innerHTML=`<section class="v3-panel"><div class="v3-panel-head"><div><h2>Cenário psicopedagógico</h2><p>Contexto, hipóteses e plano de acompanhamento.</p></div><div class="final45-context-actions"><button type="button" class="btn btn-primary" id="final45EditContext"><i data-lucide="pencil"></i>Editar cenário</button></div></div><div class="v3-detail-grid"><div><span>Queixa principal</span><strong>${esc(x.main_complaint||'—')}</strong></div><div><span>Contexto familiar</span><strong>${esc(x.family_context||'—')}</strong></div><div><span>Contexto escolar</span><strong>${esc(x.school_context||'—')}</strong></div><div><span>Desenvolvimento</span><strong>${esc(x.development||'—')}</strong></div><div><span>Rotina / hábitos</span><strong>${esc(x.routine||'—')}</strong></div><div><span>Focos de investigação</span><strong>${esc(x.hypotheses||'—')}</strong></div></div><div class="v3-note-block"><span>Plano psicopedagógico</span><p>${esc(x.plan||'—')}</p></div></section>`;
+      $('#final45EditContext',body)?.addEventListener('click',()=>{context45Editing=true;renderContext45(body,data,s);});
+    }else{
+      body.innerHTML=`<section class="v3-panel final45-context-editor"><div class="v3-panel-head"><div><h2>Editar cenário psicopedagógico</h2><p>Atualize o contexto do aluno e salve as alterações.</p></div></div><form id="final45ContextForm" class="v3-form"><div class="v3-form-grid">${field('main_complaint','Queixa principal',5)}${field('family_context','Contexto familiar',5)}${field('school_context','Contexto escolar',5)}${field('development','Desenvolvimento',5)}${field('routine','Rotina / hábitos',5)}${field('hypotheses','Hipóteses / focos de investigação',5)}${field('plan','Plano psicopedagógico',7)}</div><div class="v3-form-actions"><button type="button" class="btn btn-outline" id="final45CancelContext">Cancelar</button><button type="submit" class="btn btn-primary"><i data-lucide="save"></i>Salvar cenário</button></div></form></section>`;
+      $('#final45CancelContext',body)?.addEventListener('click',()=>{context45Editing=false;renderContext45(body,data,s)});
+      $('#final45ContextForm',body)?.addEventListener('submit',async ev=>{
+        ev.preventDefault();const btn=ev.currentTarget.querySelector('[type=submit]');
+        try{btn.disabled=true;const fd=new FormData(ev.currentTarget);const payload={user_id:uid(),student_id:s.id,main_complaint:String(fd.get('main_complaint')||'').trim()||null,family_context:String(fd.get('family_context')||'').trim()||null,school_context:String(fd.get('school_context')||'').trim()||null,development:String(fd.get('development')||'').trim()||null,routine:String(fd.get('routine')||'').trim()||null,hypotheses:String(fd.get('hypotheses')||'').trim()||null,plan:String(fd.get('plan')||'').trim()||null};const c=db();if(!c)throw new Error('Sessão não encontrada.');const r=x.id?await c.from('student_context').update(payload).eq('id',x.id).eq('user_id',uid()):await c.from('student_context').insert(payload);if(r.error)throw r.error;notify45('Cenário psicopedagógico atualizado.');context45Editing=false;await renderStudentBody44();}
+        catch(err){notify45('Não foi possível salvar o cenário: '+(err.message||err),false)}finally{btn.disabled=false}
+      });
+    }
+    refresh45();
+  }
+
+  /* Substitui apenas a seção Contexto do renderizador final, preservando as demais. */
+  const oldRenderStudentBody44=W.renderStudentBody44;
+  if(typeof oldRenderStudentBody44==='function'&&!oldRenderStudentBody44.__final45Wrapped){
+    W.renderStudentBody44=async function(){
+      const r=await oldRenderStudentBody44.apply(this,arguments);
+      if(String(window.studentSub44||'')==='context'){
+        const c=$('#studentProfileContent'),body=$('#final44StudentBody'),id=W.state?.currentStudentId;
+        if(c&&body&&id){try{const data=await (typeof W.loadStudentData44==='function'?W.loadStudentData44(id):null);const s=data?.student;if(data&&s)renderContext45(body,data,s);}catch(_){}}
+      }
+      return r;
+    };
+    W.renderStudentBody44.__final45Wrapped=true;
+  }
+
+  /* Perfil do professor: mantém exclusivamente upload de arquivo. */
+  function ensureProfileUpload45(){
+    const form=$('#lqProfForm43');if(!form)return;
+    const url=form.querySelector('input[name="photo_url"]');if(url)url.type='hidden';
+    const label=url?.closest('label');if(label)label.style.display='none';
+    const file=form.querySelector('input[name="photo_file"]');if(file){file.type='file';file.accept='image/*';}
+  }
+  const oldRenderProfile45=W.renderProfile;
+  if(typeof oldRenderProfile45==='function'&&!oldRenderProfile45.__final45Wrapped){
+    W.renderProfile=async function(){const r=await oldRenderProfile45.apply(this,arguments);setTimeout(ensureProfileUpload45,0);return r};
+    W.renderProfile.__final45Wrapped=true;
+  }
+
+  /* Financeiro: filtros por tipo/status + editar/excluir funcionais. */
+  let fin45Entries=[];
+  async function loadFin45(){
+    if(typeof W.loadFinance43==='function')return await W.loadFinance43();
+    const c=db(),me=uid();if(!c||!me)throw new Error('Sessão não encontrada.');
+    const [a,b]=await Promise.all([c.from('financial_entries').select('*').eq('user_id',me),c.from('payments').select('*').eq('user_id',me)]);
+    if(a.error&&b.error)throw a.error;
+    const modern=a.error?[]:(a.data||[]),pays=b.error?[]:(b.data||[]),ids=new Set(modern.map(e=>String(e.legacy_payment_id||'')));
+    const legacy=pays.filter(p=>!ids.has(String(p.id))).map(p=>({id:'legacy-'+p.id,legacy:true,source_payment_id:p.id,kind:'income',amount:Number(p.amount||p.value||0),status:String(p.status||'paid').toLowerCase(),competence_date:dateOnly45(p.payment_date||p.date||today45()),description:p.description||p.student_name||'Recebimento',student_name:p.student_name||null,payment_method:p.payment_method||p.method||''}));
+    return modern.map(e=>({...e,kind:e.kind||e.type||'income',competence_date:e.competence_date||e.entry_date||e.payment_date||today45()})).concat(legacy);
+  }
+  function closeFin45(){D.getElementById('final45FinanceModal')?.remove();D.body.classList.remove('legado-v4-modal-open');}
+  async function editFin45(id){
+    try{
+      const e=fin45Entries.find(x=>String(x.id)===String(id))||(await loadFin45()).find(x=>String(x.id)===String(id));if(!e)throw new Error('Lançamento não encontrado.');
+      const root=D.createElement('div');root.id='final45FinanceModal';root.className='legado-v4-modal';
+      root.innerHTML=`<div class="legado-v4-backdrop" data-close></div><section class="legado-v4-dialog legado-payment-dialog"><div class="v4-modal-header"><div><div class="v3-kicker">EDITAR LANÇAMENTO</div><h2>${esc(e.kind==='expense'?'Despesa':'Receita / conta')}</h2><p>${esc(e.description||e.student_name||'Lançamento')} · ${money45(e.amount)}</p></div><button type="button" class="icon-button" data-close><i data-lucide="x"></i></button></div><form id="final45FinanceForm" class="v4-form"><div class="v4-grid"><label><span>Tipo *</span><select name="kind"><option value="income" ${e.kind!=='expense'?'selected':''}>Conta / receita</option><option value="expense" ${e.kind==='expense'?'selected':''}>Despesa</option></select></label><label><span>Valor *</span><input name="amount" inputmode="decimal" value="${esc(Number(e.amount||0).toFixed(2).replace('.',','))}" required></label><label><span>Data *</span><input type="date" name="date" value="${esc(e.competence_date||e.due_date||today45())}" required></label><label><span>Status</span><select name="status"><option value="pending" ${e.status==='pending'?'selected':''}>Pendente</option><option value="paid" ${e.status==='paid'?'selected':''}>Pago</option><option value="overdue" ${e.status==='overdue'?'selected':''}>Em atraso</option><option value="cancelled" ${['cancelled','canceled'].includes(String(e.status||''))?'selected':''}>Cancelado</option></select></label><label><span>Forma de pagamento</span><select name="payment_method"><option value="" ${!e.payment_method?'selected':''}>Não informado</option><option value="pix" ${e.payment_method==='pix'?'selected':''}>Pix</option><option value="cash" ${e.payment_method==='cash'?'selected':''}>Dinheiro</option><option value="debit" ${e.payment_method==='debit'?'selected':''}>Débito</option><option value="credit_spot" ${e.payment_method==='credit_spot'?'selected':''}>Crédito à vista</option><option value="credit_installment" ${e.payment_method==='credit_installment'?'selected':''}>Crédito parcelado</option><option value="transfer" ${e.payment_method==='transfer'?'selected':''}>Transferência</option><option value="boleto" ${e.payment_method==='boleto'?'selected':''}>Boleto</option></select></label><label class="full"><span>Descrição</span><input name="description" value="${esc(e.description||'')}"></label></div><div class="v4-actions"><button type="button" class="btn btn-outline" data-close>Cancelar</button><button type="submit" class="btn btn-primary"><i data-lucide="save"></i>Salvar alterações</button></div></form></section>`;
+      D.body.appendChild(root);D.body.classList.add('legado-v4-modal-open');root.addEventListener('click',ev=>{if(ev.target.closest('[data-close]'))closeFin45()});refresh45();
+      $('#final45FinanceForm').onsubmit=async ev=>{ev.preventDefault();const btn=ev.currentTarget.querySelector('[type=submit]');try{btn.disabled=true;const fd=new FormData(ev.currentTarget);const raw=String(fd.get('amount')||'').replace(/\./g,'').replace(',','.');const amount=Number(raw);if(!Number.isFinite(amount)||amount<=0)throw new Error('Informe um valor maior que zero.');const payload={kind:String(fd.get('kind')||'income'),amount,competence_date:String(fd.get('date')),due_date:String(fd.get('date')),status:String(fd.get('status')||'pending'),payment_method:String(fd.get('payment_method')||'').trim()||null,description:String(fd.get('description')||'').trim()||null};let r;if(e.legacy){const original=String(e.id).replace(/^legacy-/,'');r=await db().from('payments').update({amount,payment_date:payload.competence_date,status:payload.status,payment_method:payload.payment_method,description:payload.description,paid_at:payload.status==='paid'?new Date().toISOString():null}).eq('id',original).eq('user_id',uid());}else{r=await db().from('financial_entries').update(payload).eq('id',e.id).eq('user_id',uid());}if(r.error)throw r.error;closeFin45();notify45('Lançamento atualizado.');await renderFinance45();}catch(err){notify45('Não foi possível editar o lançamento: '+(err.message||err),false)}finally{btn.disabled=false}};
+    }catch(err){notify45(err.message||'Não foi possível abrir a edição.',false)}
+  }
+  async function deleteFin45(id){
+    try{const entries=fin45Entries.length?fin45Entries:await loadFin45(),e=entries.find(x=>String(x.id)===String(id));if(!e)throw new Error('Lançamento não encontrado.');if(!confirm('Excluir este lançamento? Esta ação não poderá ser desfeita.'))return;let r;if(e.legacy){r=await db().from('payments').delete().eq('id',e.source_payment_id||String(e.id).replace(/^legacy-/,'')).eq('user_id',uid());}else{r=await db().from('financial_entries').delete().eq('id',e.id).eq('user_id',uid());}if(r.error)throw r.error;notify45('Lançamento excluído.');await renderFinance45();}catch(err){notify45('Não foi possível excluir o lançamento: '+(err.message||err),false)}
+  }
+  function renderFinanceRows45(body,entries){
+    const q=normalize45($('#final45FinSearch',body)?.value||'');const kind=$('#final45FinKind',body)?.value||'all';const status=$('#final45FinStatus',body)?.value||'all';
+    const rows=entries.slice().sort((a,b)=>String(b.competence_date||b.payment_date).localeCompare(String(a.competence_date||a.payment_date))).filter(e=>{const text=normalize45([e.student_name,e.description,e.payment_method].join(' '));const k=e.kind==='expense'?'expense':'income';return(!q||text.includes(q))&&(kind==='all'||k===kind)&&(status==='all'||String(e.status||'').toLowerCase()===status)}).slice(0,500);
+    const host=$('#final45FinanceRows',body);if(!host)return;host.innerHTML=rows.length?rows.map(e=>{const k=e.kind==='expense'?'expense':'income',paid=String(e.status||'').toLowerCase()==='paid';return `<div class="final45-fin-row ${k}"><span>${esc(dateBR45(e.competence_date||e.payment_date))}</span><span class="desc"><strong>${esc(e.student_name||e.description||'Lançamento')}</strong>${e.student_name&&e.description?`<small>${esc(e.description)}</small>`:''}${Number(e.installment_total||1)>1?`<small>Parcela ${esc(e.installment_number||1)}/${esc(e.installment_total)}</small>`:''}</span><span><span class="final45-type ${k}">${k==='expense'?'Despesa':'Conta / receita'}</span></span><span><strong>${esc(money45(e.amount))}</strong><br><span class="final45-status">${esc(String(e.status||'').replace('paid','Pago').replace('pending','Pendente').replace('overdue','Em atraso').replace('cancelled','Cancelado'))}</span></span><div class="final45-fin-actions"><button type="button" class="btn btn-outline" data-fin-edit45="${esc(e.id)}"><i data-lucide="pencil"></i>Editar</button><button type="button" class="btn final45-delete" data-fin-delete45="${esc(e.id)}"><i data-lucide="trash-2"></i>Excluir</button>${k==='income'&&!paid&&!e.legacy?`<button type="button" class="btn btn-primary" data-fin-paid45="${esc(e.id)}"><i data-lucide="check"></i>Marcar pago</button>`:''}</div></div>`}).join(''):'<div class="final45-empty">Nenhum lançamento corresponde aos filtros.</div>';
+    $$('[data-fin-edit45]',body).forEach(b=>b.onclick=()=>editFin45(b.dataset.finEdit45));
+    $$('[data-fin-delete45]',body).forEach(b=>b.onclick=()=>deleteFin45(b.dataset.finDelete45));
+    $$('[data-fin-paid45]',body).forEach(b=>b.onclick=async()=>{try{b.disabled=true;const r=await db().from('financial_entries').update({status:'paid',paid_at:new Date().toISOString()}).eq('id',b.dataset.finPaid45).eq('user_id',uid());if(r.error)throw r.error;notify45('Pagamento registrado.');await renderFinance45()}catch(e){notify45(e.message||'Não foi possível registrar o pagamento.',false)}finally{b.disabled=false}});
+    refresh45();
+  }
+  async function renderFinance45(){
+    const c=$('#financeiroContent');if(!c)return;c.innerHTML='<div class="v3-loading"><i data-lucide="loader-circle"></i><span>Carregando financeiro...</span></div>';refresh45();
+    try{
+      fin45Entries=await loadFin45();const now=new Date(),key=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0'),sum=typeof W.financeSummary43==='function'?W.financeSummary43(fin45Entries,key):{received:0,pending:0,spent:0,result:0};
+      const months=Array.from({length:6},(_,i)=>{const d=new Date(now.getFullYear(),now.getMonth()-5+i,1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')});
+      const page=D.createElement('div');page.className='v3-page';page.innerHTML=`<div class="v3-head"><div><div class="v3-kicker">GESTÃO FINANCEIRA</div><h1>Contas e pagamentos</h1><p>Controle receitas, despesas, contas, pagamentos e lançamentos com edição e exclusão.</p></div><div class="v3-head-actions"><button class="btn btn-outline" id="final45Pdf"><i data-lucide="file-down"></i>Salvar em PDF</button><button class="btn btn-primary" id="final45New"><i data-lucide="plus"></i>Novo lançamento</button></div></div><div class="final-clean-subnav"><button type="button" class="active" id="final45TabVisao"><i data-lucide="layout-dashboard"></i>Visão geral</button><button type="button" id="final45TabContas"><i data-lucide="receipt-text"></i>Contas e pagamentos</button></div><div id="final45FinanceBody"></div><div class="v3-panel v3-inline-editor" id="v3FinanceEditor" hidden></div></div>`;c.innerHTML='';c.appendChild(page);
+      const body=$('#final45FinanceBody',page);
+      const renderOverview=()=>{const series=months.map(k=>({label:typeof W.monthLabel43==='function'?W.monthLabel43(k):k.slice(5),value:fin45Entries.filter(e=>String(e.competence_date||e.payment_date).slice(0,7)===k&&e.kind!=='expense'&&String(e.status||'').toLowerCase()==='paid').reduce((s,e)=>s+Number(e.amount||0),0)}));body.innerHTML=`<div class="v3-stats">${W.statCard?W.statCard('arrow-down-left','Recebido',money45(sum.received),'Pagamentos confirmados'):''}${W.statCard?W.statCard('clock-3','A receber',money45(sum.pending),'Pendências'):''}${W.statCard?W.statCard('arrow-up-right','Despesas pagas',money45(sum.spent),'Saídas confirmadas'):''}${W.statCard?W.statCard('scale','Resultado',money45(sum.result),'Saldo do mês',sum.result>=0?'good':'bad'):''}</div><div class="v3-two-col"><section class="v3-panel"><div class="v3-panel-head"><div><h2>Receita dos últimos meses</h2><p>Pagamentos confirmados.</p></div></div><div class="v3-chart" id="final45Chart"></div></section><section class="v3-panel"><div class="v3-panel-head"><div><h2>Resumo do mês</h2><p>${esc(now.toLocaleDateString('pt-BR',{month:'long',year:'numeric'}))}</p></div></div><div class="v3-finance-summary"><div><span>Recebido</span><strong>${money45(sum.received)}</strong></div><div><span>A receber</span><strong>${money45(sum.pending)}</strong></div><div><span>Despesas pagas</span><strong>${money45(sum.spent)}</strong></div></div></section></div>`;const ch=$('#final45Chart',body);if(ch&&W.svgFinanceChart)ch.innerHTML=W.svgFinanceChart(series.map(x=>({label:x.label,income:x.value,expense:0})));refresh45();};
+      const renderAccounts=()=>{body.innerHTML=`<section class="v3-panel"><div class="v3-panel-head"><div><h2>Contas e pagamentos</h2><p>Agora é possível separar <b>contas / receitas</b> de <b>despesas</b>, além de editar e excluir cada lançamento.</p></div><div class="final45-fin-filter"><input id="final45FinSearch" placeholder="Buscar aluno ou descrição..." aria-label="Buscar lançamento"><select id="final45FinKind"><option value="all">Todos os tipos</option><option value="income">Contas / receitas</option><option value="expense">Despesas</option></select><select id="final45FinStatus"><option value="all">Todos os status</option><option value="pending">Pendentes</option><option value="paid">Pagos</option><option value="overdue">Em atraso</option><option value="cancelled">Cancelados</option></select></div></div><div class="final45-fin-table"><div class="final45-fin-row header"><span>Data</span><span>Descrição / aluno</span><span>Tipo</span><span>Valor / status</span><span>Ações</span></div><div id="final45FinanceRows"></div></div></section>`;const draw=()=>renderFinanceRows45(body,fin45Entries);$('#final45FinSearch',body)?.addEventListener('input',draw);$('#final45FinKind',body)?.addEventListener('change',draw);$('#final45FinStatus',body)?.addEventListener('change',draw);draw();};
+      $('#final45TabVisao').onclick=()=>{finSub43='visao';$('#final45TabVisao').classList.add('active');$('#final45TabContas').classList.remove('active');renderOverview()};
+      $('#final45TabContas').onclick=()=>{finSub43='contas';$('#final45TabContas').classList.add('active');$('#final45TabVisao').classList.remove('active');renderAccounts()};
+      $('#final45New').onclick=async()=>{const box=$('#v3FinanceEditor',page);if(box){box.hidden=false;await W.v3OpenFinanceEditor?.()}};
+      $('#final45Pdf').onclick=()=>W.lqSaveFinancePdf43?.();
+      if(finSub43==='contas'){$('#final45TabContas').click()}else renderOverview();refresh45();
+    }catch(err){c.innerHTML=`<div class="v3-panel"><strong>Não foi possível carregar o Financeiro.</strong><p>${esc(err.message||err)}</p><button type="button" class="btn btn-primary" onclick="window.renderFinance?.()">Tentar novamente</button></div>`;refresh45();}
+  }
+  W.renderFinance=renderFinance45;
+
+  /* Fila de espera: identidade correta da página e nome da marca. */
+  function fixWaitlistIdentity45(){
+    const c=$('#waitlistContent');if(!c)return;
+    c.querySelectorAll('.v3-kicker,.page-heading .eyebrow').forEach(el=>{if(/gest[aã]o\s+psicopedag[oó]gica/i.test(el.textContent||''))el.textContent='LISTA DE ESPERA'});
+  }
+  const oldWait45=W.renderWaitlist;
+  if(typeof oldWait45==='function'&&!oldWait45.__final45Wrapped){W.renderWaitlist=async function(){const r=await oldWait45.apply(this,arguments);setTimeout(fixWaitlistIdentity45,0);fixBrand45();return r};W.renderWaitlist.__final45Wrapped=true;}
+
+  function boot45(){fixBrand45();setTimeout(fixBrand45,300);setTimeout(ensureProfileUpload45,300);}
+  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot45);else boot45();
+})();
+</script>
+
+<style id="legado-final46-context-finance-fixes">
+  .final45-context-field{display:flex!important;flex-direction:column!important;gap:7px!important;min-width:0!important}
+  .final45-context-field>span{font-size:10px!important;color:#56675f!important;font-weight:850!important}
+  .final45-context-field textarea{width:100%!important;box-sizing:border-box!important;min-height:120px!important;resize:vertical!important}
+</style>
+<script id="legado-final46-fixes-js">
+(function(){
+'use strict';
+const D=document,W=window,$=(s,r=D)=>r.querySelector(s),$$=(s,r=D)=>Array.from(r.querySelectorAll(s));
+const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v==null?'':String(v)):String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+const uid=()=>W.state?.user?.id||W.state?.session?.user?.id||null;
+const db=()=>W.supabaseClient||null;
+const notify=m=>(W.showSuccess||(()=>{}))(m);
+const error=m=>(W.showError||(()=>{}))(m);
+const refresh=()=>W.refreshIcons?.();
+let contextEditing46=false;
+function contextDataFromBody46(){
+  const body=$('#final44StudentBody'), id=W.state?.currentStudentId; if(!body||!id)return;
+  const student=W.state?.selectedStudent||W.state?.students?.find?.(s=>String(s.id)===String(id))||{};
+  const load=async()=>{
+    const c=db();if(!c)throw new Error('Sessão não encontrada.');
+    const r=await c.from('student_context').select('*').eq('student_id',id).eq('user_id',uid()).order('updated_at',{ascending:false}).limit(1);
+    if(r.error)throw r.error;return {student,context:r.data?.[0]||{}};
+  };
+  return load();
+}
+async function showContextEditor46(){
+  const body=$('#final44StudentBody');if(!body)return;
+  try{
+    const data=await contextDataFromBody46();if(!data)return;const x=data.context||{};
+    const f=(n,l,r)=>`<label class="final45-context-field"><span>${esc(l)}</span><textarea name="${esc(n)}" rows="${r}">${esc(x[n]||'')}</textarea></label>`;
+    body.innerHTML=`<section class="v3-panel final45-context-editor"><div class="v3-panel-head"><div><div class="v3-kicker">CENÁRIO PSICOPEDAGÓGICO</div><h2>Editar cenário psicopedagógico</h2><p>Atualize o contexto do aluno, as hipóteses e o plano de acompanhamento.</p></div></div><form id="final46ContextForm" class="v3-form"><div class="v3-form-grid">${f('main_complaint','Queixa principal',5)}${f('family_context','Contexto familiar',5)}${f('school_context','Contexto escolar',5)}${f('development','Desenvolvimento',5)}${f('routine','Rotina / hábitos',5)}${f('hypotheses','Hipóteses / focos de investigação',5)}${f('plan','Plano psicopedagógico',7)}</div><div class="v3-form-actions"><button type="button" class="btn btn-outline" id="final46ContextCancel">Cancelar</button><button type="submit" class="btn btn-primary"><i data-lucide="save"></i>Salvar cenário</button></div></form></section>`;
+    $('#final46ContextCancel').onclick=()=>{contextEditing46=false;W.renderStudentProfileView?.()};
+    $('#final46ContextForm').onsubmit=async e=>{e.preventDefault();const btn=e.currentTarget.querySelector('[type=submit]');try{btn.disabled=true;const fd=new FormData(e.currentTarget),payload={user_id:uid(),student_id:data.student.id,main_complaint:String(fd.get('main_complaint')||'').trim()||null,family_context:String(fd.get('family_context')||'').trim()||null,school_context:String(fd.get('school_context')||'').trim()||null,development:String(fd.get('development')||'').trim()||null,routine:String(fd.get('routine')||'').trim()||null,hypotheses:String(fd.get('hypotheses')||'').trim()||null,plan:String(fd.get('plan')||'').trim()||null};const c=db();const r=x.id?await c.from('student_context').update(payload).eq('id',x.id).eq('user_id',uid()):await c.from('student_context').insert(payload);if(r.error)throw r.error;contextEditing46=false;notify('Cenário psicopedagógico salvo.');await W.renderStudentProfileView?.();}catch(err){error('Não foi possível salvar o cenário: '+(err.message||err))}finally{btn.disabled=false}};
+    refresh();
+  }catch(err){error('Não foi possível abrir o cenário: '+(err.message||err))}
+}
+async function showContextView46(){
+  const body=$('#final44StudentBody');if(!body)return;
+  try{
+    const data=await contextDataFromBody46();if(!data)return;const x=data.context||{};
+    body.innerHTML=`<section class="v3-panel"><div class="v3-panel-head"><div><div class="v3-kicker">CENÁRIO PSICOPEDAGÓGICO</div><h2>Cenário psicopedagógico</h2><p>Contexto, hipóteses e plano de acompanhamento.</p></div><button type="button" class="btn btn-primary" id="final46EditContext"><i data-lucide="pencil"></i>Editar cenário</button></div><div class="v3-detail-grid"><div><span>Queixa principal</span><strong>${esc(x.main_complaint||'—')}</strong></div><div><span>Contexto familiar</span><strong>${esc(x.family_context||'—')}</strong></div><div><span>Contexto escolar</span><strong>${esc(x.school_context||'—')}</strong></div><div><span>Desenvolvimento</span><strong>${esc(x.development||'—')}</strong></div><div><span>Rotina / hábitos</span><strong>${esc(x.routine||'—')}</strong></div><div><span>Focos de investigação</span><strong>${esc(x.hypotheses||'—')}</strong></div></div><div class="v3-note-block"><span>Plano psicopedagógico</span><p>${esc(x.plan||'—')}</p></div></section>`;
+    $('#final46EditContext').onclick=showContextEditor46;refresh();
+  }catch(err){error('Não foi possível carregar o cenário: '+(err.message||err))}
+}
+/* O renderizador de prontuário usa uma função interna; por isso o patch entra no clique da aba, sem substituir a arquitetura original. */
+D.addEventListener('click',ev=>{
+  const b=ev.target.closest?.('[data-student44="context"]');
+  if(!b)return;
+  setTimeout(()=>showContextView46(),40);
+});
+/* Financeiro: cálculo local para não depender de funções privadas da camada anterior. */
+W.__final46FinanceSummary=function(entries,key){
+  const cur=entries.filter(e=>String(e.competence_date||e.payment_date||'').slice(0,7)===key);
+  const income=cur.filter(e=>String(e.kind||'income')!=='expense'),expense=cur.filter(e=>String(e.kind||'income')==='expense');
+  const received=income.filter(e=>String(e.status||'').toLowerCase()==='paid').reduce((s,e)=>s+Number(e.amount||0),0);
+  const pending=income.filter(e=>!['paid','cancelled','canceled'].includes(String(e.status||'').toLowerCase())).reduce((s,e)=>s+Number(e.amount||0),0);
+  const spent=expense.filter(e=>String(e.status||'').toLowerCase()==='paid').reduce((s,e)=>s+Number(e.amount||0),0);
+  return {received,pending,spent,result:received-spent};
+};
+/* Se a camada v45 estiver presente, reaponta o cálculo usado no resumo para o cálculo seguro. */
+const oldFinance45=W.renderFinance;
+if(typeof oldFinance45==='function'&&!oldFinance45.__final46){
+  W.renderFinance=async function(){
+    return oldFinance45.apply(this,arguments);
+  };
+  W.renderFinance.__final46=true;
+}
+/* Corrige o caso em que o clique na fila de espera ocorre depois de um rerender. */
+function fixWait46(){
+  const c=$('#waitlistContent');if(!c)return;
+  c.querySelectorAll('.v3-kicker,.eyebrow,.page-heading .eyebrow').forEach(el=>{if(/gest[aã]o\s+psicopedag[oó]gica/i.test(el.textContent||''))el.textContent='LISTA DE ESPERA'});
+}
+new MutationObserver(()=>fixWait46()).observe(D.body,{subtree:true,childList:true});
+refresh();
+})();
+</script>
+
+<script id="legado-final47-finance-summary-alias">
+(function(){
+  if(window.__final46FinanceSummary) window.financeSummary43=window.__final46FinanceSummary;
+})();
+</script>
 </html>
