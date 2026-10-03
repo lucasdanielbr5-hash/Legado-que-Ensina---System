@@ -19578,5 +19578,84 @@ body.final27-dark .final36-post-payment{background:#121b17!important;border-colo
   window.addEventListener('load',removeRecadosUI,{once:true});
 })();
 </script>
+
+<!-- FINAL CLEANUP: comunicação/Recados definitivamente desativados. -->
+<style id="legadoFinalCleanUI">
+  #final32ChatLauncher,#final32ChatWidget,#final27ChatLauncher,
+  .final27-chat-shell,.final28-conversation-hub,.final29-conversation-shell,
+  .final29-chat-pane,.final29-chat-widget,.final29-chat-overlay,
+  .final29-flow-overlay:has(.final29-chat),
+  [data-final28-conversation-hub],[data-conversation-hub],
+  [data-chat-widget],[data-conversation-widget],
+  body > .saas-payment-modal:has(.final27-chat-shell),
+  body > .saas-payment-modal:has([class*="chat"]),
+  [id*="ChatWidget"],[id*="ChatLauncher"],[id*="ConversationWidget"]{
+    display:none!important;visibility:hidden!important;opacity:0!important;
+    pointer-events:none!important;width:0!important;height:0!important;
+  }
+  #view-recados,#recadosContent,#recadosBadge,
+  #mainNav [data-view="recados"],[data-view="recados"]{
+    display:none!important;visibility:hidden!important;pointer-events:none!important;
+  }
+</style>
+<script id="legadoFinalCleanUIJS">
+(function(){
+  'use strict';
+  const CHAT=[
+    '#final32ChatLauncher','#final32ChatWidget','#final27ChatLauncher',
+    '.final27-chat-shell','.final28-conversation-hub','.final29-conversation-shell',
+    '.final29-chat-pane','.final29-chat-widget','.final29-chat-overlay',
+    '.final29-flow-overlay:has(.final29-chat)',
+    '[data-final28-conversation-hub]','[data-conversation-hub]',
+    '[data-chat-widget]','[data-conversation-widget]',
+    'body > .saas-payment-modal:has(.final27-chat-shell)',
+    'body > .saas-payment-modal:has([class*="chat"])',
+    '[id*="ChatWidget"]','[id*="ChatLauncher"]','[id*="ConversationWidget"]'
+  ];
+  const RECADOS=['#view-recados','#recadosContent','#recadosBadge','#mainNav [data-view="recados"]','[data-view="recados"]'];
+  function remove(){
+    [...CHAT,...RECADOS].forEach(sel=>{try{document.querySelectorAll(sel).forEach(el=>el.remove())}catch(_){}});
+    // Remove legacy communication overlays even when their class/id changes.
+    document.querySelectorAll('body > *').forEach(el=>{
+      if(el.id==='app'||el.id==='toastContainer'||el.tagName==='SCRIPT'||el.tagName==='STYLE') return;
+      const t=String(el.textContent||'').replace(/\s+/g,' ').trim();
+      const cls=String(el.className||'');
+      if(/CENTRAL DE CONVERSAS|CONVERSA PRIVADA|SUAS CONVERSAS|NOVA CONVERSA/i.test(t) &&
+         /chat|message|conversation|recado|modal|drawer|popup|saas/i.test((el.id||'')+' '+cls)) el.remove();
+    });
+    if(window.state && window.state.currentView==='recados') window.state.currentView='dashboard';
+    if(window.W && window.W.state && window.W.state.currentView==='recados') window.W.state.currentView='dashboard';
+  }
+  // Hard-disable legacy renderers; this does not touch Supabase tables or other modules.
+  const noop=()=>{remove();return false};
+  window.renderMessages=noop;
+  window.v3OpenMessageEditor=noop;
+  window.openMessageModal=noop;
+  window.ensureChatShell32=noop;
+  window.ensureChatShell=noop;
+  window.bindPrivateConversation36=noop;
+  window.chatPolish36=noop;
+  window.__finalCommunicationDisabled=true;
+  function wrapNav(){
+    const targets=[];
+    if(typeof window.navigate==='function' && !window.navigate.__finalNoCommunication){
+      const old=window.navigate;
+      const nav=function(view){ if(view==='recados') view='dashboard'; return old.apply(this,arguments.length? [view]:arguments); };
+      nav.__finalNoCommunication=true; window.navigate=nav; targets.push(nav);
+    }
+    if(window.W && typeof window.W.navigate==='function' && !window.W.navigate.__finalNoCommunication){
+      const old=window.W.navigate;
+      const nav=function(view){ if(view==='recados') view='dashboard'; return old.apply(this,arguments.length? [view]:arguments); };
+      nav.__finalNoCommunication=true; window.W.navigate=nav;
+    }
+  }
+  remove(); wrapNav();
+  const obs=new MutationObserver(()=>{remove();wrapNav()});
+  const start=()=>document.body&&obs.observe(document.body,{childList:true,subtree:true});
+  if(document.body) start(); else document.addEventListener('DOMContentLoaded',start,{once:true});
+  window.addEventListener('load',()=>{remove();wrapNav()}, {once:false});
+})();
+</script>
+
 </body>
 </html>
