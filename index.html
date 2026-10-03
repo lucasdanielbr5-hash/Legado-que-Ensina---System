@@ -7880,7 +7880,7 @@ window.renderFinance = async function(){
   }
   window.renderFinance=async function(){
     const c=byId('financeiroContent');if(!c)return;const entries=await v3LoadFinance();const key=monthKey(V3.financeMonth);const current=entries.filter(e=>String(e.competence_date||'').slice(0,7)===key);const income=current.filter(e=>e.kind==='income');const expense=current.filter(e=>e.kind==='expense');const received=income.filter(e=>e.status==='paid').reduce((s,e)=>s+Number(e.amount||0),0);const receivable=income.filter(e=>e.status!=='paid').reduce((s,e)=>s+Number(e.amount||0),0);const spent=expense.filter(e=>e.status==='paid').reduce((s,e)=>s+Number(e.amount||0),0);const result=received-spent;const series=financeSeries(entries,6);
-    c.innerHTML=pageShell('GESTÃO','Financeiro','Receitas, recebimentos, despesas, parcelamentos e histórico mensal.',`<button class="btn btn-primary" onclick="v3OpenFinanceEditor()"><i data-lucide="plus"></i>Novo lançamento</button>`)+`<div class="v3-month-nav"><button class="icon-button" onclick="v3FinanceMonth(-1)"><i data-lucide="chevron-left"></i></button><strong>${esc(fmtMonth(V3.financeMonth))}</strong><button class="icon-button" onclick="v3FinanceMonth(1)"><i data-lucide="chevron-right"></i></button><button class="btn btn-outline btn-sm" onclick="V3.financeMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);renderFinance()">Mês atual</button></div><div class="v3-stats">${statCard('arrow-down-left','Recebido',money(received),'Pagamentos confirmados')}${statCard('clock-3','A receber',money(receivable),'Pendências do mês')}${statCard('arrow-up-right','Despesas pagas',money(spent),'Saídas confirmadas')}${statCard('scale','Resultado',money(result),result>=0?'Saldo positivo':'Saldo negativo',result>=0?'good':'bad')}</div><div class="v3-panel v3-inline-editor" id="v3FinanceEditor" hidden></div><div class="v3-two-col">${panel('Evolução dos últimos meses','Receita x despesa',svgFinanceChart(series))}${panel('Resumo do mês','Competência selecionada',`<div class="v3-finance-summary"><div><span>Receita lançada</span><strong>${money(income.reduce((s,e)=>s+Number(e.amount||0),0))}</strong></div><div><span>Despesa lançada</span><strong>${money(expense.reduce((s,e)=>s+Number(e.amount||0),0))}</strong></div><div><span>Parcelamentos</span><strong>${entries.filter(e=>e.kind==='income'&&Number(e.installment_total||1)>1&&String(e.competence_date||'').slice(0,7)===key).length}</strong></div></div>`)}</div>${panel('Lançamentos do mês','Cada parcela aparece no mês em que será reconhecida.',`<div class="v3-table"><div class="v3-table-row head"><span>Data</span><span>Descrição</span><span>Forma</span><span>Valor</span><span>Status</span></div>${current.length?current.map(e=>`<div class="v3-table-row"><span>${esc(fmtDate(e.competence_date||e.payment_date))}</span><span><strong>${esc(e.description||'Lançamento')}</strong>${e.student_name?`<small>${esc(e.student_name)}</small>`:''}${Number(e.installment_total||1)>1?`<small>Parcela ${esc(e.installment_number)}/${esc(e.installment_total)}</small>`:''}</span><span>${esc(({pix:'Pix',cash:'Dinheiro',debit:'Débito',credit_spot:'Crédito à vista',credit_installment:'Crédito parcelado',transfer:'Transferência'}[e.payment_method]||e.payment_method||'—'))}</span><span>${money(e.amount)}</span><span><span class="status-pill ${esc(e.status||'pending')}">${esc(statusLabel(e.status))}</span>${e.status!=='paid'&&e.status!=='cancelled'?`<button class="v3-mini-action" onclick="v3MarkFinancePaid('${esc(e.id)}')">Marcar pago</button>`:''}</span></div>`).join(''):empty('Nenhum lançamento neste mês.','Registre recebimentos e despesas para formar o histórico.')}</div>`)}`;
+    c.innerHTML=pageShell('GESTÃO','Financeiro','Receitas, recebimentos, despesas, parcelamentos e histórico mensal.',`<button class="btn btn-primary" onclick="v3OpenFinanceEditor()"><i data-lucide="plus"></i>Novo lançamento</button>`)+`<div class="v3-month-nav"><button class="icon-button" onclick="v3FinanceMonth(-1)"><i data-lucide="chevron-left"></i></button><strong>${esc(fmtMonth(V3.financeMonth))}</strong><button class="icon-button" onclick="v3FinanceMonth(1)"><i data-lucide="chevron-right"></i></button><button class="btn btn-outline btn-sm" onclick="V3.financeMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);renderFinance()">Mês atual</button></div><div class="v3-stats">${statCard('arrow-down-left','Recebido',money(received),'Pagamentos confirmados')}${statCard('clock-3','A receber',money(receivable),'Pendências do mês')}${statCard('arrow-up-right','Despesas pagas',money(spent),'Saídas confirmadas')}${statCard('scale','Resultado',money(result),result>=0?'Saldo positivo':'Saldo negativo',result>=0?'good':'bad')}</div><div class="v3-panel v3-inline-editor" id="v3FinanceEditor" hidden></div><div class="v3-two-col">${panel('Evolução dos últimos meses','Receita x despesa',svgFinanceChart(series))}${panel('Resumo do mês','Competência selecionada',`<div class="v3-finance-summary"><div><span>Receita lançada</span><strong>${money(income.reduce((s,e)=>s+Number(e.amount||0),0))}</strong></div><div><span>Despesa lançada</span><strong>${money(expense.reduce((s,e)=>s+Number(e.amount||0),0))}</strong></div><div><span>Parcelamentos</span><strong>${entries.filter(e=>e.kind==='income'&&Number(e.installment_total||1)>1&&String(e.competence_date||'').slice(0,7)===key).length}</strong></div></div>`)}</div>${panel('Lançamentos do mês','Cada parcela aparece no mês em que será reconhecida.',`<div class="v3-table"><div class="v3-table-row head"><span>Data</span><span>Descrição</span><span>Forma</span><span>Valor</span><span>Status</span></div>${current.length?current.map(e=>`<div class="v3-table-row"><span>${esc(fmtDate(e.competence_date||e.payment_date))}</span><span><strong>${esc(e.description||'Lançamento')}</strong>${e.student_name?`<small>${esc(e.student_name)}</small>`:''}${Number(e.installment_total||1)>1?`<small>Parcela ${esc(e.installment_number)}/${esc(e.installment_total)}</small>`:''}</span><span>${esc(({pix:'Pix',cash:'Dinheiro',debit:'Débito',credit_spot:'Crédito à vista',credit_installment:'Crédito parcelado',transfer:'Transferência'}[e.payment_method]||e.payment_method||'—'))}</span><span>${money(e.amount)}</span><span><span class="status-pill ${esc(e.status||'pending')}">${esc(statusLabel(e.status))}</span>${e.status!=='paid'&&e.status!=='cancelled'?`<button class="v3-mini-action" onclick="v3MarkFinancePaid('${esc(e.id)}')">Dar baixa</button>`:''}</span></div>`).join(''):empty('Nenhum lançamento neste mês.','Registre recebimentos e despesas para formar o histórico.')}</div>`)}`;
     refreshIcons();
   };
   window.v3FinanceMonth=function(n){V3.financeMonth=addMonths(V3.financeMonth,n);renderFinance();};
@@ -20770,7 +20770,7 @@ body.final27-dark #uxModalCard{background:#111a16!important;color:#e9f2ed!import
   }
   function studentCard43(s,disabled=false){
     const name=studentName(s),resp=s.responsible_name||s.guardian_name||s.parent_name||'Responsável não informado',birth=s.birth_date||s.date_of_birth,phone=s.phone||s.responsible_phone||'Telefone não informado';
-    return `<article class="v3-student-card" data-student43="${esc(s.id)}"><div class="v3-student-top"><div class="v3-avatar">${s.photo_url?`<img src="${esc(s.photo_url)}" alt="Foto de ${esc(name)}">`:`<span>${esc(name.split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase())}</span>`}</div><div class="v3-student-ident"><h3>${esc(name)}</h3><span>${esc(resp)}</span></div><span class="v3-tag ${disabled?'muted':''}">${disabled?'Desativado':'Ativo'}</span></div><div class="v3-student-meta"><span><i data-lucide="cake"></i>${birth?esc(dateBR(birth)):'Nascimento não informado'}</span><span><i data-lucide="phone"></i>${esc(phone)}</span></div><div class="v3-student-foot"><span>Prontuário completo</span><div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end"><button type="button" class="btn btn-outline btn-sm" data-edit-student43="${esc(s.id)}"><i data-lucide="pencil"></i>Editar</button>${disabled?`<button type="button" class="btn btn-soft btn-sm" data-reactivate43="${esc(s.id)}"><i data-lucide="rotate-ccw"></i>Reativar</button>`:`<button type="button" class="btn btn-danger btn-sm" data-disable43="${esc(s.id)}"><i data-lucide="archive"></i>Desativar</button>`}</div></div></article>`;
+    return `<article class="v3-student-card" data-student43="${esc(s.id)}"><div class="v3-student-top"><div class="v3-avatar">${s.photo_url?`<img src="${esc(s.photo_url)}" alt="Foto de ${esc(name)}">`:`<span>${esc(name.split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase())}</span>`}</div><div class="v3-student-ident"><h3>${esc(name)}</h3><span>${esc(resp)}</span></div><span class="v3-tag ${disabled?'muted':''}">${disabled?'Desativado':'Ativo'}</span></div><div class="v3-student-meta"><span><i data-lucide="cake"></i>${birth?esc(dateBR(birth)):'Nascimento não informado'}</span><span><i data-lucide="phone"></i>${esc(phone)}</span></div><div class="v3-student-foot"><span>Prontuário completo</span><div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end"><button type="button" class="btn btn-outline btn-sm" data-edit-student43="${esc(s.id)}"><i data-lucide="pencil"></i>Editar</button>${disabled?`<button type="button" class="btn btn-soft btn-sm" data-reactivate43="${esc(s.id)}"><i data-lucide="rotate-ccw"></i>Reativar</button>`:`<button type="button" class="btn btn-outline btn-sm" data-disable43="${esc(s.id)}"><i data-lucide="archive"></i>Desativar</button>`}<button type="button" class="btn btn-danger btn-sm" data-delete-student43="${esc(s.id)}"><i data-lucide="trash-2"></i>Excluir</button></div></div></article>`;
   }
   function studentSubnav43(page,sub){
     let bar=$('#lqStudentsSubnav43',page);if(!bar){bar=D.createElement('div');bar.id='lqStudentsSubnav43';bar.className='final-clean-subnav';const head=page.querySelector('.v3-head');head?.insertAdjacentElement('afterend',bar);}
@@ -20801,7 +20801,7 @@ body.final27-dark #uxModalCard{background:#111a16!important;color:#e9f2ed!import
   }
   async function renderStudents43(sub='ativos'){
     const c=$('#alunosContent');if(!c)return;c.innerHTML='<div class="v3-loading"><i data-lucide="loader-circle"></i>Carregando alunos...</div>';refresh();
-    try{const all=await loadStudents43(),active=all.filter(s=>String(s.status||'active').toLowerCase()!=='inactive'),inactive=all.filter(s=>String(s.status||'').toLowerCase()==='inactive');c.innerHTML=`${W.pageShell?W.pageShell('ACOMPANHAMENTO','Alunos','Cada aluno possui um prontuário vivo, com histórico, progresso e documentos.'):`<div class="v3-head"><div><div class="v3-kicker">ACOMPANHAMENTO</div><h1>Alunos</h1><p>Prontuários e acompanhamento.</p></div></div>`}<div class="v3-stats">${W.statCard?W.statCard('users','Total de alunos',all.length,'Cadastros mantidos'):''}${W.statCard?W.statCard('user-check','Ativos',active.length,'Em acompanhamento'):''}${W.statCard?W.statCard('archive','Desativados',inactive.length,'Histórico preservado'):''}${W.statCard?W.statCard('clipboard-plus','Prontuários',all.length,'Perfis disponíveis'):''}</div><div class="v3-panel" id="lqStudentEditor43" hidden></div><div class="v3-panel"><div class="v3-panel-head"><div><h2>${sub==='ativos'?'Alunos ativos':'Alunos desativados'}</h2><p>${sub==='ativos'?'Alunos em acompanhamento.':'Registros preservados e prontos para eventual reativação.'}</p></div><button type="button" class="btn btn-primary" id="lqNewStudent43"><i data-lucide="user-plus"></i>Novo aluno</button></div><div class="v3-toolbar"><div class="v3-search"><i data-lucide="search"></i><input id="lqStudentSearch43" placeholder="Buscar por nome, responsável ou telefone..."></div><div class="v3-view-note">${sub==='ativos'?active.length:inactive.length} registro${(sub==='ativos'?active.length:inactive.length)===1?'':'s'}</div></div><div id="lqStudentGrid43" class="v3-student-grid"></div></div>`;const page=c.querySelector('.v3-page')||c;studentSubnav43(page,sub);const list=sub==='ativos'?active:inactive;const grid=$('#lqStudentGrid43');const renderList=q=>{const arr=list.filter(s=>normalize(`${studentName(s)} ${s.responsible_name||s.guardian_name||''} ${s.phone||''}`).includes(normalize(q)));grid.innerHTML=arr.length?arr.map(s=>studentCard43(s,sub==='desativados')).join(''):(W.empty?W.empty(sub==='ativos'?'Nenhum aluno ativo.':'Nenhum aluno desativado.','O histórico aparecerá aqui quando necessário.'):`<div class="v3-empty">Nenhum registro.</div>`);refresh();$$('[data-edit-student43]',grid).forEach(b=>b.onclick=e=>{e.stopPropagation();W.lqEditStudent43(b.dataset.editStudent43)});$$('[data-disable43]',grid).forEach(b=>b.onclick=e=>{e.stopPropagation();W.lqToggleStudent43(b.dataset.disable43,false)});$$('[data-reactivate43]',grid).forEach(b=>b.onclick=e=>{e.stopPropagation();W.lqToggleStudent43(b.dataset.reactivate43,true)});grid.querySelectorAll('.v3-student-card').forEach(card=>card.onclick=e=>{if(e.target.closest('button'))return;W.lqOpenStudent43(card.dataset.student43)});};renderList('');$('#lqStudentSearch43').oninput=e=>renderList(e.target.value);$('#lqNewStudent43').onclick=()=>openStudentEditor43();refresh();}
+    try{const all=await loadStudents43(),active=all.filter(s=>String(s.status||'active').toLowerCase()!=='inactive'),inactive=all.filter(s=>String(s.status||'').toLowerCase()==='inactive');c.innerHTML=`${W.pageShell?W.pageShell('ACOMPANHAMENTO','Alunos','Cada aluno possui um prontuário vivo, com histórico, progresso e documentos.'):`<div class="v3-head"><div><div class="v3-kicker">ACOMPANHAMENTO</div><h1>Alunos</h1><p>Prontuários e acompanhamento.</p></div></div>`}<div class="v3-stats">${W.statCard?W.statCard('users','Total de alunos',all.length,'Cadastros mantidos'):''}${W.statCard?W.statCard('user-check','Ativos',active.length,'Em acompanhamento'):''}${W.statCard?W.statCard('archive','Desativados',inactive.length,'Histórico preservado'):''}${W.statCard?W.statCard('clipboard-plus','Prontuários',all.length,'Perfis disponíveis'):''}</div><div class="v3-panel" id="lqStudentEditor43" hidden></div><div class="v3-panel"><div class="v3-panel-head"><div><h2>${sub==='ativos'?'Alunos ativos':'Alunos desativados'}</h2><p>${sub==='ativos'?'Alunos em acompanhamento.':'Registros preservados e prontos para eventual reativação.'}</p></div><button type="button" class="btn btn-primary" id="lqNewStudent43"><i data-lucide="user-plus"></i>Novo aluno</button></div><div class="v3-toolbar"><div class="v3-search"><i data-lucide="search"></i><input id="lqStudentSearch43" placeholder="Buscar por nome, responsável ou telefone..."></div><div class="v3-view-note">${sub==='ativos'?active.length:inactive.length} registro${(sub==='ativos'?active.length:inactive.length)===1?'':'s'}</div></div><div id="lqStudentGrid43" class="v3-student-grid"></div></div>`;const page=c.querySelector('.v3-page')||c;studentSubnav43(page,sub);const list=sub==='ativos'?active:inactive;const grid=$('#lqStudentGrid43');const renderList=q=>{const arr=list.filter(s=>normalize(`${studentName(s)} ${s.responsible_name||s.guardian_name||''} ${s.phone||''}`).includes(normalize(q)));grid.innerHTML=arr.length?arr.map(s=>studentCard43(s,sub==='desativados')).join(''):(W.empty?W.empty(sub==='ativos'?'Nenhum aluno ativo.':'Nenhum aluno desativado.','O histórico aparecerá aqui quando necessário.'):`<div class="v3-empty">Nenhum registro.</div>`);refresh();$$('[data-edit-student43]',grid).forEach(b=>b.onclick=e=>{e.stopPropagation();W.lqEditStudent43(b.dataset.editStudent43)});$$('[data-disable43]',grid).forEach(b=>b.onclick=e=>{e.stopPropagation();W.lqToggleStudent43(b.dataset.disable43,false)});$$('[data-delete-student43]',grid).forEach(b=>b.onclick=e=>{e.stopPropagation();W.legadoDeleteStudentPermanent?.(b.dataset.deleteStudent43)});$$('[data-reactivate43]',grid).forEach(b=>b.onclick=e=>{e.stopPropagation();W.lqToggleStudent43(b.dataset.reactivate43,true)});grid.querySelectorAll('.v3-student-card').forEach(card=>card.onclick=e=>{if(e.target.closest('button'))return;W.lqOpenStudent43(card.dataset.student43)});};renderList('');$('#lqStudentSearch43').oninput=e=>renderList(e.target.value);$('#lqNewStudent43').onclick=()=>openStudentEditor43();refresh();}
     catch(e){c.innerHTML=`<div class="v3-panel"><strong>Não foi possível carregar os alunos.</strong><p class="final43-muted">${esc(e.message||e)}</p></div>`;refresh();}
   }
   const baseStudentRender=W.renderStudents;W.renderStudents=renderStudents43;W.v3ShowStudentEditor=async s=>openStudentEditor43(s||null);W.openEditStudentModal=id=>W.lqEditStudent43(id);W.openNewStudentModal=()=>openStudentEditor43();
@@ -20853,7 +20853,7 @@ body.final27-dark #uxModalCard{background:#111a16!important;color:#e9f2ed!import
   function renderFinanceBody43(page,entries,months,key){
     page.querySelectorAll('[data-fin-sub43]').forEach(b=>b.classList.toggle('active',b.dataset.finSub43===finSub43));const body=$('#lqFinanceBody43',page);if(!body)return;
     if(finSub43==='visao'){const series=months.map(k=>({label:monthLabel43(k),value:entries.filter(e=>monthKey43(e.competence_date||e.payment_date)===k&&e.kind!=='expense'&&String(e.status||'').toLowerCase()==='paid').reduce((s,e)=>s+Number(e.amount||0),0)}));body.innerHTML=`<div class="v3-stats">${W.statCard?W.statCard('arrow-down-left','Recebido',money(financeSummary43(entries,key).received),'Pagamentos confirmados'):''}${W.statCard?W.statCard('clock-3','A receber',money(financeSummary43(entries,key).pending),'Pendências do mês'):''}${W.statCard?W.statCard('arrow-up-right','Despesas pagas',money(financeSummary43(entries,key).spent),'Saídas confirmadas'):''}${W.statCard?W.statCard('scale','Resultado',money(financeSummary43(entries,key).result),'Saldo do mês',financeSummary43(entries,key).result>=0?'good':'bad'):''}</div><div class="v3-two-col"><section class="v3-panel"><div class="v3-panel-head"><div><h2>Receita dos últimos meses</h2><p>Pagamentos confirmados.</p></div></div><div class="v3-chart" id="lqFinanceChart43"></div></section><section class="v3-panel"><div class="v3-panel-head"><div><h2>Resumo do mês</h2><p>${esc(monthLabel43(key))} de ${esc(key.slice(0,4))}</p></div></div><div class="v3-finance-summary"><div><span>Recebido</span><strong>${money(financeSummary43(entries,key).received)}</strong></div><div><span>A receber</span><strong>${money(financeSummary43(entries,key).pending)}</strong></div><div><span>Despesas pagas</span><strong>${money(financeSummary43(entries,key).spent)}</strong></div></div></section></div>`;const chart=$('#lqFinanceChart43',body);if(W.svgFinanceChart)chart.innerHTML=W.svgFinanceChart(series.map(x=>({label:x.label,income:x.value,expense:0})));else chart.innerHTML='<div class="v3-empty">Dados financeiros prontos para análise.</div>';}
-    else {const rows=entries.slice().sort((a,b)=>String(b.competence_date||b.payment_date).localeCompare(String(a.competence_date||a.payment_date))).slice(0,100);body.innerHTML=`<section class="v3-panel"><div class="v3-panel-head"><div><h2>Contas e pagamentos</h2><p>Registre recebimentos, acompanhe pendências e encaminhe recibos digitais.</p></div></div><div class="final43-fin-table"><div class="final43-fin-row header"><span>Data</span><span>Descrição / aluno</span><span>Forma</span><span>Valor</span><span>Ações</span></div>${rows.length?rows.map(e=>{const paid=String(e.status||'').toLowerCase()==='paid';return `<div class="final43-fin-row"><span>${esc(dateBR(e.competence_date||e.payment_date))}</span><span class="desc"><strong>${esc(e.description||'Lançamento')}</strong>${e.student_name?`<small>${esc(e.student_name)}</small>`:''}</span><span>${esc(({pix:'Pix',cash:'Dinheiro',debit:'Débito',credit_spot:'Crédito à vista',credit_installment:'Crédito parcelado',transfer:'Transferência'}[e.payment_method]||e.payment_method||'—'))}</span><span>${money(e.amount)}</span><div class="final43-fin-actions">${paid?`<button type="button" class="btn final43-receipt-btn" data-forward-receipt43="${esc(e.id)}"><i data-lucide="send"></i>Encaminhar recibo</button>`:''}${!paid&&!e.legacy?`<button type="button" class="btn btn-primary" data-paid43="${esc(e.id)}"><i data-lucide="check"></i>Marcar pago</button>`:''}</div></div>`}).join(''):'<div class="v3-empty">Nenhum lançamento encontrado.</div>'}</div></section>`;$$('[data-forward-receipt43]',body).forEach(b=>b.onclick=()=>{const e=entries.find(x=>String(x.id)===String(b.dataset.forwardReceipt43));if(e)W.lqOpenReceipt43(e)});$$('[data-paid43]',body).forEach(b=>b.onclick=async()=>{try{const r=await db().from('financial_entries').update({status:'paid',paid_at:new Date().toISOString()}).eq('id',b.dataset.paid43).eq('user_id',uid());if(r.error)throw r.error;notify('Pagamento registrado.');await renderFinance43()}catch(e){notify(e.message||'Não foi possível registrar o pagamento.',false)}})}refresh();
+    else {const rows=entries.slice().sort((a,b)=>String(b.competence_date||b.payment_date).localeCompare(String(a.competence_date||a.payment_date))).slice(0,100);body.innerHTML=`<section class="v3-panel"><div class="v3-panel-head"><div><h2>Contas e pagamentos</h2><p>Registre recebimentos, acompanhe pendências e encaminhe recibos digitais.</p></div></div><div class="final43-fin-table"><div class="final43-fin-row header"><span>Data</span><span>Descrição / aluno</span><span>Forma</span><span>Valor</span><span>Ações</span></div>${rows.length?rows.map(e=>{const paid=String(e.status||'').toLowerCase()==='paid';return `<div class="final43-fin-row"><span>${esc(dateBR(e.competence_date||e.payment_date))}</span><span class="desc"><strong>${esc(e.description||'Lançamento')}</strong>${e.student_name?`<small>${esc(e.student_name)}</small>`:''}</span><span>${esc(({pix:'Pix',cash:'Dinheiro',debit:'Débito',credit_spot:'Crédito à vista',credit_installment:'Crédito parcelado',transfer:'Transferência'}[e.payment_method]||e.payment_method||'—'))}</span><span>${money(e.amount)}</span><div class="final43-fin-actions">${paid?`<button type="button" class="btn final43-receipt-btn" data-forward-receipt43="${esc(e.id)}"><i data-lucide="send"></i>Encaminhar recibo</button>`:''}${!paid&&!e.legacy?`<button type="button" class="btn btn-primary" data-paid43="${esc(e.id)}"><i data-lucide="check"></i>Dar baixa</button>`:''}</div></div>`}).join(''):'<div class="v3-empty">Nenhum lançamento encontrado.</div>'}</div></section>`;$$('[data-forward-receipt43]',body).forEach(b=>b.onclick=()=>{const e=entries.find(x=>String(x.id)===String(b.dataset.forwardReceipt43));if(e)W.lqOpenReceipt43(e)});$$('[data-paid43]',body).forEach(b=>b.onclick=async()=>{try{const r=await db().from('financial_entries').update({status:'paid',paid_at:new Date().toISOString()}).eq('id',b.dataset.paid43).eq('user_id',uid());if(r.error)throw r.error;notify('Pagamento registrado.');await renderFinance43()}catch(e){notify(e.message||'Não foi possível registrar o pagamento.',false)}})}refresh();
   }
   W.renderFinance=renderFinance43;
 
@@ -22030,7 +22030,7 @@ body.final27-dark .final44-actions{background:rgba(17,26,23,.97)!important}
   function renderFinanceRows45(body,entries){
     const q=normalize45($('#final45FinSearch',body)?.value||'');const kind=$('#final45FinKind',body)?.value||'all';const status=$('#final45FinStatus',body)?.value||'all';
     const rows=entries.slice().sort((a,b)=>String(b.competence_date||b.payment_date).localeCompare(String(a.competence_date||a.payment_date))).filter(e=>{const text=normalize45([e.student_name,e.description,e.payment_method].join(' '));const k=e.kind==='expense'?'expense':'income';return(!q||text.includes(q))&&(kind==='all'||k===kind)&&(status==='all'||String(e.status||'').toLowerCase()===status)}).slice(0,500);
-    const host=$('#final45FinanceRows',body);if(!host)return;host.innerHTML=rows.length?rows.map(e=>{const k=e.kind==='expense'?'expense':'income',paid=String(e.status||'').toLowerCase()==='paid';return `<div class="final45-fin-row ${k}"><span>${esc(dateBR45(e.competence_date||e.payment_date))}</span><span class="desc"><strong>${esc(e.student_name||e.description||'Lançamento')}</strong>${e.student_name&&e.description?`<small>${esc(e.description)}</small>`:''}${Number(e.installment_total||1)>1?`<small>Parcela ${esc(e.installment_number||1)}/${esc(e.installment_total)}</small>`:''}</span><span><span class="final45-type ${k}">${k==='expense'?'Despesa':'Conta / receita'}</span></span><span><strong>${esc(money45(e.amount))}</strong><br><span class="final45-status">${esc(String(e.status||'').replace('paid','Pago').replace('pending','Pendente').replace('overdue','Em atraso').replace('cancelled','Cancelado'))}</span></span><div class="final45-fin-actions"><button type="button" class="btn btn-outline" data-fin-edit45="${esc(e.id)}"><i data-lucide="pencil"></i>Editar</button><button type="button" class="btn final45-delete" data-fin-delete45="${esc(e.id)}"><i data-lucide="trash-2"></i>Excluir</button>${k==='income'&&!paid&&!e.legacy?`<button type="button" class="btn btn-primary" data-fin-paid45="${esc(e.id)}"><i data-lucide="check"></i>Marcar pago</button>`:''}</div></div>`}).join(''):'<div class="final45-empty">Nenhum lançamento corresponde aos filtros.</div>';
+    const host=$('#final45FinanceRows',body);if(!host)return;host.innerHTML=rows.length?rows.map(e=>{const k=e.kind==='expense'?'expense':'income',paid=String(e.status||'').toLowerCase()==='paid';return `<div class="final45-fin-row ${k}"><span>${esc(dateBR45(e.competence_date||e.payment_date))}</span><span class="desc"><strong>${esc(e.student_name||e.description||'Lançamento')}</strong>${e.student_name&&e.description?`<small>${esc(e.description)}</small>`:''}${Number(e.installment_total||1)>1?`<small>Parcela ${esc(e.installment_number||1)}/${esc(e.installment_total)}</small>`:''}</span><span><span class="final45-type ${k}">${k==='expense'?'Despesa':'Conta / receita'}</span></span><span><strong>${esc(money45(e.amount))}</strong><br><span class="final45-status">${esc(String(e.status||'').replace('paid','Pago').replace('pending','Pendente').replace('overdue','Em atraso').replace('cancelled','Cancelado'))}</span></span><div class="final45-fin-actions"><button type="button" class="btn btn-outline" data-fin-edit45="${esc(e.id)}"><i data-lucide="pencil"></i>Editar</button><button type="button" class="btn final45-delete" data-fin-delete45="${esc(e.id)}"><i data-lucide="trash-2"></i>Excluir</button>${k==='income'&&!paid&&!e.legacy?`<button type="button" class="btn btn-primary" data-fin-paid45="${esc(e.id)}"><i data-lucide="check"></i>Dar baixa</button>`:''}</div></div>`}).join(''):'<div class="final45-empty">Nenhum lançamento corresponde aos filtros.</div>';
     $$('[data-fin-edit45]',body).forEach(b=>b.onclick=()=>editFin45(b.dataset.finEdit45));
     $$('[data-fin-delete45]',body).forEach(b=>b.onclick=()=>deleteFin45(b.dataset.finDelete45));
     $$('[data-fin-paid45]',body).forEach(b=>b.onclick=async()=>{try{b.disabled=true;const r=await db().from('financial_entries').update({status:'paid',paid_at:new Date().toISOString()}).eq('id',b.dataset.finPaid45).eq('user_id',uid());if(r.error)throw r.error;notify45('Pagamento registrado.');await renderFinance45()}catch(e){notify45(e.message||'Não foi possível registrar o pagamento.',false)}finally{b.disabled=false}});
@@ -22039,7 +22039,7 @@ body.final27-dark .final44-actions{background:rgba(17,26,23,.97)!important}
   async function renderFinance45(){
     const c=$('#financeiroContent');if(!c)return;c.innerHTML='<div class="v3-loading"><i data-lucide="loader-circle"></i><span>Carregando financeiro...</span></div>';refresh45();
     try{
-      fin45Entries=await loadFin45();const now=new Date(),key=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0'),sum=typeof W.financeSummary43==='function'?W.financeSummary43(fin45Entries,key):{received:0,pending:0,spent:0,result:0};
+      fin45Entries=await loadFinanceSafeFinal();const now=new Date(),key=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0'),sum=typeof W.financeSummary43==='function'?W.financeSummary43(fin45Entries,key):{received:0,pending:0,spent:0,result:0};
       const months=Array.from({length:6},(_,i)=>{const d=new Date(now.getFullYear(),now.getMonth()-5+i,1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')});
       const page=D.createElement('div');page.className='v3-page';page.innerHTML=`<div class="v3-head"><div><div class="v3-kicker">GESTÃO FINANCEIRA</div><h1>Contas e pagamentos</h1><p>Controle receitas, despesas, contas, pagamentos e lançamentos com edição e exclusão.</p></div><div class="v3-head-actions"><button class="btn btn-outline" id="final45Pdf"><i data-lucide="file-down"></i>Salvar em PDF</button><button class="btn btn-primary" id="final45New"><i data-lucide="plus"></i>Novo lançamento</button></div></div><div class="final-clean-subnav"><button type="button" class="active" id="final45TabVisao"><i data-lucide="layout-dashboard"></i>Visão geral</button><button type="button" id="final45TabContas"><i data-lucide="receipt-text"></i>Contas e pagamentos</button></div><div id="final45FinanceBody"></div><div class="v3-panel v3-inline-editor" id="v3FinanceEditor" hidden></div></div>`;c.innerHTML='';c.appendChild(page);
       const body=$('#final45FinanceBody',page);
@@ -22262,6 +22262,338 @@ function boot(){
 }
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot);else boot();
 W.LegadoBNCCProgress={pack,unpack,isBncc,cleanObservation};
+})();
+</script>
+
+<style id="legado-final-bncc-real-ui">
+/* ============================================================
+   FINAL — correções de estrutura, financeiro, alunos e BNCC
+   ============================================================ */
+:root{
+  --lx-green:#2f735a;
+  --lx-green-dark:#255b49;
+  --lx-green-soft:#eaf5f0;
+  --lx-ink:#20312f;
+  --lx-muted:#6d7e79;
+  --lx-line:#dce8e4;
+  --lx-bg:#f3f7f6;
+}
+html,body{width:100%!important;max-width:100%!important;min-width:0!important}
+body{overflow-x:hidden!important;background:var(--lx-bg)!important}
+.app{width:100%!important;max-width:100%!important;min-width:0!important}
+.main{margin-left:0!important;min-width:0!important}
+.content{width:100%!important;max-width:1500px!important;margin:0 auto!important;box-sizing:border-box!important}
+.v3-page{width:100%!important;max-width:1440px!important;margin:0 auto!important;box-sizing:border-box!important}
+.v3-head{width:100%!important;box-sizing:border-box!important}
+.v3-two-col{align-items:start!important}
+.v3-panel{min-width:0!important;overflow:hidden!important}
+.v3-panel-head{align-items:flex-start!important}
+.btn-primary{
+  background:linear-gradient(135deg,var(--lx-green),#3d8876)!important;
+  border-color:var(--lx-green)!important;color:#fff!important
+}
+.btn-primary:hover{background:var(--lx-green-dark)!important;border-color:var(--lx-green-dark)!important}
+.btn-outline{background:#fff!important;color:#2f735a!important;border-color:#cfe0d9!important}
+.btn-outline:hover{background:#f1f7f4!important}
+.btn-danger,.final45-delete{
+  background:#fff2f2!important;color:#a84f54!important;border:1px solid #e4caca!important
+}
+.btn-danger:hover,.final45-delete:hover{background:#fde5e5!important}
+.final45-fin-actions .btn-primary,
+[data-fin-paid45],
+.lq-paid-btn{
+  background:#2f735a!important;color:#fff!important;border-color:#2f735a!important
+}
+.final45-fin-actions .btn-primary:hover,
+[data-fin-paid45]:hover,
+.lq-paid-btn:hover{background:#255b49!important;border-color:#255b49!important}
+.final45-fin-actions{display:flex!important;gap:6px!important;flex-wrap:wrap!important}
+.final45-fin-actions .btn{min-height:34px!important}
+.final45-fin-filter{display:flex!important;gap:8px!important;flex-wrap:wrap!important}
+.final45-fin-filter input,.final45-fin-filter select{min-height:40px!important}
+.final45-fin-row{background:#fff!important}
+.final45-fin-row.expense{background:#fffdfd!important}
+.final45-type.expense{background:#fbeeee!important;color:#9d5558!important}
+.final45-type.income{background:#e8f3ed!important;color:#28614f!important}
+.final45-status{background:#f2f5f3!important;color:#5f7068!important}
+.final45-fin-table{overflow-x:auto!important}
+.final45-fin-row{min-width:780px!important}
+.lq-bncc-page{
+  display:grid;gap:16px
+}
+.lq-bncc-hero{
+  background:linear-gradient(135deg,#edf7f3,#fff);
+  border:1px solid #d5e6df;border-radius:20px;padding:22px
+}
+.lq-bncc-hero h1{margin:3px 0 6px;font-size:28px;letter-spacing:-.03em}
+.lq-bncc-hero p{margin:0;color:#687971;line-height:1.55}
+.lq-bncc-source-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}
+.lq-bncc-source-card{padding:13px;border:1px solid #dce8e4;border-radius:13px;background:#fff}
+.lq-bncc-source-card strong{display:block;font-size:12px;color:#2d5f50}
+.lq-bncc-source-card span{display:block;margin-top:4px;color:#77857f;font-size:10px;line-height:1.4}
+.lq-bncc-searchbar{display:grid;grid-template-columns:150px 1fr auto;gap:9px;align-items:center}
+.lq-bncc-results-page{display:grid;gap:9px;max-height:620px;overflow:auto}
+.lq-bncc-result-page{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;
+  border:1px solid #dfe9e5;border-radius:13px;background:#fff;padding:14px
+}
+.lq-bncc-result-page .code{display:inline-flex;padding:4px 8px;border-radius:7px;background:#eaf5f2;color:#2d6f67;font-size:11px;font-weight:900}
+.lq-bncc-result-page h3{margin:7px 0 4px;font-size:13px;line-height:1.5}
+.lq-bncc-result-page p{margin:0;color:#73817b;font-size:10px}
+.lq-bncc-repo-note{padding:12px 14px;border-radius:12px;background:#f5f8f7;border:1px solid #dfe8e4;color:#64736d;font-size:11px;line-height:1.5}
+@media(max-width:1000px){.lq-bncc-source-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){
+  .content{padding-left:12px!important;padding-right:12px!important}
+  .lq-bncc-searchbar{grid-template-columns:1fr}
+  .lq-bncc-source-grid{grid-template-columns:1fr}
+  .lq-bncc-result-page{grid-template-columns:1fr}
+  .final45-fin-row{min-width:760px!important}
+}
+</style>
+
+<script id="legado-final-bncc-real-fixes">
+(function(){
+'use strict';
+const D=document,W=window,$=(s,r=D)=>r.querySelector(s),$$=(s,r=D)=>Array.from(r.querySelectorAll(s));
+const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(v==null?'':String(v)):String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+const uid=()=>W.state?.user?.id||W.state?.session?.user?.id||null;
+const db=()=>W.supabaseClient||null;
+const refresh=()=>W.refreshIcons?.();
+const notify=(m,ok=true)=>(ok?W.showSuccess:W.showError)?.(m);
+
+/* ------------------------------------------------------------
+   1) ALUNO — exclusão definitiva disponível
+   ------------------------------------------------------------ */
+async function deleteStudentPermanent(id){
+  const c=db(),me=uid(); if(!c||!me)return notify('Sessão não encontrada.',false);
+  let students=[];
+  try{
+    students=Array.isArray(W.state?.students)?W.state.students:[];
+    if(!students.length && typeof W.v3LoadStudents==='function') students=await W.v3LoadStudents();
+  }catch(_){}
+  const student=students.find(x=>String(x.id)===String(id)) || W.state?.selectedStudent;
+  const name=student?.name||student?.full_name||'este aluno';
+  if(!confirm(`Excluir definitivamente "${name}"?\\n\\nIsso remove o cadastro e os registros vinculados. Esta ação não pode ser desfeita.`))return;
+  try{
+    const deps=[
+      ['student_context','student_id'],
+      ['student_contacts','student_id'],
+      ['student_progress','student_id'],
+      ['student_records','student_id'],
+      ['evaluations','student_id'],
+      ['appointments','student_id'],
+      ['financial_entries','student_id'],
+      ['payments','student_id']
+    ];
+    for(const [table,col] of deps){
+      try{
+        const r=await c.from(table).delete().eq(col,id).eq('user_id',me);
+        if(r.error && !/relation .* does not exist|could not find the table/i.test(r.error.message||'')) throw r.error;
+      }catch(e){
+        if(!/relation .* does not exist|could not find the table/i.test(e?.message||'')) throw e;
+      }
+    }
+    const r=await c.from('students').delete().eq('id',id).eq('user_id',me);
+    if(r.error)throw r.error;
+    if(W.state){W.state.currentStudentId=null;W.state.selectedStudent=null;}
+    notify('Aluno excluído definitivamente.');
+    await W.renderStudents?.();
+  }catch(e){
+    console.error(e);
+    notify('Não foi possível excluir o aluno: '+(e.message||e),false);
+  }
+}
+W.legadoDeleteStudentPermanent=deleteStudentPermanent;
+
+/* Injeta exclusão definitiva nos cards finais de alunos. */
+function patchStudentCards(){
+  $$('.v3-student-card').forEach(card=>{
+    if(card.querySelector('[data-delete-student-final]'))return;
+    const id=card.dataset.student43||card.dataset.studentId||card.getAttribute('data-student43');
+    if(!id)return;
+    const foot=card.querySelector('.v3-student-foot');
+    const actions=foot?.querySelector('div');
+    if(!actions)return;
+    const b=D.createElement('button');
+    b.type='button';b.className='btn btn-danger btn-sm';b.setAttribute('data-delete-student-final','1');
+    b.innerHTML='<i data-lucide="trash-2"></i>Excluir';
+    b.onclick=e=>{e.stopPropagation();deleteStudentPermanent(id)};
+    actions.appendChild(b);
+  });
+  refresh();
+}
+const oldRenderStudentsFinal=W.renderStudents;
+if(typeof oldRenderStudentsFinal==='function'&&!oldRenderStudentsFinal.__studentDeleteFinal){
+  W.renderStudents=async function(){const r=await oldRenderStudentsFinal.apply(this,arguments);setTimeout(patchStudentCards,30);return r};
+  W.renderStudents.__studentDeleteFinal=true;
+}
+setTimeout(patchStudentCards,300);
+
+/* ------------------------------------------------------------
+   2) FINANCEIRO — garantir funcionamento mesmo se financial_entries
+      não existir, e deixar "Dar baixa" sempre verde.
+   ------------------------------------------------------------ */
+function norm(v){return String(v||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().trim()}
+async function loadFinanceSafeFinal(){
+  const c=db(),me=uid();if(!c||!me)throw new Error('Sessão não encontrada.');
+  let modern=[],pays=[];
+  try{const r=await c.from('financial_entries').select('*').eq('user_id',me).order('competence_date',{ascending:false}).limit(3000);if(!r.error)modern=r.data||[]}catch(_){}
+  try{const r=await c.from('payments').select('*').eq('user_id',me).order('payment_date',{ascending:false}).limit(3000);if(!r.error)pays=r.data||[]}catch(_){}
+  const ids=new Set(modern.map(e=>String(e.legacy_payment_id||'')));
+  const legacy=pays.filter(p=>!ids.has(String(p.id))).map(p=>({
+    id:'legacy-'+p.id,legacy:true,source_payment_id:p.id,kind:'income',
+    amount:Number(p.amount||p.value||0),status:String(p.status||'paid').toLowerCase(),
+    competence_date:String(p.payment_date||p.date||new Date().toISOString().slice(0,10)).slice(0,10),
+    due_date:String(p.payment_date||p.date||new Date().toISOString().slice(0,10)).slice(0,10),
+    description:p.description||p.student_name||'Recebimento',
+    student_id:p.student_id||null,student_name:p.student_name||null,
+    payment_method:p.payment_method||p.method||''
+  }));
+  return modern.map(e=>({...e,kind:e.kind||e.type||'income',competence_date:e.competence_date||e.entry_date||e.payment_date||new Date().toISOString().slice(0,10)})).concat(legacy);
+}
+async function markPaidFinal(id){
+  try{
+    const entries=await loadFinanceSafeFinal();
+    const e=entries.find(x=>String(x.id)===String(id));
+    if(!e)throw new Error('Lançamento não encontrado.');
+    if(e.legacy){
+      const r=await db().from('payments').update({status:'paid',paid_at:new Date().toISOString()}).eq('id',e.source_payment_id).eq('user_id',uid());
+      if(r.error)throw r.error;
+    }else{
+      const r=await db().from('financial_entries').update({status:'paid',paid_at:new Date().toISOString()}).eq('id',e.id).eq('user_id',uid());
+      if(r.error)throw r.error;
+    }
+    notify('Baixa registrada com sucesso.');
+    await W.renderFinance?.();
+  }catch(e){notify('Não foi possível dar baixa: '+(e.message||e),false)}
+}
+W.legadoDarBaixa=markPaidFinal;
+
+/* Reforça visual da ação de baixa depois de qualquer rerender. */
+function greenPaymentActions(){
+  $$('[data-fin-paid45],.final45-fin-actions .btn-primary').forEach(b=>{
+    b.style.background='#2f735a';b.style.borderColor='#2f735a';b.style.color='#fff';
+    if(/marcar pago/i.test(b.textContent||''))b.innerHTML='<i data-lucide="check-circle-2"></i>Dar baixa';
+  });
+  refresh();
+}
+const observer=new MutationObserver(()=>{greenPaymentActions();patchStudentCards()});
+observer.observe(D.body,{subtree:true,childList:true});
+setTimeout(greenPaymentActions,500);
+
+/* ------------------------------------------------------------
+   3) BNCC — módulo visível no sistema.
+   A fonte é o dataset oficial do projeto, via API publicada pelo
+   próprio bncc.dev. O arquivo anterior não embutia o repositório.
+   ------------------------------------------------------------ */
+const BNCC_API='https://api.bncc.dev/v1';
+const bnccState={items:[],query:'',stage:''};
+async function bnccJson(path){
+  const r=await fetch(BNCC_API+path,{headers:{Accept:'application/json'}});
+  if(!r.ok)throw new Error('BNCC HTTP '+r.status);
+  return r.json();
+}
+function normalizeBncc(raw){
+  if(!raw)return null;
+  const x=raw.habilidade||raw.aprendizagem||raw;
+  return {codigo:x.codigo||x.code||'',texto:x.texto||x.description||x.enunciado||'',etapa:x.etapa||x.stage||'',componente:x.componente||x.component||'',anos:x.anos||x.years||[],fonte:x.fonte||{}};
+}
+function extractBncc(data){
+  const arr=Array.isArray(data)?data:(data?.resultados||data?.aprendizagens||data?.habilidades||data?.items||data?.data||[]);
+  return arr.map(normalizeBncc).filter(x=>x&&x.codigo&&x.texto);
+}
+function renderBnccResults(box,items){
+  if(!items.length){box.innerHTML='<div class="lq-bncc-repo-note">Nenhuma aprendizagem encontrada para esta pesquisa.</div>';return}
+  box.innerHTML=items.slice(0,80).map(x=>`<article class="lq-bncc-result-page"><div><span class="code">${esc(x.codigo)}</span><h3>${esc(x.texto)}</h3><p>${esc(x.componente||'Componente não informado')} ${x.anos?.length?' · '+esc(x.anos.join(', ')):''} ${x.etapa?' · '+esc(x.etapa):''}</p><small>${esc(x.fonte?.localizador_pdf||x.fonte?.localizador||'Fonte oficial rastreável')}</small></div><button class="btn btn-outline btn-sm" type="button" data-bncc-copy="${esc(x.codigo)}">Usar no acompanhamento</button></article>`).join('');
+  $$('[data-bncc-copy]',box).forEach(b=>b.onclick=async()=>{try{const x=await bnccJson('/aprendizagens/'+encodeURIComponent(b.dataset.bnccCopy));localStorage.setItem('legado_bncc_selected',JSON.stringify(normalizeBncc(x)));notify('Habilidade BNCC selecionada. Abra o perfil do aluno para registrar o acompanhamento.')}catch(e){notify('Não foi possível abrir a habilidade.',false)}});
+}
+async function renderBnccPage(){
+  let view=$('#view-bncc');
+  if(!view){
+    view=D.createElement('section');view.id='view-bncc';view.className='view';
+    view.innerHTML='<div id="bnccContent" class="content"></div>';
+    D.querySelector('.app')?.appendChild(view);
+  }
+  const c=$('#bnccContent',view);if(!c)return;
+  c.innerHTML=`<div class="v3-page lq-bncc-page">
+    <section class="lq-bncc-hero">
+      <div class="v3-kicker">CURRÍCULO OFICIAL</div>
+      <h1>BNCC</h1>
+      <p>Consulta das aprendizagens estruturadas do projeto bncc-dados, com código, texto, etapa, componente, anos e proveniência.</p>
+      <div class="lq-bncc-source-grid">
+        <div class="lq-bncc-source-card"><strong>BNCC 2018</strong><span>Educação Infantil, Ensino Fundamental e Ensino Médio.</span></div>
+        <div class="lq-bncc-source-card"><strong>Computação 2022</strong><span>Complemento do Parecer CNE/CEB 2/2022.</span></div>
+        <div class="lq-bncc-source-card"><strong>1.721 aprendizagens</strong><span>Dataset estruturado e rastreável.</span></div>
+        <div class="lq-bncc-source-card"><strong>Proveniência</strong><span>Aba/linha da fonte e página PDF quando disponível.</span></div>
+      </div>
+    </section>
+    <section class="v3-panel">
+      <div class="v3-panel-head"><div><h2>Consultar a BNCC</h2><p>Pesquise pelo código ou pelo texto da aprendizagem.</p></div><a class="btn btn-outline btn-sm" href="https://github.com/bncc-dev/bncc-dados" target="_blank" rel="noopener">Repositório oficial</a></div>
+      <div class="lq-bncc-searchbar">
+        <select id="lqBnccPageStage"><option value="">Todas as etapas</option><option value="EI">Educação Infantil</option><option value="EF">Ensino Fundamental</option><option value="EM">Ensino Médio</option></select>
+        <input id="lqBnccPageSearch" type="search" placeholder="Ex.: EF67LP08, leitura, frações, alfabetização…">
+        <button id="lqBnccPageGo" type="button" class="btn btn-primary"><i data-lucide="search"></i>Pesquisar</button>
+      </div>
+      <div id="lqBnccPageStatus" class="lq-bncc-repo-note" style="margin-top:10px">Aguardando pesquisa.</div>
+      <div id="lqBnccPageResults" class="lq-bncc-results-page" style="margin-top:12px"></div>
+    </section>
+    <section class="v3-panel">
+      <div class="lq-bncc-repo-note"><strong>Sobre a integração:</strong> esta página consulta a base oficial publicada pelo projeto. A versão anterior do sistema não continha fisicamente as pastas do repositório; ela apenas consultava a API. Para embutir o repositório completo dentro do HTML, é necessário receber o ZIP/pasta do GitHub, pois este ambiente não conseguiu baixar o arquivo ZIP do GitHub diretamente.</div>
+    </section>
+  </div>`;
+  refresh();
+  const search=async()=>{
+    const q=String($('#lqBnccPageSearch')?.value||'').trim(),stage=String($('#lqBnccPageStage')?.value||'');
+    const status=$('#lqBnccPageStatus'),box=$('#lqBnccPageResults');
+    if(!q){box.innerHTML='';status.textContent='Digite um código ou tema para pesquisar.';return}
+    status.textContent='Consultando a base BNCC…';box.innerHTML='<div class="lq-bncc-repo-note">Carregando...</div>';
+    try{
+      const data=await bnccJson('/busca?q='+encodeURIComponent(q)+(stage?'&etapa='+encodeURIComponent(stage):''));
+      const items=extractBncc(data);bnccState.items=items;renderBnccResults(box,items);
+      status.textContent=items.length+' aprendizagem(ns) encontrada(s).';
+    }catch(e){status.textContent='A consulta não respondeu. Verifique a internet.';box.innerHTML='<div class="lq-bncc-repo-note">Não foi possível consultar a BNCC agora.</div>'}
+  };
+  $('#lqBnccPageGo').onclick=search;
+  $('#lqBnccPageSearch').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();search()}};
+}
+
+/* botão BNCC no menu — não altera as telas existentes */
+function installBnccNav(){
+  const nav=$('#mainNav');if(!nav||nav.querySelector('[data-legado-bncc]'))return;
+  const b=D.createElement('button');b.type='button';b.setAttribute('data-legado-bncc','1');b.innerHTML='<i data-lucide="book-open-check"></i><span class="nav-label">BNCC</span>';
+  b.onclick=()=>openBncc();
+  nav.appendChild(b);refresh();
+}
+function openBncc(){
+  $$('.view').forEach(v=>v.classList.remove('active'));
+  let view=$('#view-bncc');
+  if(!view){renderBnccPage().then(()=>{view=$('#view-bncc');view?.classList.add('active');setBnccTitle()});}
+  else {view.classList.add('active');renderBnccPage();setBnccTitle()}
+  $$('#mainNav button[data-view]').forEach(b=>b.classList.remove('active'));
+}
+function setBnccTitle(){
+  const t=$('#pageTitle');if(t)t.innerHTML='<i data-lucide="book-open-check"></i><span>BNCC</span>';refresh();
+}
+W.openBncc=openBncc;
+W.renderBncc=renderBnccPage;
+installBnccNav();
+setTimeout(installBnccNav,500);
+
+/* Corrige navegação caso o usuário acesse a rota manualmente. */
+const navBase=W.navigate;
+if(typeof navBase==='function'&&!navBase.__bnccFinal){
+  const nav=function(view){
+    if(view==='bncc'){openBncc();return}
+    return navBase.apply(this,arguments);
+  };
+  nav.__bnccFinal=true;W.navigate=nav;
+}
+
+/* Seletor BNCC no perfil: aproveita a habilidade selecionada da página. */
+D.addEventListener('click',e=>{
+  const b=e.target.closest?.('[data-bncc-copy]');
+  if(!b)return;
+});
 })();
 </script>
 </html>
