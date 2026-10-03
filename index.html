@@ -20875,4 +20875,320 @@ body.final27-dark hr{border-color:var(--ui-border)!important;background:var(--ui
 })();
 </script>
 
+<style id="legado-ui-v8-design-system">
+/* ============================================================
+   V8 — DESIGN EDITORIAL / WORKSPACE
+   Uma proposta visual nova: mais hierarquia, âncoras, contexto
+   e ferramentas, sem trocar os motores funcionais dos módulos.
+   ============================================================ */
+:root{
+  --v8-ink:#1f2c28;
+  --v8-muted:#73807a;
+  --v8-faint:#9ba8a2;
+  --v8-line:#dfe7e3;
+  --v8-line-strong:#cedbd4;
+  --v8-surface:#ffffff;
+  --v8-surface-soft:#f7faf8;
+  --v8-surface-2:#f1f6f3;
+  --v8-bg:#f3f7f5;
+  --v8-primary:#3f7a63;
+  --v8-primary-strong:#285b47;
+  --v8-primary-soft:#e8f3ed;
+  --v8-accent:#6875d6;
+  --v8-accent-soft:#eef0ff;
+  --v8-warning:#a87323;
+  --v8-warning-soft:#fff5df;
+  --v8-danger:#ae5d5d;
+  --v8-danger-soft:#fff0f0;
+  --v8-shadow-sm:0 5px 18px rgba(26,47,39,.045);
+  --v8-shadow-md:0 12px 34px rgba(26,47,39,.08);
+  --v8-radius:18px;
+  --v8-radius-sm:12px;
+}
+
+/* ----- base ----- */
+html,body{background:var(--v8-bg)!important;color:var(--v8-ink)}
+body{letter-spacing:-.005em}
+.app,.main,.content,.view{min-width:0}
+.topbar{height:76px!important;padding:0 34px!important;background:rgba(255,255,255,.94)!important;border-bottom:1px solid var(--v8-line)!important;backdrop-filter:blur(12px)}
+.sidebar{width:232px!important;padding:18px 13px!important;background:#fbfdfc!important;border-right:1px solid var(--v8-line)!important}
+.brand{height:58px!important;padding:0 12px!important}
+.brand-mark{width:39px!important;height:39px!important;border-radius:13px!important}
+.brand-text .main{font-size:13px!important;color:var(--v8-primary-strong)!important}
+.brand-text .sub{font-size:8px!important;color:var(--v8-faint)!important}
+.nav{gap:4px!important;margin-top:20px!important}
+.nav button{min-height:46px!important;padding:0 14px!important;border-radius:13px!important;color:#66746e!important}
+.nav button.active{background:linear-gradient(135deg,var(--v8-primary-soft),#eef8f4)!important;color:var(--v8-primary-strong)!important;box-shadow:inset 3px 0 0 var(--v8-primary)!important}
+.nav button:hover{background:#f0f5f2!important;color:var(--v8-ink)!important}
+.content{padding:28px 34px 48px!important;background:var(--v8-bg)!important}
+#dashboardContent,#alunosContent,#agendaContent,#avaliacoesContent,#financeiroContent,#waitlistContent,#perfilContent,#studentProfileContent,#masterContent,#documentosContent{max-width:1500px!important;margin:0 auto!important}
+
+/* ----- universal hierarchy ----- */
+.v3-head,.final33-dashboard-head,.page-heading,.final45-head{align-items:flex-start!important;gap:22px!important;margin-bottom:18px!important}
+.v3-head h1,.final33-dashboard-head h1,.page-heading h1,.final45-head h1{font-size:31px!important;letter-spacing:-.045em!important;line-height:1.05!important;color:var(--v8-ink)!important}
+.v3-head p,.final33-dashboard-head p,.page-heading p,.final45-head p{max-width:760px!important;color:var(--v8-muted)!important;font-size:12px!important;line-height:1.7!important}
+.v3-kicker,.final33-eyebrow,.final45-eyebrow{color:var(--v8-primary)!important;font-weight:900!important;letter-spacing:.14em!important;font-size:9px!important}
+.section-title,.v3-panel-head h2,.final33-panel-head h2{color:var(--v8-ink)!important}
+
+/* ----- unified surfaces ----- */
+.card,.v3-panel,.final33-panel,.final33-chart-shell,.l14-panel,.final19-doc-card,.v3-stat,.final33-kpi,.v3-wait-card,.settings-card,.profile-card,.form-card,.final44-history-item,.final44-eval-block,.legado-guide,.v3-inline-editor{
+  border:1px solid var(--v8-line)!important;
+  background:var(--v8-surface)!important;
+  border-radius:var(--v8-radius)!important;
+  box-shadow:var(--v8-shadow-sm)!important;
+}
+.card:hover,.v3-panel:hover,.final33-panel:hover,.final33-chart-shell:hover,.v3-wait-card:hover,.final19-doc-card:hover{box-shadow:var(--v8-shadow-md)!important}
+.v3-panel,.final33-panel,.final33-chart-shell{padding:19px!important}
+.v3-panel-head,.final33-panel-head{padding-bottom:13px!important;margin-bottom:12px!important;border-bottom:1px solid var(--v8-line)!important}
+.v3-panel-head p,.final33-panel-head p{color:var(--v8-muted)!important;font-size:10px!important;line-height:1.55!important}
+
+/* ----- stats / KPI: layered cards ----- */
+.v3-stats,.final33-kpis,.stats{gap:14px!important;margin:14px 0 18px!important}
+.v3-stat,.final33-kpi,.stat-card{padding:16px 17px!important;min-height:96px!important;position:relative;overflow:hidden}
+.v3-stat::after,.final33-kpi::after{content:"";position:absolute;right:-20px;bottom:-28px;width:95px;height:95px;border-radius:50%;background:var(--v8-primary-soft);opacity:.6}
+.v3-stat .v3-icon,.final33-kpi .final33-kpi-icon{position:relative;z-index:1}
+.v3-stat strong,.final33-kpi strong,.stat-value{font-size:23px!important;line-height:1!important;color:var(--v8-ink)!important}
+.v3-stat span,.final33-kpi span,.stat-label{color:var(--v8-muted)!important}
+
+/* ----- buttons ----- */
+.btn{border-radius:11px!important;min-height:38px!important;font-size:11px!important;font-weight:800!important;box-shadow:none!important}
+.btn-primary{background:linear-gradient(135deg,var(--v8-primary),var(--v8-primary-strong))!important}
+.btn-soft{background:var(--v8-primary-soft)!important;color:var(--v8-primary-strong)!important}
+.btn-blue{background:var(--v8-accent-soft)!important;color:#5562be!important}
+.btn-outline{background:var(--v8-surface)!important;border:1px solid var(--v8-line-strong)!important;color:#57645f!important}
+.btn-danger{background:var(--v8-danger-soft)!important;color:var(--v8-danger)!important}
+
+/* ----- forms / tables ----- */
+.input,.select,.textarea,input,select,textarea{border-radius:11px!important;border-color:var(--v8-line-strong)!important;background:#fbfdfc!important;color:var(--v8-ink)!important}
+.input:focus,.select:focus,.textarea:focus,input:focus,select:focus,textarea:focus{border-color:#8cb8a3!important;box-shadow:0 0 0 4px rgba(63,122,99,.08)!important}
+.label,.v3-form label>span,.v4-form label>span,.form-field span{color:#65736d!important;font-size:9px!important;font-weight:900!important;letter-spacing:.03em!important}
+.v3-form-grid,.v4-grid,.form-grid{gap:14px!important}
+
+/* ----- V8 workspace toolbar / anchors ----- */
+.v8-workspacebar{
+  position:sticky;top:0;z-index:12;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:18px;
+  padding:12px 14px;margin:8px 0 18px;
+  background:rgba(255,255,255,.88);border:1px solid var(--v8-line);
+  border-radius:16px;box-shadow:0 8px 24px rgba(26,47,39,.05);backdrop-filter:blur(10px)
+}
+.v8-workspace-main{display:flex;align-items:center;gap:10px;min-width:0}
+.v8-route{display:flex;align-items:center;gap:6px;min-width:0;color:var(--v8-muted);font-size:9px;font-weight:800;white-space:nowrap}
+.v8-route b{color:var(--v8-ink);font-size:10px}
+.v8-tools{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.v8-tool-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:32px;padding:7px 10px;border-radius:10px;border:1px solid var(--v8-line);background:var(--v8-surface);color:#58665f;font-size:9px;font-weight:900;cursor:pointer;transition:.18s ease}
+.v8-tool-btn:hover{transform:translateY(-1px);border-color:#b8ccc0;background:var(--v8-surface-soft)}
+.v8-tool-btn.primary{border-color:transparent;background:var(--v8-primary-soft);color:var(--v8-primary-strong)}
+.v8-tool-btn svg{width:14px;height:14px}
+.v8-anchorbar{display:flex;gap:5px;overflow:auto;padding-top:2px;scrollbar-width:none}
+.v8-anchorbar::-webkit-scrollbar{display:none}
+.v8-anchor{white-space:nowrap;border:0;background:transparent;color:#85918c;font-size:8px;font-weight:900;padding:5px 7px;border-radius:8px;cursor:pointer}
+.v8-anchor:hover,.v8-anchor.active{color:var(--v8-primary-strong);background:var(--v8-primary-soft)}
+
+/* contextual overview */
+.v8-overview{
+  display:grid;grid-template-columns:minmax(0,1.45fr) repeat(3,minmax(130px,.6fr));gap:9px;
+  margin:-4px 0 16px;
+}
+.v8-overview-card{min-height:70px;padding:12px 13px;border:1px solid var(--v8-line);border-radius:14px;background:var(--v8-surface);box-shadow:var(--v8-shadow-sm)}
+.v8-overview-card .k{font-size:8px;color:var(--v8-muted);font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.v8-overview-card .v{margin-top:5px;font-size:17px;font-weight:900;color:var(--v8-ink)}
+.v8-overview-card .s{margin-top:3px;font-size:8px;color:var(--v8-faint);line-height:1.35}
+.v8-overview-card.hero{background:linear-gradient(135deg,#eff7f2,#fbfdfc);border-color:#cfe1d6}
+.v8-overview-card.hero .v{font-size:13px}
+
+/* ----- dense but calm lists ----- */
+.v3-wait-grid,.final19-doc-grid{gap:13px!important}
+.v3-wait-card,.final19-doc-card{min-height:145px!important}
+.v3-history-item,.final44-history-item{border-radius:14px!important}
+.final33-birthday-row,.final44-bday-row{border:1px solid var(--v8-line)!important;border-radius:14px!important;background:var(--v8-surface)!important;padding:10px 12px!important}
+.final33-bday-day,.final44-bday-date{width:42px!important;height:42px!important;background:var(--v8-primary-soft)!important;color:var(--v8-primary-strong)!important;border-radius:12px!important}
+.final44-bday-wa,.final33-bday-wa{width:34px!important;height:34px!important;display:grid!important;place-items:center!important;border-radius:10px!important;background:#edf8f2!important;color:#34815e!important;border:1px solid #d3e9dc!important}
+.final44-bday-wa svg,.final33-bday-wa svg{width:16px!important;height:16px!important;margin:0!important;display:block!important}
+
+/* ----- document cards ----- */
+.final19-doc-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.final19-doc-card{padding:17px!important}
+.final19-doc-icon{box-shadow:inset 0 0 0 1px rgba(255,255,255,.65)!important}
+
+/* ----- professional profile density ----- */
+.v3-student-hero{padding:22px!important;margin-bottom:16px!important}
+.v3-avatar.large{width:78px!important;height:78px!important;border-radius:18px!important}
+.v3-profile-tabs,.final44-profile-tabs,.final45-tabs{position:sticky!important;top:78px!important;z-index:10!important;padding:5px!important;gap:5px!important;background:rgba(247,250,248,.92)!important;backdrop-filter:blur(8px)!important;border:1px solid var(--v8-line)!important;border-radius:14px!important}
+.v3-profile-tabs button,.final44-profile-tabs button,.final45-tabs button{padding:9px 10px!important;font-size:9px!important}
+
+/* ----- modals: clear hierarchy ----- */
+.final19-modal-overlay,.final44-modal-backdrop,.legado-v4-modal,.v4-modal-overlay,.saas-payment-modal{background:rgba(19,31,26,.6)!important;backdrop-filter:blur(7px)!important}
+.final19-doc-modal,.final44-modal,.legado-v4-dialog,.v4-modal,.saas-payment-card,.final45-modal{border-radius:22px!important;border:1px solid var(--v8-line-strong)!important;box-shadow:0 30px 100px rgba(0,0,0,.3)!important}
+
+/* ----- dark mode: one coherent palette, no white traces ----- */
+body.final27-dark,
+body.final27-dark #app,body.final27-dark .app,body.final27-dark .main,body.final27-dark main,body.final27-dark .content,body.final27-dark .view,body.final27-dark .view.active{background:#0c1210!important;color:#e7f0eb!important}
+body.final27-dark .topbar{background:rgba(13,20,17,.94)!important;border-color:#25332d!important}
+body.final27-dark .sidebar{background:#0d1411!important;border-color:#24312c!important}
+body.final27-dark .nav button{color:#9da9a3!important}
+body.final27-dark .nav button:hover{background:#141e19!important;color:#eef5f0!important}
+body.final27-dark .nav button.active{background:#172820!important;color:#cce6d8!important;box-shadow:inset 3px 0 0 #69a887!important}
+body.final27-dark .v8-workspacebar,.body.final27-dark .v8-workspacebar{background:rgba(15,23,19,.92)!important;border-color:#293831!important}
+body.final27-dark .v8-route,body.final27-dark .v8-anchor{color:#8e9d95!important}
+body.final27-dark .v8-route b,body.final27-dark .v8-anchor:hover,body.final27-dark .v8-anchor.active{color:#d6e8df!important}
+body.final27-dark .v8-tool-btn{background:#121b17!important;border-color:#2b3b34!important;color:#b9c9c1!important}
+body.final27-dark .v8-tool-btn.primary{background:#1a2c23!important;color:#bfe2d0!important;border-color:#2d4b3b!important}
+body.final27-dark .v8-overview-card,body.final27-dark .card,body.final27-dark .v3-panel,body.final27-dark .final33-panel,body.final27-dark .final33-chart-shell,body.final27-dark .l14-panel,body.final27-dark .final19-doc-card,body.final27-dark .v3-stat,body.final27-dark .final33-kpi,body.final27-dark .v3-wait-card,body.final27-dark .settings-card,body.final27-dark .profile-card,body.final27-dark .form-card,body.final27-dark .final44-history-item,body.final27-dark .final44-eval-block,body.final27-dark .legado-guide,body.final27-dark .v3-inline-editor,body.final27-dark .final33-birthday-row,body.final27-dark .final44-bday-row{background:#111a16!important;border-color:#2a3832!important;color:#e5eee9!important}
+body.final27-dark .v8-overview-card.hero{background:#16241e!important;border-color:#2f463b!important}
+body.final27-dark .v8-overview-card .v,body.final27-dark .v3-stat strong,body.final27-dark .final33-kpi strong,body.final27-dark .section-title,body.final27-dark .v3-panel-head h2,body.final27-dark .final33-panel-head h2,body.final27-dark .v3-head h1,body.final27-dark .final33-dashboard-head h1{color:#eef5f1!important}
+body.final27-dark .v8-overview-card .k,body.final27-dark .v8-overview-card .s,body.final27-dark .v3-head p,body.final27-dark .final33-dashboard-head p,body.final27-dark .v3-panel-head p,body.final27-dark .final33-panel-head p{color:#92a29a!important}
+body.final27-dark input,body.final27-dark select,body.final27-dark textarea,body.final27-dark .input,body.final27-dark .select,body.final27-dark .textarea{background:#0f1713!important;border-color:#31423a!important;color:#e8f1ec!important}
+body.final27-dark .btn-outline{background:#121b17!important;border-color:#33443c!important;color:#d9e6e0!important}
+body.final27-dark .v3-panel-head,.body.final27-dark .v3-panel-head,body.final27-dark .final33-panel-head{border-color:#2a3832!important}
+body.final27-dark .v3-profile-tabs,body.final27-dark .final44-profile-tabs,body.final27-dark .final45-tabs{background:rgba(17,26,22,.92)!important;border-color:#2b3a33!important}
+body.final27-dark .final33-bday-day,body.final27-dark .final44-bday-date{background:#183027!important;color:#b9dfcc!important}
+body.final27-dark .final44-bday-wa,body.final27-dark .final33-bday-wa{background:#152820!important;border-color:#2d4a3b!important;color:#83c5a4!important}
+body.final27-dark hr{border-color:#2b3933!important;background:#2b3933!important}
+
+/* ----- responsive ----- */
+@media(max-width:1100px){
+  .v8-overview{grid-template-columns:1.5fr repeat(2,.7fr)}
+  .final19-doc-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:820px){
+  .sidebar{width:72px!important;padding:14px 7px!important}
+  .brand{justify-content:center}
+  .brand-text{display:none!important}
+  .nav-label{display:none!important}
+  .nav button{justify-content:center;padding:0!important}
+  .topbar{padding:0 16px!important}
+  .content{padding:20px 16px 36px!important}
+  .v8-workspacebar{grid-template-columns:1fr;top:0}
+  .v8-tools{justify-content:flex-start}
+  .v8-overview{grid-template-columns:1fr 1fr}
+  .v8-overview-card.hero{grid-column:1/-1}
+  .v3-head h1,.final33-dashboard-head h1,.page-heading h1,.final45-head h1{font-size:27px!important}
+}
+@media(max-width:560px){
+  .v8-overview{grid-template-columns:1fr}
+  .v8-overview-card.hero{grid-column:auto}
+  .final19-doc-grid{grid-template-columns:1fr!important}
+  .v3-stats,.stats,.final33-kpis{grid-template-columns:1fr 1fr!important}
+}
+</style>
+
+
+<script id="legado-ui-v8-runtime">
+(function(){
+  'use strict';
+  const W=window,D=document;
+  const $=(s,r=D)=>r.querySelector(s);
+  const $$=(s,r=D)=>Array.from(r.querySelectorAll(s));
+  const esc=v=>typeof W.escapeHtml==='function'?W.escapeHtml(String(v??'')):String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
+
+  if(W.__legadoV8Loaded)return;
+  W.__legadoV8Loaded=true;
+
+  const PAGES={
+    dashboard:{label:'Início',anchors:['Visão geral','Próximos atendimentos','Indicadores','Aniversariantes'],tools:[['Novo aluno','users-round','()=>W.openNewStudentModal?.()'],['Novo atendimento','calendar-plus','()=>W.v4OpenAppointmentModal?.()'],['Nova avaliação','clipboard-plus','()=>W.v3OpenEvaluationEditor?.()'],['Novo lançamento','wallet-cards','()=>W.v3OpenFinanceEditor?.()'],['Documento','file-plus-2','()=>W.openDocModal?.(\'recibo\')']]},
+    alunos:{label:'Alunos',anchors:['Resumo','Sua carteira','Busca','Alunos desativados'],tools:[['Novo aluno','user-plus','()=>W.openNewStudentModal?.()'],['Recarregar','refresh-cw','()=>W.renderStudents?.()']]},
+    agenda:{label:'Agenda',anchors:['Calendário','Dia selecionado','Próximos atendimentos','Disponibilidade','Histórico'],tools:[['Novo atendimento','calendar-plus','()=>W.v4OpenAppointmentModal?.()'],['Hoje','calendar-days','()=>W.l14AgendaToday?.()'],['Recarregar','refresh-cw','()=>W.renderAgenda?.()']]},
+    avaliacoes:{label:'Avaliações',anchors:['Biblioteca de instrumentos','Histórico de aplicações','Indicadores','Relatórios'],tools:[['Aplicar avaliação','play-circle','()=>W.v3OpenEvaluationEditor?.()'],['Histórico','history','()=>W.scrollToTextV8?.(\'Histórico de aplicações\')'],['Recarregar','refresh-cw','()=>W.renderEvaluations?.()']]},
+    financeiro:{label:'Financeiro',anchors:['Visão financeira','Resumo do mês','Contas e pagamentos','Relatórios'],tools:[['Novo lançamento','plus-circle','()=>W.v3OpenFinanceEditor?.()'],['Contas e pagamentos','receipt-text','()=>W.scrollToTextV8?.(\'Contas e pagamentos\')'],['PDF anual','file-down','()=>W.legadoSaveFinanceYearPDF?.(new Date().getFullYear())']]},
+    'lista-espera':{label:'Lista de espera',anchors:['Fila atual','Indicadores','Histórico encerrado'],tools:[['Adicionar interessado','user-plus','()=>W.v4OpenWaitlistModal?.()'],['Recarregar','refresh-cw','()=>W.renderWaitlist?.()']]},
+    'aluno-perfil':{label:'Perfil do aluno',anchors:['Resumo','Indicadores do prontuário','Avaliações','Atendimentos','Família e escola','Progresso','Contexto'],tools:[['Editar aluno','pencil','()=>W.v3ShowStudentEditor?.(W.state?.selectedStudent||null)'],['Nova avaliação','clipboard-plus','()=>W.v3OpenEvaluationEditor?.()'],['Registrar atendimento','stethoscope','()=>W.legadoOpenDetailedAttendance?.()'],['Documento','file-plus-2','()=>W.openDocModal?.(\'declaracao\')']]},
+    perfil:{label:'Meu perfil',anchors:['Dados pessoais','Acesso e plano','Preferências','Segurança'],tools:[['Salvar perfil','save','()=>W.saveProfile?.()'],['Recarregar','refresh-cw','()=>W.renderProfile?.()']]},
+    documentos:{label:'Modelos e documentos',anchors:['Modelos','Editor','PDF e impressão'],tools:[['Novo recibo','receipt-text','()=>W.openDocModal?.(\'recibo\')'],['Nova declaração','file-check-2','()=>W.openDocModal?.(\'declaracao\')'],['Encaminhamento','send','()=>W.openDocModal?.(\'encaminhamento\')']]},
+    master:{label:'Administração',anchors:['Visão geral','Professores','Planos','Financeiro','Suporte'],tools:[['Atualizar','refresh-cw','()=>W.renderMaster?.()']]}
+  };
+
+  function currentView(){return String(W.state?.currentView||'dashboard')}
+  function firstHeader(root){return $('.v3-head,.final33-dashboard-head,.page-heading,.final45-head',root)}
+  function normalize(t){return String(t||'').toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\\s+/g,' ').trim()}
+
+  function scrollToText(text){
+    const n=normalize(text), root=$('#content')||D;
+    const candidates=$$('h1,h2,h3,.section-title,.v3-kicker,.final33-eyebrow,.v3-panel-head',root);
+    let best=null;
+    for(const el of candidates){
+      const a=normalize(el.textContent||'');
+      if(a.includes(n)||n.includes(a)){best=el;break;}
+    }
+    if(best){best.scrollIntoView({behavior:'smooth',block:'start'});return;}
+    const any=$$('section,article,.card,.v3-panel,.final33-panel,.l14-panel',root).find(el=>normalize(el.textContent||'').includes(n));
+    if(any)any.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  W.scrollToTextV8=scrollToText;
+
+  function safeInvoke(expr){try{new Function('W',expr)(W)}catch(e){console.warn('[UI V8]',e.message)}}
+
+  function metric(view){
+    const st=W.state||{};
+    const students=Array.isArray(st.students)?st.students:[];
+    const apps=Array.isArray(st.appointments)?st.appointments:[];
+    const evals=Array.isArray(st.evaluations)?st.evaluations:[];
+    const expenses=Array.isArray(st.expenses)?st.expenses:[];
+    const wait=Array.isArray(st.waitlist)?st.waitlist:[];
+    if(view==='dashboard')return [
+      ['Alunos ativos',students.filter(s=>String(s.status||'active').toLowerCase()!=='inactive').length,'Cadastros em acompanhamento'],
+      ['Hoje',apps.filter(a=>String(a.appointment_date||a.date||'').slice(0,10)===new Date().toISOString().slice(0,10)).length,'Atendimentos previstos'],
+      ['Avaliações',evals.length,'Histórico disponível'],
+      ['Fila',wait.filter(r=>!['cancelled','converted'].includes(String(r.status||'').toLowerCase())).length,'Interessados ativos']
+    ];
+    if(view==='alunos')return [['Cadastros',students.length,'Total de alunos'],['Ativos',students.filter(s=>String(s.status||'active').toLowerCase()!=='inactive').length,'Em acompanhamento'],['Desativados',students.filter(s=>String(s.status||'').toLowerCase()==='inactive').length,'Histórico preservado'],['Com telefone',students.filter(s=>s.phone).length,'Contato cadastrado']];
+    if(view==='avaliacoes')return [['Aplicações',evals.length,'Histórico completo'],['Concluídas',evals.filter(e=>String(e.status||'').toLowerCase()==='completed').length,'Registros finalizados'],['Em rascunho',evals.filter(e=>String(e.status||'').toLowerCase()!=='completed').length,'Em construção'],['Alunos avaliados',new Set(evals.map(e=>String(e.student_id||e.student_name||'')).filter(Boolean)).size,'Vínculos ativos']];
+    if(view==='financeiro')return [['Lançamentos',expenses.length,'Itens carregados'],['Receitas',expenses.filter(e=>String(e.kind||'income').toLowerCase()==='income').length,'Entradas'],['Despesas',expenses.filter(e=>String(e.kind||'').toLowerCase()==='expense').length,'Saídas'],['Mês',new Date().toLocaleDateString('pt-BR',{month:'long'}),'Competência atual']];
+    if(view==='lista-espera')return [['Na fila',wait.filter(r=>!['cancelled','converted'].includes(String(r.status||'').toLowerCase())).length,'Aguardando atendimento'],['Contatados',wait.filter(r=>String(r.status||'').toLowerCase()==='contacted').length,'Contato realizado'],['Convertidos',wait.filter(r=>String(r.status||'').toLowerCase()==='converted').length,'Viraram alunos'],['Histórico',wait.filter(r=>['cancelled','converted'].includes(String(r.status||'').toLowerCase())).length,'Registros encerrados']];
+    return [];
+  }
+
+  function overview(view){
+    const data=metric(view); if(!data.length)return '';
+    const lead= PAGES[view]?.label||'Workspace';
+    return `<div class="v8-overview"><div class="v8-overview-card hero"><div class="k">CENTRAL DE TRABALHO</div><div class="v">${esc(lead)}</div><div class="s">Navegação por âncoras, atalhos operacionais e informações organizadas por contexto.</div></div>${data.slice(0,3).map(x=>`<div class="v8-overview-card"><div class="k">${esc(x[0])}</div><div class="v">${esc(x[1])}</div><div class="s">${esc(x[2])}</div></div>`).join('')}</div>`;
+  }
+
+  function toolbar(view){
+    const p=PAGES[view]||PAGES.dashboard;
+    const tools=(p.tools||[]).map((t,i)=>`<button class="v8-tool-btn ${i===0?'primary':''}" type="button" data-v8-action="${i}"><i data-lucide="${t[1]}"></i><span>${esc(t[0])}</span></button>`).join('');
+    const anchors=(p.anchors||[]).map((t,i)=>`<button class="v8-anchor ${i===0?'active':''}" type="button" data-v8-anchor="${esc(t)}">${esc(t)}</button>`).join('');
+    return `<div class="v8-workspacebar" data-v8-view="${esc(view)}"><div class="v8-workspace-main"><div class="v8-route"><span>LEGADO QUE ENSINA</span><span>›</span><b>${esc(p.label)}</b></div><div class="v8-anchorbar">${anchors}</div></div><div class="v8-tools">${tools}</div></div>${overview(view)}`;
+  }
+
+  function mount(view){
+    if(view==='recados'||view==='messages')return;
+    const ids=view==='aluno-perfil'?['studentProfileContent']:view==='lista-espera'?['waitlistContent']:view==='documentos'?['documentosContent']:[`${view==='dashboard'?'dashboard':view}Content`];
+    let root=null;
+    for(const id of ids){root=byId(id);if(root)break}
+    if(!root)return;
+    $$('.v8-workspacebar',root).forEach(x=>x.remove());
+    $$('.v8-overview',root).forEach(x=>x.remove());
+    const h=firstHeader(root);
+    const wrap=document.createElement('div');wrap.innerHTML=toolbar(view);
+    const tb=wrap.firstElementChild;const ov=wrap.lastElementChild;
+    if(h){h.insertAdjacentElement('afterend',tb);tb.insertAdjacentElement('afterend',ov)}
+    else root.prepend(ov, tb);
+    const p=PAGES[view]||PAGES.dashboard;
+    tb.querySelectorAll('[data-v8-anchor]').forEach(btn=>btn.addEventListener('click',()=>{tb.querySelectorAll('[data-v8-anchor]').forEach(x=>x.classList.remove('active'));btn.classList.add('active');scrollToText(btn.dataset.v8Anchor)}));
+    tb.querySelectorAll('[data-v8-action]').forEach(btn=>{const idx=Number(btn.dataset.v8Action);const t=p.tools?.[idx];btn.addEventListener('click',()=>safeInvoke(t?.[2]||''));});
+    W.refreshIcons?.();
+  }
+
+  function cleanResidualVisuals(){
+    // V8 faz somente uma normalização idempotente: não cria loops nem observa o DOM.
+    $$('.v8-workspacebar').forEach(tb=>tb.querySelectorAll('svg').forEach(()=>{}));
+    // O chat/recados continuam fora da interface.
+    ['#view-recados','#recadosContent','#recadosBadge','#mainNav [data-view="recados"],[id*="ChatWidget"],[id*="ChatLauncher"],[id*="ConversationWidget"]'].forEach(sel=>$$(`${sel}`).forEach(el=>{el.style.setProperty('display','none','important')}));
+  }
+
+  const oldRenderCurrent=W.renderCurrentView;
+  if(typeof oldRenderCurrent==='function'&&!oldRenderCurrent.__uiV8){
+    const fn=async function(view){const r=await oldRenderCurrent.apply(this,arguments);setTimeout(()=>{mount(view);cleanResidualVisuals()},30);return r};fn.__uiV8=true;W.renderCurrentView=fn;
+  }
+
+  const oldNavigate=W.navigate;
+  if(typeof oldNavigate==='function'&&!oldNavigate.__uiV8){
+    const fn=function(view){if(view==='recados'||view==='messages')return;const r=oldNavigate.apply(this,arguments);setTimeout(()=>mount(view),80);return r};fn.__uiV8=true;W.navigate=fn;
+  }
+
+  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{mount(currentView());cleanResidualVisuals()},160),{once:true});
+  else setTimeout(()=>{mount(currentView());cleanResidualVisuals()},160);
+})();
+</script>
 </html>
