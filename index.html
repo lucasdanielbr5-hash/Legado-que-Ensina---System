@@ -1335,8 +1335,8 @@
       <div class="brand">
         <div class="brand-mark">
           <img
-            src="https://i.imgur.com/AUoGLEq.png"
-            alt="Logo"
+            src="https://i.imgur.com/Nnd3ori.png"
+            alt="Legado Que Ensina"
           >
         </div>
 
@@ -22730,7 +22730,7 @@ p,.muted,.help-text{font-size:11px!important;line-height:1.45!important}
         let img=mark.querySelector('img');
         if(!img){
           img=d.createElement('img');
-          img.src='https://i.imgur.com/AUoGLEq.png';
+          img.src='https://i.imgur.com/Nnd3ori.png';
           img.alt='Legado Que Ensina';
           mark.appendChild(img);
         }
@@ -22910,6 +22910,84 @@ img,svg,video,canvas{max-width:100%!important}
   }
   function boot(){syncLayout();setTimeout(syncLayout,250);setTimeout(syncLayout,900)}
   if(d.readyState==='loading') d.addEventListener('DOMContentLoaded',boot,{once:true}); else boot();
+})();
+</script>
+
+
+<style id="legado-final-logo-upload-2026">
+  /* Logo oficial do menu: versão branca fornecida pelo usuário. */
+  .sidebar .brand-mark img{
+    display:block!important;
+    width:40px!important;
+    height:40px!important;
+    max-width:none!important;
+    max-height:none!important;
+    object-fit:contain!important;
+    opacity:1!important;
+  }
+
+  /* Upload de foto do professor e do aluno: arquivo local, sem URL visível. */
+  #lqProfForm43 input[name="photo_url"],
+  #lqStudentForm43 input[name="photo_url"]{
+    display:none!important;
+  }
+  #lqProfForm43 .final43-image-field,
+  #lqStudentForm43 .final43-image-field{
+    width:100%;
+  }
+  #lqProfForm43 .final43-image-field > div:first-child label,
+  #lqStudentForm43 .final43-image-field > div:first-child label{
+    display:flex!important;
+    flex-direction:column!important;
+    gap:7px!important;
+    color:#596d61!important;
+    font-size:11px!important;
+    font-weight:650!important;
+  }
+  #lqProfForm43 input[name="photo_file"],
+  #lqStudentForm43 input[name="photo_file"]{
+    display:block!important;
+    width:100%!important;
+    min-height:42px!important;
+    padding:9px 10px!important;
+    border:1px dashed #cbdad2!important;
+    border-radius:11px!important;
+    background:#f8fbf9!important;
+    cursor:pointer!important;
+  }
+</style>
+<script id="legado-final-logo-upload-2026-js">
+(function(){
+  'use strict';
+  function enforceLogoAndUploads(){
+    document.querySelectorAll('.sidebar .brand-mark img').forEach(function(img){
+      if(img.getAttribute('src')!=='https://i.imgur.com/Nnd3ori.png'){
+        img.src='https://i.imgur.com/Nnd3ori.png';
+      }
+      img.alt='Legado Que Ensina';
+      img.setAttribute('data-logo-variant','white-menu');
+      img.style.display='block';
+      img.style.opacity='1';
+    });
+
+    ['#lqProfForm43','#lqStudentForm43'].forEach(function(sel){
+      var form=document.querySelector(sel);
+      if(!form)return;
+      var url=form.querySelector('input[name="photo_url"]');
+      if(url)url.type='hidden';
+      var file=form.querySelector('input[name="photo_file"]');
+      if(file){
+        file.type='file';
+        file.accept='image/*';
+      }
+    });
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',enforceLogoAndUploads,{once:true});
+  }else{
+    enforceLogoAndUploads();
+  }
+  window.addEventListener('load',enforceLogoAndUploads,{once:true});
 })();
 </script>
 
