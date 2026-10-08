@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#2f735a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
 
   <title>Legado Que Ensina · Gestão Psicopedagógica</title>
 
@@ -1064,7 +1068,7 @@
       }
     }
   </style>
-<meta name="legado-build" content="2026-10-03-final40">
+<meta name="legado-build" content="2026-10-07-final59">
 
 <style id="legado-stability-no-loop">
   /* Elementos legados ficam ocultos por CSS; não é necessário MutationObserver para removê-los. */
@@ -24317,5 +24321,47 @@ body.final27-dark .v3-tag.lq-tag-purple,body.final27-dark .v3-tag.lq-tag-slate{c
   D.addEventListener('transitionend',syncLoginLogo,{passive:true});
   setInterval(()=>{syncLoginLogo();enforceLayering();},1000);
 })();
+</script>
+<!-- FINAL59 — CONSOLIDAÇÃO RESPONSIVA E ROBUSTEZ -->
+<style id="legado-final59-responsive">
+html,body{width:100%;min-width:0;-webkit-text-size-adjust:100%}body{min-height:100dvh}
+.app,.main,.content,.view,[id$="Content"],.v3-page{min-width:0!important;max-width:100%!important}.main{overflow:hidden!important}.content{overflow:auto!important;overflow-x:hidden!important}
+img,svg,video,canvas{max-width:100%}button,.btn,input[type="button"],input[type="submit"]{touch-action:manipulation}button,.btn{min-height:40px}
+.v3-head-actions,.v3-form-actions,.form-actions,.modal-actions,.final44-actions,.final45-fin-actions{flex-wrap:wrap!important;min-width:0}.v3-head-actions>*,.v3-form-actions>*,.form-actions>*,.modal-actions>*{min-width:0}
+.v3-search{min-width:0!important}.v3-search input{min-width:0!important;width:100%!important}
+.v3-table,.final45-fin-table,.final43-fin-table,.rz-table,.table-wrap,.table-container,.data-table-wrap,.report-table-wrap,.schedule-table-wrap,.agenda-table-wrap{width:100%!important;max-width:100%!important;overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch}
+.final45-fin-row{min-width:760px!important}.final43-fin-row{min-width:680px!important}.rz-tr{min-width:510px}.v3-table-row{min-width:650px}
+.v3-calendar-grid{width:100%!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;min-width:0!important}.v3-weekdays{width:100%!important;grid-template-columns:repeat(7,minmax(0,1fr))!important}.v3-day{min-width:0!important;overflow:hidden}.v3-slot{min-width:0!important}.v3-slot-body{min-width:0!important;overflow:hidden}.v3-slot-body strong,.v3-slot-body span{overflow:hidden;text-overflow:ellipsis}
+@media(max-width:1180px){.sidebar{width:220px!important;flex:0 0 220px!important}.main{width:calc(100% - 220px)!important}.content{padding-left:20px!important;padding-right:20px!important}.v3-student-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.v3-two-col{grid-template-columns:1fr!important}.v3-stats,.v3-profile-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:900px) and (min-width:761px){.sidebar{width:84px!important;flex-basis:84px!important}.main{width:calc(100% - 84px)!important}.sidebar .brand{justify-content:center!important}.sidebar .brand-text{display:none!important}.sidebar .nav-label,.sidebar .side-bottom .nav-label{display:none!important}.sidebar .nav button{justify-content:center!important;padding-left:0!important;padding-right:0!important}.content{padding:18px 16px 30px!important}.v3-head{gap:14px!important}.v3-form-grid,.form-grid,.form-grid.two{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:760px){
+html,body{width:100%;max-width:100%;overflow:hidden!important}.app{width:100%!important;height:100dvh!important;overflow:hidden!important}.main{width:100%!important;height:100dvh!important}.topbar{width:100%!important;min-width:0!important}.content{width:100%!important;height:calc(100dvh - 64px)!important;padding:14px 12px 28px!important}
+.sidebar{position:fixed!important;left:0!important;top:0!important;bottom:0!important;width:min(300px,86vw)!important;height:100dvh!important;z-index:100001!important;transform:translateX(-105%)!important;transition:transform .22s ease!important;box-shadow:18px 0 45px rgba(12,31,25,.22)!important;overflow-y:auto!important;overflow-x:hidden!important}.mobile-menu-toggle{display:grid!important;place-items:center!important;width:42px!important;height:42px!important;flex:0 0 42px!important}.mobile-sidebar-backdrop{z-index:100000!important}body.mobile-menu-open .sidebar{transform:translateX(0)!important}
+.sidebar .brand{width:100%!important;justify-content:center!important;overflow:visible!important}.sidebar .brand-text{display:none!important}.sidebar .nav{width:100%!important;margin-top:20px!important}.sidebar .nav button{width:100%!important;justify-content:flex-start!important;padding:0 14px!important}.sidebar .nav-label,.sidebar .side-bottom .nav-label{display:inline!important}.sidebar .side-bottom .btn{width:100%!important;justify-content:flex-start!important}
+.topbar #pageTitle{font-size:16px!important;min-width:0!important;max-width:55vw!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}#topbarUserName{display:none!important}#topbarAvatar{flex:0 0 40px!important}
+.v3-head,.section-head,.panel-heading,.v3-panel-head,.v3-section-intro,.v3-student-hero,.v3-day-head,.rz-head{flex-direction:column!important;align-items:stretch!important}.v3-head h1{font-size:24px!important;line-height:1.15!important}.v3-head-actions,.v3-hero-actions,.v3-form-actions,.form-actions,.modal-actions{width:100%!important}.v3-head-actions>.btn,.v3-hero-actions>.btn,.v3-form-actions>.btn,.form-actions>.btn,.modal-actions>.btn{flex:1 1 160px!important}
+.v3-panel,.card,.report-panel,.final33-panel{padding:15px!important;border-radius:14px!important}.v3-stats,.v3-profile-stats,.stats,.v3-stat-grid,.final33-kpis,.final44-indicator-grid{grid-template-columns:1fr!important}.v3-two-col{grid-template-columns:1fr!important}.v3-form-grid,.form-grid,.form-grid.two,.v4-grid,.final44-grid,.final19-doc-fields{grid-template-columns:1fr!important}.v3-form label.full,.form-field.full,.form-field.full-width{grid-column:auto!important}
+input,select,textarea,.v3-form input,.v3-form select,.v3-form textarea{font-size:16px!important;max-width:100%!important}
+.v3-student-card,.v3-wait-card{height:auto!important;min-height:0!important}.v3-student-top{align-items:flex-start!important}.v3-student-ident{min-width:0!important}.v3-student-ident h3{overflow-wrap:anywhere}.v3-student-foot{flex-wrap:wrap!important}.v3-student-foot .btn{flex:1 1 150px!important}
+.v3-tabs,.final44-tabs,.filter-tabs,.v3-assessment-filter{max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch}.v3-tabs button,.final44-tabs button,.filter-tab,.v3-filter-chip{flex:0 0 auto!important}.v3-history-item,.final44-history-item{grid-template-columns:1fr!important;gap:8px!important}.final44-history-actions,.final45-fin-actions{width:100%!important;justify-content:flex-start!important}.final44-history-actions .btn,.final45-fin-actions .btn{min-height:42px!important}
+.legado-v4-modal,.final19-modal-overlay,.final44-modal-backdrop,#uxModal,#confirmModal{padding:8px!important;align-items:flex-start!important;overflow:auto!important}.legado-v4-dialog,.final44-modal,#uxModalCard,#confirmModal>div{width:100%!important;max-width:100%!important;max-height:calc(100dvh - 16px)!important;margin:0 auto!important;border-radius:15px!important;overflow:auto!important}#uxModalCard{padding:18px!important}.v4-actions,.final44-actions{flex-direction:column-reverse!important;align-items:stretch!important}.v4-actions .btn,.final44-actions .btn{width:100%!important;min-height:44px!important}
+.final45-fin-table,.final43-fin-table,.v3-table{overflow-x:auto!important}.final45-fin-row,.final43-fin-row,.v3-table-row{min-width:650px!important}.v3-agenda-layout{grid-template-columns:1fr!important}.v3-calendar-head{flex-wrap:wrap!important}.v3-calendar-grid{gap:4px!important}.v3-day{min-height:56px!important;padding:6px 3px!important;border-radius:9px!important}.v3-day strong{font-size:14px!important}.v3-day span,.v3-day small{font-size:8px!important}.v3-slot{grid-template-columns:52px minmax(0,1fr) auto!important;padding:10px!important}.toast{left:10px!important;right:10px!important;bottom:max(10px,env(safe-area-inset-bottom))!important;max-width:none!important}
+}
+@media(max-width:480px){.content{padding:11px 9px 24px!important}.topbar{padding:0 9px!important}.topbar #pageTitle{max-width:50vw!important}.btn{padding:10px 12px!important}.v3-panel,.card,.report-panel{padding:13px!important}.v3-avatar.large{width:58px!important;height:58px!important;border-radius:17px!important;font-size:18px!important}.v3-hero-left{gap:11px!important}.v3-hero-left h1{font-size:22px!important;overflow-wrap:anywhere}.final44-modal-head h2{font-size:18px!important}}
+@media(max-width:360px){.mobile-menu-toggle{width:40px!important;flex-basis:40px!important}.topbar #pageTitle{max-width:44vw!important;font-size:15px!important}.content{padding-left:7px!important;padding-right:7px!important}}
+@media(prefers-reduced-motion:reduce){.sidebar{transition:none!important}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+<script id="legado-final59-runtime">
+(function(){'use strict';const D=document,W=window,B=()=>D.body;
+function sync(open){const b=D.querySelector('.mobile-menu-toggle');if(!b)return;b.setAttribute('aria-expanded',String(!!open));b.setAttribute('aria-label',open?'Fechar menu':'Abrir menu');b.innerHTML='<i data-lucide="'+(open?'x':'menu')+'"></i>';W.refreshIcons?.()}
+function close(){B()?.classList.remove('mobile-menu-open');sync(false)}
+function setup(){const s=D.querySelector('.sidebar'),t=D.querySelector('.topbar');if(!s||!t)return;let b=t.querySelector('.mobile-menu-toggle');if(!b){b=D.createElement('button');b.type='button';b.className='mobile-menu-toggle';t.insertBefore(b,t.firstChild)}b.onclick=()=>{const o=!B().classList.contains('mobile-menu-open');B().classList.toggle('mobile-menu-open',o);sync(o)};if(!D.querySelector('.mobile-sidebar-backdrop')){const bg=D.createElement('div');bg.className='mobile-sidebar-backdrop';bg.setAttribute('aria-hidden','true');bg.addEventListener('click',close,{passive:true});D.body.appendChild(bg)}s.querySelectorAll('button').forEach(btn=>{if(btn.dataset.f59)return;btn.dataset.f59='1';btn.addEventListener('click',()=>{if(matchMedia('(max-width:760px)').matches)close()},{passive:true})});sync(B().classList.contains('mobile-menu-open'))}
+function protect(){D.querySelectorAll('.content,.view,[id$="Content"],.v3-page,.v3-panel,.card').forEach(e=>{e.style.maxWidth='100%';e.style.minWidth='0'})}
+function missing(err){const m=String(err?.message||err?.details||err?.hint||'');const a=m.match(/Could not find the ['"]([^'"]+)['"] column/i);if(a)return a[1];const b=m.match(/column ['"]?([A-Za-z_][A-Za-z0-9_]*)['"]?.*(?:does not exist|not found)/i);return b?.[1]||null}
+const optional=['type','family_contact','student_name','due_date','paid_at','payment_method','installment_group','installment_number','installment_total','description','notes','photo_url','responsible_name','cpf','email','full_name','date_of_birth','status'];
+if(typeof W.insertSafe==='function'&&!W.insertSafe.__f59){const base=W.insertSafe;W.insertSafe=async function(table,payload){let clean={...(payload||{})},last;for(let i=0;i<4;i++){try{return await base.call(this,table,clean)}catch(e){last=e;const c=missing(e);if(!c||!optional.includes(c)||!(c in clean))throw e;delete clean[c];console.warn('[Legado] coluna opcional ausente:',c)}}throw last||new Error('Não foi possível salvar.')} ;W.insertSafe.__f59=true}
+if(typeof W.updateSafe==='function'&&!W.updateSafe.__f59){const base=W.updateSafe;W.updateSafe=async function(table,id,payload){let clean={...(payload||{})},last;for(let i=0;i<4;i++){try{return await base.call(this,table,id,clean)}catch(e){last=e;const c=missing(e);if(!c||!optional.includes(c)||!(c in clean))throw e;delete clean[c];console.warn('[Legado] coluna opcional ausente no update:',c)}}throw last||new Error('Não foi possível atualizar.')} ;W.updateSafe.__f59=true}
+if(typeof W.v4OpenEvaluationModal==='function'){W.v3OpenEvaluationEditor=W.v4OpenEvaluationModal;W.openNewEvaluationModal=W.v4OpenEvaluationModal}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',()=>{setup();protect()},{once:true});else{setup();protect()}W.addEventListener('resize',()=>{if(!matchMedia('(max-width:760px)').matches)close();protect()},{passive:true});D.addEventListener('keydown',e=>{if(e.key==='Escape')close()})})();
 </script>
 </html>
