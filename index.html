@@ -13099,7 +13099,7 @@ body.legado-v4-modal-open{overflow:hidden}
   --radius-sm:11px;
 }
 html,body{background:var(--c-bg)!important;color:var(--c-text)!important}
-body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}
+body{font-family:'Poppins',sans-serif!important}
 .sidebar{
   width:252px!important;
   background:linear-gradient(180deg,#173f3a 0%,#1f514a 55%,#245d55 100%)!important;
@@ -26009,6 +26009,338 @@ button,.btn,.mpro-primary-btn,.mpro-light-btn,.mpro-icon-btn,.v3-btn,.final44-hi
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(run,80),{once:true}); else setTimeout(run,80);
   new MutationObserver(()=>setTimeout(run,30)).observe(document.body,{childList:true,subtree:true});
   window.LegadoCleanUI={run};
+})();
+</script>
+<style id="legado-clean-redesign-v3">
+/* ==============================================================
+   LEGADO QUE ENSINA — REDESIGN CLÍNICO / LIMPO
+   Uma linguagem única para todo o sistema. Sem aparência de
+   "coleção de cards": o conteúdo usa superfícies, linhas e áreas.
+   ============================================================== */
+:root{
+  --r-bg:#f3f6f5;
+  --r-canvas:#f7f9f8;
+  --r-surface:#ffffff;
+  --r-surface-soft:#f8faf9;
+  --r-primary:#2d7063;
+  --r-primary-2:#3b8374;
+  --r-primary-soft:#eaf3ef;
+  --r-ink:#273531;
+  --r-muted:#7d8985;
+  --r-muted-2:#9aa49f;
+  --r-line:#e4ebe8;
+  --r-line-strong:#d6e1dd;
+  --r-danger:#a55d5a;
+  --r-danger-soft:#f8eeee;
+  --r-radius:10px;
+  --r-font:'Poppins',sans-serif;
+}
+
+/* ---------- BASE ---------- */
+html,body,body *{font-family:var(--r-font)!important}
+html,body{font-size:12px!important}
+body{
+  background:var(--r-bg)!important;
+  color:var(--r-ink)!important;
+  font-weight:400!important;
+  letter-spacing:0!important;
+  -webkit-font-smoothing:antialiased;
+}
+body *{font-weight:400!important;letter-spacing:0!important}
+body h1,body h2,body h3,body h4,body h5,body h6,
+body strong,body b,.page-title,.section-title{font-weight:600!important}
+body button,body .btn,body a{font-weight:500!important}
+
+/* ---------- APP CANVAS: fundo contínuo, sem caixas empilhadas ---------- */
+.app,.main{background:var(--r-bg)!important}
+.content{
+  position:relative;
+  background:
+    radial-gradient(circle at 100% 0,rgba(45,112,99,.035),transparent 32%),
+    linear-gradient(180deg,#f7f9f8 0%,#f2f6f4 100%)!important;
+  padding:24px 30px 38px!important;
+}
+.content::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background-image:linear-gradient(rgba(45,112,99,.018) 1px,transparent 1px);
+  background-size:100% 42px;
+  opacity:.35;
+}
+.view{position:relative;z-index:1}
+
+/* ---------- MENU ---------- */
+.sidebar{
+  width:220px!important;
+  flex:0 0 220px!important;
+  padding:14px 12px!important;
+  background:#fbfdfc!important;
+  border-right:1px solid var(--r-line)!important;
+  box-shadow:none!important;
+}
+.sidebar .brand{
+  height:76px!important;min-height:76px!important;margin:0 0 12px!important;
+  padding:4px!important;border:0!important;background:transparent!important;box-shadow:none!important;
+}
+.sidebar .brand-mark{width:148px!important;height:62px!important;flex:0 0 148px!important;background:transparent!important;border:0!important}
+.sidebar .brand-mark img{width:120px!important;max-height:58px!important;object-fit:contain!important}
+.sidebar .brand-text{display:none!important}
+.sidebar .nav{gap:2px!important;margin-top:3px!important}
+.sidebar .nav button{
+  height:35px!important;min-height:35px!important;padding:0 11px!important;
+  border-radius:7px!important;background:transparent!important;color:#77837f!important;
+  font-size:11px!important;box-shadow:none!important;transform:none!important;
+}
+.sidebar .nav button:hover{background:#f1f5f3!important;color:var(--r-ink)!important}
+.sidebar .nav button.active{
+  background:var(--r-primary-soft)!important;color:var(--r-primary)!important;
+  box-shadow:inset 2px 0 var(--r-primary)!important;font-weight:500!important;
+}
+.sidebar .nav svg{width:15px!important;height:15px!important;min-width:15px!important;stroke-width:1.8!important}
+.sidebar .side-bottom{border-top:1px solid var(--r-line)!important;padding-top:12px!important}
+.sidebar #logoutButton{height:30px!important;min-height:30px!important;font-size:10px!important}
+
+/* ---------- TOPO ---------- */
+.topbar{
+  height:60px!important;padding:0 27px!important;background:rgba(255,255,255,.93)!important;
+  border-bottom:1px solid var(--r-line)!important;box-shadow:none!important;backdrop-filter:blur(8px);
+}
+.page-title{font-size:14px!important;color:#2d3e39!important;gap:7px!important}
+.page-title svg{width:16px!important;height:16px!important;color:var(--r-primary)!important;stroke-width:1.8!important}
+.topbar .user-mini{gap:8px!important}
+.topbar .nav-label{font-size:10px!important;color:#6f7b76!important}
+.avatar{width:32px!important;height:32px!important;font-size:10px!important;box-shadow:none!important}
+
+/* ---------- CABEÇALHOS ---------- */
+.page-heading,.v3-head,.rz-head{margin:0 0 17px!important}
+.page-heading h1,.v3-head h1,.rz-head h1{font-size:21px!important;line-height:1.2!important;font-weight:600!important;letter-spacing:-.02em!important;margin:0 0 4px!important;color:#263833!important}
+.page-heading p,.v3-head p,.rz-head p{font-size:10.5px!important;line-height:1.55!important;color:var(--r-muted)!important;margin:0!important;max-width:760px!important}
+.v3-kicker,.rz-kicker,.eyebrow,.page-heading .eyebrow{font-size:9px!important;line-height:1.2!important;color:var(--r-primary)!important;font-weight:500!important;letter-spacing:.08em!important;margin-bottom:5px!important}
+.v3-head-actions,.rz-head-actions{gap:6px!important}
+
+/* ---------- SEM CARTÕES: painéis tornam-se áreas de conteúdo ---------- */
+.card,.v3-panel,.rz-panel,.mpro-panel,.saas-panel,.saas-panel-box,.report-panel,
+.final33-area-card,.final40-area-card,.l14-view-card,.legado-admin-card,.loading-card,
+.evaluation-card,.student-card,.v3-student-card,.v3-assessment-card,.v3-wait-card,
+.legado-wait-card,.final26-profile-card,.final20-terms-card,.final16-message-panel,
+.final18-msg-card,.final19-choice-card,.final19-doc-card,.final29-flow-card,
+.final29-mode-panel,.final29-composer-card,.final29-received-card,.final41-message-card,
+.final42-doc-card,.finance-card,.section-card,.panel,.metric-card,.stat-card{
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  transform:none!important;
+}
+.card,.v3-panel,.rz-panel,.mpro-panel,.saas-panel,.saas-panel-box,.report-panel{padding:0!important}
+.card:hover,.v3-panel:hover,.rz-panel:hover,.mpro-panel:hover{box-shadow:none!important}
+
+/* Cada página passa a ter áreas delimitadas por linha, não por molduras. */
+.v3-panel,.rz-panel,.mpro-panel,.saas-panel,.report-panel{border-top:1px solid var(--r-line)!important;padding-top:15px!important;margin-top:18px!important}
+.v3-panel-head,.rz-panel-head,.mpro-panel-head{margin-bottom:12px!important;padding:0!important}
+.v3-panel-head h2,.rz-panel-head h2,.mpro-panel-head h2{font-size:14px!important;font-weight:600!important;color:#33443f!important;margin:0!important}
+.v3-panel-head p,.rz-panel-head p,.mpro-panel-head p{font-size:10px!important;color:var(--r-muted)!important;margin:3px 0 0!important}
+
+/* ---------- MÉTRICAS: UMA FAIXA ÚNICA ---------- */
+.stats,.v3-stats,.rz-kpis,.v3-profile-stats,.stats-grid,.final33-kpis{
+  display:grid!important;gap:0!important;
+  background:rgba(255,255,255,.68)!important;
+  border-top:1px solid var(--r-line)!important;
+  border-bottom:1px solid var(--r-line)!important;
+  padding:0!important;margin:2px 0 18px!important;
+}
+.v3-stat,.rz-kpi,.metric-card,.stat-card,.final33-kpi{
+  min-height:68px!important;padding:12px 17px!important;border:0!important;border-right:1px solid var(--r-line)!important;
+  border-radius:0!important;background:transparent!important;box-shadow:none!important;
+}
+.v3-stat:first-child,.rz-kpi:first-child,.metric-card:first-child,.stat-card:first-child,.final33-kpi:first-child{padding-left:2px!important}
+.v3-stat:last-child,.rz-kpi:last-child,.metric-card:last-child,.stat-card:last-child,.final33-kpi:last-child{border-right:0!important}
+.v3-stat span,.rz-kpi span,.metric-card-info span,.final33-kpi span,.stat-card-label{font-size:9.5px!important;font-weight:400!important;color:var(--r-muted)!important}
+.v3-stat strong,.rz-kpi strong,.metric-card-info strong,.final33-kpi strong,.stat-card-value{display:block!important;margin-top:3px!important;font-size:19px!important;font-weight:600!important;color:#30413c!important}
+.v3-stat small,.rz-kpi small,.metric-card-info small,.final33-kpi small,.stat-card-helper{font-size:9px!important;color:var(--r-muted-2)!important}
+.v3-icon,.rz-icon,.metric-card-icon,.stat-card-icon,.final33-kpi-icon{width:27px!important;height:27px!important;border-radius:7px!important;background:var(--r-primary-soft)!important;color:var(--r-primary)!important;box-shadow:none!important}
+.v3-icon svg,.rz-icon svg,.metric-card-icon svg,.stat-card-icon svg,.final33-kpi-icon svg{width:13px!important;height:13px!important}
+
+/* ---------- LISTAS E TABELAS: linhas compactas ---------- */
+.v3-student-grid,.v3-message-list,.v3-history-list,.final44-history-list,.v3-progress-list,
+.v3-finance-summary{display:grid!important;gap:0!important}
+.v3-student-card,.evaluation-card,.student-card,.v3-assessment-card,.v3-wait-card,.legado-wait-card,
+.final41-message-card,.final29-received-card{display:grid!important;grid-template-columns:auto 1fr auto!important;align-items:center!important;
+  gap:12px!important;padding:11px 3px!important;border-bottom:1px solid var(--r-line)!important;cursor:default!important}
+.v3-student-card:hover,.student-card:hover,.evaluation-card:hover,.v3-assessment-card:hover{background:rgba(255,255,255,.42)!important}
+.v3-student-top{display:contents!important}
+.v3-student-ident h3{font-size:12.5px!important;font-weight:500!important;margin:0!important;color:#34443f!important}
+.v3-student-ident span,.v3-student-meta span,.v3-student-foot span{font-size:9.5px!important;color:var(--r-muted)!important}
+.v3-student-meta{display:flex!important;gap:14px!important;align-items:center!important}
+.v3-student-meta svg{width:12px!important;height:12px!important;vertical-align:-2px!important;color:#97a39e!important}
+.v3-student-foot{display:flex!important;align-items:center!important;gap:8px!important}
+.v3-avatar{width:34px!important;height:34px!important;border-radius:50%!important;background:#edf4f1!important;color:var(--r-primary)!important;border:1px solid #dce9e5!important;box-shadow:none!important}
+.v3-avatar span{font-size:10px!important;font-weight:500!important}
+.v3-tag,.status-pill,.final33-ap-status{height:21px!important;padding:0 7px!important;display:inline-flex!important;align-items:center!important;border-radius:6px!important;font-size:9px!important;font-weight:500!important;background:#f0f4f2!important;color:#687670!important}
+
+/* ---------- FERRAMENTAS / FILTROS ---------- */
+.v3-toolbar,.toolbar,.filters,.filter-bar{display:flex!important;align-items:center!important;gap:7px!important;margin:0 0 12px!important;padding:0!important}
+.v3-search{max-width:360px!important;min-width:220px!important}
+.v3-search input{height:32px!important;min-height:32px!important;border-radius:7px!important;background:#fff!important}
+.v3-view-note{font-size:9.5px!important;color:var(--r-muted-2)!important}
+.v3-tabs,.subnav,.final-clean-subnav,.v3-subnav{
+  display:flex!important;gap:4px!important;padding:3px!important;margin:14px 0!important;
+  border-bottom:1px solid var(--r-line)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;
+}
+.v3-tabs button,.v3-filter-chip,.subnav button,.final-clean-subnav button,.v3-subnav button{
+  height:29px!important;padding:0 9px!important;border:0!important;border-radius:6px!important;background:transparent!important;
+  color:#788580!important;font-size:9.5px!important;font-weight:400!important;box-shadow:none!important
+}
+.v3-tabs button.active,.v3-filter-chip.active,.subnav button.active,.final-clean-subnav button.active,.v3-subnav button.active{
+  background:var(--r-primary-soft)!important;color:var(--r-primary)!important;font-weight:500!important;box-shadow:none!important
+}
+
+/* ---------- BOTÕES: pequenos, iguais, sem “peso” ---------- */
+button,.btn,.v3-btn,.mpro-primary-btn,.mpro-light-btn,.mpro-icon-btn,.legado-mini-btn,
+.final43-receipt-btn,.final25-online-btn,.final26-edit-btn,.final26-server-btn,
+.final33-alert-btn,.final34-permission-btn,.final29-start-btn,.final29-cancel-btn,.final27-send-btn{
+  font-family:var(--r-font)!important;font-size:10px!important;font-weight:500!important;
+  height:30px!important;min-height:30px!important;line-height:1!important;
+  padding:0 10px!important;border-radius:7px!important;gap:6px!important;
+  box-shadow:none!important;transform:none!important;white-space:nowrap!important;
+}
+.btn svg,.v3-btn svg,.mpro-primary-btn svg,.mpro-light-btn svg,.mpro-icon-btn svg,
+.legado-mini-btn svg,.final43-receipt-btn svg,.final25-online-btn svg,.final26-edit-btn svg,
+.final26-server-btn svg,.final33-alert-btn svg,.final34-permission-btn svg,
+.final29-start-btn svg,.final29-cancel-btn svg,.final27-send-btn svg{width:13px!important;height:13px!important;stroke-width:1.8!important}
+.btn:hover,.v3-btn:hover,.mpro-primary-btn:hover,.mpro-light-btn:hover,.mpro-icon-btn:hover{transform:none!important;box-shadow:none!important}
+.btn-primary,.mpro-primary-btn,.final29-start-btn{background:var(--r-primary)!important;border:1px solid var(--r-primary)!important;color:#fff!important}
+.btn-outline,.mpro-light-btn,.legado-mini-btn{background:#fff!important;border:1px solid var(--r-line-strong)!important;color:#5f6d68!important}
+.btn-soft{background:var(--r-primary-soft)!important;border:1px solid #dceae5!important;color:var(--r-primary)!important}
+.btn-blue{background:#f1f5f7!important;border:1px solid #e2e9ed!important;color:#587386!important}
+.btn-danger,.btn-danger-outline,.final29-cancel-btn{background:var(--r-danger-soft)!important;border:1px solid #eedddd!important;color:var(--r-danger)!important}
+.btn-sm{height:27px!important;min-height:27px!important;padding:0 8px!important;font-size:9.5px!important}
+.icon-button,.mpro-icon-btn{width:29px!important;min-width:29px!important;padding:0!important;background:#fff!important;border:1px solid var(--r-line-strong)!important;color:#65736e!important}
+
+/* ---------- FORMULÁRIOS: superfície funcional única ---------- */
+.v3-inline-editor,.v3-profile-editor,#v3AppointmentEditor,.final19-doc-card,.final20-terms-card{
+  background:rgba(255,255,255,.92)!important;border:1px solid var(--r-line)!important;border-radius:10px!important;
+  padding:16px!important;margin:12px 0 16px!important;box-shadow:0 3px 16px rgba(35,58,50,.035)!important;
+}
+.input,.select,.textarea,.v3-form input,.v3-form select,.v3-form textarea,
+input:not([type="checkbox"]):not([type="radio"]),select,textarea{
+  min-height:34px!important;height:auto!important;padding:7px 9px!important;border:1px solid var(--r-line-strong)!important;
+  border-radius:7px!important;background:#fff!important;color:var(--r-ink)!important;font-size:10.5px!important;
+  font-weight:400!important;box-shadow:none!important;outline:none!important
+}
+.textarea,textarea{min-height:82px!important}
+.input:focus,.select:focus,.textarea:focus,.v3-form input:focus,.v3-form select:focus,.v3-form textarea:focus,
+input:focus,select:focus,textarea:focus{border-color:#9bb9ae!important;box-shadow:0 0 0 2px rgba(45,112,99,.08)!important}
+.label,label,.v3-form label>span{font-size:9.5px!important;font-weight:500!important;color:#687670!important}
+.field{margin-bottom:11px!important}
+.form-grid,.v3-form-grid,.v3-assessment-fields{gap:10px!important}
+.v3-form-actions,.form-actions{gap:6px!important;margin-top:11px!important}
+
+/* ---------- AGENDA ---------- */
+.v3-day{min-height:64px!important;padding:7px!important;border:1px solid var(--r-line)!important;border-radius:7px!important;background:#fff!important;box-shadow:none!important}
+.v3-day.selected{border-color:#91b3a7!important;background:var(--r-primary-soft)!important;box-shadow:none!important}
+.v3-day strong{font-size:12px!important;font-weight:500!important}
+.v3-day span,.v3-day small{font-size:8.5px!important;font-weight:400!important}
+.v3-slot{padding:8px!important;border:0!important;border-bottom:1px solid var(--r-line)!important;border-radius:0!important;background:transparent!important}
+.v3-slot.free,.v3-slot.booked{background:transparent!important}
+.v3-slot-time{font-size:10px!important;font-weight:500!important}
+
+/* ---------- PERFIL DO ALUNO ---------- */
+.v3-student-hero{background:rgba(255,255,255,.64)!important;border:0!important;border-top:1px solid var(--r-line)!important;border-bottom:1px solid var(--r-line)!important;border-radius:0!important;padding:18px 0!important;box-shadow:none!important}
+.v3-hero-left h1{font-size:23px!important;font-weight:600!important}
+.v3-detail-grid div,.v3-finance-summary div,.v3-progress-item{background:#fff!important;border:1px solid var(--r-line)!important;border-radius:8px!important;box-shadow:none!important}
+.v3-detail-grid div{padding:10px!important}
+.v3-progress-item{padding:12px!important}
+.v3-progress-bar{height:7px!important}
+.v3-note-block,.v3-permission-note,.v3-form-note{background:#f8faf9!important;border:1px solid var(--r-line)!important;border-radius:8px!important}
+
+/* ---------- MODAIS / POPUPS ---------- */
+#uxModal,#confirmModal,.final19-modal-overlay,.final44-modal-backdrop{background:rgba(24,39,34,.34)!important;backdrop-filter:blur(3px)!important}
+#uxModalCard,.final19-modal-card,.final44-modal-card,#confirmModal>div{
+  border:1px solid var(--r-line)!important;border-radius:10px!important;background:#fff!important;
+  box-shadow:0 18px 50px rgba(22,42,36,.14)!important;padding:18px!important
+}
+
+/* ---------- LOGIN: uma composição nova, sem vestígios das anteriores ---------- */
+.login-screen{grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr)!important;background:#f5f8f7!important}
+.login-visual{
+  padding:38px 44px!important;background:linear-gradient(150deg,#225f53 0%,#2f7466 100%)!important;
+}
+.login-visual::before,.lv-eyebrow,.lv-features,.lv-footer{display:none!important}
+.lv-top img{width:38px!important;height:38px!important;border-radius:9px!important;padding:5px!important}
+.lv-top-text .a{font-size:12.5px!important;font-weight:500!important}.lv-top-text .b{font-size:8.5px!important}
+.lv-center{max-width:390px!important}.lv-title{font-size:29px!important;font-weight:500!important;line-height:1.18!important;margin:0 0 10px!important;letter-spacing:-.03em!important}
+.lv-sub{font-size:11px!important;line-height:1.65!important;color:rgba(255,255,255,.75)!important}
+.login-form-panel{padding:28px 42px!important;background:#fff!important}
+.login-box{max-width:355px!important}.lb-header{margin-bottom:23px!important}.lb-eyebrow{font-size:9px!important;font-weight:500!important;color:var(--r-primary)!important}
+.lb-title{font-size:21px!important;font-weight:600!important;letter-spacing:-.025em!important}.lb-subtitle{font-size:10.5px!important}
+.lb-field{margin-bottom:11px!important}.lb-field label{font-size:9.5px!important;font-weight:500!important}
+.lb-input{min-height:39px!important;padding:8px 10px!important;border:1px solid var(--r-line-strong)!important;border-radius:7px!important;font-size:10.5px!important;box-shadow:none!important}
+.lb-row{font-size:9.5px!important;margin:0 0 14px!important}.lb-submit{height:39px!important;min-height:39px!important;border-radius:7px!important;font-size:10.5px!important;font-weight:500!important;box-shadow:none!important}
+.lb-footer-note{margin-top:15px!important;padding:9px 10px!important;border-radius:7px!important;background:#f8faf9!important;border:1px solid var(--r-line)!important;font-size:9px!important}
+.lb-divider{margin:17px 0 12px!important;font-size:8.5px!important}.lb-help{font-size:9.5px!important;margin-top:12px!important}
+.expired-card{border:1px solid var(--r-line)!important;border-radius:10px!important;background:#fff!important;box-shadow:none!important}
+
+/* ---------- REMOVER COPIA DE VERSÕES DAS ÁREAS CRÍTICAS ---------- */
+#loginScreen [class*="final" i],#loginScreen [class*="rebuild" i],#loginScreen [class*="legacy" i],
+#dashboardContent [class*="rebuild" i],#dashboardContent [class*="legacy" i],
+#dashboardContent [id*="final" i][id*="version" i]{box-shadow:none!important}
+
+/* ---------- DARK MODE: mesma lógica visual ---------- */
+body.final27-dark{background:#182421!important;color:#dde8e3!important}
+body.final27-dark .app,body.final27-dark .main,body.final27-dark .content{background:#182421!important}
+body.final27-dark .content{background:linear-gradient(180deg,#1b2824,#17231f)!important}
+body.final27-dark .sidebar,body.final27-dark .topbar{background:#1b2925!important;border-color:#30423c!important}
+body.final27-dark .sidebar .nav button{color:#91a09a!important}
+body.final27-dark .sidebar .nav button.active{background:#24483f!important;color:#cfe4dc!important}
+body.final27-dark .page-title,body.final27-dark h1,body.final27-dark h2,body.final27-dark h3,body.final27-dark strong{color:#dce8e3!important}
+body.final27-dark p,body.final27-dark span,body.final27-dark label,.dark-muted{color:#9aa9a3!important}
+body.final27-dark .stats,body.final27-dark .v3-stats,body.final27-dark .rz-kpis{background:rgba(24,36,32,.72)!important;border-color:#30423c!important}
+body.final27-dark .v3-inline-editor,body.final27-dark .v3-profile-editor,#uxModalCard,body.final27-dark #confirmModal>div{background:#1d2b27!important;border-color:#33463f!important}
+body.final27-dark .input,body.final27-dark .select,body.final27-dark .textarea,body.final27-dark input,body.final27-dark select,body.final27-dark textarea{background:#17231f!important;border-color:#344840!important;color:#dce7e2!important}
+body.final27-dark .btn-outline,body.final27-dark .mpro-light-btn{background:#20302b!important;border-color:#3a4c45!important;color:#c3d0ca!important}
+
+/* ---------- RESPONSIVO ---------- */
+@media(max-width:1000px){
+  .content{padding:19px 18px 28px!important}
+  .v3-agenda-layout,.v3-two-col{grid-template-columns:1fr!important}
+  .login-screen{grid-template-columns:1fr!important}.login-visual{display:none!important}
+}
+@media(max-width:680px){
+  .sidebar{width:60px!important;flex-basis:60px!important;padding:12px 6px!important}
+  .sidebar .brand{height:61px!important;min-height:61px!important}.sidebar .brand-mark{width:46px!important;height:48px!important}.sidebar .brand-mark img{width:42px!important}
+  .sidebar .nav button{justify-content:center!important;padding:0!important}.nav-label{display:none!important}
+  .topbar{height:56px!important;padding:0 13px!important}.content{height:calc(100vh - 56px)!important;padding:15px 12px 24px!important}
+  .v3-student-card,.evaluation-card,.student-card,.v3-assessment-card,.v3-wait-card{grid-template-columns:auto 1fr!important}
+  .v3-student-meta,.v3-student-foot{grid-column:2!important}.v3-student-foot{margin-top:2px!important}
+  .stats,.v3-stats,.rz-kpis,.v3-profile-stats{grid-template-columns:1fr 1fr!important}
+  .v3-stat,.rz-kpi,.metric-card,.stat-card,.final33-kpi{border-right:0!important;border-bottom:1px solid var(--r-line)!important}
+  .v3-stat:nth-last-child(-n+2),.rz-kpi:nth-last-child(-n+2),.metric-card:nth-last-child(-n+2),.stat-card:nth-last-child(-n+2),.final33-kpi:nth-last-child(-n+2){border-bottom:0!important}
+  .v3-toolbar,.toolbar,.filters,.filter-bar{align-items:stretch!important;flex-direction:column!important}.v3-search{max-width:none!important;min-width:0!important}
+}
+</style>
+<script id="legado-clean-redesign-v3-runtime">
+(function(){
+  "use strict";
+  const cleanText=/(reconstru[cç][aã]o\s+v\d+|vers[aã]o\s+(antiga|anterior|final\s*\d*|v\d+)|camada\s+de\s+compatibilidade|build\s*\d{4}|final\s*\d{2,})/i;
+  function strip(root){
+    if(!root) return;
+    root.querySelectorAll("div,span,p,small,strong,h1,h2,h3,h4").forEach(el=>{
+      if(el.children.length) return;
+      const t=(el.textContent||"").trim();
+      if(cleanText.test(t)) el.style.display="none";
+    });
+  }
+  function icons(){ try{window.refreshIcons?.();window.lucide?.createIcons?.();}catch(e){} }
+  function run(){
+    strip(document.getElementById("loginScreen"));
+    strip(document.getElementById("dashboardContent"));
+    icons();
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",()=>setTimeout(run,80),{once:true}); else setTimeout(run,80);
+  new MutationObserver(()=>setTimeout(run,40)).observe(document.body,{subtree:true,childList:true});
 })();
 </script>
 </body>
